@@ -1,0 +1,35 @@
+doctype html
+html
+  head
+    link(rel="stylesheet" href="/styles/style.css")
+    script(src='/scripts/zepto.min.js')
+    script(src='/scripts/wcq.js')
+  block vars
+  - var activeRound = (options && options.round) ? options.round : -1
+  - var renderRounds = (options && options.rounds) ? options.rounds : [1,2,3,4,5,6]
+  body(class="en_US")
+    div(class="Wrap Background")
+      section(class="Section  Section--no-sides Section--thin-top u-bottomPadding--none")
+        #schedule
+          div(class="Schedule")
+            div(class="container")
+              div(class="col-sm-8" style="float:right")
+                h1(style="float:right") REBBL 2018 World Cup Qualifiers
+              div(class="row u-bottomPadding--small")
+            div(class="Tabs Tabs--rectangular")
+              div(class="Tabs-header-wrapper")
+                div(class="Tabs-header")
+                  div(class="Tabs-scroller-wrapper")
+                    div(class="Tabs-scroller")
+                      nav(class="Tabs-bar container")
+                        a(href="#" class="Tabs-tab Tabs-tab--active") WQC 2018
+            div(class="Tabs Tabs--darkBackground")
+              div(class="Tabs-header-wrapper")
+                div(class="Tabs-header")
+                  div(class="Tabs-scroller-wrapper")
+                    div(class="Tabs-scroller")
+                      nav(class="Tabs-bar container")
+                        a(data-value="0" href="/coach" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
+                        each round in renderRounds
+                          a(data-value="" + round class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/round/"+round)= 'Round ' + round
+            block content

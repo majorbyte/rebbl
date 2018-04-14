@@ -1,0 +1,19 @@
+//- coachDetail.pug
+extends ..\layout.pug
+block vars
+  - var options = {rounds : rounds, round: round}
+
+block content
+  div(class="Background u-bottomPadding--large u-topPadding--medium")
+    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
+      div(class="container navcontainer" data-index="0")
+        h1()= coach.name
+        h2(class="TeamLabel-coach" )= 'Points ' + coach.score
+        h2(class="TeamLabel-coach" )= 'TD Diff ' + coach.touchdownDiff
+
+        div(class="ScheduleMatchList")
+          div(class="MatchSchedule")
+            each match, index in matches
+              div(class="MatchRow MatchRow-match MatchRow-header" )= 'Round ' + (index+1)
+              div(class="MatchRow MatchRow-match" )
+                include matches.pug

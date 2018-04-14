@@ -1,0 +1,992 @@
+@charset "UTF-8";
+@font-face {
+    font-family: 'Roboto';
+    src: url(/fonts/roboto-latin-regular-webfont.woff2) format("woff2");
+    font-weight: 400;
+    font-style: normal
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url(/fonts/roboto-latin-medium-webfont.woff2) format("woff2");
+    font-weight: 500;
+    font-style: normal
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url(/fonts/roboto-latin-bold-webfont.woff2) format("woff2");
+    font-weight: 700;
+    font-style: normal
+}
+
+@font-face {
+    font-family: 'Industry';
+    src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+    font-weight: 400;
+    font-style: normal
+}
+
+@font-face {
+    font-family: 'Industry';
+    src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+    font-weight: 500;
+    font-style: normal
+}
+
+@font-face {
+    font-family: 'Industry';
+    src: url(/fonts/industry-bold-webfont.woff2) format("woff2");
+    font-weight: 700;
+    font-style: normal
+}
+
+
+/*!
+ * Bootstrap v3.3.7 (http://getbootstrap.com)
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%
+}
+
+body {
+    margin: 0
+}
+
+article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary {
+    display: block
+}
+
+
+a {
+    background-color: transparent
+}
+
+a:active,a:hover {
+    outline: 0
+}
+
+.h1,.u-h1,h1 {
+    font-size: 2em;
+    margin: .67em 0
+}
+img {
+    border: 0
+}
+
+button,input,optgroup,select,textarea {
+    color: inherit;
+    font: inherit;
+    margin: 0
+}
+
+button {
+    overflow: visible
+}
+
+button,select {
+    text-transform: none
+}
+
+button,html input[type=button],input[type=reset],input[type=submit] {
+    -webkit-appearance: button;
+    cursor: pointer
+}
+
+
+*,:after,:before,input[type=search] {
+    box-sizing: border-box
+}
+
+html {
+    font-size: 10px;
+    -webkit-tap-highlight-color: transparent
+}
+
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #fff
+}
+
+button,input,select,textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit
+}
+
+a {
+    color: #ff8900;
+    text-decoration: none
+}
+
+a:focus,a:hover {
+    color: #b36000;
+    text-decoration: underline
+}
+
+img {
+    vertical-align: middle
+}
+
+.h1,.h2,.h3,.h4,.h5,.h6,.u-h1,.u-h2,.u-h3,.u-h4,.u-h5,.u-h6,h1,h2,h3,h4,h5,h6 {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit
+}
+
+.h1,.h2,.h3,.u-h1,.u-h2,.u-h3,h1,h2,h3 {
+    margin-top: 1px;
+    margin-bottom: .5px
+}
+
+
+.h1,.u-h1,h1 {
+    font-size: 2rem
+}
+
+p {
+    margin: 0 0 .5px
+}
+
+
+.Container,.container {
+    max-width: 1300px;
+    width:100%;
+
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 40px;
+    padding-right: 40px
+}
+
+.Container:after,.Container:before,.container:after,.container:before {
+    content: " ";
+    display: table
+}
+
+.Container:after,.container:after {
+    clear: both
+}
+
+@media (min-width: 768px) {
+    .Container,.container {
+        width:45rem
+    }
+}
+
+@media (min-width: 992px) {
+    .Container,.container {
+        width:63.75rem
+    }
+}
+
+@media (min-width: 1200px) {
+    .Container,.container {
+        width:80rem
+    }
+}
+
+@media (min-width: 1700px) {
+    .Container,.container {
+        max-width: 1600px;
+    }
+}
+
+
+
+.row {
+    margin-left: -40px;
+    margin-right: -40px
+}
+
+.row:after,.row:before {
+    content: " ";
+    display: table
+}
+
+.row:after {
+    clear: both
+}
+
+.col-lg-1,.col-lg-10,.col-lg-11,.col-lg-12,.col-lg-2,.col-lg-3,.col-lg-4,.col-lg-5,.col-lg-6,.col-lg-7,.col-lg-8,.col-lg-9,.col-md-1,.col-md-10,.col-md-11,.col-md-12,.col-md-2,.col-md-3,.col-md-4,.col-md-5,.col-md-6,.col-md-7,.col-md-8,.col-md-9,.col-sm-1,.col-sm-10,.col-sm-11,.col-sm-12,.col-sm-2,.col-sm-3,.col-sm-4,.col-sm-5,.col-sm-6,.col-sm-7,.col-sm-8,.col-sm-9,.col-xs-1,.col-xs-10,.col-xs-11,.col-xs-12,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-5,.col-xs-6,.col-xs-7,.col-xs-8,.col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-left: 40px;
+    padding-right: 40px
+}
+
+.col-sm-8 {
+    width: 66.66667%
+}
+
+.Button,.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    text-align: center;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    font-size: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.Button:focus,.Button:hover,.btn:focus,.btn:hover {
+    color: #fff
+}
+
+.Button,.btn {
+    font-size: .875rem;
+    line-height: 1;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background: 0 0;
+    border-radius: 0;
+    border-style: solid;
+    border-width: 1px;
+    color: #333;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-weight: 700;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    max-width: 30ch;
+    outline: none!important;
+    padding: 1.075em 1.5em .925em;
+    text-transform: uppercase;
+    transition: all .2s ease-out;
+    white-space: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+.Button:active,.Button:focus,.Button:hover,.btn:active,.btn:focus,.btn:hover {
+    outline: none;
+    text-decoration: none;
+    transition: all .2s ease-out
+}
+
+.Button--primary,.btn-default,.btn-primary {
+    background: #ff8900;
+    border-color: #c75a00;
+    color: #fff
+}
+
+.Button--primary:hover,.Button--primary:hover:focus,.active.Button--primary,.btn-default.active,.btn-default:hover,.btn-default:hover:focus,.btn-primary.active,.btn-primary:hover,.btn-primary:hover:focus {
+    background: #c75a00;
+    border-color: #c75a00;
+    box-shadow: none
+}
+
+body,html {
+    font-size: 16px;
+    font-family: "Roboto",Helvetica Neue,Helvetica,Arial,sans-serif;
+    -webkit-font-feature-settings: normal;
+    font-feature-settings: normal;
+    font-variant-position: normal
+}
+
+@media (min-width: 768px) {
+    body,html {
+        font-size:17px
+    }
+}
+
+@media (min-width: 992px) {
+    body,html {
+        font-size:18px
+    }
+}
+
+@media (min-width: 1200px) {
+    body,html {
+        font-size:19px
+    }
+}
+
+@media (min-width: 1600px) {
+    body,html {
+        font-size:20px
+    }
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    margin-top: 20px
+}
+
+a {
+    color: #ff8900
+}
+
+a:focus,a:hover {
+    color: #e67b00;
+    text-decoration: none;
+    transition: none
+}
+
+.Background {
+    background-color: #f1f1f1
+}
+
+.MatchStatus {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: center;
+    min-width: 80px;
+    padding: 4px 12px;
+    margin: 0 8px;
+    font-size: 14px;
+    font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+    background-color: rgba(51,51,51,.06);
+    line-height: 1;
+    border-radius: 0
+}
+
+.MatchStatus--transparent {
+    background-color: transparent
+}
+
+.MatchStatus-score {
+    display: inline-block;
+    width: 13px;
+    margin: 0 4px;
+    font-size: 20px
+}
+
+.MatchStatus-score.is-winner {
+    font-weight: 700
+}
+.Section {
+    padding: 40px
+}
+
+@media (min-width: 768px) {
+    .Section {
+        padding:80px
+    }
+}
+
+.Section--thin-top {
+    padding-top: 20px
+}
+
+@media (min-width: 768px) {
+    .Section--thin-top {
+        padding-top:40px
+    }
+}
+
+.Section--no-sides {
+    padding-left: 0;
+    padding-right: 0
+}
+
+.u-topPadding--medium {
+    padding-top: 40px
+}
+
+.u-bottomPadding--large,div.dataTables_wrapper {
+    padding-bottom: 80px
+}
+
+.u-bottomPadding--small {
+    padding-bottom: 20px
+}
+
+.u-bottomPadding--none {
+    padding-bottom: 0!important
+}
+
+.h1,.u-h1,.u-ui1,h1 {
+    font-size: 2rem;
+    line-height: 1.25
+}
+
+.u-ui5 {
+    font-size: .875rem;
+    line-height: 1
+}
+
+.h1,.h2,.u-h1,.u-h2,h1,h2 {
+    text-transform: uppercase
+}
+
+.h1,.h2,.h3,.h4,.h5,.h6,.u-h1,.u-h2,.u-h3,.u-h4,.u-h5,.u-h6,h1,h2,h3,h4,h5,h6 {
+    font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-weight: 700
+}
+
+.h1,.h2,.h3,.h4,.h5,.h6,.u-h1,.u-h2,.u-h3,.u-h4,.u-h5,.u-h6,h1,h2,h3,h4,h5,h6 {
+    margin-bottom: 20px;
+    margin-top: 40px
+}
+
+
+.u-no-text-transform {
+    text-transform: none!important
+}
+
+
+.MatchRow {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    left: 50%;
+    right: 50%;
+    margin: 0 -50vw;
+    background-color: #fff;
+    border: 1px solid rgba(51,51,51,.2);
+    border-top: none;
+    width: 100vw;
+    /*height: 60px;*/
+    min-width:482px;
+
+}
+
+@media (min-width: 768px) {
+    .MatchRow {
+        width:auto;
+        left: auto;
+        right: auto;
+        margin: 0
+    }
+
+    .MatchRow:last-child:not(:first-child) {
+        border-radius: 0 0 4px 4px
+    }
+}
+
+.MatchRow-header{
+    height: 40px;
+    align-items: center;
+    border: 1px solid rgba(51,51,51,.2);
+    text-transform: uppercase;
+    font-size: 14px;
+    font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+}
+
+@media (min-width: 768px) {
+    .MatchRow--titleMatch, .MatchRow-header {
+        margin: 0;
+        border-radius: 4px 4px 0 0;
+    }
+}
+
+.MatchRow-status {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    white-space: nowrap;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center
+}
+
+.MatchRow-team {
+    -webkit-box-flex: 3;
+    -ms-flex: 3;
+    flex: 3
+}
+
+.MatchRow-contentWrapper {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 100%;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    color: #000
+}
+
+@media (min-width: 768px) {
+    .MatchRow-contentWrapper--hover {
+        margin-left:0
+    }
+}
+
+@media (min-width: 1200px) {
+    .MatchRow-contentWrapper--hover:hover {
+        border-left-color:#ff8900;
+        transition: border-left-color 300ms
+    }
+    .MatchRow-contentWrapper--hover--noBorder:hover {
+        border-left-color:#ff890000;
+        transition: border-left-color 300ms    }
+}
+
+@media (min-width: 1200px) {
+    .MatchRow-match:hover .Button {
+        display:-webkit-box;
+        display: -ms-flexbox;
+        display: flex
+    }
+}
+
+
+.MatchInfo,.MatchRow-matchDetail {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex
+}
+
+.MatchRow-matchDetail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    -ms-flex-line-pack: center;
+    align-content: center
+}
+
+.MatchRow-matchDetail .Button {
+    display: none;
+    padding: 0 8px;
+    margin-right: 20px;
+    border-color: transparent;
+    height: 32px;
+    -ms-flex-item-align: center;
+    -ms-grid-row-align: center;
+    align-self: center;
+    font-size: 14px
+}
+
+@media (min-width: 992px) {
+    .MatchRow-matchDetail .Button {
+        display:-webkit-box;
+        display: -ms-flexbox;
+        display: flex
+    }
+}
+
+@media (min-width: 1200px) {
+    .MatchRow-matchDetail .Button {
+        display:none
+    }
+}
+
+
+.TeamLabel {
+    font-size: 1rem;
+    line-height: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 100%;
+    margin:5px 0px
+}
+
+.TeamLabel--reverse {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    -ms-flex-direction: row-reverse;
+    flex-direction: row-reverse
+}
+
+.TeamLabel-info {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 0;
+    font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif
+}
+
+
+.TeamLabel--reverse .TeamLabel-info, {
+    text-align: right;
+}
+
+
+.TeamLabel--reverse .TeamLabel-info--noScore {
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: flex-end;
+}
+
+.TeamLabel--reverse .TeamLabel-name {
+    text-align: right;
+}
+
+/*
+@media (min-width: 992px) {
+    .TeamLabel--reverse .TeamLabel-info--noScore {
+        -webkit-box-orient:horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row
+    }
+}*/
+
+
+@media (min-width: 480px) {
+    .TeamLabel-info {
+        padding-left:8px
+    }
+
+    .TeamLabel--reverse .TeamLabel-info {
+        padding-left: 0;
+        padding-right: 8px
+    }
+}
+
+/*@media (min-width: 992px) {*/
+    .TeamLabel-info {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-align: start;
+        -ms-flex-align: start;
+        align-items: flex-start
+    }
+/*}*/
+
+.TeamLabel-info--noScore {
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start
+}
+
+@media (min-width: 992px) {
+    .TeamLabel-info--noScore {
+        -webkit-box-pack:center;
+        -ms-flex-pack: center;
+        justify-content: center
+    }
+}
+
+.TeamLabel-block {
+    width: 48px;
+    height: 48px;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto
+}
+
+.TeamLabel-logo {
+    width: 48px;
+    height: 48px;
+    fill: rgba(51,51,51,.4)
+}
+
+
+.TeamLabel-name,.TeamLabel-coach{
+    position: relative;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    font-size:1.2em;
+}
+.TeamLabel-coach{
+    color: #2F6FAD;
+    font-size:0.8em;
+    margin:5px 0px 0px 0px;
+}
+
+@media (min-width: 992px) {
+    .TeamLabel-name,.TeamLabel-coach {
+        -webkit-box-flex:0;
+        -ms-flex: 0 1 auto;
+        flex: 0 1 auto
+    }
+}
+
+@media (max-width: 1200px) and (min-width: 992px) {
+    .TeamLabel-name {
+        max-width: 20vw;
+    }
+}
+
+
+.Tabs {
+    overflow: hidden;
+    top:-50px;
+}
+
+.Tabs-header {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-bottom: -7px
+}
+
+@media (min-width: 992px) {
+    .Tabs-header {
+        height:50px
+    }
+}
+
+
+.Tabs-scroller-wrapper {
+    height: 100%;
+    width: 100%;
+    overflow: hidden
+}
+
+.Tabs-scroller {
+    position: relative;
+    overflow-x: auto;
+    padding-bottom: 25px;
+    scroll-behavior: smooth
+}
+
+.Tabs-bar {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    transition: translate 300ms
+}
+
+.Tabs-bar:after {
+    content: '';
+    display: block;
+    -webkit-box-flex: 1;
+    -ms-flex: auto;
+    flex: auto;
+    margin-left: 8px
+}
+
+.Tabs-tab {
+    font-size: .875rem;
+    line-height: 1;
+    text-transform: uppercase;
+    font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 8px 20px;
+    margin: 0 8px;
+    transition: all 300ms
+}
+
+.Tabs-tab:first-child {
+    margin-left: 0
+}
+
+.Tabs-tab:last-child {
+    margin-right: 0
+}
+
+.Tabs-tab:focus,.Tabs-tab:hover {
+    outline: 0
+}
+
+.Tabs-tab--active,.Tabs-tab--disabled {
+    pointer-events: none
+}
+
+.Tabs--darkBackground{
+
+}
+
+.Tabs--darkBackground,.Tabs--rectangular {
+    position: relative;
+    width: auto;
+    left: auto;
+    right: auto;
+    margin-left: 0;
+    margin-right: 0
+}
+
+.Tabs--darkBackground .Tabs-header-wrapper,.Tabs--rectangular .Tabs-header-wrapper {
+    margin-left: -240px;
+    margin-right: -240px
+}
+
+.Tabs--darkBackground .Tabs-header,.Tabs--rectangular .Tabs-header {
+    margin: 0 240px;
+    width: auto
+}
+
+
+.Tabs--darkBackground .Tabs-scroller,.Tabs--rectangular .Tabs-scroller {
+    margin-left: 0
+}
+
+.Tabs--darkBackground .Tabs-bar,.Tabs--rectangular .Tabs-bar {
+    transition: all 0ms
+}
+
+.Tabs--darkBackground .Tabs-bar:after,.Tabs--rectangular .Tabs-bar:after {
+    border-bottom: none
+}
+
+.Tabs--darkBackground .Tabs-tab,.Tabs--rectangular .Tabs-tab {
+    padding: 12px 20px;
+    font-weight: 400;
+    font-size: .875rem;
+    border-bottom: none;
+    transition: all 0ms
+}
+
+.Tabs--darkBackground .Tabs-tab--active,.Tabs--rectangular .Tabs-tab--active {
+    font-weight: 700
+}
+
+.Tabs--darkBackground .Tabs-header-wrapper {
+    height: 50px;
+    background-color: #333;
+}
+
+.Tabs--darkBackground .Tabs-bar {
+    padding-top: 8px
+}
+
+.Tabs--darkBackground .Tabs-tab--active {
+    border-bottom: 5px solid #fff;
+}
+.Tabs--darkBackground .Tabs-tab {
+    color: #fff;
+}
+
+.Tabs--rectangular .Tabs-tab--active {
+    background-color: #ff8900;
+    color: #fff;
+    padding-top: 16px;
+    height:50px;
+}
+.Tabs--rectangular .Tabs-header-wrapper {
+    border-bottom: 5px solid #ff8900;
+}
+
+@media (min-width: 1200px) {
+    .Tabs--darkBackground .Tabs-bar {
+        padding-top:5px
+    }
+}
+
+.WidgetDay-header,.Wrap {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex
+}
+
+.Wrap {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.divider{
+    margin-right:20px;
+}
+.Alternate:nth-child(2n){
+    background-color: #bbbbbb;
+}
+
+.hidden {
+ display:none;
+}
+
+.TeamLabel-standing {
+    width:75px;
+    height:50px;
+}
+
+.coachNumber {
+    width:50px;
+    height:50px;
+    text-align: center;
+}
+
+.divider:first-child .MatchRow-contentWrapper:nth-child(-n+3) .coachNumber{
+    background-color:#94c16f;
+}
+/*
+.divider:first-of-type{
+    float:left;
+}*/
+
+.row.u-bottomPadding--small{
+    background-image: url(/images/rebbl-wcqheader.png);
+    height: 250px;
+}
+
+.col-sm-8 {
+    color: #d22424;
+    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-color: white;
+    top: 65%;
+}

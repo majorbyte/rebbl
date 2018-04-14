@@ -1,0 +1,20 @@
+{
+  "name": "worldcup",
+  "version": "1.0.0",
+  "description": "display REBBL WQC results",
+  "main": "app.js",
+  "dependencies": {
+    "async-request": "^1.2.0",
+    "express": "^4.16.3",
+    "memory-cache": "^0.2.0",
+    "nedb": "^1.8.0",
+    "pug": "^2.0.3",
+    "thenify": "^3.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -83,3 +83,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Project
+# =========================
+.idea
+datastore
