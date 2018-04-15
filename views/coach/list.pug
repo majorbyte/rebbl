@@ -9,32 +9,55 @@ block content
     div(class="/*TexturedBackground TexturedBackground--light-primary*/")
       div(class="container navcontainer" data-index="0")
         h1(class="u-no-text-transform u-verticalMargin--xx-small") Standings
-        div
-          a(href="/coach/" + top.id class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder" )
-            div(class="TeamLabel" style="width:550px;margin:auto;")
-              div(class="TeamLabel-block" style="width:125px;height:125px;background-color:#94c16f")
-                h1(style="margin-top: 0px;margin-bottom: 0px;text-align: center;font-size: 5em;width: 125px;") 1
-              div(class="TeamLabel-info TeamLabel-info--noScore" style="width:100%;margin-top:5px")
-                div(class="TeamLabel-name" style="width:100%")
-                  div(style="font-size:2em")=  top.name
-                  div(style="float: left;font-size:1.45em;margin-right:15px;")= top.score + 'pts'
-                  div(class="TeamLabel-coach" style="margin-right:15px;float:right;clear:right")= top.team.race
-                  div(class="TeamLabel-coach" style="float:right;margin-right:15px;clear:right")= top.team.name
-          br
-        div(style="grid-template-columns: auto auto auto;display:grid;overflow:scroll")
-          for coaches, x in coaches2d
-            div.divider
-              div(class="ScheduleMatchList")
-                div(class="MatchSchedule")
-                  each coach, y in coaches
-                    a(href="/coach/" + coach.id class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
-                      div(class="TeamLabel Alternate")
-                        div(class="TeamLabel-block TeamLabel-standing")
-                          div(style="width:50px;height:50px" class="coach" )
-                            h1(class="coachNumber" style="float:left;margin:0px")= '' + (x*43+y + 2)
-                        div(class="TeamLabel-info TeamLabel-info--noScore" style="width:100%;margin-top:5px")
-                          div(class="TeamLabel-name" style="width:100%")
-                            div(style="float: right;font-size:1em;margin-right:15px;")= coach.score + 'pts'
-                            div(class="TeamLabel-coach" style="margin-right:15px;float:right;clear:right")= coach.team.race
-                            div=  coach.name
-                            div(class="TeamLabel-coach")= coach.team.name
+        div(style="grid-template-columns: auto;display:grid;")
+          div(class="table-striped TeamLabel-info")
+            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
+              div(class="Standings-details-rank Standings-header")
+              div
+              div(class="Standings-details-team Standings-header") Coach
+              div(class="Standings-details Standings-header") Points
+              div(title="Matches won" class="Standings-details Standings-header") Won
+              div(title="Matches drawn" class="Standings-details Standings-header") Draw
+              div(title="Matches Played" class="Standings-details Standings-header") Played
+              div(title="" class="Standings-details Standings-header") TD Diff
+            for coaches, x in coaches2d
+              each coach, y in coaches
+                a(href="/coach/" + coach.id class="TableRow TableRow--hover")
+                  div(class="Standings-details-rank " + ((x*15+y + 1)<5 ? "qualified" : "" ) )= '' + (x*15+y + 1)
+                  div
+                    img(src="/images/logos/logo_" + coach.team.logo + ".png" alt="" class="TeamLabel-logo")
+                  div(class="Standings-details-team")
+                    div
+                      div= coach.name
+                      div(class="TeamLabel-coach")= coach.team.name
+                  div(class="Standings-details")= coach.score
+                  div(class="Standings-details")= (coach.history.match(/A/g)||[]).length
+                  div(class="Standings-details")= (coach.history.match(/M/g)||[]).length
+                  div(class="Standings-details")= coach.history.length
+                  div(class="Standings-details " + (coach.touchdownDiff > 0 ? "is-positive" : (coach.touchdownDiff < 0 ? "is-negative" : ""))  )= coach.touchdownDiff > 0 ? '+' + coach.touchdownDiff : coach.touchdownDiff
+                - if (x*15+y + 1 == 4)
+                  div(class="TableHeader" )
+                    div(class="Standings-divider" style="width: 30px;")
+                      div(class="Standings-divider--flex")
+                        span(class="Standings-dividerText--correction")
+                    div(class="Standings-divider" style="width: 75px;")
+                      div(class="Standings-divider--flex")
+                        span(class="Standings-dividerText--correction" )
+                    div(class="Standings-divider")
+                      div(class="Standings-divider--flex"  style="margin-top:11px")
+                        span(class="Standings-dividerText")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
+                    div(class="Standings-divider")
+                      div(class="Standings-divider--flex")
+                        span(class="Standings-dividerText--correction")
+                    div(class="Standings-divider")
+                      div(class="Standings-divider--flex")
+                        span(class="Standings-dividerText--correction")
+                    div(class="Standings-divider")
+                      div(class="Standings-divider--flex")
+                        span(class="Standings-dividerText--correction")
+                    div(class="Standings-divider")
+                      div(class="Standings-divider--flex")
+                        span(class="Standings-dividerText--correction")
+                    div(class="Standings-divider")
+                      div(class="Standings-divider--flex")
+                        span(class="Standings-dividerText--correction")

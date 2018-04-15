@@ -418,10 +418,6 @@ a:focus,a:hover {
     padding-right: 0
 }
 
-.u-topPadding--medium {
-    padding-top: 40px
-}
-
 .u-bottomPadding--large,div.dataTables_wrapper {
     padding-bottom: 80px
 }
@@ -989,4 +985,138 @@ a:focus,a:hover {
     -webkit-text-stroke-width: 1.5px;
     -webkit-text-stroke-color: white;
     top: 65%;
+}
+
+.table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1px;
+}
+
+.TableRow, .TableHeader {
+    display:table-row;
+    width: 100%;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    color: #000;
+}
+
+.TableHeader{
+    height: 40px;
+    vertical-align: middle;
+}
+
+.table-striped{
+    display:table;
+    border-collapse: collapse;
+}
+
+.table-striped>*:nth-child(even) {
+    background-color: rgba(51,51,51,.06);
+    width:100%;
+}
+
+.Standings table>tbody>tr>td {
+    line-height: 1;
+    vertical-align: middle;
+    font-size: 1rem;
+    overflow: hidden;
+}
+
+.table-condensed>tbody>tr>td, table.dataTable--condensed>tbody>tr>td {
+    padding: 5px 20px;
+}
+
+.Standings-details-rank {
+    padding-left: 0!important;
+    white-space: nowrap;
+    display: table-cell;
+    text-align: center;
+}
+.Standings-details-rank.qualified{
+    font-size:1.25em;
+}
+
+
+
+.Standings-details-team {
+    padding-left: 0!important;
+    white-space: nowrap;
+    display: table-cell;
+    vertical-align: top;
+}
+
+.Standings-details-team .TeamLabel-coach{
+    margin:0;
+}
+
+.Standings-details {
+    text-align: center;
+    white-space: nowrap;
+    display: table-cell;
+    width:80px;
+}
+
+.Standings-details.is-positive {
+    color: green;
+}
+
+.Standings-details.is-negative {
+    color: #e50e47;
+}
+
+.Standings-header, .Standings-header-title {
+    font-size: .75rem;
+    line-height: 1;
+    text-transform: uppercase;
+    color: rgba(51, 51, 51, .6);
+}
+
+
+@media (min-width: 1200px) {
+    .TableRow--hover:hover {
+        border-left-color: #ff8900;
+        transition: border-left-color 300ms;
+    }
+}
+
+.Standings-divider {
+    display:table-cell;
+}
+
+.Standings-divider--flex{
+    font-size: .75rem;
+    line-height: 1;
+    font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-basis: 100%;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #00a0ea;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 0;
+}
+
+.Standings-dividerText {
+    margin-top: .15em;
+    margin-bottom: -.15em;
+}
+
+.Standings-dividerText--correction {
+    margin-top: .7em;
+}
+
+.Standings-divider--flex::after {
+    content: " ";
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    background: rgba(0,160,234,0);
+    font-size: 0;
+    line-height: 0;
+    margin: 0 0 0 2px;
+    border: 1px dashed;
 }

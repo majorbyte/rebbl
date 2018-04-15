@@ -1,14 +1,11 @@
-
-
 /**
  * Module dependencies.
  */
 
-var express = require('express');
+const express = require('express')
+  , path = require('path');
 
-
-var path = require('path');
-var app = module.exports = express();
+const app = module.exports = express();
 
 // set our default template engine to "ejs"
 // which prevents the need for using file extensions
@@ -25,28 +22,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 // parse request bodies (req.body)
 app.use(express.urlencoded({ extended: true }));
 
-console.log('booting');
 // load controllers
 require('./lib/boot')(app, { verbose: !module.parent });
-console.log('booted');
 
-app.use(function(err, req, res){
+app.use(function(err, req, res, next){
   // log it
-  if (!module.parent) console.error(err.stack);
+    if (!module.parent) console.error(err.stack);
+
 
   // error page
   res.status(500).render('5xx');
 });
 
-console.log('500 done');
-
-
 // assume 404 since no middleware responded
-app.use(function(req, res){
+app.use(function(req, res,next){
   res.status(404).render('404', { url: req.originalUrl });
 });
 
-console.log('404 done');
-
-app.listen(3000);
+app.listen(process.env.PORT);
 console.log(`Express started on port ${process.env.PORT}`);

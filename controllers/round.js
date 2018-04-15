@@ -1,11 +1,11 @@
-const db = require('../lib/datahandler.js')
+const db = require('../lib/dataservice')
   , cache = require('memory-cache');
 
 exports.name = 'round';
 exports.engine = 'pug';
 
 exports.cache = function(req, res, next){
-  let key = '__express__' + req.originalUrl || req.url;
+  let key = '__round__' + req.originalUrl || req.url;
   let cachedBody = cache.get(key);
   if (cachedBody) {
     res.send(cachedBody);
