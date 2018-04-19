@@ -18,7 +18,7 @@ exports.before = async function(req, res, next){
 exports.show = async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
     await db.getLeagueData(req.round);
-    await db.updateCoachScoringPoints();
+    //await db.updateCoachScoringPoints(126587);
   }
   res.redirect('/coach');
 };

@@ -25,7 +25,7 @@ block content
                 a(href="/coach/" + coach.id class="TableRow TableRow--hover")
                   div(class="Standings-details-rank " + ((x*15+y + 1)<5 ? "qualified" : "" ) )= '' + (x*15+y + 1)
                   div
-                    img(src="/images/logos/logo_" + coach.team.logo + ".png" alt="" class="TeamLabel-logo")
+                    img(src="http://cdn.rebbl.net/images/logo/logo_" + coach.team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                   div(class="Standings-details-team")
                     div
                       div= coach.name

@@ -1,0 +1,47 @@
+//- coachDetail.pug
+extends ..\layout.pug
+block vars
+  - var options = {active: league, title: "REBBL SEASON 8"}
+
+
+block navigation
+  div(class="Tabs Tabs--darkBackground")
+     div(class="Tabs-header-wrapper")
+       div(class="Tabs-header")
+         div(class="Tabs-scroller-wrapper")
+           div(class="Tabs-scroller")
+             nav(class="Tabs-bar container")
+               a(href="/league/" + league class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") style="padding-left:5px;padding-right:5px" ) Standings
+               each round in rounds.sort(function(a,b){return a > b ? 1: -1})
+                 a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/league/"+league + "/" + round style="padding-left:5px;padding-right:5px")= round
+
+block content
+  div(class="Background u-bottomPadding--large u-topPadding--medium")
+    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
+      div(class="container navcontainer" data-index="0")
+        h1(class="u-no-text-transform u-verticalMargin--xx-small")= "Standings " + league
+        div(class="League-Standings")
+          for div, x in standings
+            div(class="table-striped TeamLabel-info")
+              div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
+                div(title="" class="Standings-details Standings-header")= div[0].competition
+              div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
+                div(style="grid-template-columns: 50% 10% 5% 5% 5% 15% 10% ;display:grid;")
+                  div coach
+                  div points
+                  div W
+                  div D
+                  div L
+                  div played
+                  div TD diff
+
+              each coach, y in div.sort(function(a,b){if(a.points > b.points) {return -1} if (b.points > a.points) {return 1} if (a.tddiff > b.tddiff) {return -1} if (b.tddiff > a.tddiff) {return 1} if(a.loss>b.loss){return 1} if(b.loss > a.loss){return -1} return 0; })
+                div(style="grid-template-columns: 50% 10% 5% 5% 5% 15% 10% ;display:grid;")
+                  div= coach.name
+                  div= coach.points
+                  div= coach.win
+                  div= coach.draw
+                  div= coach.loss
+                  div= coach.games
+                  div= coach.tddiff
+              br

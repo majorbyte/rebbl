@@ -1,0 +1,37 @@
+//- coachDetail.pug
+extends ..\layout.pug
+block vars
+  - var options = {active: league, title: "REBBL SEASON 8"}
+
+block navigation
+  div(class="Tabs Tabs--darkBackground")
+     div(class="Tabs-header-wrapper")
+       div(class="Tabs-header")
+         div(class="Tabs-scroller-wrapper")
+           div(class="Tabs-scroller")
+             nav(class="Tabs-bar container")
+               a(href="/league/" + league class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") style="padding-left:5px;padding-right:5px" ) Standings
+               each div in divisions.sort(function(a,b){return a > b ? 1: -1})
+                 a(class="Tabs-tab"  + (competition == div ? " Tabs-tab--active" : "") href="/league/"+league + "/" + div style="padding-left:5px;padding-right:5px")= div
+  div(class="Tabs Tabs--darkBackground")
+     div(class="Tabs-header-wrapper")
+       div(class="Tabs-header")
+         div(class="Tabs-scroller-wrapper")
+           div(class="Tabs-scroller")
+             nav(class="Tabs-bar container")
+               for week, x in matches
+                 a(class="Tabs-tab"  href="#" + x  style="padding-left:5px;padding-right:5px;")= "Week " + x
+
+block content
+  div(class="Background u-bottomPadding--large u-topPadding--medium")
+    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
+      div(class="container navcontainer" data-index="0")
+        h1(class="u-no-text-transform u-verticalMargin--xx-small")= league + " " + competition
+        div(class="League-Standings")
+          for week, x in matches
+            br
+            div(class="table-striped TeamLabel-info")
+              div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
+                div(title="" class="Standings-details Standings-header" id= x )= "Week " + x
+              each match, y in week
+                include matches.pug

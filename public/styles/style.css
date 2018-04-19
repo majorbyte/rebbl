@@ -177,31 +177,11 @@ p {
     clear: both
 }
 
-@media (min-width: 768px) {
-    .Container,.container {
-        width:45rem
-    }
-}
-
-@media (min-width: 992px) {
-    .Container,.container {
-        width:63.75rem
-    }
-}
-
-@media (min-width: 1200px) {
-    .Container,.container {
-        width:80rem
-    }
-}
-
 @media (min-width: 1700px) {
     .Container,.container {
         max-width: 1600px;
     }
 }
-
-
 
 .row {
     margin-left: -40px;
@@ -541,16 +521,15 @@ a:focus,a:hover {
 
 .MatchRow-contentWrapper {
     position: relative;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
+    display: grid;
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
     width: 100%;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    color: #000
+    color: #000;
+    grid-template-columns: 30% 20% 30%;
 }
 
 @media (min-width: 768px) {
@@ -576,49 +555,6 @@ a:focus,a:hover {
         display: flex
     }
 }
-
-
-.MatchInfo,.MatchRow-matchDetail {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex
-}
-
-.MatchRow-matchDetail {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    -ms-flex-line-pack: center;
-    align-content: center
-}
-
-.MatchRow-matchDetail .Button {
-    display: none;
-    padding: 0 8px;
-    margin-right: 20px;
-    border-color: transparent;
-    height: 32px;
-    -ms-flex-item-align: center;
-    -ms-grid-row-align: center;
-    align-self: center;
-    font-size: 14px
-}
-
-@media (min-width: 992px) {
-    .MatchRow-matchDetail .Button {
-        display:-webkit-box;
-        display: -ms-flexbox;
-        display: flex
-    }
-}
-
-@media (min-width: 1200px) {
-    .MatchRow-matchDetail .Button {
-        display:none
-    }
-}
-
 
 .TeamLabel {
     font-size: 1rem;
@@ -907,9 +843,7 @@ a:focus,a:hover {
     padding-top: 8px
 }
 
-.Tabs--darkBackground .Tabs-tab--active {
-    border-bottom: 5px solid #fff;
-}
+
 .Tabs--darkBackground .Tabs-tab {
     color: #fff;
 }
@@ -1119,4 +1053,22 @@ a:focus,a:hover {
     line-height: 0;
     margin: 0 0 0 2px;
     border: 1px dashed;
+}
+
+.League-Standings{
+    grid-template-columns: auto;
+    display:grid;    
+}
+
+@media (min-width: 1200px) {
+  .League-Standings{
+    display:grid;
+  }
+}
+
+.Tabs--darkBackground .Tabs-tab--active {
+    color: #ff8900;
+}
+.Tabs--darkBackground .Tabs-tab--active-week{
+    border-bottom: 5px solid #fff;
 }
