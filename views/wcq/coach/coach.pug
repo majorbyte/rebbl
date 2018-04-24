@@ -1,0 +1,43 @@
+//- coachDetail.pug
+extends ..\..\layout.pug
+block vars
+  - var options = {rounds : rounds, round: round}
+
+block navigation
+  div(class="Tabs Tabs--darkBackground")
+    div(class="Tabs-header-wrapper")
+      div(class="Tabs-header")
+        div(class="Tabs-scroller-wrapper")
+          div(class="Tabs-scroller")
+            nav(class="Tabs-bar container")
+              a(href="/coach" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
+              each round in renderRounds
+                a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/wcq/round/"+round)= textRound + round
+  div(class="Tabs Tabs--darkBackground")
+     div(class="Tabs-header-wrapper")
+       div(class="Tabs-header")
+         div(class="Tabs-scroller-wrapper")
+           div(class="Tabs-scroller")
+             nav(class="Tabs-bar container")
+               a(class="Tabs-tab"  href="#" + x  style="padding-left:5px;padding-right:5px;") Team
+               a(class="Tabs-tab"  href="#" + x  style="padding-left:5px;padding-right:5px;") Matches
+
+
+block content
+  div(class="Background u-bottomPadding--large u-topPadding--medium")
+    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
+      div(class="container navcontainer" data-index="0")
+        h1()= coach.name
+        h2(class="TeamLabel-coach" )= 'Points ' + coach.score
+        h2(class="TeamLabel-coach" )= 'TD Diff ' + coach.touchdownDiff
+        h2(class="TeamLabel-coach" )= 'Strength of Schedule ' + coach.strengthOfSchedule
+        h2(class="TeamLabel-coach" )= 'Own strength ' + coach.strength
+        h2(class="TeamLabel-coach" )= 'Record ' + coach.history.replace(/A/g,"W").replace(/M/m,"D").replace(/Z/g,"L")
+
+        div(class="ScheduleMatchList")
+          div(class="MatchSchedule")
+            each match, index in matches.sort(function(a,b){return a.match_uuid < b.match_uuid ? -1 : 1;})
+              br
+              div(class="MatchRow MatchRow-match MatchRow-header" )= 'Round ' + (index+1)
+              div(class="MatchRow MatchRow-match" )
+                include matches.pug

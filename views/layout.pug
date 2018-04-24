@@ -23,10 +23,10 @@ html
                   div(class="Tabs-scroller-wrapper")
                     div(class="Tabs-scroller")
                       nav(class="Tabs-bar container")
-                        a(href="/coach" class="Tabs-tab " + (active === "WQC" ? "Tabs-tab--active" : "")) WQC 2018
-                        a(href="/league/Big O" class="Tabs-tab " + (active.toUpperCase() === "BIG O" ? "Tabs-tab--active" : "")) BIG O
-                        a(href="/league/GMan" class="Tabs-tab " + (active.toUpperCase() === "GMAN" ? "Tabs-tab--active" : "")) GMAN
-                        a(href="/league/REL" class="Tabs-tab " + (active.toUpperCase() === "REL" ? "Tabs-tab--active" : "")) REL
+                        a(href="/wcq/coach" class="Tabs-tab " + (active === "WQC" ? "Tabs-tab--active" : "")) WQC 2018
+                        a(href="/rebbl/Big O" class="Tabs-tab " + (active.toUpperCase() === "BIG O" ? "Tabs-tab--active" : "")) BIG O
+                        a(href="/rebbl/GMan" class="Tabs-tab " + (active.toUpperCase() === "GMAN" ? "Tabs-tab--active" : "")) GMAN
+                        a(href="/rebbl/REL" class="Tabs-tab " + (active.toUpperCase() === "REL" ? "Tabs-tab--active" : "")) REL
             block navigation
               div(class="Tabs Tabs--darkBackground")
                 div(class="Tabs-header-wrapper")
@@ -34,7 +34,7 @@ html
                     div(class="Tabs-scroller-wrapper")
                       div(class="Tabs-scroller")
                         nav(class="Tabs-bar container")
-                          a(href="/coach" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
+                          a(href="/wcq/coach" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
                           each round in renderRounds
-                            a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/round/"+round)= textRound + round
+                            a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/wcq/round/"+round)= textRound + round
             block content

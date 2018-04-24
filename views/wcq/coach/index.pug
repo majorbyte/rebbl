@@ -1,5 +1,5 @@
 //- index.pug
-extends ..\layout.pug
+extends ..\..\layout.pug
 
 block vars
   - var options = {rounds : rounds, round: "0"}
@@ -22,7 +22,7 @@ block content
               div(title="" class="Standings-details Standings-header") TD Diff
             for coaches, x in coaches2d
               each coach, y in coaches
-                a(href="/coach/" + coach.id class="TableRow TableRow--hover")
+                a(href="/wcq/coach/" + coach.id class="TableRow TableRow--hover")
                   div(class="Standings-details-rank " + ((x*15+y + 1)<5 ? "qualified" : "" ) )= '' + (x*15+y + 1)
                   div
                     img(src="http://cdn.rebbl.net/images/logo/logo_" + coach.team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")

@@ -1,5 +1,5 @@
-- let url = match.match_uuid === "1000000000" ? "#" : "/match/" + match.match_uuid
-a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" title= match.competition)
+- let url = match.match_uuid === "1000000000" ? "#" : "/wcq/match/" + match.match_uuid
+a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
   div(class="MatchRow-team")
     div(class="TeamLabel TeamLabel--reverse")
       div(class="TeamLabel-block"): img(src="http://cdn.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")

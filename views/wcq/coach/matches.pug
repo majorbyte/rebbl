@@ -1,0 +1,29 @@
+- let url = match.match_uuid === "1000000000" ? "#" : "/wcq/match/" + match.match_uuid
+a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
+  div(class="MatchRow-team")
+    div(class="TeamLabel TeamLabel--reverse")
+      div(class="TeamLabel-block"): img(src="http://cdn.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+      div(class="TeamLabel-info TeamLabel-info--noScore")
+        div(class="TeamLabel-name ")= match.opponents[0].team.name
+        div(class="TeamLabel-coach ")= match.opponents[0].coach.name
+  div(class="MatchRow-status")
+    span(class="MatchStatus MatchStatus--transparent")
+      span
+        if match.opponents[0].team.score > match.opponents[1].team.score
+          span(class="MatchStatus-score is-winner")= match.opponents[0].team.score
+          span(class="MatchStatus-score") -
+          span(class="MatchStatus-score")= match.opponents[1].team.score
+        else if match.opponents[1].team.score > match.opponents[0].team.score
+          span(class="MatchStatus-score")= match.opponents[0].team.score
+          span(class="MatchStatus-score") -
+          span(class="MatchStatus-score is-winner")= match.opponents[1].team.score
+        else
+          span(class="MatchStatus-score")= match.opponents[0].team.score
+          span(class="MatchStatus-score") -
+          span(class="MatchStatus-score")= match.opponents[1].team.score
+  div(class="MatchRow-team")
+    div(class="TeamLabel")
+      div(class="TeamLabel-block"): img(src="http://cdn.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+      div(class="TeamLabel-info TeamLabel-info--noScore")
+        div(class="TeamLabel-name ")= match.opponents[1].team.name
+        div(class="TeamLabel-coach ")= match.opponents[1].coach.name

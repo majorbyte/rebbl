@@ -521,7 +521,9 @@ a:focus,a:hover {
 
 .MatchRow-contentWrapper {
     position: relative;
-    display: grid;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
@@ -529,7 +531,6 @@ a:focus,a:hover {
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     color: #000;
-    grid-template-columns: 30% 20% 30%;
 }
 
 @media (min-width: 768px) {
@@ -943,6 +944,7 @@ a:focus,a:hover {
 .table-striped{
     display:table;
     border-collapse: collapse;
+    width: 100%;
 }
 
 .table-striped>*:nth-child(even) {
@@ -1056,19 +1058,22 @@ a:focus,a:hover {
 }
 
 .League-Standings{
-    grid-template-columns: auto;
-    display:grid;    
+    display: flex;
+    flex-direction: column;
 }
-
+/*
 @media (min-width: 1200px) {
   .League-Standings{
     display:grid;
   }
-}
+}*/
 
 .Tabs--darkBackground .Tabs-tab--active {
     color: #ff8900;
 }
 .Tabs--darkBackground .Tabs-tab--active-week{
     border-bottom: 5px solid #fff;
+}
+.toggle-skills {
+    display:none;
 }

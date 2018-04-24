@@ -4,6 +4,7 @@
   "description": "display REBBL WQC results",
   "main": "app.js",
   "dependencies": {
+    "applicationinsights": "^1.0.2",
     "async-request": "^1.2.0",
     "express": "^4.16.3",
     "memory-cache": "^0.2.0",

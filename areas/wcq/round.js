@@ -1,11 +1,12 @@
-const db = require('../lib/dataservice')
-  , cache = require('memory-cache');
+'use strict';
+const db = require('../../lib/dataservice')
+  , cache = require('memory-cache')
+  , express = require('express')
+  , router = express.Router();
 
-exports.name = 'round';
-exports.engine = 'pug';
 
-exports.cache = function(req, res, next){
-  let key = '__round__' + req.originalUrl || req.url;
+const checkCache = function(req, res, next){
+  let key = req.originalUrl || req.url;
   let cachedBody = cache.get(key);
   if (cachedBody) {
     res.send(cachedBody);
@@ -19,7 +20,7 @@ exports.cache = function(req, res, next){
   }
 };
 
-exports.show = async function(req, res, next){
+router.get('/:round_id', checkCache, async function(req, res, next){
   var id = req.params.round_id;
   if (!id) return next('route');
 
@@ -31,5 +32,7 @@ exports.show = async function(req, res, next){
   data['rounds'] = await db.rounds();
   data['round'] = id;
 
-  res.render('show', data);
-};
+  res.render('wcq/round/round', data);
+});
+
+module.exports = router;
