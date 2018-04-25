@@ -10,7 +10,7 @@ block navigation
         div(class="Tabs-scroller-wrapper")
           div(class="Tabs-scroller")
             nav(class="Tabs-bar container")
-              a(href="/coach" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
+              a(href="wcq/coach" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
               each round in renderRounds
                 a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/wcq/round/"+round)= textRound + round
   div(class="Tabs Tabs--darkBackground")

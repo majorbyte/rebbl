@@ -20,7 +20,7 @@ block navigation
            div(class="Tabs-scroller")
              nav(class="Tabs-bar container")
                for w in weeks.sort(function(a,b){return a - b ;})
-                 a(class="Tabs-tab"  + (week == w ? " Tabs-tab--active-week" : "") href="/league/"+league + "/" + competition + "/" + w  style="padding-left:5px;padding-right:5px;")= "Week " + w
+                 a(class="Tabs-tab"  + (week == w ? " Tabs-tab--active-week" : "") href="/rebbl/"+league + "/" + competition + "/" + w  style="padding-left:5px;padding-right:5px;")= "Week " + w
 
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")
