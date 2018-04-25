@@ -14,7 +14,6 @@ router.get('/cache', async function(req, res, next){
 router.get('/update/:round', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
     let round = parseInt(req.params.round);
-    // cant find that coach
     if (!round) return next('route');
 
     wcq.getLeagueData(round);
@@ -24,10 +23,23 @@ router.get('/update/:round', async function(req, res){
 });
 
 
-router.get('/updateleague/', async function(req, res){
-  if (req.query.verify === process.env['verifyToken']){
-    league.getRebblData();
-  }
+router.get('/updateleague/init', async function(req, res){
+  //if (req.query.verify === process.env['verifyToken']){
+
+  league.getRebblData();
+  //}
+  res.redirect('/wcq/coach');
+});
+
+
+router.get('/updateleague/:round', async function(req, res){
+  //if (req.query.verify === process.env['verifyToken']){
+
+    let round = parseInt(req.params.round);
+    if (!round) return next('route');
+
+    league.getRebblData(round);
+  //}
   res.redirect('/wcq/coach');
 });
 
