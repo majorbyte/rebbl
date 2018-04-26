@@ -23,7 +23,7 @@ html
                   div(class="Tabs-scroller-wrapper")
                     div(class="Tabs-scroller")
                       nav(class="Tabs-bar container")
-                        a(href="/wcq/coach" class="Tabs-tab " + (active === "WCQ" ? "Tabs-tab--active" : "")) WCQ 2018
+                        a(href="/wcq" class="Tabs-tab " + (active === "WCQ" ? "Tabs-tab--active" : "")) WCQ 2018
                         a(href="/rebbl/Big O" class="Tabs-tab " + (active.toUpperCase() === "BIG O" ? "Tabs-tab--active" : "")) BIG O
                         a(href="/rebbl/GMan" class="Tabs-tab " + (active.toUpperCase() === "GMAN" ? "Tabs-tab--active" : "")) GMAN
                         a(href="/rebbl/REL" class="Tabs-tab " + (active.toUpperCase() === "REL" ? "Tabs-tab--active" : "")) REL
@@ -34,7 +34,7 @@ html
                     div(class="Tabs-scroller-wrapper")
                       div(class="Tabs-scroller")
                         nav(class="Tabs-bar container")
-                          a(href="/wcq/coach" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
+                          a(href="/wcq" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
                           each round in renderRounds
                             a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/wcq/round/"+round)= textRound + round
             block content
