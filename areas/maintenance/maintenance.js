@@ -24,22 +24,21 @@ router.get('/update/:round', async function(req, res){
 
 
 router.get('/updateleague/init', async function(req, res){
-  //if (req.query.verify === process.env['verifyToken']){
-
-  league.getRebblData();
-  //}
+  if (req.query.verify === process.env['verifyToken']){
+    league.getRebblData();
+  }
   res.redirect('/wcq/coach');
 });
 
 
 router.get('/updateleague/:round', async function(req, res){
-  //if (req.query.verify === process.env['verifyToken']){
+  if (req.query.verify === process.env['verifyToken']){
 
     let round = parseInt(req.params.round);
     if (!round) return next('route');
 
     league.getRebblData(round);
-  //}
+  }
   res.redirect('/wcq/coach');
 });
 

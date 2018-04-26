@@ -68,12 +68,16 @@ block content
                 while index < rosterSize
                   - let home = match.teams[0].roster[index]
                   - let away = match.teams[1].roster[index]
+                  - let homeName = home ? (home.number === 0 ? home.type.split('_')[1].replace(/([A-Z])/g, ' $1') : home.name) : ""
+                  - let awayName = away ? (away.number === 0 ? away.type.split('_')[1].replace(/([A-Z])/g, ' $1') : away.name) : ""
+                  - let homePos  = home && home.number > 0 ? home.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
+                  - let awayPos  = away && away.number > 0 ? away.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
                   - index++
                   tr
                     td(class="MatchRow-status")= home ? home.number : ""
                     td(class="MatchRow-team")
-                      div(style="margin-left:15px")= home ? home.name : ""
-                      div(class="TeamLabel-coach" style="margin-left:15px;")= home ? home.type.split('_')[1] : ''
+                      div(style="margin-left:15px")= homeName
+                      div(class="TeamLabel-coach" style="margin-left:15px;")= homePos
                     td(class="MatchRow-team")
                       if home && home.mvp
                         img(src="http://cdn.rebbl.net/images/skills/MVPCondition.png" style="float:right;width:48px;margin-right:5px;margin-top:6px;" title="MVP")
@@ -91,9 +95,9 @@ block content
                     td(class="MatchRow-team match-stats toggle-skills")
                       div(style="margin-left:15px")= (away && away.stats.inflicteddead > 0) ? away.stats.inflicteddead : " "
                     td(class="MatchRow-team match-stats toggle-skills")
-                      div(style="margin-left:15px")= (away && away.stats.inflictedcasualties > 0) ? away.stats.inflictedcasualties : " "
+                      div(style="margin-left:15px")= (away && away.stats.inflictedcasualties > 0) ? away.stats.inflictedcasualties : ""
                     td(class="MatchRow-team match-stats toggle-skills")
-                      div(style="margin-left:15px")= (away && away.stats.inflictedtouchdowns > 0) ? away.stats.inflictedtouchdowns : " "
+                      div(style="margin-left:15px")= (away && away.stats.inflictedtouchdowns > 0) ? away.stats.inflictedtouchdowns : ""
                     td(class="MatchRow-team ")
                       if away && away.skills.length > 0
                         each skill in away.skills
@@ -102,7 +106,7 @@ block content
                       if away && away.mvp
                         img(src="http://cdn.rebbl.net/images/skills/MVPCondition.png" style="float:left;width:48px;margin-left:5px;margin-top:6px;" title="MVP")
                     td(class="MatchRow-team" style="text-align:right")
-                      div(style="margin-right:15px;")= away ? away.name : ""
-                      div(class="TeamLabel-coach" style="margin-right:15px;float:right;clear:right")= away ? away.type.split('_')[1]: ''
+                      div(style="margin-right:15px;")= awayName
+                      div(class="TeamLabel-coach" style="margin-right:15px;float:right;clear:right")= awayPos
                     td(class="MatchRow-status")= away ? away.number : ""
 

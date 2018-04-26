@@ -20,13 +20,6 @@ const checkCache = function(req, res, next){
   }
 };
 
-router.get('/', checkCache, async function(req, res, next){
-  let data = await db.getCoaches();
-  data['rounds'] = await db.rounds();
-
-  res.render('wcq/coach/index', data);
-});
-
 router.get('/:coach_id', checkCache, async function(req, res, next){
   let data =  await db.getCoach(req.params.coach_id);
   data['rounds'] = await db.rounds();

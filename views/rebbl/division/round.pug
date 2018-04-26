@@ -1,4 +1,4 @@
-//- coachDetail.pug
+//- round.pug
 extends ..\layout.pug
 block vars
   - var options = {active: league, title: "REBBL SEASON 8"}
@@ -10,7 +10,7 @@ block navigation
          div(class="Tabs-scroller-wrapper")
            div(class="Tabs-scroller")
              nav(class="Tabs-bar container")
-               a(href="/league/" + league class="Tabs-tab" + (competition == 0 ? " Tabs-tab--active" : "") style="padding-left:5px;padding-right:5px" ) Standings
+               a(href="/rebbl/" + league class="Tabs-tab" + (competition == 0 ? " Tabs-tab--active" : "") style="padding-left:5px;padding-right:5px" ) Standings
                each round in divisions.sort(function(a,b){return a > b ? 1: -1})
                  a(class="Tabs-tab"  + (competition == round ? " Tabs-tab--active" : "") href="/rebbl/"+league + "/" + round style="padding-left:5px;padding-right:5px")= round.replace("Season 8 - ","").replace("Season 8 ","")
   div(class="Tabs Tabs--darkBackground")
