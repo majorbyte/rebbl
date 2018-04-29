@@ -12,6 +12,8 @@ router.use('/match', require(`./match`));
 
 //router.use('/coach', require(`./coach`));
 
+router.use('/stunty', require(`./stunty`));
+
 router.use('/:league', require(`./league`));
 
 router.use('/:league/:division', require(`./division`));

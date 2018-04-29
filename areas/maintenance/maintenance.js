@@ -27,7 +27,7 @@ router.get('/updateleague/init', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
     league.getRebblData();
   }
-  res.redirect('/wcq/coach');
+  res.redirect('/wcq');
 });
 
 
@@ -39,7 +39,7 @@ router.get('/updateleague/:round', async function(req, res){
 
     league.getRebblData(round);
   }
-  res.redirect('/wcq/coach');
+  res.redirect('/wcq');
 });
 
 
