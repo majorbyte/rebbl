@@ -23,7 +23,7 @@ const cacheCheck = function(req, res, next){
 
 router.get('/', cacheCheck, async function(req, res, next){
   let data = {standings:null, rounds:null, league:req.params.league };
-  data.standings = await db.getCoachScore("REBBL - " + req.params.league);
+  data.standings = await db.getCoachScore("REBBL - " + req.params.league, true);
   data.rounds = await db.getDivisions("REBBL - " + req.params.league);
 
   res.render('rebbl/league/index', data);

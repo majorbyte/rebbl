@@ -9,7 +9,7 @@ appInsights.setup(process.env["ApplicationInsights"])
     .setAutoCollectExceptions(true)
     .setAutoCollectDependencies(true)
     .setAutoCollectConsole(true)
-    .setUseDiskRetryCaching(true)
+    .setUseDiskRetryCaching(false)
     .start();
 
 const express = require('express')
@@ -32,6 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // parse request bodies (req.body)
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/api', require('./areas/api/api'));
 
 app.use('/maintenance', require('./areas/maintenance/maintenance'));
 
