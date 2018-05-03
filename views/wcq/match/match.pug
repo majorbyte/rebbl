@@ -12,7 +12,8 @@ block content
             div(class="MatchRow MatchRow-match MatchRow-header" )= match.started
             div(class="MatchRow MatchRow-match" )
               div(class="MatchRow-team")
-                a(href="/wcq/coach/"+match.coaches[0].idcoach class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
+                - let homeUrl =  match.coaches[0].idcoach === 0 ? "#" : "/wcq/coach/"+match.coaches[0].idcoach
+                a(href=homeUrl class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                   div(class="TeamLabel TeamLabel--reverse")
                     div(class="TeamLabel-block"): img(src="http://cdn.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                     div(class="TeamLabel-info TeamLabel-info--noScore")
@@ -34,7 +35,8 @@ block content
                       span(class="MatchStatus-score") -
                       span(class="MatchStatus-score")= match.teams[1].score
               div(class="MatchRow-team")
-                a(href="/wcq/coach/"+match.coaches[1].idcoach class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
+                - let awayUrl =  match.coaches[1].idcoach === 0 ? "#" : "/wcq/coach/"+match.coaches[1].idcoach
+                a(href=awayUrl class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                   div(class="TeamLabel")
                     div(class="TeamLabel-block"): img(src="http://cdn.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                     div(class="TeamLabel-info TeamLabel-info--noScore")
