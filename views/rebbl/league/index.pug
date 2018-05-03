@@ -13,7 +13,7 @@ block navigation
             nav(class="Tabs-bar container")
               a(href="/rebbl/" + league class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") style="padding-left:5px;padding-right:5px" ) Standings
               each round in rounds.sort(function(a,b){return a > b ? 1: -1})
-                a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/rebbl/"+league + "/" + round style="padding-left:5px;padding-right:5px")= round.replace("Season 8 - ","").replace("Season 8 ","")
+                a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/rebbl/"+league + "/" + round style="padding-left:5px;padding-right:5px")= round.replace("Season 8 - Division","div").replace("Season 8 ","")
 
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")
