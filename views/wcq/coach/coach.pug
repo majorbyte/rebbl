@@ -32,7 +32,7 @@ block content
         h2(class="TeamLabel-coach" )= 'TD Diff ' + coach.touchdownDiff
         h2(class="TeamLabel-coach" )= 'Strength of Schedule ' + coach.strengthOfSchedule
         h2(class="TeamLabel-coach" )= 'Own strength ' + coach.strength
-        h2(class="TeamLabel-coach" )= 'Record ' + coach.history.replace(/A/g,"W").replace(/M/m,"D").replace(/Z/g,"L")
+        h2(class="TeamLabel-coach" )= 'Record ' + coach.history.replace(/A/g,"W").replace(/M/g,"D").replace(/Z/g,"L")
 
         div(class="ScheduleMatchList")
           div(class="MatchSchedule")
