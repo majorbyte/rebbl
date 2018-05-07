@@ -36,7 +36,7 @@ block content
 
         div(class="ScheduleMatchList")
           div(class="MatchSchedule")
-            each match, index in matches.sort(function(a,b){return a.match_uuid < b.match_uuid ? -1 : 1;})
+            each match, index in matches.sort(function(a,b){return (a.match_uuid === "1000000000" || b.match_uuid === "1000000000") ? -1 : a.match_uuid < b.match_uuid ? -1 : 1;})
               br
               div(class="MatchRow MatchRow-match MatchRow-header" )= 'Round ' + (index+1)
               div(class="MatchRow MatchRow-match" )
