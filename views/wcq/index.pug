@@ -52,7 +52,7 @@ block content
                     }
 
                   div(class="Standings-details")= round(coach.strengthOfSchedule,2)
-                  div(class="Standings-details")= coach.history.replace(/A/g,"W").replace(/M/m,"D").replace(/Z/g,"L")
+                  div(class="Standings-details")= coach.history.replace(/A/g,"W").replace(/M/g,"D").replace(/Z/g,"L")
                 - if (x*15+y + 1 == 4)
                   div(class="TableHeader" )
                     div(class="Standings-divider" style="width: 30px;")
