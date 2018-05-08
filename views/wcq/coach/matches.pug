@@ -1,4 +1,4 @@
-- let url = match.match_uuid ? "/wcq/match/" + match.match_uuid : "#"
+- let url = match.match_uuid !== "1000000000" ? "/wcq/match/" + match.match_uuid : "#"
 a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
   div(class="MatchRow-team")
     div(class="TeamLabel TeamLabel--reverse")
