@@ -1,8 +1,10 @@
 /**
  * Module dependencies.
  */
-const appInsights = require("applicationinsights");
-appInsights.setup(process.env["ApplicationInsights"])
+let appInsights;
+if (process.env.NODE_ENV === 'production'){
+  appInsights = require("applicationinsights");
+  appInsights.setup(process.env["ApplicationInsights"])
     .setAutoDependencyCorrelation(true)
     .setAutoCollectRequests(true)
     .setAutoCollectPerformance(true)
@@ -11,6 +13,7 @@ appInsights.setup(process.env["ApplicationInsights"])
     .setAutoCollectConsole(true)
     .setUseDiskRetryCaching(false)
     .start();
+}
 
 const express = require('express')
   , path = require('path')
@@ -29,6 +32,8 @@ app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views', "
 // serve static files
 app.use(express.static(path.join(__dirname, 'public-images'), {maxAge: 7*24*60*60*1000, etag: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+//let's encrypt
+app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
 
 // parse request bodies (req.body)
 app.use(express.urlencoded({ extended: true }));
@@ -60,4 +65,4 @@ app.use(function(req, res,next){
 });
 
 app.listen(process.env.PORT);
-console.log(`Express started on port ${process.env.PORT}`);
+console.log(`Express started on port ${process.env.PORT} :: ${process.env.NODE_ENV}`);
