@@ -1,0 +1,31 @@
+extends ..\accountlayout.pug
+
+block content
+  div(class="container")
+    h2= "Thanks for signing up " + user.coach + "!"
+
+    p You can always change your signup information at a later stage
+      a(href="/signup" class="highlighted-rules")= " here"
+      span .
+
+    form(class="signup" action="/signup/confirm-greenhorn" method="post" )
+
+      h2 Interested in playing in
+        span(class="highlight")= " the Greenhorn Cup"
+        span ?
+
+      p The Greenhorn Cup is a swiss tournament before the seasons starts with two aims in mind, one to give coaches something to do, while waiting on the season to start as well as giving the teams a leg up into the season.
+      p You can read more about the rules
+        a(href="https://docs.google.com/document/d/1Eru68LdaFIDYokNv4fU-894zB4ILQUiXp7xbVWVut0U" class="highlighted-rules")= " here"
+        span .
+
+      div(class="warning")
+        p The competition is inter-divisional so playing outside your preferred time zone is likely to happen.
+
+      h3 By pressing
+        i  Sign me up for The Greenhorn Cup
+        span , you confirm that you have read and will abide by the cup's rules
+        a(href="https://docs.google.com/document/d/1Eru68LdaFIDYokNv4fU-894zB4ILQUiXp7xbVWVut0U" class="highlighted-rules")= " as described here"
+        span .
+
+      <button type="submit">Sign me up The Greenhorn Cup</button>
