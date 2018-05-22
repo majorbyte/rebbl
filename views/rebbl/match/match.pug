@@ -1,5 +1,5 @@
 //- index.pug
-extends ..\layout.pug
+extends ..\..\coachlayout.pug
 
 block navigation
   div(class="Tabs Tabs--darkBackground")
@@ -17,12 +17,14 @@ block content
             div(class="MatchRow MatchRow-match MatchRow-header" )= match.started
             div(class="MatchRow MatchRow-match" )
               div(class="MatchRow-team")
-                a(href="#"+match.coaches[0].idcoach class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
+                a(href="/rebbl/coach/"+match.coaches[0].idcoach class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                   div(class="TeamLabel TeamLabel--reverse")
                     div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="TeamLabel-name ")= match.teams[0].teamname
                       div(class="TeamLabel-coach ")= match.coaches[0].coachname
+                      div(class="TeamLabel-coach" title="cash earned: " + match.teams[0].cashearned + "; spiraling expenses: " +match.teams[0].spirallingexpenses)= "winnings: " + (match.teams[0].cashearned - match.teams[0].spirallingexpenses)
+                      div(class="TeamLabel-coach ")= match.teams[0].popularitygain + " Fan Factor"
               div(class="MatchRow-status")
                 span(class="MatchStatus MatchStatus--transparent")
                   span
@@ -39,74 +41,45 @@ block content
                       span(class="MatchStatus-score") -
                       span(class="MatchStatus-score")= match.teams[1].score
               div(class="MatchRow-team")
-                a(href="#"+match.coaches[1].idcoach class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
+                a(href="/rebbl/coach/"+match.coaches[1].idcoach class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                   div(class="TeamLabel")
                     div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="TeamLabel-name ")= match.teams[1].teamname
                       div(class="TeamLabel-coach ")= match.coaches[1].coachname
-
-            table(class="" style="width:100%")
+                      div(class="TeamLabel-coach" title="cash earned: " + match.teams[1].cashearned + "; spiraling expenses: " +match.teams[1].spirallingexpenses)= "winnings: " + (match.teams[1].cashearned - match.teams[1].spirallingexpenses)
+                      div(class="TeamLabel-coach ")= match.teams[1].popularitygain + " Fan Factor"
+            br
+            table(class="team-stats")
               thead
                 tr
-                  td(class="MatchRow-status") #
-                  td(class="MatchRow-team" style="margin-left:15px") Player
-                  td(class="MatchRow-team")
-                  td(class="MatchRow-team ") Skills
-                  td(class="MatchRow-team match-stats toggle-skills") Touch Down
-                  td(class="MatchRow-team match-stats toggle-skills") CAS
-                  td(class="MatchRow-team match-stats toggle-skills") kills
-                  td(class="MatchRow-team match-stats toggle-skills") kills
-                  td(class="MatchRow-team match-stats toggle-skills") CAS
-                  td(class="MatchRow-team match-stats toggle-skills") Touch Down
-                  td(class="MatchRow-team " style="text-align:right") Skills
-                  td(class="MatchRow-team")
-                  td(class="MatchRow-team" style="text-align:right;margin-right:15px") Player
-                  td(class="MatchRow-status") #
-              - let index = 0
-              tbody
-                while index < rosterSize
-                  - let home = match.teams[0].roster[index]
-                  - let away = match.teams[1].roster[index]
-                  - let homeName = home ? (home.number === 0 ? home.type.split('_')[1].replace(/([A-Z])/g, ' $1') : home.name) : ""
-                  - let awayName = away ? (away.number === 0 ? away.type.split('_')[1].replace(/([A-Z])/g, ' $1') : away.name) : ""
-                  - let homePos  = home && home.number > 0 ? home.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
-                  - let awayPos  = away && away.number > 0 ? away.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
-                  - index++
-                  tr
-                    td(class="MatchRow-status")= home ? home.number : ""
-                    td(class="MatchRow-team")
-                      div(style="margin-left:15px")= homeName
-                      div(class="TeamLabel-coach" style="margin-left:15px;")= homePos
-                    td(class="MatchRow-team")
-                      if home && home.mvp
-                        img(src="https://cdn2.rebbl.net/images/skills/MVPCondition.png" style="float:right;width:48px;margin-right:5px;margin-top:6px;" title="MVP")
+                  th Name
+                  th TV
+                  th(title="Spent on inducements") Idc
+                  th Supporters
+                  th Possession (%)
+                  th Comp
+                  th Pass (m)
+                  th INT
+                  th Rush (m)
+                  th
+                  th BLK
+                  th AVBrk+
+                  th AVBrk-
+                  th KO+
+                  th KO-
+                  th CAS+
+                  th CAS-
+                  th Kill+
+                  th Kill-
+                  th Surf
+                  th Expulsion
 
-                    td(class="MatchRow-team")
-                      if home && home.skills.length > 0
-                        each skill in home.skills
-                          img(src="https://cdn2.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo" style="margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim() )
-                    td(class="MatchRow-team match-stats toggle-skills")
-                      div(style="margin-left:15px")= (home && home.stats.inflictedtouchdowns > 0) ? home.stats.inflictedtouchdowns : ""
-                    td(class="MatchRow-team match-stats toggle-skills")
-                      div(style="margin-left:15px")= (home && home.stats.inflictedcasualties > 0) ? home.stats.inflictedcasualties : ""
-                    td(class="MatchRow-team match-stats toggle-skills")
-                      div(style="margin-left:15px")= (home && home.stats.inflicteddead > 0) ? home.stats.inflicteddead : ""
-                    td(class="MatchRow-team match-stats toggle-skills")
-                      div(style="margin-left:15px")= (away && away.stats.inflicteddead > 0) ? away.stats.inflicteddead : " "
-                    td(class="MatchRow-team match-stats toggle-skills")
-                      div(style="margin-left:15px")= (away && away.stats.inflictedcasualties > 0) ? away.stats.inflictedcasualties : ""
-                    td(class="MatchRow-team match-stats toggle-skills")
-                      div(style="margin-left:15px")= (away && away.stats.inflictedtouchdowns > 0) ? away.stats.inflictedtouchdowns : ""
-                    td(class="MatchRow-team ")
-                      if away && away.skills.length > 0
-                        each skill in away.skills
-                          img(src="https://cdn2.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo" style="float:right;margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim())
-                    td(class="MatchRow-team" style="text-align:right")
-                      if away && away.mvp
-                        img(src="https://cdn2.rebbl.net/images/skills/MVPCondition.png" style="float:left;width:48px;margin-left:5px;margin-top:6px;" title="MVP")
-                    td(class="MatchRow-team" style="text-align:right")
-                      div(style="margin-right:15px;")= awayName
-                      div(class="TeamLabel-coach" style="margin-right:15px;float:right;clear:right")= awayPos
-                    td(class="MatchRow-status")= away ? away.number : ""
+
+              tbody
+                each team in match.teams
+                  include teamoverview.pug
+
+            each team in match.teams
+              include team.pug
 

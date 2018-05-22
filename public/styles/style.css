@@ -1081,9 +1081,6 @@ a:focus,a:hover {
 .Tabs--darkBackground .Tabs-tab--active-week{
   border-bottom: 5px solid #fff;
 }
-.toggle-skills {
-  display:none;
-}
 
 .highlighted-rules{
   color: #00a0ea;
@@ -1115,3 +1112,82 @@ a:focus,a:hover {
 }
 
 label { display: block; }
+
+.match-stats {
+  text-align:center;
+}
+
+.match-stats-table {
+  border-collapse: collapse;
+  border:none;
+}
+
+.odd{
+  background-color: #CAC8C8F5;
+}
+
+.even{
+  /*background-color: #A5A5A5;*/
+}
+
+
+.match-stats-table tr:nth-child(even){
+  background-color: #ffffff8f;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.match-stats-TeamLabel-name {
+    font-size: 1.2em;
+}
+.TeamLabel-position{
+    color: #2F6FAD;
+    font-size: 0.8em;
+    margin: 0px 0px 0px 0px;
+}
+
+
+.TeamLabel-logo-skill{
+  width: 36px;
+  height: 36px;
+  border-radius: 5px;
+
+}
+
+.team-stats{
+  font-size: 16px;
+  text-align: center;
+  width:100%;
+  border: 1px solid rgba(51,51,51,.2);
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.team-stats thead{
+  border-bottom: 1px solid rgba(51, 51, 51, .2);
+  text-align: left;
+}
+
+.team-stats td:first-child{
+  text-align: left;
+}
+
+.team-stats th{
+  font-size: 20px;
+}
+
+/*
+let skills = document.querySelectorAll('.match-skills'); // Using a class instead, see note below.
+let stats = document.querySelectorAll('.match-stats');
+undefined
+skills.forEach(function(skill){skill.classList.toggle('toggle-skills')})
+undefined
+stats.forEach(function(stat){stat.classList.toggle('toggle-stats')})
+*/
+

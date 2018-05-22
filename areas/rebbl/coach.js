@@ -21,9 +21,18 @@ const checkCache = function(req, res, next){
 };
 
 router.get('/:coach_id', checkCache, async function(req, res, next){
-  let data =  await db.getCoach(req.params.coach_id);
-  data['rounds'] = await db.rounds();
+  res.redirect(`/rebbl/coach/${req.params.coach_id}/matches`);
+});
 
+router.get('/:coach_id/team', checkCache, async function(req, res, next){
+  let data =  await db.getCoach(req.params.coach_id);
+  data.matches = await db.getMatchesForCoach(req.params.coach_id);
+  res.render('rebbl/coach/coach', data);
+});
+
+router.get('/:coach_id/matches', checkCache, async function(req, res, next){
+  let data =  await db.getCoach(req.params.coach_id);
+  data.matches = await db.getMatchesForCoach(req.params.coach_id);
   res.render('rebbl/coach/coach', data);
 });
 
