@@ -18,108 +18,147 @@ function ensureAuthenticated(req, res, next) {
 
 
 router.get('/', ensureAuthenticated, async function(req, res){
-  let user = await signupService.getExistingTeam(req.user.name);
-  let signup = await signupService.getSignup(req.user.name);
+  try{
+    let user = await signupService.getExistingTeam(req.user.name);
+    let signup = await signupService.getSignup(req.user.name);
 
-  if (signup){
-    signup.signedUp = true;
+    if (signup){
+      signup.signedUp = true;
+    }
+    res.render('signup/overview', { user: signup || user || {reddit: req.user.name, isNew :true} });
+  } catch (err){
+    console.log(err);
   }
-  res.render('signup/overview', { user: signup || user || {reddit: req.user.name, isNew :true} });
 });
 
 router.get('/change', ensureAuthenticated, async function(req, res){
-  let user = await signupService.getExistingTeam(req.user.name);
-  let signup = await signupService.getSignup(req.user.name);
+  try {
+    let user = await signupService.getExistingTeam(req.user.name);
+    let signup = await signupService.getSignup(req.user.name);
 
-  if(!signup && user){
-    res.render('signup/signup-existing', { user: user});
-    return;
-  }
+    if(!signup && user){
+      res.render('signup/signup-existing', { user: user});
+      return;
+    }
 
-  switch(signup.saveType){
-    case "existing":
-      res.render('signup/signup-existing', { user: signup || user});
-      break;
-    case "reroll":
-      res.render('signup/signup-reroll', {user: signup});
-      break;
-    case "new":
-      res.render('signup/signup-new-coach', {user: signup});
-      break;
-    default:
+    if (!signup){
       res.render('signup/signup-new-coach', {user: req.user.name});
-      break;
+      return;
+    }
+
+    switch(signup.saveType){
+      case "existing":
+        res.render('signup/signup-existing', { user: signup || user});
+        break;
+      case "reroll":
+        res.render('signup/signup-reroll', {user: signup});
+        break;
+      case "new":
+        res.render('signup/signup-new-coach', {user: signup});
+        break;
+      default:
+        res.render('signup/signup-new-coach', {user: req.user.name});
+        break;
+    }
+  } catch (err){
+    console.log(err);
   }
 });
 
 router.get('/reroll', ensureAuthenticated, async function(req, res){
-  let user = await signupService.getExistingTeam(req.user.name);
-  let signup = await signupService.getSignup(req.user.name);
-  if (user) {
-    user.team = "";
-    user.race = "";
-    res.render('signup/signup-reroll', { user: signup || user });
+  try {
+    let user = await signupService.getExistingTeam(req.user.name);
+    let signup = await signupService.getSignup(req.user.name);
+    if (user) {
+      user.team = "";
+      user.race = "";
+      res.render('signup/signup-reroll', { user: signup || user });
+    }
+    else {
+      res.render('signup/signup-new-coach', { user: signup });
+    }
+  } catch (err){
+    console.log(err);
   }
-  else {
-    res.render('signup/signup-new-coach', { user: signup });
-  }
-
 });
 
 
 
 router.post('/confirm-existing', ensureAuthenticated, async function(req, res){
+  try{
+    //remove unwanted input
+    delete req.body.coach;
+    delete req.body.team;
 
-  //remove unwanted input
-  delete req.body.coach;
-  delete req.body.team;
+    req.body.saveType = "existing";
+    await signupService.saveSignup(req.user.name, req.body);
 
-  req.body.saveType = "existing";
-  await signupService.saveSignup(req.user.name, req.body);
-
-  res.redirect('/signup');
+    res.redirect('/signup');
+  } catch (err){
+    console.log(err);
+  }
 });
 
 router.post('/confirm-reroll', ensureAuthenticated, async function(req, res){
-  //remove unwanted input
-  delete req.body.coach;
+  try{
+    //remove unwanted input
+    delete req.body.coach;
 
-  req.body.saveType = "reroll";
-  let user = await signupService.saveSignup(req.user.name, req.body);
+    req.body.saveType = "reroll";
+    let user = await signupService.saveSignup(req.user.name, req.body);
 
-  if (user.error){
-    res.render('signup/signup-reroll', {user: user});
-  } else {
-    res.render('signup/signup-confirmed-greenhorn', {user: user});
+    if (user.error){
+      res.render('signup/signup-reroll', {user: user});
+    } else {
+      res.render('signup/signup-confirmed-greenhorn', {user: user});
+    }
+  } catch (err){
+    console.log(err);
   }
 });
 
 router.post('/confirm-new', ensureAuthenticated, async function(req, res){
-  req.body.saveType = "new";
-  let user = await signupService.saveSignup(req.user.name, req.body);
+  try {
+    req.body.saveType = "new";
+    let user = await signupService.saveSignup(req.user.name, req.body);
 
-  if (user.error){
-    res.render('signup/signup-new-coach', {user: user});
-  } else {
-    res.render('signup/signup-confirmed-greenhorn', {user: user});
+    if (user.error){
+      res.render('signup/signup-new-coach', {user: user});
+    } else {
+      res.render('signup/signup-confirmed-greenhorn', {user: user});
+    }
+  } catch (err){
+    console.log(err);
   }
 });
 
 router.post('/confirm-greenhorn', ensureAuthenticated, async function(req, res){
-  let user = await signupService.saveGreenhornSignup(req.user.name);
+  try{
+    await signupService.saveGreenhornSignup(req.user.name);
 
-  res.redirect('/signup');
+    res.redirect('/signup');
+  } catch (err){
+    console.log(err);
+  }
 });
 
 
 router.post('/resign', ensureAuthenticated, async function(req,res){
-  await signupService.resign(req.user.name);
-  res.redirect('/signup');
+  try{
+    await signupService.resign(req.user.name);
+    res.redirect('/signup');
+  } catch (err){
+    console.log(err);
+  }
 });
 
 router.post('/resign-greenhorn', ensureAuthenticated, async function(req,res){
-  await signupService.resignGreenhorn(req.user.name);
-  res.redirect('/signup');
+  try{
+    await signupService.resignGreenhorn(req.user.name);
+    res.redirect('/signup');
+  } catch (err){
+    console.log(err);
+  }
 });
 
 
