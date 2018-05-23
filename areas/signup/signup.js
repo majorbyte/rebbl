@@ -24,6 +24,8 @@ router.get('/', ensureAuthenticated, async function(req, res){
 
     if (signup){
       signup.signedUp = true;
+    } else if (user) {
+      user.signedUp = false;
     }
     res.render('signup/overview', { user: signup || user || {reddit: req.user.name, isNew :true} });
   } catch (err){
