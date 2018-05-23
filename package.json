@@ -6,9 +6,15 @@
   "dependencies": {
     "applicationinsights": "^1.0.2",
     "async-request": "^1.2.0",
+    "connect-nedb-session": "0.0.3",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
+    "express-session": "^1.15.6",
     "memory-cache": "^0.2.0",
+    "method-override": "^2.3.10",
     "nedb": "^1.8.0",
+    "passport": "^0.4.0",
+    "passport-reddit": "^0.2.4",
     "pug": "^2.0.3",
     "thenify": "^3.3.0"
   },
