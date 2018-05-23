@@ -9,34 +9,35 @@ block content
 
       p It looks like we don't have you on file yet, please continue with your sign up
         a(href="/signup/change" class="highlighted-rules")= " here"
-    - if (!user.signedUp)
-      h2= "Welcome back to REBBL Season 9, "
-        span(class="highlight")= user.coach
-        span !
+    - if(user.hasOwnProperty('signedUp'))
+      - if (!user.signedUp)
+        h2= "Welcome back to REBBL Season 9, "
+          span(class="highlight")= user.coach
+          span !
 
-      p You haven't signed up yet, so continue with your sign up
-        a(href="/signup/change" class="highlighted-rules")= " here"
-    - else
-      h2= "Welcome back to REBBL Season 9, "
-        span(class="highlight")= user.coach
-        span !
+        p You haven't signed up yet, so continue with your sign up
+          a(href="/signup/change" class="highlighted-rules")= " here"
+      - else
+        h2= "Welcome back to REBBL Season 9, "
+          span(class="highlight")= user.coach
+          span !
 
-      h3 You have signed up with
-        span(class="highlight")= " " + user.team
-        span(style="font-size:0.75em" )= " (" + user.race + ")"
-        span= " to the following:"
-      div
-        h3= "REBBL SEASON 9 - " + user.league
-        form(action="/signup/change" method="get")
-          button(type="submit") Change
-
-        form(action="/signup/resign" method="post")
-          button(type="submit") Resign
-
-      -if (user.greenHorn)
+        h3 You have signed up with
+          span(class="highlight")= " " + user.team
+          span(style="font-size:0.75em" )= " (" + user.race + ")"
+          span= " to the following:"
         div
-          h3 THE GREENHORN CUP
+          h3= "REBBL SEASON 9 - " + user.league
+          form(action="/signup/change" method="get")
+            button(type="submit") Change
 
-          form(action="/signup/resign-greenhorn" method="post")
+          form(action="/signup/resign" method="post")
             button(type="submit") Resign
+
+        -if (user.greenHorn)
+          div
+            h3 THE GREENHORN CUP
+
+            form(action="/signup/resign-greenhorn" method="post")
+              button(type="submit") Resign
 
