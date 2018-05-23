@@ -1,0 +1,8 @@
+//- coachDetail.pug
+extends ..\layout.pug
+
+block content
+  div(class="container")
+    h2 You need to login.
+    form(action="/auth/reddit" method="get")
+      button(type="submit") Login with Reddit

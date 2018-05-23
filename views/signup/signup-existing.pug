@@ -1,0 +1,50 @@
+extends ..\accountlayout.pug
+
+block scripts
+  script.
+    $(document).ready(function(){
+      let select = document.getElementById("TZ");
+      let guessed = moment.tz.guess();
+      guessed = !{user.tz || "null"} || guessed;
+      let names = moment.tz.names();
+      let l = names.length;
+
+      for(let i = 0; i < l; i++){
+        let tz = names[i];
+        let option = document.createElement("option");
+        option.setAttribute("value", tz);
+        option.text = tz;
+        if (tz === guessed){
+          option.setAttribute("selected", "selected")
+        }
+        select.appendChild(option);
+      }
+    });
+
+
+block content
+  form(action="/signup/confirm-existing" method="post" class="container signup")
+    div
+      h2 Your current team is
+       span(class="highlight")= " " + user.team
+       span(style="font-size: 0.85em")= " [" + user.race +"]"
+      p If you wish to reroll, please
+        a(href="/signup/reroll")= " go here"
+    div
+      select(name="league" id="league")
+        option(value="BIG O" selected=user.league==="BIG O") BIG O
+        option(value="GMAN" selected=user.league==="GMAN") GMAN
+        option(value="REL" selected=user.league==="REL") REL
+    div
+      input(type="text" id="discord" name="discord" value=user.discord placeholder="discord" title="discord")
+    div
+      input(type="text" id="steam" name="steam" value=user.steam placeholder="steam" title="steam")
+    div
+      input(type="text" id="email" name="email" value=user.email placeholder="email" title="email")
+    div
+      select(id="TZ" name="TZ" required title="timezone")
+    div
+      h3 By pressing complete, you confirm that you have read and will abide by our rules
+        a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules")= " as described here"
+
+      <button type="submit">Complete</button>
