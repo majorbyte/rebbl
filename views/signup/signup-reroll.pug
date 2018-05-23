@@ -30,10 +30,13 @@ block content
         span !
     div(style="float:left;margin-right: 20px;")
       div
+        label(for="coach") Blood Bowl 2 coach name
         input(type="text" id="coach" name="coach" value=user.coach  disabled title="Blood Bowl 2 coach name")
       div
+        label(for="team") Team name
         input(type="text" id="team" name="team" value=user.team  required placeholder="team name" title="team name")
       div
+        label(for="race") Team race
         select(id="race" name="race" required)
           - if (user.race === "")
             option(value="" disabled selected style="color: #9b959166;") Select race
@@ -64,18 +67,23 @@ block content
         - if (user.error && user.error.race)
           p(class="error")= user.error.race
       div
+        label(for="league") League
         select(name="league" id="league")
           option(value="BIG O" selected=user.league==="BIG O") BIG O
           option(value="GMAN" selected=user.league==="GMAN") GMAN
           option(value="REL" selected=user.league==="REL") REL
     div(style="")
       div
+        label(for="discord") Discord
         input(type="text" id="discord" name="discord" value=user.discord placeholder="discord" title="discord")
       div
+        label(for="steam") Steam
         input(type="text" id="steam" name="steam" value=user.steam placeholder="steam" title="steam")
       div
+        label(for="email") Email
         input(type="text" id="email" name="email" value=user.email placeholder="email" title="email")
       div
+        label(for="TZ") Timezone
         select(id="TZ" name="TZ" required title="timezone")
     div(style="clear:both")
       h3 By pressing complete, you confirm that you have read and will abide by our rules

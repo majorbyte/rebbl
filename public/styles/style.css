@@ -1113,3 +1113,5 @@ a:focus,a:hover {
   padding-top:5px;
   padding-bottom:5px;
 }
+
+label { display: block; }

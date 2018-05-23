@@ -54,7 +54,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new RedditStrategy({
     clientID: REDDIT_CONSUMER_KEY,
     clientSecret: REDDIT_CONSUMER_SECRET,
-    callbackURL: "https://rebbl.net/auth/reddit/callback"
+    callbackURL: process.env['redditcallbackURL']
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -88,7 +88,8 @@ let sessionObject = {
 
 if (process.env.NODE_ENV === 'production'){
   //app.set('trust proxy', 1) // trust first proxy
-  sessionObject.cookie.secure = true; // serve secure cookies
+  //TODO: why does this not work with true
+  sessionObject.cookie.secure = false; // serve secure cookies
   sessionObject.secret =  process.env['sessionSecret'];
 }
 
