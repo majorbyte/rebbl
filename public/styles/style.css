@@ -917,7 +917,7 @@ a:focus,a:hover {
 
 .row.u-bottomPadding--small-rebbl{
   height: 250px;
-  background: #333333 url(https://rebblcdn.azureedge.net/images/rebbl.png) no-repeat 99%;
+  background: #333333 url(/images/rebbl.png) no-repeat 99%;
   background-size: 350px;
 }
 

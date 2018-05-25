@@ -28,10 +28,10 @@ block content
           span= " to the following:"
         div
           h3= "REBBL SEASON 9 - " + user.league
-          form(action="/signup/change" method="get")
+          form(action="/signup/change" method="get" style="float:left;margin-right:116px;")
             button(type="submit") Change
 
-          form(action="/signup/resign" method="post")
+          form(action="/signup/resign" method="post" )
             button(type="submit") Resign
 
         -if (user.greenHorn)

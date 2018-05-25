@@ -15,7 +15,7 @@ block content
                 - let homeUrl =  match.coaches[0].idcoach === 0 ? "#" : "/wcq/coach/"+match.coaches[0].idcoach
                 a(href=homeUrl class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                   div(class="TeamLabel TeamLabel--reverse")
-                    div(class="TeamLabel-block"): img(src="http://cdn.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                    div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="TeamLabel-name ")= match.teams[0].teamname
                       div(class="TeamLabel-coach ")= match.coaches[0].coachname
@@ -38,7 +38,7 @@ block content
                 - let awayUrl =  match.coaches[1].idcoach === 0 ? "#" : "/wcq/coach/"+match.coaches[1].idcoach
                 a(href=awayUrl class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                   div(class="TeamLabel")
-                    div(class="TeamLabel-block"): img(src="http://cdn.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                    div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="TeamLabel-name ")= match.teams[1].teamname
                       div(class="TeamLabel-coach ")= match.coaches[1].coachname
@@ -73,12 +73,12 @@ block content
                       div(class="TeamLabel-coach" style="margin-left:15px;")= home ? home.type.split('_')[1] : ''
                     td(class="MatchRow-team")
                       if home && home.mvp
-                        img(src="http://cdn.rebbl.net/images/skills/MVPCondition.png" style="float:right;width:48px;margin-right:5px;margin-top:6px;" title="MVP")
+                        img(src="https://cdn2.rebbl.net/images/skills/MVPCondition.png" style="float:right;width:48px;margin-right:5px;margin-top:6px;" title="MVP")
 
                     td(class="MatchRow-team")
                       if home && home.skills.length > 0
                         each skill in home.skills
-                          img(src="http://cdn.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo" style="margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim() )
+                          img(src="https://cdn2.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo" style="margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim() )
                     td(class="MatchRow-team match-stats toggle-skills")
                       div(style="margin-left:15px")= (home && home.stats.inflictedtouchdowns > 0) ? home.stats.inflictedtouchdowns : ""
                     td(class="MatchRow-team match-stats toggle-skills")
@@ -94,10 +94,10 @@ block content
                     td(class="MatchRow-team")
                       if away && away.skills.length > 0
                         each skill in away.skills
-                          img(src="http://cdn.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo" style="float:right;margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim())
+                          img(src="https://cdn2.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo" style="float:right;margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim())
                     td(class="MatchRow-team" style="text-align:right")
                       if away && away.mvp
-                        img(src="http://cdn.rebbl.net/images/skills/MVPCondition.png" style="float:left;width:48px;margin-left:5px;margin-top:6px;" title="MVP")
+                        img(src="https://cdn2.rebbl.net/images/skills/MVPCondition.png" style="float:left;width:48px;margin-left:5px;margin-top:6px;" title="MVP")
                     td(class="MatchRow-team" style="text-align:right")
                       div(style="margin-right:15px;")= away ? away.name : ""
                       div(class="TeamLabel-coach" style="margin-right:15px;float:right;clear:right")= away ? away.type.split('_')[1]: ''
