@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    link(rel="stylesheet" href="/styles/style.css")
+    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.css")
   block vars
   - var activeRound = (options && options.round) ? options.round : -1
   - var renderRounds = (options && options.rounds) ? options.rounds : [1,2,3,4,5,6]
@@ -28,6 +28,7 @@ html
                         a(href="/rebbl/GMan" class="Tabs-tab " + (active.toUpperCase() === "GMAN" ? "Tabs-tab--active" : "")) GMAN
                         a(href="/rebbl/REL" class="Tabs-tab " + (active.toUpperCase() === "REL" ? "Tabs-tab--active" : "")) REL
                         a(href="/rebbl/stunty" class="Tabs-tab " + (active.toUpperCase() === "STUNTY" ? "Tabs-tab--active" : "")) Stunty Cup
+                        a(href="/signup" class="Tabs-tab ") Account
             block navigation
               div(class="Tabs Tabs--darkBackground")
                 div(class="Tabs-header-wrapper")
