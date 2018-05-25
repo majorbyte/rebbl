@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express')
+  , cache = require('memory-cache')
   , signupService = require('../../lib/signupService')
   , router = express.Router();
 
@@ -10,11 +11,26 @@ const express = require('express')
 //   the request is authenticated (typically via a persistent login session),
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
-function ensureAuthenticated(req, res, next) {
+const ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
   req.session.returnUrl = req.baseUrl;
   res.redirect('/account/login');
-}
+};
+
+const cacheCheck = function(req, res, next){
+  let key = req.originalUrl || req.url;
+  let cachedBody = cache.get(key);
+  if (cachedBody) {
+    res.send(cachedBody);
+  } else {
+    res.sendResponse = res.send;
+    res.send = (body) => {
+      cache.put(key, body);
+      res.sendResponse(body);
+    };
+    next();
+  }
+};
 
 
 router.get('/', ensureAuthenticated, async function(req, res){
@@ -163,7 +179,7 @@ router.post('/resign-greenhorn', ensureAuthenticated, async function(req,res){
   }
 });
 
-router.get('/signups', async function(req,res){
+router.get('/signups', cacheCheck, async function(req,res){
   try{
     let signups = await signupService.getSignups();
 
