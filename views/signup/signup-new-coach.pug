@@ -31,7 +31,8 @@ block content
 
         p Use the form below to make any changes
 
-        div(style="float:left;margin-right: 20px;")
+        fieldset
+          legend Required
           div
             label(for="coach") Blood Bowl 2 coach name
             input(type="text" id="coach" name="coach" value=user.coach required placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name")
@@ -75,7 +76,13 @@ block content
               option(value="BIG O" selected=user.league==="BIG O") BIG O
               option(value="GMAN" selected=user.league==="GMAN") GMAN
               option(value="REL" selected=user.league==="REL") REL
-        div(style="")
+          div
+            label(for="TZ") Timezone
+            select(id="TZ" name="TZ" required title="timezone")
+        fieldset
+          legend Optional
+          p Email is optional, if you provide an email address are opting in on rebbl.net processing your personal data.
+          P The email address will solely be used by rebbl administrators in order to contact you for issues concerning rebbl.
           div
             label(for="discord") Discord
             input(type="text" id="discord" name="discord" value=user.discord placeholder="discord" title="discord")
@@ -85,9 +92,6 @@ block content
           div
             label(for="email") Email
             input(type="text" id="email" name="email" value=user.email placeholder="email" title="email")
-          div
-            label(for="TZ") Timezone
-            select(id="TZ" name="TZ" required title="timezone")
           div(style="clear:both")
             h3 By pressing complete, you confirm that you have read and will abide by our rules
               a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules")= " as described here"
@@ -100,7 +104,8 @@ block content
 
         p Once you have done that, take you time to fill out the following:
 
-        div(style="float:left;margin-right: 20px;")
+        fieldset
+          legend Required
           div
             input(type="text" id="coach" name="coach" value="" required placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name")
           div
@@ -138,15 +143,18 @@ block content
               option(value="BIG O") BIG O
               option(value="GMAN") GMAN
               option(value="REL") REL
-        div(style="")
+          div
+            select(id="TZ" name="TZ" required title="timezone")
+        fieldset
+          legend Optional
+          p Email is optional, if you provide an email address are opting in on rebbl.net processing your personal data.
+          P The email address will solely be used by rebbl administrators in order to contact you for issues concerning rebbl.
           div
             input(type="text" id="discord" name="discord" value="" placeholder="discord" title="discord")
           div
             input(type="text" id="steam" name="steam" value="" placeholder="steam" title="steam")
           div
             input(type="text" id="email" name="email" value="" placeholder="email" title="email")
-          div
-            select(id="TZ" name="TZ" required title="timezone")
           div
             h3 By pressing complete, you confirm that you have read and will abide by our rules
               a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " as described here"

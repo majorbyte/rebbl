@@ -30,24 +30,30 @@ block content
        span(style="font-size: 0.85em")= " [" + user.race +"]"
       p If you wish to reroll, please
         a(href="/signup/reroll")= " go here"
-    div
-      label(for="discord") League
-      select(name="league" id="league")
-        option(value="BIG O" selected=user.league==="BIG O") BIG O
-        option(value="GMAN" selected=user.league==="GMAN") GMAN
-        option(value="REL" selected=user.league==="REL") REL
-    div
-      label(for="discord") Discord
-      input(type="text" id="discord" name="discord" value=user.discord placeholder="discord" title="discord")
-    div
-      label(for="discord") Steam
-      input(type="text" id="steam" name="steam" value=user.steam placeholder="steam" title="steam")
-    div
-      label(for="discord") Email
-      input(type="text" id="email" name="email" value=user.email placeholder="email" title="email")
-    div
-      label(for="discord") Timezone
-      select(id="TZ" name="TZ" required title="timezone")
+    fieldset
+      legend Required
+      div
+        label(for="discord") League
+        select(name="league" id="league")
+          option(value="BIG O" selected=user.league==="BIG O") BIG O
+          option(value="GMAN" selected=user.league==="GMAN") GMAN
+          option(value="REL" selected=user.league==="REL") REL
+      div
+        label(for="discord") Timezone
+        select(id="TZ" name="TZ" required title="timezone")
+    fieldset
+      legend Optional
+      p Email is optional, if you provide an email address are opting in on rebbl.net processing your personal data.
+      P The email address will solely be used by rebbl administrators in order to contact you for issues concerning rebbl.
+      div
+        label(for="discord") Discord
+        input(type="text" id="discord" name="discord" value=user.discord placeholder="discord" title="discord")
+      div
+        label(for="discord") Steam
+        input(type="text" id="steam" name="steam" value=user.steam placeholder="steam" title="steam")
+      div
+        label(for="discord") Email
+        input(type="text" id="email" name="email" value=user.email placeholder="email" title="email")
     div
       h3 By pressing complete, you confirm that you have read and will abide by our rules
         a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules")= " as described here"
