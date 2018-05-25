@@ -10,6 +10,8 @@ html
 
   block vars
   - var title= (options && options.title) ? options.title : "REBBL"
+  - var activeSubMenu = (options && options.subMenu) ? options.subMenu : "signup"
+
   body(class="en_US")
     div(class="Wrap Background")
       section(class="Section  Section--no-sides Section--thin-top u-bottomPadding--none")
@@ -36,5 +38,6 @@ html
                     div(class="Tabs-scroller-wrapper")
                       div(class="Tabs-scroller")
                         nav(class="Tabs-bar container")
-                          a(href="/signup" class="Tabs-tab Tabs-tab--active"  ) Sign up
+                          a(href="/signup" class="Tabs-tab" + (activeSubMenu == "signup" ? " Tabs-tab--active" : "")  ) Sign up
+                          a(href="/signup/signups" class="Tabs-tab" + (activeSubMenu == "signups" ? " Tabs-tab--active" : "") ) Singups
             block content

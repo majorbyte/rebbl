@@ -1,0 +1,36 @@
+extend ..\accountlayout.pug
+
+block vars
+  - var options = {subMenu: "signups"}
+
+
+block content
+  div(class="Background u-bottomPadding--large u-topPadding--medium")
+    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
+      div(class="container navcontainer" data-index="0")
+        h1(class="u-no-text-transform u-verticalMargin--xx-small") Current Signups
+
+        div
+          h3 Currently&nbsp;
+            span(class="highlight")= signups.length
+            span &nbsp;coaches have signed up.
+
+
+        div(style="grid-template-columns: auto;display:grid;")
+          div(class="table-striped TeamLabel-info")
+            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
+              div(style="white-space: nowrap;display: table-cell;width: 250px;" class="Standings-header") Coach
+              div(style="white-space: nowrap;display: table-cell;width: 350px;" class="Standings-header") Team
+              div(style="white-space: nowrap;display: table-cell;width: 160px;" class="Standings-header") Race
+              div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") League
+              div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") State
+              div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") Timezone
+            for signup, x in signups
+              div(class="TableRow")
+                div(style="white-space: nowrap;display: table-cell;width: 250px;")= signup.coach
+                div(style="white-space: nowrap;display: table-cell;width: 350px;")= signup.team
+                div(style="white-space: nowrap;display: table-cell;width: 160px;")= signup.race
+                div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.league
+                div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.saveType.replace("existing", "staying").replace("reroll", "rerolling")
+                div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.TZ
+
