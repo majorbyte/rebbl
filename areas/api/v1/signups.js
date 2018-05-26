@@ -18,10 +18,10 @@ router.get('/', ensureAuthenticated, async function(req, res, next){
     const data = await db.getSignups();
 
     const csv = data.map(function(row){
-      return `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.TZ)},${JSON.stringify(row.saveType)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.coach)},${JSON.stringify(row.steam)},${JSON.stringify(row.league)},${JSON.stringify(row.competition)}`;
+      return `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.coach)},${JSON.stringify(row.league)},${JSON.stringify(row.competition)},${JSON.stringify(row.TZ)},${JSON.stringify(row.saveType)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.steam)}`;
     });
 
-    csv.unshift('team name,race,timezone,state,reddit name,discord,blood bowl 2 name,steam name,league,division');
+    csv.unshift('team name,race,blood bowl 2 name,league,division,timezone,state,reddit name,discord,steam name');
 
 
     res.setHeader("content-type", "text/csv");
