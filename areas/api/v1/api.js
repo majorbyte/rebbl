@@ -5,4 +5,9 @@ const express = require('express'),
 
 router.use('/standings', require(`./standings`));
 
+router.use('/greenhorn', require(`./greenhorn`));
+
+router.use('/signups', require(`./signups`));
+
+
 module.exports = router;
