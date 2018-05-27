@@ -109,6 +109,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 //let's encrypt
 app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
 
+app.use('/robots.txt', express.static(path.join(__dirname, 'robots.txt')));
+
+
 // parse request bodies (req.body)
 app.use(express.urlencoded({ extended: true }));
 
