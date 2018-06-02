@@ -34,7 +34,7 @@ const cacheCheck = function(req, res, next){
 };
 
 
-router.get('/*', ensureAuthenticated, async function(req, res){
+router.get('/', ensureAuthenticated, async function(req, res){
   try{
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
