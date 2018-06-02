@@ -27,7 +27,8 @@ block content
               div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") Timezone
             for signup, x in signups
               div(class="TableRow")
-                div(style="white-space: nowrap;display: table-cell;width: 250px;")= signup.coach
+                div(style="white-space: nowrap;display: table-cell;width: 250px;")
+                 a(href="/coach/"+encodeURIComponent(signup.coach))= signup.coach
                 div(style="white-space: nowrap;display: table-cell;width: 350px;")= signup.team
                 div(style="white-space: nowrap;display: table-cell;width: 160px;")= signup.race
                 div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.league

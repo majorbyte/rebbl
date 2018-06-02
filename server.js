@@ -19,7 +19,6 @@ const express = require('express')
   , path = require('path')
   , fs = require('fs')
   , passport = require('passport')
-  , crypto = require('crypto')
   , util = require('util')
   , session = require('express-session')
   , methodOverride = require('method-override')
@@ -127,28 +126,10 @@ app.use('/account', require('./areas/account/account'));
 
 app.use('/signup', require('./areas/signup/signup'));
 
+app.use('/auth', require('./areas/account/auth'));
 
-app.get('/auth/reddit', function(req, res, next){
-  req.session.state = crypto.randomBytes(32).toString('hex');
-  req.session.save();
-  passport.authenticate('reddit', {
-    state: req.session.state,
-    duration: 'permanent'
-  })(req, res, next);
-});
+app.use('/coach', require('./areas/coach/coach'));
 
-app.get('/auth/reddit/callback', function(req, res, next){
-  // Check for origin via state token
-  if (req.query.state == req.session.state){
-    passport.authenticate('reddit', {
-      successRedirect: req.session.returnUrl || '/',
-      failureRedirect: '/login'
-    })(req, res, next);
-  }
-  else {
-    next( new Error(403) );
-  }
-});
 
 app.get('/', function(req, res, next){
   res.redirect('/wcq');

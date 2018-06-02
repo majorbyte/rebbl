@@ -3,7 +3,7 @@
 const express = require('express')
   , cache = require('memory-cache')
   , signupService = require('../../lib/SignUpService')
-//  , accountService = require('../../lib/accountService')
+  , accountService = require('../../lib/accountService')
   , router = express.Router();
 
 
@@ -35,8 +35,7 @@ const cacheCheck = function(req, res, next){
 
 
 router.get('/*', ensureAuthenticated, async function(req, res){
-  res.render('signup/maintenance');
-  /*try{
+  try{
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
 
@@ -211,7 +210,7 @@ router.get('/signups', cacheCheck, async function(req,res){
     res.render('signup/signups', {signups: signups});
   } catch (err){
     console.log(err);
-  }*/
+  }
 });
 
 

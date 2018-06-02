@@ -3,9 +3,14 @@ extends ..\accountlayout.pug
 block scripts
   script.
     $(document).ready(function(){
-      let select = document.getElementById("TZ");
+      $("#timezone").on('change', function(e){
+        $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
+      });
+
+      let select = document.getElementById("timezone");
       let guessed = moment.tz.guess();
-      guessed = !{user.tz || "null"} || guessed;
+
+      guessed = "#{user.timezone}" || guessed;
       let names = moment.tz.names();
       let l = names.length;
 
@@ -19,7 +24,10 @@ block scripts
         }
         select.appendChild(option);
       }
+      $("#tz_info").text(moment().tz(guessed).format('YYYY-MM-DD HH:mm ZZ'));
+
     });
+
 
 
 block content
@@ -75,12 +83,11 @@ block content
             option(value="GMAN" selected=user.league==="GMAN") GMAN
             option(value="REL" selected=user.league==="REL") REL
         div
-          label(for="TZ") Timezone
-          select(id="TZ" name="TZ" required title="timezone")
+          label(for="timezone") Timezone
+          select(id="timezone" name="timezone" required title="timezone")
+          label(id="tz_info")
     fieldset
       legend Optional
-      p Email is optional, if you provide an email address are opting in on rebbl.net processing your personal data.
-      P The email address will solely be used by rebbl administrators in order to contact you for issues concerning rebbl.
 
       div(style="")
         div
@@ -89,9 +96,6 @@ block content
         div
           label(for="steam") Steam
           input(type="text" id="steam" name="steam" value=user.steam placeholder="steam" title="steam")
-        div
-          label(for="email") Email
-          input(type="text" id="email" name="email" value=user.email placeholder="email" title="email")
     div(style="clear:both")
       h3 By pressing complete, you confirm that you have read and will abide by our rules
         a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules")= " as described here"
