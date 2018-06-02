@@ -2,7 +2,8 @@
 
 const express = require('express')
   , cache = require('memory-cache')
-  , signupService = require('../../lib/signupService')
+  , signupService = require('../../lib/SignUpService')
+//  , accountService = require('../../lib/accountService')
   , router = express.Router();
 
 
@@ -33,10 +34,11 @@ const cacheCheck = function(req, res, next){
 };
 
 
-router.get('/', ensureAuthenticated, async function(req, res){
-  try{
+router.get('/*', ensureAuthenticated, async function(req, res){
+  res.render('signup/maintenance');
+  /*try{
     let user = await signupService.getExistingTeam(req.user.name);
-    let signup = await signupService.getSignup(req.user.name);
+    let signup = await signupService.getSignUp(req.user.name);
 
     if (signup){
       signup.signedUp = true;
@@ -52,7 +54,8 @@ router.get('/', ensureAuthenticated, async function(req, res){
 router.get('/change', ensureAuthenticated, async function(req, res){
   try {
     let user = await signupService.getExistingTeam(req.user.name);
-    let signup = await signupService.getSignup(req.user.name);
+    let signup = await signupService.getSignUp(req.user.name);
+    let account = await accountService.getAccount(req.user.name);
 
     if(!signup && user){
       res.render('signup/signup-existing', { user: user});
@@ -60,7 +63,11 @@ router.get('/change', ensureAuthenticated, async function(req, res){
     }
 
     if (!signup){
-      res.render('signup/signup-new-coach', {user: req.user.name});
+      if(account){
+        res.render('signup/signup-new-coach', {user: {account: account}});
+      } else {
+        res.render('signup/signup-new-coach', {user: req.user.name});
+      }
       return;
     }
 
@@ -72,6 +79,9 @@ router.get('/change', ensureAuthenticated, async function(req, res){
         res.render('signup/signup-reroll', {user: signup});
         break;
       case "new":
+        if(account){
+          signup.account = account;
+        }
         res.render('signup/signup-new-coach', {user: signup});
         break;
       default:
@@ -86,7 +96,7 @@ router.get('/change', ensureAuthenticated, async function(req, res){
 router.get('/reroll', ensureAuthenticated, async function(req, res){
   try {
     let user = await signupService.getExistingTeam(req.user.name);
-    let signup = await signupService.getSignup(req.user.name);
+    let signup = await signupService.getSignUp(req.user.name);
     if (user) {
       user.team = "";
       user.race = "";
@@ -109,7 +119,7 @@ router.post('/confirm-existing', ensureAuthenticated, async function(req, res){
     delete req.body.team;
 
     req.body.saveType = "existing";
-    await signupService.saveSignup(req.user.name, req.body);
+    await signupService.saveSignUp(req.user.name, req.body);
 
     res.redirect('/signup');
   } catch (err){
@@ -123,7 +133,7 @@ router.post('/confirm-reroll', ensureAuthenticated, async function(req, res){
     delete req.body.coach;
 
     req.body.saveType = "reroll";
-    let user = await signupService.saveSignup(req.user.name, req.body);
+    let user = await signupService.saveSignUp(req.user.name, req.body);
 
     if (user.error){
       res.render('signup/signup-reroll', {user: user});
@@ -138,7 +148,7 @@ router.post('/confirm-reroll', ensureAuthenticated, async function(req, res){
 router.post('/confirm-new', ensureAuthenticated, async function(req, res){
   try {
     req.body.saveType = "new";
-    let user = await signupService.saveSignup(req.user.name, req.body);
+    let user = await signupService.saveSignUp(req.user.name, req.body);
 
     if (user.error){
       res.render('signup/signup-new-coach', {user: user});
@@ -152,7 +162,7 @@ router.post('/confirm-new', ensureAuthenticated, async function(req, res){
 
 router.post('/confirm-greenhorn', ensureAuthenticated, async function(req, res){
   try{
-    await signupService.saveGreenhornSignup(req.user.name);
+    await signupService.saveGreenhornSignUp(req.user.name);
 
     res.redirect('/signup');
   } catch (err){
@@ -181,7 +191,7 @@ router.post('/resign-greenhorn', ensureAuthenticated, async function(req,res){
 
 router.get('/signups', cacheCheck, async function(req,res){
   try{
-    let signups = await signupService.getSignups();
+    let signups = await signupService.getSignUps();
 
     signups = signups.sort(function(a,b){
 
@@ -201,7 +211,7 @@ router.get('/signups', cacheCheck, async function(req,res){
     res.render('signup/signups', {signups: signups});
   } catch (err){
     console.log(err);
-  }
+  }*/
 });
 
 
