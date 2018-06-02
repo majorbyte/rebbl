@@ -17,11 +17,11 @@ function ensureAuthenticated(req, res, next) {
 }
 
 
-router.get('/', ensureAuthenticated, async function(req, res){
+router.get('/:coach', ensureAuthenticated, async function(req, res){
   try{
-    let user = await accountService.getAccount(req.user.name);
+    let user = await accountService.searchAccount({"coach":req.params.coach});
 
-    res.render('account/account', { user: user });
+    res.render('coach/coach', { user: user });
   } catch(err){
     console.log(err);
   }
@@ -31,20 +31,6 @@ router.get('/login', function(req, res){
   res.render('account/login');
 });
 
-router.post('/update', ensureAuthenticated, async function(req, res){
-  try{
-    let account = { reddit: req.user.name
-      , discord:  req.body.discord
-      , steam: req.body.steam
-      , timezone: req.body.timezone };
-
-    account = await accountService.saveAccount(account);
-
-    res.render('account/account', { user: account });
-  } catch(err){
-    console.log(err);
-  }
-});
 
 
 module.exports = router;

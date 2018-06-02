@@ -1,5 +1,5 @@
 'use strict';
-const db = require('../../../lib/signupService')
+const db = require('../../../lib/SignUpService')
   , cache = require('memory-cache')
   , express = require('express')
   , router = express.Router();
@@ -18,7 +18,7 @@ router.get('/', ensureAuthenticated, async function(req, res, next){
     const data = await db.getSignups();
 
     const csv = data.map(function(row){
-      return `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.coach)},${JSON.stringify(row.league)},${JSON.stringify(row.competition)},${JSON.stringify(row.TZ)},${JSON.stringify(row.saveType)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.steam)}`;
+      return `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.coach)},${JSON.stringify(row.league)},${JSON.stringify(row.competition || "")},${JSON.stringify(row.timezone)},${JSON.stringify(row.saveType)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.steam)}`;
     });
 
     csv.unshift('team name,race,blood bowl 2 name,league,division,timezone,state,reddit name,discord,steam name');

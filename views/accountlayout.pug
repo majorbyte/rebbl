@@ -38,6 +38,7 @@ html
                     div(class="Tabs-scroller-wrapper")
                       div(class="Tabs-scroller")
                         nav(class="Tabs-bar container")
+                          a(href="/account" class="Tabs-tab" + (activeSubMenu == "account" ? " Tabs-tab--active" : "")  ) Account
                           a(href="/signup" class="Tabs-tab" + (activeSubMenu == "signup" ? " Tabs-tab--active" : "")  ) Sign up
                           a(href="/signup/signups" class="Tabs-tab" + (activeSubMenu == "signups" ? " Tabs-tab--active" : "") ) Signups
             block content
