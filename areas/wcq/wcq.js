@@ -1,5 +1,5 @@
 'use strict';
-const db = require('../../lib/dataservice')
+const db = require('../../lib/WorldCupQualifierService.js')
   , cache = require('memory-cache')
   , express = require('express')
   , router = express.Router();
@@ -27,10 +27,10 @@ router.get('/', checkCache, async function(req, res, next){
   res.render('wcq/index', data);
 });
 
-router.use('/coach', require(`./coach`));
+router.use('/coach', require(`./coach.js`));
 
-router.use('/match', require(`./match`));
+router.use('/match', require(`./match.js`));
 
-router.use('/round', require(`./round`));
+router.use('/round', require(`./round.js`));
 
 module.exports = router;

@@ -1,5 +1,5 @@
 'use strict';
-const db = require('../../lib/dataservice')
+const db = require('../../lib/WorldCupQualifierService.js')
   , cache = require('memory-cache')
   , express = require('express')
   , router = express.Router();

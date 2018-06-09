@@ -149,9 +149,8 @@ app.use(function(req, res,next){
   res.status(404).render('404', { url: req.originalUrl });
 });
 
-if (process.env.NODE_ENV === 'production'){
-  app.listen(process.env.PORT);
-} else {
-  app.listen(3000);
-}
-console.log(`Express started on port ${process.env.PORT} :: ${process.env.NODE_ENV}`);
+const port = process.env.NODE_ENV === 'production' ? process.env.NODE_ENV : 3000;
+
+
+app.listen(port);
+console.log(`Express started on port ${port}`);

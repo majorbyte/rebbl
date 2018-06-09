@@ -2,8 +2,8 @@
 
 const express = require('express')
   , cache = require('memory-cache')
-  , signupService = require('../../lib/SignUpService')
-  , accountService = require('../../lib/accountService')
+  , signupService = require('../../lib/SignUpService.js')
+  , accountService = require('../../lib/accountService.js')
   , router = express.Router();
 
 

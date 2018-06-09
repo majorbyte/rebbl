@@ -1,6 +1,6 @@
 'use strict';
-const league = require('../../lib/leagueservice')
-  , wcq = require('../../lib/dataservice')
+const league = require('../../lib/LeagueService.js')
+  , wcq = require('../../lib/WorldCupQualifierService.js')
   , cache = require('memory-cache')
   , express = require('express')
   , router = express.Router();
@@ -19,7 +19,7 @@ router.get('/update/:round', async function(req, res){
     wcq.getLeagueData(round);
     //await wcq.updateCoachScoringPoints(126587);
   }
-  res.redirect('/wcq/coach');
+  res.redirect('/');
 });
 
 
@@ -27,7 +27,7 @@ router.get('/updateleague/init', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
     league.getRebblData();
   }
-  res.redirect('/wcq');
+  res.redirect('/');
 });
 
 
@@ -39,7 +39,7 @@ router.get('/updateleague/:round', async function(req, res){
 
     league.getRebblData(round);
   }
-  res.redirect('/wcq');
+  res.redirect('/');
 });
 
 

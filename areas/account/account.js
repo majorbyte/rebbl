@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express')
-  , accountService = require("../../lib/accountService")
+  , accountService = require("../../lib/accountService.js")
   , router = express.Router();
 
 

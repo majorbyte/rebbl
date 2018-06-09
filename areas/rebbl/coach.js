@@ -1,5 +1,5 @@
 'use strict';
-const db = require('../../lib/leagueservice')
+const db = require('../../lib/LeagueService.js')
   , cache = require('memory-cache')
   , express = require('express')
   , router = express.Router();
