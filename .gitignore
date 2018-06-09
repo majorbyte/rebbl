@@ -88,3 +88,7 @@ $RECYCLE.BIN/
 # =========================
 .idea
 datastore
+
+# ignore stuff
+# =========================
+grunk

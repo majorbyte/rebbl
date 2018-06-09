@@ -1,5 +1,5 @@
 'use strict';
-const db = require('../../../lib/SignUpService')
+const db = require('../../../lib/SignUpService.js')
   , cache = require('memory-cache')
   , express = require('express')
   , router = express.Router();
