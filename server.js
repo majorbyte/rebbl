@@ -149,7 +149,7 @@ app.use(function(req, res,next){
   res.status(404).render('404', { url: req.originalUrl });
 });
 
-const port = process.env.NODE_ENV === 'production' ? process.env.NODE_ENV : 3000;
+const port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
 
 app.listen(port);
