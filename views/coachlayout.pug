@@ -1,0 +1,40 @@
+doctype html
+html
+  head
+    link(rel="stylesheet" href="/styles/style.css")
+    block scripts
+
+  block vars
+  - var title= (options && options.title) ? options.title : "REBBL"
+  - var activeSubMenu = (options && options.subMenu) ? options.subMenu : "matches"
+
+  body(class="en_US")
+    div(class="Wrap Background")
+      section(class="Section  Section--no-sides Section--thin-top u-bottomPadding--none")
+        #schedule
+          div(class="Schedule")
+            div(class="container")
+              div(class="col-sm-8" style="float:left;padding-left:0px")
+                h1= title
+              div(class="row u-bottomPadding--small-rebbl")
+            div(class="Tabs Tabs--rectangular")
+              div(class="Tabs-header-wrapper")
+                div(class="Tabs-header")
+                  div(class="Tabs-scroller-wrapper")
+                    div(class="Tabs-scroller")
+                      nav(class="Tabs-bar container")
+                        a(href="/account" class="Tabs-tab Tabs-tab--active") COACH
+                        a(href="/rebbl/Big O" class="Tabs-tab ") BIG O
+                        a(href="/rebbl/GMan" class="Tabs-tab " ) GMAN
+                        a(href="/rebbl/REL" class="Tabs-tab " ) REL
+                        a(href="/account" class="Tabs-tab") ACCOUNT
+            block navigation
+              div(class="Tabs Tabs--darkBackground")
+                 div(class="Tabs-header-wrapper")
+                   div(class="Tabs-header")
+                     div(class="Tabs-scroller-wrapper")
+                       div(class="Tabs-scroller")
+                         nav(class="Tabs-bar container")
+                           a(class="Tabs-tab" class="Tabs-tab" + (activeSubMenu == "team" ? " Tabs-tab--active" : "")  href="team"  style="padding-left:5px;padding-right:5px;") Team
+                           a(class="Tabs-tab" class="Tabs-tab" + (activeSubMenu == "matches" ? " Tabs-tab--active" : "")  href="matches"  style="padding-left:5px;padding-right:5px;") Matches
+            block content

@@ -1,0 +1,26 @@
+tr
+  td= team.teamname
+  td= team.value
+  td= team.cashspentinducements
+  td= team.nbsupporters
+  td
+   div(title="Total:(own half/opponents half)")
+    span= team.possessionball + "  ("
+    span= team.occupationown + "/"
+    span= team.occupationtheir + ")"
+  td= team.inflictedpasses
+  td= team.inflictedmeterspassing
+  td= team.inflictedinterceptions
+  td= team.inflictedmetersrunning
+  td
+  td= team.inflictedtackles
+  td= team.inflictedinjuries
+  td= team.sustainedinjuries
+  td= team.inflictedko
+  td= team.sustainedko
+  td= team.inflictedcasualties
+  td= team.sustainedcasualties
+  td= team.inflicteddead
+  td= team.sustaineddead
+  td= team.inflictedpushouts
+  td= team.sustainedexpulsions

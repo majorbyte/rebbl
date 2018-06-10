@@ -43,7 +43,8 @@ block content
                   - let cutoffs = league === "REL" ? [5,3,3,3,2,2,2,2,1,1,1,1,1] : (league === "GMan" ? [5,3,3,2,2,1,1,1,1,1] : [5,3,2,1,1])
                   each coach, y in div.sort(function(a,b){if(a.points > b.points) {return -1} if (b.points > a.points) {return 1} if (a.tddiff > b.tddiff) {return -1} if (b.tddiff > a.tddiff) {return 1} if(a.loss>b.loss){return 1} if(b.loss > a.loss){return -1} return 0; })
                     div(style="flex-grow:1;flex-basis:0")= y+1
-                    div(style="flex-grow:6;flex-basis:0;overflow:hidden")= coach.name
+                    div(style="flex-grow:6;flex-basis:0;overflow:hidden")
+                      a(href="/rebbl/coach/"+coach.id )= coach.name
                     div(style="flex-grow:6;flex-basis:0;overflow:hidden")= coach.team
                     div(style="flex-grow:6;flex-basis:0;overflow:hidden")= coach.race
                     div(style="flex-grow:2;flex-basis:0")= coach.points
