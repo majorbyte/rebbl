@@ -69,13 +69,13 @@ router.get('/change', ensureAuthenticated, async function(req, res){
       }
       return;
     }
-
+    let data = Object.assign(signup, account);
     switch(signup.saveType){
       case "existing":
-        res.render('signup/signup-existing', { user: signup || user});
+        res.render('signup/signup-existing', { user: data});
         break;
       case "reroll":
-        res.render('signup/signup-reroll', {user: signup});
+        res.render('signup/signup-reroll', {user: data});
         break;
       case "new":
         if(account){
@@ -96,9 +96,17 @@ router.get('/reroll', ensureAuthenticated, async function(req, res){
   try {
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
+    let account = await accountService.getAccount(req.user.name);
+
     if (user) {
       user.team = "";
       user.race = "";
+      signup.team = "";
+      signup.race = "";
+      if(account){
+        user = Object.assign(user, account);
+        signup = Object.assign(signup, account);
+      }
       res.render('signup/signup-reroll', { user: signup || user });
     }
     else {
