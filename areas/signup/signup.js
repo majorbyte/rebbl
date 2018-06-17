@@ -101,11 +101,13 @@ router.get('/reroll', ensureAuthenticated, async function(req, res){
     if (user) {
       user.team = "";
       user.race = "";
-      signup.team = "";
-      signup.race = "";
+      if(signup) {
+        signup.team = "";
+        signup.race = "";
+      }
       if(account){
         user = Object.assign(user, account);
-        signup = Object.assign(signup, account);
+        if(signup) signup = Object.assign(signup, account);
       }
       res.render('signup/signup-reroll', { user: signup || user });
     }
