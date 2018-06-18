@@ -23,7 +23,7 @@ const express = require('express')
   , session = require('express-session')
   , methodOverride = require('method-override')
   , bodyParser = require("body-parser")
-  , NedbStore = require('connect-nedb-session')(session)
+  , NedbStore = require('nedb-session-store')(session)
   , RedditStrategy = require('passport-reddit').Strategy;
 
 const REDDIT_CONSUMER_KEY = process.env['redditKey'];
@@ -129,7 +129,6 @@ app.use('/signup', require('./areas/signup/signup'));
 app.use('/auth', require('./areas/account/auth'));
 
 app.use('/coach', require('./areas/coach/coach'));
-
 
 app.get('/', function(req, res, next){
   res.redirect('/wcq');
