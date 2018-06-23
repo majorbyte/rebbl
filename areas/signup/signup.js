@@ -198,7 +198,7 @@ router.post('/resign-greenhorn', ensureAuthenticated, async function(req,res){
   }
 });
 
-router.get('/signups', /*cacheCheck,*/ async function(req,res){
+router.get('/signups', cacheCheck, async function(req,res){
   try{
     let signups = await signupService.getSignUps();
 
