@@ -10,22 +10,40 @@ block content
       div(class="container navcontainer" data-index="0")
         h1(class="u-no-text-transform u-verticalMargin--xx-small") Current Signups
 
-        div
-          h3 Currently&nbsp;
-            span(class="highlight")= signups.length
+
+
+        div(style="float:left")
+          span Currently&nbsp;
+            span(class="highlight")= signups.all.length
             span &nbsp;coaches have signed up.
-
-
-        div(style="grid-template-columns: auto;display:grid;")
+        - let races = ["Amazon","Bretonnian","Chaos","Chaos Dwarf","Dark Elf","Dwarf","Elven Union","Goblin","Halfling","High Elf","Human","Khemri","Kislev","Lizardman","Necromantic","Norse","Nurgle","Ogre","Orc","Skaven","Undead","Underworld Denizens","Vampire","Wood Elf"]
+        div(style="grid-template-columns: auto;display:grid;clear:both")
           div(class="table-striped TeamLabel-info")
-            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
+            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:75px")
+              div(style="white-space: nowrap;display: table-cell;width: 100px;" class="Standings-header") League
+              for race in races
+                div(style="display: table-cell;width: 10px;transform: rotate(-90deg);" class="Standings-header")= race.substr(0,3)
+            - let leagues = ["BIG O","GMAN","REL"]
+            for league in leagues
+              div(class="TableRow")
+                - let total = signups.grouped.reduce(function(p, c){ return c.league === league ? p + c.count : p; }, 0);
+                div(style="white-space: nowrap;display: table-cell;width: 100px;")= league
+                  span(class="highlight" style="float:right;margin-right:15px")= total
+                for race in races
+                  - let stat = signups.grouped.filter(function(a){ return a.league === league && a.race === race });
+                  div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat[0] ? stat[0].count: 0
+        br
+        br
+        div(style="grid-template-columns: auto;display:grid;clear:both")
+          div(class="table-striped TeamLabel-info")
+            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
               div(style="white-space: nowrap;display: table-cell;width: 250px;" class="Standings-header") Coach
               div(style="white-space: nowrap;display: table-cell;width: 350px;" class="Standings-header") Team
               div(style="white-space: nowrap;display: table-cell;width: 160px;" class="Standings-header") Race
               div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") League
               div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") State
               div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") Timezone
-            for signup, x in signups
+            for signup, x in signups.all
               div(class="TableRow")
                 div(style="white-space: nowrap;display: table-cell;width: 250px;")
                  a(href="/coach/"+encodeURIComponent(signup.coach))= signup.coach

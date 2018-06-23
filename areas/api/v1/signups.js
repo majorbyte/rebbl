@@ -1,5 +1,5 @@
 'use strict';
-const db = require('../../../lib/SignUpService.js')
+const db = require('../../../lib/signupService.js')
   , cache = require('memory-cache')
   , express = require('express')
   , router = express.Router();
@@ -15,7 +15,7 @@ router.get('/', ensureAuthenticated, async function(req, res, next){
   if (['FullMetalCOS', 'minorbyte', 'Harringzord', 'Miraskadu'].indexOf(req.user.name) === -1 ){
     next( new Error(403) );
   } else {
-    const data = await db.getSignups();
+    const data = await db.getSignUps().all;
 
     const csv = data.map(function(row){
       return `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.coach)},${JSON.stringify(row.league)},${JSON.stringify(row.competition || "")},${JSON.stringify(row.timezone)},${JSON.stringify(row.saveType)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.steam)}`;

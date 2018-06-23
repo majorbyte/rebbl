@@ -2,7 +2,7 @@
 
 const express = require('express')
   , cache = require('memory-cache')
-  , signupService = require('../../lib/SignUpService.js')
+  , signupService = require('../../lib/signupService.js')
   , accountService = require('../../lib/accountService.js')
   , router = express.Router();
 
@@ -198,11 +198,11 @@ router.post('/resign-greenhorn', ensureAuthenticated, async function(req,res){
   }
 });
 
-router.get('/signups', cacheCheck, async function(req,res){
+router.get('/signups', /*cacheCheck,*/ async function(req,res){
   try{
     let signups = await signupService.getSignUps();
 
-    signups = signups.sort(function(a,b){
+    signups.all = signups.all.sort(function(a,b){
 
       if(a.league > b.league) return 1;
       if(a.league < b.league) return -1;
