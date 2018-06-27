@@ -1,27 +1,10 @@
 'use strict';
 const db = require('../../lib/LeagueService.js')
-  , cache = require('memory-cache')
+  , util = require('../../lib/util.js')
   , express = require('express')
   , router = express.Router({mergeParams: true});
 
-
-const cacheCheck = function(req, res, next){
-  let key = req.originalUrl || req.url;
-  let cachedBody = cache.get(key);
-  if (cachedBody) {
-    res.send(cachedBody);
-  } else {
-    res.sendResponse = res.send;
-    res.send = (body) => {
-      cache.put(key, body);
-      res.sendResponse(body);
-    };
-    next();
-  }
-};
-
-
-router.get('/', cacheCheck, async function(req, res, next){
+router.get('/', util.checkCache, async function(req, res){
   let data = {standings:null, rounds:null, league:req.params.league };
   data.standings = await db.getCoachScore("REBBL - " + req.params.league, true);
   data.rounds = await db.getDivisions("REBBL - " + req.params.league);

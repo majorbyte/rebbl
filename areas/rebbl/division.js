@@ -1,26 +1,10 @@
 'use strict';
 const db = require('../../lib/LeagueService.js')
-  , cache = require('memory-cache')
+  , util = require('../../lib/util.js')
   , express = require('express')
   , router = express.Router({mergeParams: true});
 
-
-const cacheCheck = function(req, res, next){
-  let key = req.originalUrl || req.url;
-  let cachedBody = cache.get(key);
-  if (cachedBody) {
-    res.send(cachedBody);
-  } else {
-    res.sendResponse = res.send;
-    res.send = (body) => {
-      cache.put(key, body);
-      res.sendResponse(body);
-    };
-    next();
-  }
-};
-
-router.get('/', cacheCheck, async function(req,res,next) {
+router.get('/', util.checkCache, async function(req,res) {
   let data = {matches: null, divisions: null, league: req.params.league, competition: req.params.division};
   data.matches = await db.getLeagues({league: "REBBL - " + req.params.league, competition: req.params.division});
   data.divisions = await db.getDivisions("REBBL - " + req.params.league);
@@ -28,7 +12,7 @@ router.get('/', cacheCheck, async function(req,res,next) {
   res.render('rebbl/division/index', data);
 });
 
-router.get('/:week', cacheCheck, async function(req,res,next) {
+router.get('/:week', util.checkCache, async function(req,res) {
   let week = parseInt(req.params.week);
 
   if (week > 0){

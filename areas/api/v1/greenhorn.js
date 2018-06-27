@@ -1,17 +1,10 @@
 'use strict';
 const db = require('../../../lib/signupService.js')
-  , cache = require('memory-cache')
+  , util = require('../../../lib/util.js')
   , express = require('express')
   , router = express.Router();
 
-
-const ensureAuthenticated = function(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  req.session.returnUrl = req.baseUrl;
-  res.redirect('/account/login');
-};
-
-router.get('/', ensureAuthenticated, async function(req, res,next){
+router.get('/', util.ensureAuthenticated, async function(req, res,next){
 
   if (['FullMetalCOS', 'minorbyte', 'Harringzord', 'Miraskadu'].indexOf(req.user.name) === -1){
     next( new Error(403) );
