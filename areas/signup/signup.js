@@ -1,40 +1,12 @@
 'use strict';
 
 const express = require('express')
-  , cache = require('memory-cache')
+  , util = require('../../lib/util.js')
   , signupService = require('../../lib/signupService.js')
   , accountService = require('../../lib/accountService.js')
   , router = express.Router();
 
-
-// Simple route middleware to ensure user is authenticated.
-//   Use this route middleware on any resource that needs to be protected.  If
-//   the request is authenticated (typically via a persistent login session),
-//   the request will proceed.  Otherwise, the user will be redirected to the
-//   login page.
-const ensureAuthenticated = function(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  req.session.returnUrl = req.baseUrl;
-  res.redirect('/account/login');
-};
-
-const cacheCheck = function(req, res, next){
-  let key = req.originalUrl || req.url;
-  let cachedBody = cache.get(key);
-  if (cachedBody) {
-    res.send(cachedBody);
-  } else {
-    res.sendResponse = res.send;
-    res.send = (body) => {
-      cache.put(key, body);
-      res.sendResponse(body);
-    };
-    next();
-  }
-};
-
-
-router.get('/', ensureAuthenticated, async function(req, res){
+router.get('/', util.ensureAuthenticated, async function(req, res){
   try{
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
@@ -50,7 +22,7 @@ router.get('/', ensureAuthenticated, async function(req, res){
   }
 });
 
-router.get('/change', ensureAuthenticated, async function(req, res){
+router.get('/change', util.ensureAuthenticated, async function(req, res){
   try {
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
@@ -92,7 +64,7 @@ router.get('/change', ensureAuthenticated, async function(req, res){
   }
 });
 
-router.get('/reroll', ensureAuthenticated, async function(req, res){
+router.get('/reroll', util.ensureAuthenticated, async function(req, res){
   try {
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
@@ -121,7 +93,7 @@ router.get('/reroll', ensureAuthenticated, async function(req, res){
 
 
 
-router.post('/confirm-existing', ensureAuthenticated, async function(req, res){
+router.post('/confirm-existing',util.ensureAuthenticated, async function(req, res){
   try{
     //remove unwanted input
     delete req.body.coach;
@@ -136,7 +108,7 @@ router.post('/confirm-existing', ensureAuthenticated, async function(req, res){
   }
 });
 
-router.post('/confirm-reroll', ensureAuthenticated, async function(req, res){
+router.post('/confirm-reroll', util.ensureAuthenticated, async function(req, res){
   try{
     //remove unwanted input
     delete req.body.coach;
@@ -147,14 +119,15 @@ router.post('/confirm-reroll', ensureAuthenticated, async function(req, res){
     if (user.error){
       res.render('signup/signup-reroll', {user: user});
     } else {
-      res.render('signup/signup-confirmed-greenhorn', {user: user});
+      //res.render('signup/signup-confirmed-greenhorn', {user: user});
+      res.redirect('/signup');
     }
   } catch (err){
     console.log(err);
   }
 });
 
-router.post('/confirm-new', ensureAuthenticated, async function(req, res){
+router.post('/confirm-new', util.ensureAuthenticated, async function(req, res){
   try {
     req.body.saveType = "new";
     let user = await signupService.saveSignUp(req.user.name, req.body);
@@ -162,14 +135,15 @@ router.post('/confirm-new', ensureAuthenticated, async function(req, res){
     if (user.error){
       res.render('signup/signup-new-coach', {user: user});
     } else {
-      res.render('signup/signup-confirmed-greenhorn', {user: user});
+      //res.render('signup/signup-confirmed-greenhorn', {user: user});
+      res.redirect('/signup');
     }
   } catch (err){
     console.log(err);
   }
 });
 
-router.post('/confirm-greenhorn', ensureAuthenticated, async function(req, res){
+router.post('/confirm-greenhorn', util.ensureAuthenticated, async function(req, res){
   try{
     await signupService.saveGreenhornSignUp(req.user.name);
 
@@ -180,7 +154,7 @@ router.post('/confirm-greenhorn', ensureAuthenticated, async function(req, res){
 });
 
 
-router.post('/resign', ensureAuthenticated, async function(req,res){
+router.post('/resign', util.ensureAuthenticated, async function(req,res){
   try{
     await signupService.resign(req.user.name);
     res.redirect('/signup');
@@ -189,7 +163,7 @@ router.post('/resign', ensureAuthenticated, async function(req,res){
   }
 });
 
-router.post('/resign-greenhorn', ensureAuthenticated, async function(req,res){
+router.post('/resign-greenhorn', util.ensureAuthenticated, async function(req,res){
   try{
     await signupService.resignGreenhorn(req.user.name);
     res.redirect('/signup');
@@ -198,7 +172,18 @@ router.post('/resign-greenhorn', ensureAuthenticated, async function(req,res){
   }
 });
 
-router.get('/signups', cacheCheck, async function(req,res){
+router.post('/confirm', util.ensureAuthenticated, async function(req,res){
+  try{
+    await signupService.confirm(req.user.name);
+    res.redirect('/signup');
+  } catch (err){
+    console.log(err);
+  }
+});
+
+
+
+router.get('/signups', util.checkCache, async function(req,res){
   try{
     let signups = await signupService.getSignUps();
 

@@ -29,18 +29,27 @@ block content
             span= " to the following:"
           div
             h3= "REBBL SEASON 9 - " + user.league
+            - if(!user.teamExist)
+              div(class="warning")
+                p Your team is either misspelled or not yet existing
+              br
+
             form(action="/signup/change" method="get" style="float:left;margin-right:116px;")
               button(type="submit") Change
 
+            form(action="/signup/confirm" method="post" )
+              -if(user.confirmed)
+                span Thank you for confirming!
+              -else
+                button(type="submit") Confirm
+
             form(action="/signup/resign" method="post" )
+              br
               button(type="submit") Resign
 
           -if (user.greenHorn)
             div
               h3 THE GREENHORN CUP
-
-              form(action="/signup/resign-greenhorn" method="post")
-                  button(type="submit") Resign
 
           p Nagivate
            a(href="/signup/signups" class="highlighted-rules") &nbsp;here

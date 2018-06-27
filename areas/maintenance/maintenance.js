@@ -1,16 +1,10 @@
 'use strict';
 const league = require('../../lib/LeagueService.js')
   , wcq = require('../../lib/WorldCupQualifierService.js')
-  , team = require('../../lib/teamservice')
-  , cache = require('memory-cache')
+  , team = require('../../lib/TeamService.js')
+  , signUp = require('../../lib/signupService.js')
   , express = require('express')
   , router = express.Router();
-
-
-router.get('/cache', async function(req, res, next){
-  res.send(cache.keys());
-});
-
 
 router.get('/update/:round', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
@@ -46,6 +40,13 @@ router.get('/updateleague/:round', async function(req, res){
 router.get('/updateteams', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
     team.updateTeams();
+  }
+  res.redirect('/');
+});
+
+router.get('/checksignups', async function(req, res){
+  if (req.query.verify === process.env['verifyToken']){
+    signUp.checkTeams({'teamExist':false});
   }
   res.redirect('/');
 });
