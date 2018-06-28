@@ -47,6 +47,7 @@ router.get('/updateteams', async function(req, res){
 router.get('/checksignups', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
     signUp.checkTeams({'teamExist':false});
+    signUp.checkTeams({'teamExist':{ $exists: false }});
   }
   res.redirect('/');
 });
