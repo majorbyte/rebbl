@@ -79,7 +79,7 @@ app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views', "
 
 let sessionObject = {
   secret: 'keyboard cat'
-  , cookie: {}
+  , cookie: {maxAge:180*24*60*60*1000} // Let's start with half a year
   , resave: false
   , saveUninitialized: false
   , store: new NedbStore({ filename: 'datastore/sessions.db' })
