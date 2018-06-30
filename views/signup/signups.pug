@@ -32,6 +32,32 @@ block content
                 for race in races
                   - let stat = signups.grouped.filter(function(a){ return a.league === league && a.race === race });
                   div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat[0] ? stat[0].count: 0
+            div(class="TableRow")
+              - let _total = signups.grouped.reduce(function(p, c){ return p + c.count; }, 0);
+              div(style="white-space: nowrap;display: table-cell;width: 100px;") Total
+                span(class="highlight" style="float:right;margin-right:15px")= _total
+              for race in races
+                - let stat = signups.grouped.reduce(function(p, c){ return c.race === race ? p + c.count : p; }, 0);
+                div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat
+        br
+        - let data = ["existing", "reroll", "new"]
+        div(style="grid-template-columns: auto;display:grid;clear:both;width:400px;")
+          div(class="table-striped TeamLabel-info")
+            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
+              div(style="white-space: nowrap;display: table-cell;width: 100px;" class="Standings-header") League
+              for d in data
+                div(style="display: table-cell;width: 10px;;" class="Standings-header" title=race)= d
+            for league in leagues
+              div(class="TableRow")
+                div(style="white-space: nowrap;display: table-cell;width: 100px;")= league
+                for d in data
+                  - let stat = signups.all.reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0);
+                  div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat
+            div(class="TableRow")
+              div(style="white-space: nowrap;display: table-cell;width: 100px;") Total
+              for d in data
+                - let stat = signups.all.reduce(function(p, c){ return c.saveType === d ? p+1 : p; }, 0);
+                div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;")= stat
         br
         br
         div(style="grid-template-columns: auto;display:grid;clear:both")
