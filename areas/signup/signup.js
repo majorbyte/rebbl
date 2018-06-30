@@ -7,6 +7,11 @@ const express = require('express')
   , router = express.Router();
 
 router.get('/', util.ensureAuthenticated, async function(req, res){
+  res.render('signup/closed');
+});
+
+/*
+router.get('/', util.ensureAuthenticated, async function(req, res){
   try{
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
@@ -180,7 +185,7 @@ router.post('/confirm', util.ensureAuthenticated, async function(req,res){
     console.log(err);
   }
 });
-
+*/
 
 
 router.get('/signups', util.checkCache, async function(req,res){
