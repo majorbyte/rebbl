@@ -2,12 +2,11 @@ doctype html
 html(lang="en" xmlns="http://www.w3.org/1999/xhtml")
   head
     link(rel="stylesheet" href="/styles/style.css")
-  block vars
-  - var activeRound = (options && options.round) ? options.round : -1
-  - var renderRounds = (options && options.rounds) ? options.rounds : [1,2,3,4,5,6]
-  - var textRound =  (options && options.text) ? options.text : "Round "
-  - var active =  (options && options.active) ? options.active : "WCQ"
-  - var title= (options && options.title) ? options.title : "REBBL 2018 World Cup Qualifiers"
+  block scripts
+  block vars  
+  //- set default active top menu and title
+  - if (!active) { var active =  (options && options.active) ? options.active : "WCQ" }
+  - if (!title) { var title = (options && options.title) ? options.title : "REBBL 2018 World Cup Qualifiers" }
   body(class="en_US")
     div(class="Wrap Background")
       section(class="Section  Section--no-sides Section--thin-top u-bottomPadding--none")
@@ -28,15 +27,6 @@ html(lang="en" xmlns="http://www.w3.org/1999/xhtml")
                         a(href="/rebbl/GMan" class="Tabs-tab " + (active.toUpperCase() === "GMAN" ? "Tabs-tab--active" : "")) GMAN
                         a(href="/rebbl/REL" class="Tabs-tab " + (active.toUpperCase() === "REL" ? "Tabs-tab--active" : "")) REL
                         a(href="/rebbl/stunty" class="Tabs-tab " + (active.toUpperCase() === "STUNTY" ? "Tabs-tab--active" : "")) Stunty Cup
-                        a(href="/signup" class="Tabs-tab ") Account
+                        a(href="/signup" class="Tabs-tab " + (active.toUpperCase() === "ACCOUNT" ? "Tabs-tab--active" : "")) Account
             block navigation
-              div(class="Tabs Tabs--darkBackground")
-                div(class="Tabs-header-wrapper")
-                  div(class="Tabs-header")
-                    div(class="Tabs-scroller-wrapper")
-                      div(class="Tabs-scroller")
-                        nav(class="Tabs-bar container")
-                          a(href="/wcq" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
-                          each round in renderRounds
-                            a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/wcq/round/"+round)= textRound + round
             block content

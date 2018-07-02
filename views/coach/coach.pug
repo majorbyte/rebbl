@@ -1,7 +1,7 @@
-extends ..\accountlayout.pug
+extends ..\account\sublayout.pug
 
-block vars
-  - var options = {subMenu: "coach"}
+block append vars
+  - var activeSubMenu = "signups"
 
 block scripts
   script.

@@ -1,5 +1,8 @@
 //- coachDetail.pug
-extends ..\layout.pug
+extends sublayout.pug
+
+block append vars
+- var activeSubMenu = "signup"
 
 block content
   div(class="container")
