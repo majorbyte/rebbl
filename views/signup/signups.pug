@@ -1,8 +1,7 @@
-extend ..\accountlayout.pug
+extends ..\account\sublayout.pug
 
-block vars
-  - var options = {subMenu: "signups"}
-
+block append vars
+  - var activeSubMenu = "signups"
 
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")

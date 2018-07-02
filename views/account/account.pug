@@ -1,11 +1,10 @@
-extends ..\accountlayout.pug
+extends sublayout.pug
 
-block vars
-  - var options = {subMenu: "account"}
+block append vars
+  - var activeSubMenu = "account"
 
-block scripts
+block append scripts
   script.
-
     $(document).ready(function(){
       $("#timezone").on('change', function(e){
         $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
