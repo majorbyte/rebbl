@@ -86,9 +86,8 @@ let sessionObject = {
 };
 
 if (process.env.NODE_ENV === 'production'){
-  //app.set('trust proxy', 1) // trust first proxy
-  //TODO: why does this not work with true
-  sessionObject.cookie.secure = false; // serve secure cookies
+  app.set('trust proxy', 1) // trust first proxy
+  sessionObject.cookie.secure = true; // serve secure cookies
   sessionObject.secret =  process.env['sessionSecret'];
 }
 
