@@ -915,7 +915,7 @@ a:focus,a:hover {
   height: 250px;
 }
 
-.row.u-bottomPadding--small-rebbl{
+.u-bottomPadding--small-rebbl{
   height: 250px;
   background: #333333 url(/images/rebbl.png) no-repeat 99%;
   background-size: 350px;
@@ -1182,12 +1182,11 @@ label { display: block; }
   font-size: 20px;
 }
 
-/*
-let skills = document.querySelectorAll('.match-skills'); // Using a class instead, see note below.
-let stats = document.querySelectorAll('.match-stats');
-undefined
-skills.forEach(function(skill){skill.classList.toggle('toggle-skills')})
-undefined
-stats.forEach(function(stat){stat.classList.toggle('toggle-stats')})
-*/
 
+*{
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+
+.bg-rebbl {
+  background-color: #333333!important;
+}
