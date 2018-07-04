@@ -1,20 +1,50 @@
-//- coachDetail.pug
 extends ..\sublayout.pug
+block scripts
+  script(src="/scripts/jquery-3.3.1.slim.min.js")
+  script(src="/scripts/popper-1.14.3.min.js")
+  script(src="/scripts/bootstrap.min.js")
+  script.
+    $(document).ready(function(){
+      $('.dropdown-item').click(function(){
+          let classes = this.className.split(' ');
+          let season = classes.find(function(e){return e.toLowerCase().indexOf("season")>-1;});
+          $('.Season').hide();
+          $('.'+season).show();
+          $("#"+$(this).parent().attr('aria-labelledby')).text($(this).text());
+          $(this).parent().parent().addClass('active');
+      });
+    });
+      
 block vars
-  - var options = {active: league, title: "REBBL SEASON 8"}
-
-
+  - let options = {active: league, title: "REBBL SEASON 8"}
+  - let seasons = []
+  for div, x in standings
+    - let season = div[0].competition.substr(0,9)
+    - if(seasons.indexOf(season) === -1) seasons.push(season)
+    
 block navigation
-  div(class="Tabs Tabs--darkBackground")
-    div(class="Tabs-header-wrapper")
-      div(class="Tabs-header")
-        div(class="Tabs-scroller-wrapper")
-          div(class="Tabs-scroller")
-            nav(class="Tabs-bar container")
-              a(href="/rebbl/" + league class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") style="padding-left:5px;padding-right:5px" ) Standings
+  nav(class="navbar navbar-expand-md navbar-dark bg-dark bg-rebbl" style="top:-50px")
+    div(class="container")
+      a(class="navbar-brand" href="#") Standings
+        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation")
+          span(class="navbar-toggler-icon")
+      div(class="collapse navbar-collapse")
+        ul(class="navbar-nav mr-auto")
+          li( class="nav-item active")
+            div(class="nav-link") display 
+          li( class="nav-item dropdown")
+            a(class="nav-link dropdown-toggle" href="https://example.com" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Season
+            div(class="dropdown-menu" aria-labelledby="dropdownSeason")
+              each season in seasons
+                a(class="dropdown-item " + season.replace(' ', '')  href="#")= season
+          li( class="nav-item active")
+            div(class="nav-link") navigate to 
+          li( class="nav-item dropdown")
+            a(class="nav-link dropdown-toggle" href="https://example.com" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Division
+            div(class="dropdown-menu" aria-labelledby="dropdownDivision")
               each round in rounds.sort(function(a,b){return a > b ? 1: -1})
-                a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/rebbl/"+league + "/" + round style="padding-left:5px;padding-right:5px")= round.replace("Season 8 - Division","div").replace("Season 8 ","")
-
+                - let season = round.substr(0,9).replace(' ', '')
+                a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")
     div(class="/*TexturedBackground TexturedBackground--light-primary*/")
@@ -24,7 +54,7 @@ block content
           -let i = -1
           for div, x in standings
             - i++
-            div(class="table-striped TeamLabel-info")
+            div(class=`table-striped TeamLabel-info Season ${div[0].competition.substr(0,9).replace(' ','')} `)
               div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
                 div(title="" class="Standings-details Standings-header")= div[0].competition
               div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
@@ -74,4 +104,3 @@ block content
                       div(style="flex-grow:2;flex-basis:0" class="Standings-divider--flex")
                         span(class="Standings-dividerText--correction")
                       div(style="display:block;width:100%;height:0;") &nbsp;
-              br

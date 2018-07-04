@@ -1,26 +1,60 @@
 //- coachDetail.pug
 extends ..\sublayout.pug
+block scripts
+  script(src="/scripts/jquery-3.3.1.slim.min.js")
+  script(src="/scripts/popper-1.14.3.min.js")
+  script(src="/scripts/bootstrap.min.js")
+  script.
+    $(document).ready(function(){
+      $('.dropdown-item').click(function(){
+          debugger;
+          let classes = this.className.split(' ');
+          let season = classes.find(function(e){return e.toLowerCase().indexOf("season")>-1;});
+          $('.Season').hide();
+          $('.'+season).show();
+          $("#"+$(this).parent().attr('aria-labelledby')).text($(this).text());
+          $(this).parent().parent().addClass('active');
+      });
+    });
 block vars
   - var options = {active: league, title: "REBBL SEASON 8"}
+  - let seasons = []
+  for div, x in divisions
+    - let season = div.substr(0,9)
+    - if(seasons.indexOf(season) === -1) seasons.push(season)  
 
 block navigation
-  div(class="Tabs Tabs--darkBackground")
-    div(class="Tabs-header-wrapper")
-      div(class="Tabs-header")
-        div(class="Tabs-scroller-wrapper")
-          div(class="Tabs-scroller")
-            nav(class="Tabs-bar container")
-              a(href="/rebbl/" + league class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") style="padding-left:5px;padding-right:5px" ) Standings
-              each div in divisions.sort(function(a,b){return a > b ? 1: -1})
-                a(class="Tabs-tab"  + (competition == div ? " Tabs-tab--active" : "") href="/rebbl/"+league + "/" + div style="padding-left:5px;padding-right:5px")= div.replace("Season 8 - Division","div").replace("Season 8 ","")
-  div(class="Tabs Tabs--darkBackground")
-    div(class="Tabs-header-wrapper")
-      div(class="Tabs-header")
-        div(class="Tabs-scroller-wrapper")
-          div(class="Tabs-scroller")
-            nav(class="Tabs-bar container")
+  nav(class="navbar navbar-expand-md navbar-dark bg-dark bg-rebbl" style="top:-50px")
+    div(class="container")
+      a(class="navbar-brand" href=".") Standings
+        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation")
+          span(class="navbar-toggler-icon")
+      div(class="collapse navbar-collapse")
+        ul(class="navbar-nav mr-auto")
+          li( class="nav-item active")
+            div(class="nav-link") display 
+          li( class="nav-item dropdown")
+            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Season
+            div(class="dropdown-menu" aria-labelledby="dropdownSeason")
+              each season in seasons
+                a(class="dropdown-item " + season.replace(' ', '')  href="#")= season
+          li( class="nav-item active")
+            div(class="nav-link") navigate to 
+          li( class="nav-item dropdown")
+            a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Division
+            div(class="dropdown-menu" aria-labelledby="dropdownDivision")
+              each round in divisions.sort(function(a,b){return a > b ? 1: -1})
+                -let season = round.substr(0,9).replace(' ','') 
+                a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round
+          li( class="nav-item active")
+            div(class="nav-link") week                  
+          li( class="nav-item dropdown")
+            a(class="nav-link dropdown-toggle" href="#" id="dropdowWeek" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Week
+            div(class="dropdown-menu" aria-labelledby="dropdowWeek")
               for week, x in matches
-                a(class="Tabs-tab"  href="#" + x  style="padding-left:5px;padding-right:5px;")= "Week " + x
+                a(class=`dropdown-item Season ${season}`   href=`#${x}`)=  x
+
+
 
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")

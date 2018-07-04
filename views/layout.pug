@@ -1,32 +1,36 @@
 doctype html
-html(lang="en" xmlns="http://www.w3.org/1999/xhtml")
-  head
-    link(rel="stylesheet" href="/styles/style.css")
+html(lang="en")
+  block head
+    head
+      link(rel="stylesheet" href="/styles/bootstrap.min.css")
+      link(rel="stylesheet" href="/styles/style.css")
   block scripts
   block vars  
-  //- set default active top menu and title
+    //- set default active top menu and title
   - if (!active) { var active =  (options && options.active) ? options.active : "WCQ" }
   - if (!title) { var title = (options && options.title) ? options.title : "REBBL 2018 World Cup Qualifiers" }
-  body(class="en_US")
-    div(class="Wrap Background")
-      section(class="Section  Section--no-sides Section--thin-top u-bottomPadding--none")
-        #schedule
-          div(class="Schedule")
-            div(class="container")
-              div(class="col-sm-8" style="float:left;padding-left:0px")
-                h1= title
-              div(class="row u-bottomPadding--small")
-            div(class="Tabs Tabs--rectangular")
-              div(class="Tabs-header-wrapper")
-                div(class="Tabs-header")
-                  div(class="Tabs-scroller-wrapper")
-                    div(class="Tabs-scroller")
-                      nav(class="Tabs-bar container")
-                        a(href="/wcq" class="Tabs-tab " + (active === "WCQ" ? "Tabs-tab--active" : "")) WCQ 2018
-                        a(href="/rebbl/Big O" class="Tabs-tab " + (active.toUpperCase() === "BIG O" ? "Tabs-tab--active" : "")) BIG O
-                        a(href="/rebbl/GMan" class="Tabs-tab " + (active.toUpperCase() === "GMAN" ? "Tabs-tab--active" : "")) GMAN
-                        a(href="/rebbl/REL" class="Tabs-tab " + (active.toUpperCase() === "REL" ? "Tabs-tab--active" : "")) REL
-                        a(href="/rebbl/stunty" class="Tabs-tab " + (active.toUpperCase() === "STUNTY" ? "Tabs-tab--active" : "")) Stunty Cup
-                        a(href="/signup" class="Tabs-tab " + (active.toUpperCase() === "ACCOUNT" ? "Tabs-tab--active" : "")) Account
-            block navigation
-            block content
+  
+  block body
+    body(class="en_US")
+      div(class="Wrap Background")
+        section(class="Section  Section--no-sides Section--thin-top u-bottomPadding--none")
+          #schedule
+            div(class="Schedule")
+              div(class="container")
+                div(class="col-sm-8" style="float:left;padding-left:0px;background-color: #333333;height: 250px;")
+                  h1= title
+                div(class="u-bottomPadding--small-rebbl" style="    margin-left: -40px;margin-right: -40px;")
+              div(class="Tabs Tabs--rectangular")
+                div(class="Tabs-header-wrapper")
+                  div(class="Tabs-header")
+                    div(class="Tabs-scroller-wrapper")
+                      div(class="Tabs-scroller")
+                        nav(class="Tabs-bar container")
+                          a(href="/rebbl/Big O" class="Tabs-tab " + (active.toUpperCase() === "BIG O" ? "Tabs-tab--active" : "")) BIG O
+                          a(href="/rebbl/GMan" class="Tabs-tab " + (active.toUpperCase() === "GMAN" ? "Tabs-tab--active" : "")) GMAN
+                          a(href="/rebbl/REL" class="Tabs-tab " + (active.toUpperCase() === "REL" ? "Tabs-tab--active" : "")) REL
+                          a(href="/rebbl/stunty" class="Tabs-tab " + (active.toUpperCase() === "STUNTY" ? "Tabs-tab--active" : "")) Stunty Cup
+                          a(href="/wcq" class="Tabs-tab " + (active === "WCQ" ? "Tabs-tab--active" : "")) WCQ 2018
+                          a(href="/signup" class="Tabs-tab " + (active.toUpperCase() === "ACCOUNT" ? "Tabs-tab--active" : "")) Account
+              block navigation
+              block content
