@@ -1,0 +1,26 @@
+extends ..\layout.pug 
+
+block prepend vars
+  - var title = "REBBL"
+  - var active = "account"
+  - var activeSubMenu = "signup"
+
+block append scripts
+  script(src="https://cdn2.rebbl.net/scripts/zepto.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/moment.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/moment-timezone.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/moment-timezone-with-data-2012-2022.min.js")
+  
+block navigation
+  div(class="Tabs Tabs--darkBackground")
+    div(class="Tabs-header-wrapper")
+      div(class="Tabs-header")
+        div(class="Tabs-scroller-wrapper")
+          div(class="Tabs-scroller")
+            nav(class="Tabs-bar container")
+              - console.log(user);
+              if user && user.signedUp
+                a(href="/account" class="Tabs-tab" + (activeSubMenu == "account" ? " Tabs-tab--active" : "")  ) Account
+              a(href="/signup" class="Tabs-tab" + (activeSubMenu == "signup" ? " Tabs-tab--active" : "")  ) Sign up
+              a(href="/signup/signups" class="Tabs-tab" + (activeSubMenu == "signups" ? " Tabs-tab--active" : "") ) Signups
+

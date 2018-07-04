@@ -1,18 +1,7 @@
 //- coachDetail.pug
-extends ..\..\layout.pug
-block vars
-  - var options = {rounds : rounds, round: round}
+extends ..\sublayout.pug
 
-block navigation
-  div(class="Tabs Tabs--darkBackground")
-    div(class="Tabs-header-wrapper")
-      div(class="Tabs-header")
-        div(class="Tabs-scroller-wrapper")
-          div(class="Tabs-scroller")
-            nav(class="Tabs-bar container")
-              a(href="/wcq" class="Tabs-tab" + (activeRound == 0 ? " Tabs-tab--active" : "") ) Standings
-              each round in renderRounds
-                a(class="Tabs-tab"  + (activeRound == round ? " Tabs-tab--active" : "") href="/wcq/round/"+round)= textRound + round
+block append navigation
   div(class="Tabs Tabs--darkBackground")
      div(class="Tabs-header-wrapper")
        div(class="Tabs-header")
