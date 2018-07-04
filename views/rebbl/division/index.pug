@@ -26,30 +26,30 @@ block vars
 block navigation
   nav(class="navbar navbar-expand-md navbar-dark bg-dark bg-rebbl" style="top:-50px")
     div(class="container")
-      a(class="navbar-brand" href=".") Standings
+      a(class="navbar-brand" href=".") STANDINGS
         button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation")
           span(class="navbar-toggler-icon")
       div(class="collapse navbar-collapse")
         ul(class="navbar-nav mr-auto")
           li( class="nav-item active")
-            div(class="nav-link") display 
+            div(class="nav-link") DISPLAY 
           li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Season
+            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
             div(class="dropdown-menu" aria-labelledby="dropdownSeason")
               each season in seasons
-                a(class="dropdown-item " + season.replace(' ', '')  href="#")= season
+                a(class="dropdown-item " + season.replace(' ', '')  href="#")= season.toUpperCase()
           li( class="nav-item active")
-            div(class="nav-link") navigate to 
+            div(class="nav-link") NAVIGATE TO
           li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Division
+            a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
             div(class="dropdown-menu" aria-labelledby="dropdownDivision")
               each round in divisions.sort(function(a,b){return a > b ? 1: -1})
                 -let season = round.substr(0,9).replace(' ','') 
-                a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round
+                a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
           li( class="nav-item active")
-            div(class="nav-link") week                  
+            div(class="nav-link") WEEK                  
           li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdowWeek" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Week
+            a(class="nav-link dropdown-toggle" href="#" id="dropdowWeek" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") WEEK
             div(class="dropdown-menu" aria-labelledby="dropdowWeek")
               for week, x in matches
                 a(class=`dropdown-item Season ${season}`   href=`#${x}`)=  x
