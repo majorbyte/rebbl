@@ -6,11 +6,27 @@ const express = require('express')
   , accountService = require('../../lib/accountService.js')
   , router = express.Router();
 
+  /*
 router.get('/', util.ensureAuthenticated, async function(req, res){
   res.render('signup/closed');
+});*/
+
+router.post('/confirm-rampup',util.ensureAuthenticated, async function(req, res){
+  try {
+    req.body.saveType = "rampup";
+    let user = await signupService.saveSignUp(req.user.name, req.body);
+
+    if (user.error){
+      res.render('signup/signup-rampup', {user: user});
+    } else {
+      res.redirect('/signup');
+    }
+  } catch (err){
+    console.log(err);
+  }
 });
 
-/*
+
 router.get('/', util.ensureAuthenticated, async function(req, res){
   try{
     let user = await signupService.getExistingTeam(req.user.name);
@@ -40,9 +56,11 @@ router.get('/change', util.ensureAuthenticated, async function(req, res){
 
     if (!signup){
       if(account){
-        res.render('signup/signup-new-coach', {user: {account: account}});
+        //res.render('signup/signup-new-coach', {user: {account: account}});
+        res.render('signup/signup-rampup', {user: {account: account}});
       } else {
-        res.render('signup/signup-new-coach', {user: req.user.name});
+        //res.render('signup/signup-new-coach', {user: req.user.name});
+        res.render('signup/signup-rampup', {user: req.user.name});
       }
       return;
     }
@@ -60,15 +78,21 @@ router.get('/change', util.ensureAuthenticated, async function(req, res){
         }
         res.render('signup/signup-new-coach', {user: signup});
         break;
+      case "rampup":
+        if(account){
+          signup.account = account;
+        }
+        res.render('signup/signup-rampup', {user: signup});
+        break;
       default:
-        res.render('signup/signup-new-coach', {user: req.user.name});
+        res.render('signup/signup-rampup', {user: req.user.name});
         break;
     }
   } catch (err){
     console.log(err);
   }
 });
-
+/*
 router.get('/reroll', util.ensureAuthenticated, async function(req, res){
   try {
     let user = await signupService.getExistingTeam(req.user.name);
