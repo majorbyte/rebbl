@@ -113,25 +113,7 @@ app.use('/robots.txt', express.static(path.join(__dirname, 'robots.txt')));
 // parse request bodies (req.body)
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api', require('./areas/api/api'));
-
-app.use('/maintenance', require('./areas/maintenance/maintenance'));
-
-app.use('/wcq', require('./areas/wcq/wcq'));
-
-app.use('/rebbl', require('./areas/rebbl/rebbl'));
-
-app.use('/account', require('./areas/account/account'));
-
-app.use('/signup', require('./areas/signup/signup'));
-
-app.use('/auth', require('./areas/account/auth'));
-
-app.use('/coach', require('./areas/coach/coach'));
-
-app.get('/', function(req, res, next){
-  res.redirect('/wcq');
-});
+app.use('/', require('./areas/routes.js'));
 
 app.use(function(err, req, res, next){
   // log it
