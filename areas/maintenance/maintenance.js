@@ -32,6 +32,11 @@ router.get('/updateleague', async function(req, res){
   res.redirect('/');
 });
 
+router.get('/correctsurfs', async function(req, res){
+  league.correctSurf();
+  res.redirect('/');
+});
+
 
 router.get('/updateteams', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
