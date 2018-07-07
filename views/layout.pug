@@ -4,8 +4,9 @@ html(lang="en")
     head
       link(rel="stylesheet" href="/styles/bootstrap.min.css")
       link(rel="stylesheet" href="/styles/style.css")
+  block vars
   block scripts
-  block vars  
+  
     //- set default active top menu and title
   - if (!active) { var active =  (options && options.active) ? options.active : "WCQ" }
   - if (!title) { var title = (options && options.title) ? options.title : "REBBL 2018 World Cup Qualifiers" }
