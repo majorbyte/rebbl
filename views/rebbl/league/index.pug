@@ -1,4 +1,12 @@
 extends ..\sublayout.pug
+block vars
+  - let options = {active: league, title: "REBBL SEASON 8"}
+  - let seasons = []
+  for div, x in standings
+    - let season = div[0].competition.substr(0,9)
+    - if(seasons.indexOf(season) === -1) seasons.push(season)
+  - seasons = seasons.sort(function(a,b){ return a > b ? -1 :1})
+
 block scripts
   script(src="/scripts/jquery-3.3.1.slim.min.js")
   script(src="/scripts/popper-1.14.3.min.js")
@@ -13,14 +21,12 @@ block scripts
           $("#"+$(this).parent().attr('aria-labelledby')).text($(this).text());
           $(this).parent().parent().addClass('active');
       });
+      let seasons = ["!{seasons.join('\",\"')}"];
+      $('.Season').hide();
+      $('.'+seasons[0].replace(' ','')).show();
+      $("#dropdownSeason").text(seasons[0]);
+      $("#dropdownSeason").parent().addClass('active');
     });
-      
-block vars
-  - let options = {active: league, title: "REBBL SEASON 8"}
-  - let seasons = []
-  for div, x in standings
-    - let season = div[0].competition.substr(0,9)
-    - if(seasons.indexOf(season) === -1) seasons.push(season)
     
 block navigation
   nav(class="navbar navbar-expand-md navbar-dark bg-dark bg-rebbl" style="top:-50px")
@@ -33,16 +39,16 @@ block navigation
           li( class="nav-item active")
             div(class="nav-link") DISPLAY 
           li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="https://example.com" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
+            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
             div(class="dropdown-menu" aria-labelledby="dropdownSeason")
               each season in seasons
                 a(class="dropdown-item " + season.replace(' ', '')  href="#")= season.toUpperCase()
           li( class="nav-item active")
             div(class="nav-link") NAVIGATE TO
           li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="https://example.com" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
+            a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
             div(class="dropdown-menu" aria-labelledby="dropdownDivision")
-              each round in rounds.sort(function(a,b){return a > b ? 1: -1})
+              each round in rounds.sort(function(a,b){return a.replace('10','') > b.replace('10','') ? 1: -1})
                 - let season = round.substr(0,9).replace(' ', '')
                 a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
 block content
