@@ -1,7 +1,7 @@
 'use strict';
 const league = require('../../lib/LeagueService.js')
   , wcq = require('../../lib/WorldCupQualifierService.js')
-  , team = require('../../lib/TeamService.js')
+  , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , express = require('express')
   , router = express.Router();
@@ -38,6 +38,26 @@ router.get('/updateteams', async function(req, res){
   }
   res.redirect('/');
 });
+/*
+router.get('/updateteams/init', async function(req, res){
+  //if (req.query.verify === process.env['verifyToken']){
+   //await team.initTemas();
+   await team.fixPastPlayers();
+   //await team.fixTeamStats();
+  //}
+  res.redirect('/');
+});
+
+router.get('/updateteams/test', async function(req, res){
+  
+  let match = await league.getMatchDetails('10004cb93f')
+
+  await team.updateTeamsAfterMatch(match);
+  //if (req.query.verify === process.env['verifyToken']){
+  //}
+  res.redirect('/');
+});*/
+
 
 router.get('/checksignups', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){

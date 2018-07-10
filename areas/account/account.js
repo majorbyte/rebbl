@@ -2,7 +2,7 @@
 
 const express = require('express')
   , accountService = require("../../lib/accountService.js")
-  , teamService = require("../../lib/LeagueService.js")
+  , leagueService = require("../../lib/LeagueService.js")
   , util = require('../../lib/util.js')
   , router = express.Router();
 
@@ -26,7 +26,7 @@ router.get('/login', function(req, res){
 
 router.get('/match',util.ensureAuthenticated, async function(req, res){
   try{
-    let match = await teamService.getUpcomingMatch(req.user.name);
+    let match = await leagueService.getUpcomingMatch(req.user.name);
 
     res.render('account/match',{match: match} );
   } catch(err){
