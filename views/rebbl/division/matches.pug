@@ -1,4 +1,4 @@
-- let url = match.match_uuid ? "/rebbl/match/" + match.match_uuid : "#"
+- let url = match.match_uuid ? `/rebbl/match/${ match.match_uuid }` : `/rebbl/match/unplayed/${match.contest_id}`
 a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
   div(class="MatchRow-team")
     div(class="TeamLabel TeamLabel--reverse")
