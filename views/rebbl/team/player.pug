@@ -2,8 +2,8 @@
 - let playerPos  = player.number > 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
 - let playerId = playerPos === "" ? playerName.replace(/ /g,'') : player.id 
 - let cls = (player.active && player.casualties_sustained && (player.casualties_sustained.length === 1 && player.casualties_sustained[0] !== "BadlyHurt" )) ? "player-out" : ""
-tr(class=""+cls data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId) 
-  td()= player.number
+tr(class="stats "+cls data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId) 
+  td= player.number
   td= playerName
   td= playerPos
   td= player.attributes.ma
