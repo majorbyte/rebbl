@@ -26,9 +26,9 @@ router.get('/updateleague/init', async function(req, res){
 
 
 router.get('/updateleague', async function(req, res){
-  if (req.query.verify === process.env['verifyToken']){
+  //if (req.query.verify === process.env['verifyToken']){
     league.getRebblData();
-  }
+  //}
   res.redirect('/');
 });
 
