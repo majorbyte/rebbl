@@ -1190,3 +1190,11 @@ label { display: block; }
 .bg-rebbl {
   background-color: #333333!important;
 }
+
+.player-out {
+  background-color: #ab072566 !important;
+}
+
+.playerStats{
+  display:none;
+}

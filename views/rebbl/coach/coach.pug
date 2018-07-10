@@ -10,8 +10,13 @@ block content
 
         div(class="ScheduleMatchList")
           div(class="MatchSchedule")
-            each match, index in matches.sort(function(a,b){return a.match_id < b.match_id ? 1 : -1;})
-              br
-              div(class="MatchRow MatchRow-match MatchRow-header" )= match.competition + ' - ' + match.round
-              div(class="MatchRow MatchRow-match" )
-                include matches.pug
+            - if (matches)
+              each match, index in matches.sort(function(a,b){return a.match_id < b.match_id ? 1 : -1;})
+                br
+                div(class="MatchRow MatchRow-match MatchRow-header" )= match.competition + ' - ' + match.round
+                div(class="MatchRow MatchRow-match" )
+                  include matches.pug
+            - if (teams)
+              each team, index in teams.sort(function(a,b){return a.team.id > b.team.id ? -1 :1})
+                include team.pug
+              
