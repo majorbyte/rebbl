@@ -1198,3 +1198,21 @@ label { display: block; }
 .playerStats{
   display:none;
 }
+.col-12 table img {
+  width: 32px;
+}
+
+.stats:hover{
+  color: #00a0ea;
+}
+
+@media (max-width: 576px) { .headerText{font-size: 0.3em;} }
+
+@media (min-width: 768px) { .headerText{font-size: 0.5em;} }
+
+@media (min-width: 992px) { .headerText{font-size: 0.6em;} }
+
+@media (min-width: 1200px) { .headerText{font-size: 0.75em;} }
+
+@media (min-width: 1600px) { .headerText{font-size: 1em;} }
+
