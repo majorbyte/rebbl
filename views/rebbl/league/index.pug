@@ -6,6 +6,7 @@ block vars
     - let season = div[0].competition.substr(0,9)
     - if(seasons.indexOf(season) === -1) seasons.push(season)
   - seasons = seasons.sort(function(a,b){ return a > b ? -1 :1})
+  - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 block scripts
   script(src="/scripts/jquery-3.3.1.slim.min.js")
@@ -48,7 +49,7 @@ block navigation
           li( class="nav-item dropdown")
             a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
             div(class="dropdown-menu" aria-labelledby="dropdownDivision")
-              each round in rounds.sort(function(a,b){return a.replace('10','') > b.replace('10','') ? 1: -1})
+              each round in rounds.sort(collator.compare)
                 - let season = round.substr(0,9).replace(' ', '')
                 a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
 block content
