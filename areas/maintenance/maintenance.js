@@ -34,7 +34,8 @@ router.get('/updateleague', async function(req, res){
 
 router.get('/updateteams', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
-    team.updateTeams();
+    if (req.query.id) team.updateTeams(parseInt(req.query.id));
+    else team.updateTeams();
   }
   res.redirect('/');
 });
