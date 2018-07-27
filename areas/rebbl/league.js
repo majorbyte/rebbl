@@ -11,7 +11,6 @@ router.get('/', util.checkCache, async function(req, res){
   data.rounds = await db.getDivisions("REBBL - " + req.params.league);
 
   data.cutoffs = configuration.getPlayoffTickets(req.params.league);
-  console.dir(data);
   res.render('rebbl/league/index', data);
 });
 

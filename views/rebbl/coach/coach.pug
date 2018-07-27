@@ -1,6 +1,20 @@
-extends ..\..\coachlayout.pug
+extends ..\..\layout.pug
 
+block vars
+  - var options = {active: "coach", title: " "}
 
+block additionalMainNavigation
+  a(href="/coach" class="Tabs-tab Tabs-tab--active") COACH
+  
+block navigation
+  div(class="Tabs Tabs--darkBackground")
+     div(class="Tabs-header-wrapper")
+       div(class="Tabs-header")
+         div(class="Tabs-scroller-wrapper")
+           div(class="Tabs-scroller")
+             nav(class="Tabs-bar container")
+               a(class="Tabs-tab" class="Tabs-tab" + (activeSubMenu == "teams" ? " Tabs-tab--active" : "")  href="teams"  style="padding-left:5px;padding-right:5px;") Teams
+               a(class="Tabs-tab" class="Tabs-tab" + (activeSubMenu == "matches" ? " Tabs-tab--active" : "")  href="matches"  style="padding-left:5px;padding-right:5px;") Matches
 
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")
