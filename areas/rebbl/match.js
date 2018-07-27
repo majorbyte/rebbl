@@ -5,7 +5,7 @@ const
   , express = require('express')
   , router = express.Router();
 
-router.get('/unplayed/:match_id', util.checkCache, async function(req, res, next){
+router.get('/unplayed/:match_id', async function(req, res, next){
   try{
     let match = await leagueService.getUnplayedMatch(req.params.match_id);
 
