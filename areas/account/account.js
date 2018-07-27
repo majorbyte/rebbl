@@ -14,7 +14,13 @@ router.get('/', util.ensureAuthenticated, async function(req, res){
   try{
     let user = await accountService.getAccount(req.user.name);
 
-    res.render('account/account', { user: user });
+    if (!user){
+      res.redirect('/signup');
+    } else {
+      res.render('account/account', { user: user });
+    }
+
+
   } catch(err){
     console.log(err);
   }

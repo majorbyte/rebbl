@@ -58,9 +58,16 @@ block content
       div(class="container navcontainer" data-index="0")
         h1(class="u-no-text-transform u-verticalMargin--xx-small")= "Standings " + league
         div(class="League-Standings")
+          -let seasonName = ""
           -let i = -1
           for div, x in standings
             - i++
+            -let config = cutoffs.find((c) => div[0].competition.toLowerCase().indexOf(c.name) > -1 )
+            - if (seasonName !== config.name)
+              - seasonName = config.name
+              - i = 0
+            -let cutoff = config.cutoff[i]
+
             div(class=`table-striped TeamLabel-info Season ${div[0].competition.substr(0,9).replace(' ','')} `)
               div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
                 div(title="" class="Standings-details Standings-header")= div[0].competition
@@ -77,7 +84,6 @@ block content
                   div(style="flex-grow:2;flex-basis:0;font-size: 1.25em;overflow:hidden") P
                   div(style="flex-grow:2;flex-basis:0;font-size: 1.25em;overflow:hidden") TD diff
                   div(style="display:block;width:100%;height:0;") &nbsp;
-                  - let cutoffs = league === "REL" ? [5,3,3,3,2,2,2,2,1,1,1,1,1] : (league === "GMan" ? [5,3,3,2,2,1,1,1,1,1] : [5,3,2,1,1])
                   each coach, y in div.sort(function(a,b){if(a.points > b.points) {return -1} if (b.points > a.points) {return 1} if (a.tddiff > b.tddiff) {return -1} if (b.tddiff > a.tddiff) {return 1} if(a.loss>b.loss){return 1} if(b.loss > a.loss){return -1} return 0; })
                     div(style="flex-grow:1;flex-basis:0")= y+1
                     div(style="flex-grow:6;flex-basis:0;overflow:hidden")
@@ -92,7 +98,7 @@ block content
                     div(style="flex-grow:2;flex-basis:0")= coach.games
                     div(style="flex-grow:2;flex-basis:0")= coach.tddiff
                     div(style="display:block;width:100%;height:0;") &nbsp;
-                    - if (y+1 == cutoffs[i])
+                    - if (y+1 == cutoff)
                       div(style="flex-grow:1;flex-basis:0" class="Standings-divider--flex")
                         span(class="Standings-dividerText--correction")
                       div(style="flex-grow:6;flex-basis:0;margin-top:0px" class="Standings-divider--flex" )
