@@ -50,51 +50,47 @@ block content
       thead(class="headerText")
         tr 
           th
-          th CAS
-          th catch
-          th dead
-          th injuries
-          th interc.
-          th ko
-          th passing (m)
-          th running (m)
-          th passes
-          th pushouts
-          th stuns
           th tackles
+          th injuries
+          th stuns
+          th ko
+          th CAS
+          th dead
+          th running (m)
+          th passing (m)
+          th passes
+          th interc.
           th touchdowns
+          th surfs
       tbody
         tr
           td inflicted
-          td= team.stats ? team.stats.inflictedcasualties : 0
-          td= team.stats ? team.stats.inflictedcatches : 0
-          td= team.stats ? team.stats.inflicteddead : 0
-          td= team.stats ? team.stats.inflictedinjuries : 0
-          td= team.stats ? team.stats.inflictedinterceptions : 0
-          td= team.stats ? team.stats.inflictedko : 0
-          td= team.stats ? team.stats.inflictedmeterspassing : 0
-          td= team.stats ? team.stats.inflictedmetersrunning : 0
-          td= team.stats ? team.stats.inflictedpasses : 0
-          td= team.stats ? team.stats.inflictedpushouts : 0
-          td= team.stats ? team.stats.inflictedstuns : 0
           td= team.stats ? team.stats.inflictedtackles : 0
+          td= team.stats ? team.stats.inflictedinjuries : 0
+          td= team.stats ? team.stats.inflictedstuns : 0
+          td= team.stats ? team.stats.inflictedko : 0
+          td= team.stats ? team.stats.inflictedcasualties : 0
+          td= team.stats ? team.stats.inflicteddead : 0
+          td= team.stats ? team.stats.inflictedmetersrunning : 0
+          td= team.stats ? team.stats.inflictedmeterspassing : 0
+          td= team.stats ? team.stats.inflictedpasses : 0
+          td= team.stats ? team.stats.inflictedinterceptions : 0
           td= team.stats ? team.stats.inflictedtouchdowns : 0
-  
+          td= team.stats ? team.stats.inflictedpushouts : 0
         tr  
           td sustained
-          td= team.stats ? team.stats.sustainedcasualties:0
-          td= team.stats ? team.stats.sustainedcatches:0
-          td= team.stats ? team.stats.sustaineddead:0
-          td= team.stats ? team.stats.sustainedinjuries:0
-          td= team.stats ? team.stats.sustainedinterceptions:0
-          td= team.stats ? team.stats.sustainedko:0
-          td= team.stats ? team.stats.sustainedmeterspassing : 0
-          td= team.stats ? team.stats.sustainedmetersrunning : 0
-          td= team.stats ? team.stats.sustainedpasses : 0
-          td= team.stats ? team.stats.sustainedpushouts:0
-          td= team.stats ? team.stats.sustainedstuns:0
           td= team.stats ? team.stats.sustainedtackles:0
+          td= team.stats ? team.stats.sustainedinjuries:0
+          td= team.stats ? team.stats.sustainedstuns:0
+          td= team.stats ? team.stats.sustainedko:0
+          td= team.stats ? team.stats.sustainedcasualties:0
+          td= team.stats ? team.stats.sustaineddead:0
+          td= team.stats ? team.stats.sustainedmetersrunning : 0
+          td= team.stats ? team.stats.sustainedmeterspassing : 0
+          td= team.stats ? team.stats.sustainedpasses : 0
+          td= team.stats ? team.stats.sustainedinterceptions:0
           td= team.stats ? team.stats.sustainedtouchdowns:0
+          td= team.stats ? team.stats.sustainedpushouts:0
 
     br
     nav
