@@ -5,25 +5,46 @@ block scripts
   script(src="/scripts/popper-1.14.3.min.js")
   script(src="/scripts/bootstrap.min.js")
 
+block vars
+  - var options = {active: "team", title: " "}
 
+block additionalMainNavigation
+  a(href="/coach" class="Tabs-tab Tabs-tab--active") TEAM
 block content
   div(class="container")
     h1= team.team.name
     div(class="row" style="margin-left:0px")
-      div(class="col col-2")
-        strong Cash earned
-      div(class="col col-2")
-        strong= team.stats ? team.stats.cashearned :0
+      div(class="col col-3")
+        strong current TV
+      div(class="col col-3")
+        strong= team.team.value  
+      div(class="col col-3")
+        strong Total cash earned
+      div(class="col col-3")
+        strong= (team.stats ? team.stats.cashearned/1000 :0) + "k"
     div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col col-3")
+        strong next match TV
+      div(class="col col-3")
+        strong= team.team.nextMatchTV  
+      div(class="col col-3")
         strong Spiralling Expenses
-      div(class="col col-2")
+      div(class="col col-3")
         strong=  team.stats ? team.stats.spirallingexpenses:0
     div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col col-3")
+        strong actual TV
+      div(class="col col-3")
+        strong= team.team.actualTV  
+      div(class="col col-3")
         strong Audience
-      div(class="col col-2")
+      div(class="col col-3")
         strong= team.stats ? team.stats.nbsupporters:0
+    div(class="row" style="margin-left:0px")
+      div(class="col col-3")
+        strong cash
+      div(class="col col-3")
+        strong= team.team.cash/1000 + "k"  
 
     table(class="table table-striped") 
       thead(class="headerText")

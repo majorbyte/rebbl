@@ -37,6 +37,11 @@ block content
         h3 
           a(href=`/rebbl/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
     div(class="row justify-content-center")
+      div(class="col-4 text-right")= match.opponents[0].team.team.nextMatchTV
+      div(class="col-2 text-center") 
+        strong team value
+      div(class="col-4")= match.opponents[1].team.team.nextMatchTV
+    div(class="row justify-content-center")
       div(class="col-4 text-right")= match.opponents[0].team.race
       div(class="col-2 text-center") 
         strong race
