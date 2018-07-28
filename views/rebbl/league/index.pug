@@ -2,9 +2,10 @@ extends ..\sublayout.pug
 block vars
   - let options = {active: league, title: "REBBL SEASON 8"}
   - let seasons = []
-  for div, x in standings
-    - let season = div[0].competition.substr(0,9)
-    - if(seasons.indexOf(season) === -1) seasons.push(season)
+  - if (league !== "One Minute")
+    for div, x in standings
+      - let season = div[0].competition.substr(0,9)
+      - if(seasons.indexOf(season) === -1) seasons.push(season)
   - seasons = seasons.sort(function(a,b){ return a > b ? -1 :1})
   - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
@@ -23,10 +24,12 @@ block scripts
           $(this).parent().parent().addClass('active');
       });
       let seasons = ["!{seasons.join('\",\"')}"];
-      $('.Season').hide();
-      $('.'+seasons[0].replace(' ','')).show();
-      $("#dropdownSeason").text(seasons[0]);
-      $("#dropdownSeason").parent().addClass('active');
+      if (seasons.length > 0 && seasons[0] !== ""){
+        $('.Season').hide();
+        $('.'+seasons[0].replace(' ','')).show();
+        $("#dropdownSeason").text(seasons[0]);
+        $("#dropdownSeason").parent().addClass('active');
+      }
     });
     
 block navigation
@@ -63,10 +66,10 @@ block content
           for div, x in standings
             - i++
             -let config = cutoffs.find((c) => div[0].competition.toLowerCase().indexOf(c.name) > -1 )
-            - if (seasonName !== config.name)
+            - if (config && seasonName !== config.name)
               - seasonName = config.name
               - i = 0
-            -let cutoff = config.cutoff[i]
+            -let cutoff = config ? config.cutoff[i] : -1;
 
             div(class=`table-striped TeamLabel-info Season ${div[0].competition.substr(0,9).replace(' ','')} `)
               div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
