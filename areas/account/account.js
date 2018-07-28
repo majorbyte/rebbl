@@ -32,7 +32,7 @@ router.get('/login', function(req, res){
 
 router.get('/match',util.ensureAuthenticated, async function(req, res){
   try{
-    let match = await leagueService.getUpcomingMatch('archxl' );//req.user.name);
+    let match = await leagueService.getUpcomingMatch(req.user.name);
 
     res.render('account/match',{match: match} );
   } catch(err){
