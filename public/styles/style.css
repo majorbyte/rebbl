@@ -952,6 +952,7 @@ a:focus,a:hover {
   display:table;
   border-collapse: collapse;
   width: 100%;
+  margin-bottom: 15px;
 }
 
 .table-striped>*:nth-child(even) {
