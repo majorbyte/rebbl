@@ -5,7 +5,7 @@ tr
   // player
   td
     div
-      - if( player.xp + player.xp_gain > levels[player.level+1] )
+      - if( player.xp + player.xp_gain >= levels[player.level+1] )
         img(src="https://cdn2.rebbl.net/images/level.png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
       - else
         img(src="https://cdn2.rebbl.net/images/skills/" + player.level + ".png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
@@ -43,6 +43,7 @@ tr
   // SPP
   td(class="match-stats")
     div= player.xp_gain
-
+  td(class="match-stats")
+    div= `${player.xp + player.xp_gain}/${levels[player.level+1]}`
 //
   td(class="")

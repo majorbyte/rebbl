@@ -114,6 +114,7 @@ block content
               th(scope="col") MVP
               th(scope="col") Skills
               th(scope="col") CAS
+              th(scope="col") SPP
           tbody
             each player in roster.filter(function(a){return a.active})
               include player.pug
@@ -133,6 +134,7 @@ block content
               th(scope="col") MVP
               th(scope="col") Skills
               th(scope="col") CAS
+              th(scope="col") SPP
           tbody
             each player in roster.filter(function(a){return !a.active && a.id})
               include player.pug
@@ -152,6 +154,7 @@ block content
               th(scope="col") MVP
               th(scope="col") Skills
               th(scope="col") CAS
+              th(scope="col") SPP
           tbody
             each player in roster.filter(function(a){return !a.active && !a.id})
               include player.pug          
