@@ -20,6 +20,7 @@ block scripts
           let season = classes.find(function(e){return e.toLowerCase().indexOf("season")>-1;});
           $('.Season').hide();
           $('.'+season).show();
+          $(".title").text($(this).text());
           $("#"+$(this).parent().attr('aria-labelledby')).text($(this).text());
           $(this).parent().parent().addClass('active');
       });
@@ -29,6 +30,7 @@ block scripts
         $('.'+seasons[0].replace(' ','')).show();
         $("#dropdownSeason").text(seasons[0]);
         $("#dropdownSeason").parent().addClass('active');
+        $(".title").text(seasons[0]);
       }
     });
     

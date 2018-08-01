@@ -10,7 +10,7 @@ router.get('/unplayed/:match_id', async function(req, res, next){
   try{
     let match = await leagueService.getUnplayedMatch(req.params.match_id);
 
-    res.render('account/match',{match: match} );
+    res.render('account/match',{matches: match} );
   } catch(err){
     console.log(err);
   }
