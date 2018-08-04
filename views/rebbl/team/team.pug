@@ -1,52 +1,79 @@
 extends ..\..\layout.pug
-
 block scripts
   script(src="/scripts/jquery-3.3.1.slim.min.js")
   script(src="/scripts/popper-1.14.3.min.js")
   script(src="/scripts/bootstrap.min.js")
 
 block vars
-  - var options = {active: "team", title: " "}
+  - let stadiumDescription = {"astrogranit":"+1 on Armour rolls when a player falls while going for it.", "bazar":"During the Inducements phase, both teams receive a Wizard at no cost", "elfturf":"-1 on Armour rolls when a player falls while going for it.", "foodarea":"The 'Throw a Rock' and 'Get the Ref' kick-off events are cancelled.","nuffle":"During the Inducements phase, Star Players cost 50k less","refereearea":"During the Inducements phase, both teams receive a Bribe at no cost.","refreshmentarea":"+1 on Injury rolls when a player is pushed off the pitch (crowdsurf)", "roof":"The weather always starts as 'Nice' and the 'Changing Weather' kick-off event is cancelled.","securityarea":"The 'Riot' and 'Pitch Invasion' Kick-off events are cancelled.","viparea":"Double all gains and losses of Fan Factor." }
+  - let sponsor = team.team.cards.find(function(a) { return a.type === "Sponsor" }) 
+  - var options = {active: "team", title: " ", img:`https://cdn2.rebbl.net/images/sponsors/${sponsor ? sponsor.name.toLowerCase(): "none"}.png`}
 
 block additionalMainNavigation
   a(href="/coach" class="Tabs-tab Tabs-tab--active") TEAM
 block content
   div(class="container")
     h1= team.team.name
-    h3(style="margin-top: -20px;")
+      - let building = team.team.cards.find(function(a) { return a.type === "Building" }) 
+      div(class="float-right")
+        -if (team.team.apothecary > 0)
+          img(src=`https://cdn2.rebbl.net/images/apothecary.png` class="align-top" )
+        - let necro = team.team.cards.find(function(a) { return a.name  === "Necromancer" })
+        - if( necro)
+          img(src=`https://cdn2.rebbl.net/images/necromancer.png` class="align-top")
+        - if (building)
+          img(src=`https://cdn2.rebbl.net/images/stadium/${building.name.toLowerCase()}.png` title=`${stadiumDescription[building.name.toLowerCase()]}` class="align-top")
+    h3(style="margin-top: 0px;")
       i= team.team.leitmotiv
+    div(class="clearfix")
     div(class="row" style="margin-left:0px")
-      div(class="col col-3")
-        strong current TV
-      div(class="col col-3")
+      div(class="col col-2")
+        strong Current TV
+      div(class="col col-2")
         strong= team.team.value  
+      div(class="col col-2")
+        strong Fan Factor
+      div(class="col col-1")
+        strong= team.team.popularity
       div(class="col col-3")
         strong Total cash earned
-      div(class="col col-3")
+      div(class="col col-2")
         strong= (team.stats ? team.stats.cashearned/1000 :0) + "k"
     div(class="row" style="margin-left:0px")
-      div(class="col col-3")
-        strong next match TV
-      div(class="col col-3")
+      div(class="col col-2")
+        strong Next match TV
+      div(class="col col-2")
         strong= team.team.nextMatchTV  
+      div(class="col col-2")
+        strong Rerolls
+      div(class="col col-1")
+        strong= team.team.rerolls  
       div(class="col col-3")
         strong Spiralling Expenses
-      div(class="col col-3")
-        strong=  team.stats ? team.stats.spirallingexpenses:0
+      div(class="col col-2")
+        strong=  (team.stats ? team.stats.spirallingexpenses/1000 :0) + "k"
     div(class="row" style="margin-left:0px")
-      div(class="col col-3")
-        strong actual TV
-      div(class="col col-3")
+      div(class="col col-2")
+        strong Actual TV
+      div(class="col col-2")
         strong= team.team.actualTV  
+      div(class="col col-2")
+        strong Cheerleader
+      div(class="col col-1")
+        strong= team.team.cheerleaders
       div(class="col col-3")
         strong Audience
-      div(class="col col-3")
-        strong= team.stats ? team.stats.nbsupporters:0
+      div(class="col col-2")
+        strong= (team.stats ? team.stats.nbsupporters/1000 :0) + "k"
     div(class="row" style="margin-left:0px")
-      div(class="col col-3")
-        strong cash
-      div(class="col col-3")
+      div(class="col col-2")
+        strong Cash
+      div(class="col col-2")
         strong= team.team.cash/1000 + "k"  
+      div(class="col col-2")
+        strong Assistant
+      div(class="col col-1")
+        strong= team.team.assistantcoaches 
 
     table(class="table table-striped") 
       thead(class="headerText")
@@ -117,6 +144,7 @@ block content
               th(scope="col") Skills
               th(scope="col") CAS
               th(scope="col") SPP
+              th(scope="col") Value
           tbody
             each player in roster.filter(function(a){return a.active})
               include player.pug
