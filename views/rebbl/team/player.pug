@@ -30,5 +30,7 @@ tr(class="stats "+cls data-toggle="collapse" data-target="#"+playerId  aria-expa
     - if((player.casualties_sustained && player.casualties_sustained[0] === "Dead") &&( player.casualties_state && player.casualties_state.indexOf("Dead") === -1) )    
       img(src="https://cdn2.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
   td= `${player.xp}/${levels[player.level+1]}`    
+  - if (player.value > 0)
+    td= player.value
 include playerstats.pug
         

@@ -19,7 +19,11 @@ html(lang="en")
             div(class="Schedule")
               div(class="container")
                 div(class="col-sm-8" style="float:left;padding-left:0px;background-color: #333333;height: 250px;")
-                  h1(class="title")= title
+                  - if (options && options.img)
+                    h1(style="margin-top:10px;margin-bottom:0px") Sponsored by:
+                    img(src= options.img)
+                  -else  
+                    h1(class="title")= title
                 div(class="u-bottomPadding--small-rebbl" style="    margin-left: -40px;margin-right: -40px;")
               div(class="Tabs Tabs--rectangular")
                 div(class="Tabs-header-wrapper")
