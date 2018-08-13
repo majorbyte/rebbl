@@ -908,7 +908,7 @@ a:focus,a:hover {
   background: #ffffff00 url(/images/rebbl.png) no-repeat 99%;
   background-size: 12em;
   right: 5px;
-  position: absolute;
+  position: fixed;
   top:0px;
   z-index: 9999;
 }
@@ -1144,8 +1144,8 @@ label { display: block; }
 
 
 .TeamLabel-logo-skill{
-  width: 36px;
-  height: 36px;
+  width: 36px !important;
+  height: 36px !important;
   border-radius: 5px;
 
 }
@@ -1190,6 +1190,12 @@ label { display: block; }
 }
 .col-12 table img {
   width: 32px;
+  height: 32px;
+}
+
+.match-stats img{
+  width: 48px !important;
+  height: 48px !important; 
 }
 
 .stats:hover{
@@ -1262,9 +1268,9 @@ body {
 -------------------------------------------------- */
 
 /* Carousel base class */
-.carousel {
+/*.carousel {
   margin-bottom: 4rem;
-}
+}*/
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
   bottom: 3rem;
