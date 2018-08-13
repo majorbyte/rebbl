@@ -5,7 +5,7 @@ const db = require('../../../lib/LeagueService.js')
   , router = express.Router({mergeParams: true});
 
 router.get('/:league', util.checkCache, async function(req, res){
-  let standings = await db.getCoachScore("REBBL - " + req.params.league);
+  let standings = await db.getCoachScore("REBBL[\\s-]+" + req.params.league);
 
 
   res.sendResponse(

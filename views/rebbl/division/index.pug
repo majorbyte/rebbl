@@ -1,9 +1,6 @@
 //- coachDetail.pug
 extends ..\sublayout.pug
 block scripts
-  script(src="/scripts/jquery-3.3.1.slim.min.js")
-  script(src="/scripts/popper-1.14.3.min.js")
-  script(src="/scripts/bootstrap.min.js")
   script.
     $(document).ready(function(){
       $('.dropdown-item').click(function(){
@@ -20,42 +17,26 @@ block scripts
 block vars
   - var options = {active: league, title: league}
   - let seasons = []
-  - if (league !== "One Minute")
+  - if (league !== "One Minute")  
     for div, x in divisions
       - let season = div.substr(0,9)
       - if(seasons.indexOf(season) === -1) seasons.push(season)  
   - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 block navigation
-  nav(class="navbar navbar-expand-md navbar-dark bg-dark bg-rebbl" style="top:-50px")
-    div(class="container")
-      a(class="navbar-brand" href=".") STANDINGS
-        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation")
-          span(class="navbar-toggler-icon")
-      div(class="collapse navbar-collapse")
-        ul(class="navbar-nav mr-auto")
-          li( class="nav-item active")
-            div(class="nav-link") DISPLAY 
-          li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
-            div(class="dropdown-menu" aria-labelledby="dropdownSeason")
-              each season in seasons
-                a(class="dropdown-item " + season.replace(' ', '')  href="#")= season.toUpperCase()
-          li( class="nav-item active")
-            div(class="nav-link") NAVIGATE TO
-          li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
-            div(class="dropdown-menu" aria-labelledby="dropdownDivision")
-              each round in divisions.sort(collator.compare)
-                -let season = round.substr(0,9).replace(' ','') 
-                a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
-          li( class="nav-item active")
-            div(class="nav-link") WEEK                  
-          li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdowWeek" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") WEEK
-            div(class="dropdown-menu" aria-labelledby="dropdowWeek")
-              for week, x in matches
-                a(class=`dropdown-item Season ${season}`   href=`#${x}`)=  x
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav mr-auto")
+        li( class="nav-item active")
+          div(class="nav-link") SCROLLL TO WEEK                  
+        li( class="nav-item dropdown")
+          a(class="nav-link dropdown-toggle" href="#" id="dropdowWeek" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") WEEK
+          div(class="dropdown-menu" aria-labelledby="dropdowWeek")
+            for week, x in matches
+              a(class=`dropdown-item Season ${season}`   href=`#${x}`)=  x
 
 
 
@@ -68,7 +49,8 @@ block content
           for week, x in matches
             br
             div(class="table-striped TeamLabel-info")
-              div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
-                div(title="" class="Standings-details Standings-header" id= x )= "Week " + x
+              div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
+                a(name=x style="padding-top:160px;margin-top:-160px" href=`/rebbl/${league}/${competition}/${x}`)
+                  div(title="" class="Standings-details Standings-header highlight" )= "Week " + x
               each match, y in week
                 include matches.pug

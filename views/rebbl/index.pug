@@ -1,0 +1,101 @@
+extends .\sublayout.pug
+block vars
+  - let options = {active: league, title: "REBBL SEASON 8"}
+
+block scripts
+  script.
+
+block content
+  div(id="myCarousel" class="carousel slide" data-ride="carousel")
+    ol(class="carousel-indicators")
+      li( data-target="#myCarousel" data-slide-to="0" class="")
+      li( data-target="#myCarousel" data-slide-to="1" class="active")
+      li( data-target="#myCarousel" data-slide-to="2" class="")
+    div(class="carousel-inner")
+      each article, x in articles      
+        div(class="carousel-item " + (x === 0 ? "active" : ""))
+          div(class="container")
+            div(class="carousel-caption text-left")
+              div(class="row col-12")
+                h1(style="margin-bottom:0px")= article.title
+              div(class="row col-12")
+                div(class="col-12")
+                  p(style="margin:0")= article.text
+              div(class="col-2 float-right")
+                span(class="") -
+                  i= article.writer
+              div(class="row col-12")
+                a(class="btn btn-lg btn-default" href=`http://news.rebbl.net/${article.link}`  target="_blank" role="button") Continue Reading ... 
+   
+    a(class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev")
+      span(class="carousel-control-prev-icon" aria-hidden="true")
+      span(class="sr-only") Previous
+    
+    a(class="carousel-control-next" href="#myCarousel" role="button" data-slide="next")
+      span(class="carousel-control-next-icon" aria-hidden="true")
+      span(class="sr-only") Next
+    
+  
+  - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+  - let seasonName = ""
+  - let i = -1
+  div(class=`container`)
+    h1 Current playoff tickets contesters
+    div(class="row col-12")
+      div(class="col-4")
+        h2
+          a(href=`/rebbl/Big O`  class="highlight") BIG O
+        div(class="season-table")  
+          div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
+            div(class="col-12" ) Coach
+          for div, x in bigo
+            - i++
+            -let config = bigocut.find((c) => div[0].competition.toLowerCase().indexOf(c.name) > -1 )
+            - if (config && seasonName !== config.name)
+              - seasonName = config.name
+              - i = 0
+            -let cutoff = config ? config.cutoff[i] : -1;
+            div(class="row col-12 season-table-row")
+              each coach, y in div
+                - if (y+1 <= cutoff)
+                  div(class="col-6")
+                    a(href=`/rebbl/team/${coach.teamId}` )= coach.name
+      - seasonName = ""
+      div(class="col-4")
+        h2
+          a(href=`/rebbl/GMan`  class="highlight") Gman
+        div(class="season-table")  
+          div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
+            div(class="col-6" ) Coach
+            div(class="col-6" ) Coach
+          for div, x in gman
+            - i++
+            -let config = gmancut.find((c) => div[0].competition.toLowerCase().indexOf(c.name) > -1 )
+            - if (config && seasonName !== config.name)
+              - seasonName = config.name
+              - i = 0
+            -let cutoff = config ? config.cutoff[i] : -1;
+            div(class="row col-12 season-table-row")
+              each coach, y in div
+                - if (y+1 <= cutoff)
+                  div(class="col-6")
+                    a(href=`/rebbl/team/${coach.teamId}` )= coach.name
+      - seasonName = ""
+      div(class="col-4")
+        h2
+          a(href=`/rebbl/REL`  class="highlight") REL
+        div(class="season-table")  
+          div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
+            div(class="col-12" ) Coach
+          for div, x in rel
+            - i++
+            -let config = relcut.find((c) => div[0].competition.toLowerCase().indexOf(c.name) > -1 )
+            - if (config && seasonName !== config.name)
+              - seasonName = config.name
+              - i = 0
+            -let cutoff = config ? config.cutoff[i] : -1;
+            div(class="row col-12 season-table-row")
+              each coach, y in div
+                - if (y+1 <= cutoff)
+                  div(class="col-6")
+                    a(href=`/rebbl/team/${coach.teamId}` )= coach.name

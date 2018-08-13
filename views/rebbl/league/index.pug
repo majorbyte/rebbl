@@ -10,9 +10,6 @@ block vars
   - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 block scripts
-  script(src="/scripts/jquery-3.3.1.slim.min.js")
-  script(src="/scripts/popper-1.14.3.min.js")
-  script(src="/scripts/bootstrap.min.js")
   script.
     $(document).ready(function(){
       $('.dropdown-item').click(function(){
@@ -35,13 +32,13 @@ block scripts
     });
     
 block navigation
-  nav(class="navbar navbar-expand-md navbar-dark bg-dark bg-rebbl" style="top:-50px")
-    div(class="container")
-      a(class="navbar-brand" href="#") STANDINGS
-        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation")
-          span(class="navbar-toggler-icon")
-      div(class="collapse navbar-collapse")
-        ul(class="navbar-nav mr-auto")
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav mr-auto")
+        - if (seasons.length > 0 )
           li( class="nav-item active")
             div(class="nav-link") DISPLAY 
           li( class="nav-item dropdown")
@@ -49,77 +46,63 @@ block navigation
             div(class="dropdown-menu" aria-labelledby="dropdownSeason")
               each season in seasons
                 a(class="dropdown-item " + season.replace(' ', '')  href="#")= season.toUpperCase()
-          li( class="nav-item active")
-            div(class="nav-link") NAVIGATE TO
-          li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
-            div(class="dropdown-menu" aria-labelledby="dropdownDivision")
-              each round in rounds.sort(collator.compare)
-                - let season = round.substr(0,9).replace(' ', '')
-                a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
+        li( class="nav-item active")
+          div(class="nav-link") NAVIGATE TO
+        li( class="nav-item dropdown")
+          a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
+          div(class="dropdown-menu" aria-labelledby="dropdownDivision")
+            each round in rounds.sort(collator.compare)
+              - let season = round.substr(0,9).replace(' ', '')
+              a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
 block content
-  div(class="Background u-bottomPadding--large u-topPadding--medium")
-    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
-      div(class="container navcontainer" data-index="0")
-        h1(class="u-no-text-transform u-verticalMargin--xx-small")= "Standings " + league
-        div(class="League-Standings")
-          -let seasonName = ""
-          -let i = -1
-          for div, x in standings
-            - i++
-            -let config = cutoffs.find((c) => div[0].competition.toLowerCase().indexOf(c.name) > -1 )
-            - if (config && seasonName !== config.name)
-              - seasonName = config.name
-              - i = 0
-            -let cutoff = config ? config.cutoff[i] : -1;
-
-            div(class=`table-striped TeamLabel-info Season ${div[0].competition.substr(0,9).replace(' ','')} `)
-              div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
-                div(title="" class="Standings-details Standings-header")= div[0].competition
-              div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
-                div(style="display:flex; flex-direction:row;flex-wrap:wrap")
-                  div(style="flex-grow:1;flex-basis:0;font-size: 1.25em") #
-                  div(style="flex-grow:6;flex-basis:0;font-size: 1.25em") Coach
-                  div(style="flex-grow:6;flex-basis:0;font-size: 1.25em") Team
-                  div(style="flex-grow:6;flex-basis:0;font-size: 1.25em") Race
-                  div(style="flex-grow:2;flex-basis:0;font-size: 1.25em") Pts.
-                  div(style="flex-grow:2;flex-basis:0;font-size: 1.25em") W
-                  div(style="flex-grow:2;flex-basis:0;font-size: 1.25em") D
-                  div(style="flex-grow:2;flex-basis:0;font-size: 1.25em") L
-                  div(style="flex-grow:2;flex-basis:0;font-size: 1.25em;overflow:hidden") P
-                  div(style="flex-grow:2;flex-basis:0;font-size: 1.25em;overflow:hidden") TD diff
-                  div(style="display:block;width:100%;height:0;") &nbsp;
-                  each coach, y in div
-                    div(style="flex-grow:1;flex-basis:0")= y+1
-                    div(style="flex-grow:6;flex-basis:0;overflow:hidden")
-                      a(href=`/rebbl/coach/${coach.id}` )= coach.name
-                    div(style="flex-grow:6;flex-basis:0;overflow:hidden")
-                      a(href=`/rebbl/team/${coach.teamId}` )= coach.team
-                    div(style="flex-grow:6;flex-basis:0;overflow:hidden")= coach.race
-                    div(style="flex-grow:2;flex-basis:0")= coach.points
-                    div(style="flex-grow:2;flex-basis:0")= coach.win
-                    div(style="flex-grow:2;flex-basis:0")= coach.draw
-                    div(style="flex-grow:2;flex-basis:0")= coach.loss
-                    div(style="flex-grow:2;flex-basis:0")= coach.games
-                    div(style="flex-grow:2;flex-basis:0")= coach.tddiff
-                    div(style="display:block;width:100%;height:0;") &nbsp;
-                    - if (y+1 == cutoff)
-                      div(style="flex-grow:1;flex-basis:0" class="Standings-divider--flex")
-                        span(class="Standings-dividerText--correction")
-                      div(style="flex-grow:6;flex-basis:0;margin-top:0px" class="Standings-divider--flex" )
-                        span(class="Standings-dividerText")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
-                      div(style="flex-grow:6;flex-basis:0" class="Standings-divider--flex")
-                        span(class="Standings-dividerText--correction")
-                      div(style="flex-grow:2;flex-basis:0" class="Standings-divider--flex")
-                        span(class="Standings-dividerText--correction")
-                      div(style="flex-grow:2;flex-basis:0" class="Standings-divider--flex")
-                        span(class="Standings-dividerText--correction")
-                      div(style="flex-grow:2;flex-basis:0" class="Standings-divider--flex")
-                        span(class="Standings-dividerText--correction")
-                      div(style="flex-grow:2;flex-basis:0" class="Standings-divider--flex")
-                        span(class="Standings-dividerText--correction")
-                      div(style="flex-grow:2;flex-basis:0" class="Standings-divider--flex")
-                        span(class="Standings-dividerText--correction")
-                      div(style="flex-grow:2;flex-basis:0" class="Standings-divider--flex")
-                        span(class="Standings-dividerText--correction")
-                      div(style="display:block;width:100%;height:0;") &nbsp;
+  -let seasonName = ""
+  -let i = -1
+  for div, x in standings
+    - i++
+    -let config = cutoffs.find((c) => div[0].competition.toLowerCase().indexOf(c.name) > -1 )
+    - if (config && seasonName !== config.name)
+      - seasonName = config.name
+      - i = 0
+    -let cutoff = config ? config.cutoff[i] : -1;
+    div(class=`container Season ${div[0].competition.substr(0,9).replace(' ','')} `)
+      div(class="row col-12")
+        h2
+         a(href=`/rebbl/${league}/${div[0].competition}`  class="highlight")= div[0].competition
+      div(class="season-table")  
+        div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
+          div(class="row col-6" style="font-size:1.25em")
+            div(class="col-1" ) #
+            div(class="col-4" ) Coach
+            div(class="col-7" ) Team
+          div(class="col-2" style="font-size:1.25em") Race
+          div(class="row col-4" style="font-size:1.25em")
+            div(class="col-2" ) Pts.
+            div(class="col-2") W  
+            div(class="col-2") D  
+            div(class="col-2") L  
+            div(class="col-2") P
+            div(class="col-2 text-right") ΔTD
+        each coach, y in div
+          div(class="row col-12 season-table-row")
+            div(class="row col-6")
+              div(class="col-1" )= y+1
+              div(class="col-4" style=";overflow:hidden") 
+                a(href=`/rebbl/coach/${coach.id}` )= coach.name
+              div(class="col-7" style=";overflow:hidden") 
+                a(href=`/rebbl/team/${coach.teamId}` )= coach.team
+            div(class="col-2" style=";overflow:hidden")= coach.race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
+            div(class="row col-4" )
+              div(class="col-2" )= coach.points
+              div(class="col-2")= coach.win 
+              div(class="col-2")= coach.draw 
+              div(class="col-2")= coach.loss 
+              div(class="col-2")= coach.games
+              div(class="col-2 text-right" )= coach.tddiff
+          - if (y+1 == cutoff)
+            div(class="row col-12 season-table-row")
+              div(class="col-1 Standings-divider--flex")
+                span(class="Standings-dividerText--correction")
+              div(class="col-6 Standings-divider--flex" )
+                span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
+              div(class="col-5 Standings-divider--flex")
+                span(class="Standings-dividerText--correction")
