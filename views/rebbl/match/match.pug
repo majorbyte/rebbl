@@ -1,89 +1,86 @@
 //- index.pug
 extends ..\..\layout.pug
+include ..\..\nav-link
 
+block additionalMainNavigation
+  +nav-link("TEAM","/coach")
 block navigation
-  div(class="Tabs Tabs--darkBackground")
-     div(class="Tabs-header-wrapper")
-       div(class="Tabs-header")
-         div(class="Tabs-scroller-wrapper")
-           div(class="Tabs-scroller")
 
 block content
-  div(class="Background u-bottomPadding--large u-topPadding--medium")
-    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
-      div(class="container navcontainer" data-index="0")
-        div(class="ScheduleMatchList")
-          div(class="MatchSchedule")
-            div(class="MatchRow MatchRow-match MatchRow-header" )= match.started
-            div(class="MatchRow MatchRow-match" )
-              div(class="MatchRow-team")
-                div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
-                  div(class="TeamLabel TeamLabel--reverse")
-                    div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
-                    div(class="TeamLabel-info TeamLabel-info--noScore")
-                      div(class="TeamLabel-name ")
-                        a(href=`/rebbl/team/${match.teams[0].idteamlisting}` )= match.teams[0].teamname
-                      div(class="TeamLabel-coach ")
-                        a(href=`/rebbl/coach/${match.coaches[0].idcoach}`)= match.coaches[0].coachname
-                      div(class="TeamLabel-coach" title="cash earned: " + match.teams[0].cashearned + "; spiraling expenses: " +match.teams[0].spirallingexpenses)= "winnings: " + (match.teams[0].cashearned - match.teams[0].spirallingexpenses)
-                      div(class="TeamLabel-coach ")= match.teams[0].popularitygain + " Fan Factor"
-              div(class="MatchRow-status")
-                span(class="MatchStatus MatchStatus--transparent")
-                  span
-                    if match.teams[0].score > match.teams[1].score
-                      span(class="MatchStatus-score is-winner")= match.teams[0].score
-                      span(class="MatchStatus-score") -
-                      span(class="MatchStatus-score")= match.teams[1].score
-                    else if match.teams[1].score > match.teams[0].score
-                      span(class="MatchStatus-score")= match.teams[0].score
-                      span(class="MatchStatus-score") -
-                      span(class="MatchStatus-score is-winner")= match.teams[1].score
-                    else
-                      span(class="MatchStatus-score")= match.teams[0].score
-                      span(class="MatchStatus-score") -
-                      span(class="MatchStatus-score")= match.teams[1].score
-              div(class="MatchRow-team")
-                div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
-                  div(class="TeamLabel")
-                    div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
-                    div(class="TeamLabel-info TeamLabel-info--noScore")
-                      div(class="TeamLabel-name ")
-                        a(href=`/rebbl/team/${match.teams[1].idteamlisting}` )= match.teams[1].teamname
-                      div(class="TeamLabel-coach ")
-                        a(href=`/rebbl/coach/${match.coaches[1].idcoach}`)= match.coaches[1].coachname
-                      div(class="TeamLabel-coach" title="cash earned: " + match.teams[1].cashearned + "; spiraling expenses: " +match.teams[1].spirallingexpenses)= "winnings: " + (match.teams[1].cashearned - match.teams[1].spirallingexpenses)
-                      div(class="TeamLabel-coach ")= match.teams[1].popularitygain + " Fan Factor"
-            br
-            table(class="team-stats")
-              thead
-                tr
-                  th Name
-                  th TV
-                  th(title="Spent on inducements") Idc
-                  th Supporters
-                  th Possession (%)
-                  th Comp
-                  th Pass (m)
-                  th INT
-                  th Rush (m)
-                  th
-                  th BLK
-                  th AVBrk+
-                  th AVBrk-
-                  th KO+
-                  th KO-
-                  th CAS+
-                  th CAS-
-                  th Kill+
-                  th Kill-
-                  th Surf
-                  th Expulsion
+  div(class=`container`)
+    div(class="row col-12")
+      div(class="ScheduleMatchList")
+        div(class="MatchSchedule")
+          div(class="MatchRow MatchRow-match MatchRow-header" )= match.started
+          div(class="MatchRow MatchRow-match" )
+            div(class="MatchRow-team")
+              div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
+                div(class="TeamLabel TeamLabel--reverse")
+                  div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel-info TeamLabel-info--noScore")
+                    div(class="TeamLabel-name ")
+                      a(href=`/rebbl/team/${match.teams[0].idteamlisting}` )= match.teams[0].teamname
+                    div(class="TeamLabel-coach ")
+                      a(href=`/rebbl/coach/${match.coaches[0].idcoach}`)= match.coaches[0].coachname
+                    div(class="TeamLabel-coach" title="cash earned: " + match.teams[0].cashearned + "; spiraling expenses: " +match.teams[0].spirallingexpenses)= "winnings: " + (match.teams[0].cashearned - match.teams[0].spirallingexpenses)
+                    div(class="TeamLabel-coach ")= match.teams[0].popularitygain + " Fan Factor"
+            div(class="MatchRow-status")
+              span(class="MatchStatus MatchStatus--transparent")
+                span
+                  if match.teams[0].score > match.teams[1].score
+                    span(class="MatchStatus-score is-winner")= match.teams[0].score
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score")= match.teams[1].score
+                  else if match.teams[1].score > match.teams[0].score
+                    span(class="MatchStatus-score")= match.teams[0].score
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score is-winner")= match.teams[1].score
+                  else
+                    span(class="MatchStatus-score")= match.teams[0].score
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score")= match.teams[1].score
+            div(class="MatchRow-team")
+              div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
+                div(class="TeamLabel")
+                  div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel-info TeamLabel-info--noScore")
+                    div(class="TeamLabel-name ")
+                      a(href=`/rebbl/team/${match.teams[1].idteamlisting}` )= match.teams[1].teamname
+                    div(class="TeamLabel-coach ")
+                      a(href=`/rebbl/coach/${match.coaches[1].idcoach}`)= match.coaches[1].coachname
+                    div(class="TeamLabel-coach" title="cash earned: " + match.teams[1].cashearned + "; spiraling expenses: " +match.teams[1].spirallingexpenses)= "winnings: " + (match.teams[1].cashearned - match.teams[1].spirallingexpenses)
+                    div(class="TeamLabel-coach ")= match.teams[1].popularitygain + " Fan Factor"
+          br
+          table(class="team-stats")
+            thead
+              tr
+                th Name
+                th TV
+                th(title="Spent on inducements") Idc
+                th Supporters
+                th Possession (%)
+                th Comp
+                th Pass (m)
+                th INT
+                th Rush (m)
+                th
+                th BLK
+                th AVBrk+
+                th AVBrk-
+                th KO+
+                th KO-
+                th CAS+
+                th CAS-
+                th Kill+
+                th Kill-
+                th Surf
+                th Expulsion
 
 
-              tbody
-                each team, x in match.teams
-                  include teamoverview.pug
+            tbody
+              each team, x in match.teams
+                include teamoverview.pug
 
-            each team in match.teams
-              include team.pug
+          each team in match.teams
+            include team.pug
 
