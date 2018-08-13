@@ -3,7 +3,7 @@ extends ..\layout.pug
 block prepend vars
   - var title = "REBBL"
   - var active = "account"
-  - var activeSubMenu = "signup"
+  - var activeSubMenu = "sign up"
 
 block append scripts
   script(src="https://cdn2.rebbl.net/scripts/zepto.min.js")
@@ -12,14 +12,17 @@ block append scripts
   script(src="https://cdn2.rebbl.net/scripts/moment-timezone-with-data-2012-2022.min.js")
   
 block navigation
-  div(class="Tabs Tabs--darkBackground")
-    div(class="Tabs-header-wrapper")
-      div(class="Tabs-header")
-        div(class="Tabs-scroller-wrapper")
-          div(class="Tabs-scroller")
-            nav(class="Tabs-bar container")
-              a(href="/account" class="Tabs-tab" + (activeSubMenu == "account" ? " Tabs-tab--active" : "")  ) Account
-              a(href="/account/match" class="Tabs-tab" + (activeSubMenu == "match" ? " Tabs-tab--active" : "")  ) Match
-              a(href="/signup" class="Tabs-tab" + (activeSubMenu == "signup" ? " Tabs-tab--active" : "")  ) Sign up
-              a(href="/signup/signups" class="Tabs-tab" + (activeSubMenu == "signups" ? " Tabs-tab--active" : "") ) Signups
-
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= activeSubMenu.toUpperCase()
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav mr-auto")
+        li(class="nav-item " + (activeSubMenu == "account" ? " active" : ""))
+          a(href="/account" class="nav-link " + (activeSubMenu == "account" ? " highligh" : "")) Account
+        li(class="nav-item " + (activeSubMenu == "match" ? " active" : ""))
+          a(href="/account/match" class="nav-link " + (activeSubMenu == "match" ? " highligh" : "")) Match
+        li(class="nav-item " + (activeSubMenu == "sign up" ? " active" : ""))
+          a(href="/signup" class="nav-link " + (activeSubMenu == "sign up" ? " highligh" : "")) Sign up
+        li(class="nav-item " + (activeSubMenu == "signups" ? " active" : ""))
+          a(href="/signup/signups" class="nav-link " + (activeSubMenu == "signups" ? " highligh" : "")) Signups

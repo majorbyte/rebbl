@@ -1,16 +1,18 @@
 extends ..\..\layout.pug
-block scripts
-  script(src="/scripts/jquery-3.3.1.slim.min.js")
-  script(src="/scripts/popper-1.14.3.min.js")
-  script(src="/scripts/bootstrap.min.js")
+include ..\..\nav-link
 
 block vars
   - let stadiumDescription = {"astrogranit":"+1 on Armour rolls when a player falls while going for it.", "bazar":"During the Inducements phase, both teams receive a Wizard at no cost", "elfturf":"-1 on Armour rolls when a player falls while going for it.", "foodarea":"The 'Throw a Rock' and 'Get the Ref' kick-off events are cancelled.","nuffle":"During the Inducements phase, Star Players cost 50k less","refereearea":"During the Inducements phase, both teams receive a Bribe at no cost.","refreshmentarea":"+1 on Injury rolls when a player is pushed off the pitch (crowdsurf)", "roof":"The weather always starts as 'Nice' and the 'Changing Weather' kick-off event is cancelled.","securityarea":"The 'Riot' and 'Pitch Invasion' Kick-off events are cancelled.","viparea":"Double all gains and losses of Fan Factor." }
   - let sponsor = team.team.cards.find(function(a) { return a.type === "Sponsor" }) 
-  - var options = {active: "team", title: " ", img:`https://cdn2.rebbl.net/images/sponsors/${sponsor ? sponsor.name.toLowerCase(): "none"}.png`}
+  - var options = {active: "team", title: " "}
 
 block additionalMainNavigation
-  a(href="/coach" class="Tabs-tab Tabs-tab--active") TEAM
+  +nav-link("TEAM","/coach")
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;")
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      - if (sponsor)
+        img(src=`https://cdn2.rebbl.net/images/sponsors/${sponsor.name.toLowerCase()}.png` style="height:4em;margin: 0 auto" title="sponsored by:")          
 block content
   div(class="container")
     h1= team.team.name
@@ -130,7 +132,7 @@ block content
     div(class="tab-content" id="tabContent")
       div(class="tab-pane fade show active col col-12" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
         table(class="table table-striped")
-          thead
+          thead(class="headerText")
             tr
               th(scope="col") #
               th(scope="col") name

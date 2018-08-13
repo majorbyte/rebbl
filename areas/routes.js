@@ -1,5 +1,7 @@
 'use strict';
-const signUpService = require('../lib/signupService.js')
+const db = require('../lib/LeagueService.js')
+  , ts = require('../lib/teamservice.js')
+  , configuration = require('../lib/ConfigurationService.js')
   , util = require('../lib/util.js')
   , express = require('express')
   , router = express.Router();
@@ -13,15 +15,21 @@ router.use('/signup', require('./signup/signup'));
 router.use('/auth', require('./account/auth'));
 router.use('/coach', require('./coach/coach'));
 
-router.get('/', async function(req, res, next){
-    if(req.isAuthenticated()){
-        let coach = await signUpService.getSignUp(req.user.name);
-        if(coach) {
-            res.redirect(`/rebbl/${coach.league}`);
-            return;
-        }
-    }
-    res.redirect(`/wcq`);
+router.get('/', util.checkCache, async function(req, res, next){
+    let data = {bigo:null,gman:null,rel:null, rounds:null, league:req.params.league };
+    data.bigo = await db.getCoachScore("REBBL[\\s-]+Big O", "Season 9",true);
+
+    data.gman =  await db.getCoachScore("REBBL[\\s-]+Gman", "Season 9", true);
+    data.rel =  await db.getCoachScore("REBBL[\\s-]+Rel", "Season 9", true);
+
+    data.bigocut =  configuration.getPlayoffTickets("Big O");
+    data.gmancut =  configuration.getPlayoffTickets("Gman");
+    data.relcut =  configuration.getPlayoffTickets("Rel");
+
+    data.playerData = await ts.getPlayerStats();
+
+    data.articles = await configuration.getArticles();
+    res.render('rebbl/index', data);
 });
 
 module.exports = router;
