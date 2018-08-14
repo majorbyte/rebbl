@@ -1254,7 +1254,7 @@ main {
 
 @media (max-height: 768px) {
   .dropdown-menu{
-    max-height:450;
+    max-height:450px;
     overflow-y: scroll;
  }
 }
