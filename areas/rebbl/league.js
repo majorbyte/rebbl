@@ -7,8 +7,13 @@ const db = require('../../lib/LeagueService.js')
 
 router.get('/', util.checkCache, async function(req, res){
   let data = {standings:null, rounds:null, league:req.params.league };
-  data.standings = await db.getCoachScore("REBBL[\\s-]+" + req.params.league, null, true);
-  data.rounds = await db.getDivisions("REBBL[\\s-]+" + req.params.league);
+
+  let league = req.params.league;
+  if (league.toLowerCase() !== "rebbll"){
+    league = "REBBL[\\s-]+" + league;
+  }
+  data.standings = await db.getCoachScore(league, null, true);
+  data.rounds = await db.getDivisions(league);
 
   data.cutoffs = configuration.getPlayoffTickets(req.params.league);
   res.render('rebbl/league/index', data);

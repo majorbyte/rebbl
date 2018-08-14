@@ -2,7 +2,7 @@ extends ..\sublayout.pug
 block vars
   - let options = {active: league, title: "REBBL SEASON 8"}
   - let seasons = []
-  - if (league !== "One Minute")
+  - if (league.toLowerCase() !== "one minute" && league.toLowerCase() !== "rebbll")
     for div, x in standings
       - let season = div[0].competition.substr(0,9)
       - if(seasons.indexOf(season) === -1) seasons.push(season)
