@@ -49,10 +49,12 @@ router.get('/change', util.ensureAuthenticated, async function(req, res){
     let signup = await signupService.getSignUp(req.user.name);
     let account = await accountService.getAccount(req.user.name);
 
+    // Disabled while during season
+    /*  
     if(!signup && user){
       res.render('signup/signup-existing', { user: user});
       return;
-    }
+    }*/
 
     if (!signup){
       if(account){
