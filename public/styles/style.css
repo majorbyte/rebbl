@@ -1351,3 +1351,17 @@ body {
     margin-top: 7rem;
   }
 }
+
+
+@media (max-width: 768px) { .carousel-item h1 {font-size: 1em;}
+.carousel-item p {font-size: 0.8em;} }
+
+@media (min-width: 768px) {  .carousel-item h1{font-size: 1.25em;} 
+.carousel-item p {font-size: 0.8em;} }
+
+@media (min-width: 992px) { .carousel-item h1{font-size: 1.5em;} 
+.carousel-item p {font-size: 1em;}}
+
+@media (min-width: 1200px) { .carousel-item h1{font-size: 2em;} }
+
+@media (min-width: 1600px) { .carousel-item h1{font-size: 2em;} }
