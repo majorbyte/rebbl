@@ -9,9 +9,10 @@ const express = require('express')
 
 router.get('/:coach', async function(req, res){
   try{
+
     let user = await accountService.searchAccount({"coach":req.params.coach});
 
-    res.render('coach/coach', { user: user});
+    res.render('rebbl/coach/details', { coachDetails: user});
   } catch(err){
     console.log(err);
   }

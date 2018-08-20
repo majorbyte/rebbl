@@ -1,36 +1,27 @@
 extends ..\..\layout.pug
 
-block vars
+block prepend vars
   - var options = {active: "coach", title: " "}
+  - var activeSubMenu = "details"
 
 block additionalMainNavigation
-  a(href="/coach" class="Tabs-tab Tabs-tab--active") COACH
+  li(class="nav-item active")
+    a(href="#" class="nav-link highlight")= "COACH"
   
 block navigation
-  div(class="Tabs Tabs--darkBackground")
-     div(class="Tabs-header-wrapper")
-       div(class="Tabs-header")
-         div(class="Tabs-scroller-wrapper")
-           div(class="Tabs-scroller")
-             nav(class="Tabs-bar container")
-               a(class="Tabs-tab" class="Tabs-tab" + (activeSubMenu == "teams" ? " Tabs-tab--active" : "")  href="teams"  style="padding-left:5px;padding-right:5px;") Teams
-               a(class="Tabs-tab" class="Tabs-tab" + (activeSubMenu == "matches" ? " Tabs-tab--active" : "")  href="matches"  style="padding-left:5px;padding-right:5px;") Matches
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= activeSubMenu.toUpperCase()
+    a(class="navbar-brand d-xs-none " href="#")= name || coachDetails.coach
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav mr-auto")
+        li(class="nav-item " + (activeSubMenu == "details" ? " active" : ""))
+          a(href="details" class="nav-link " + (activeSubMenu == "details" ? " highlight" : "")) Details
+        - if (renderExtra || teams || matches)  
+          li(class="nav-item " + (activeSubMenu == "teams" ? " active" : ""))
+            a(href="teams" class="nav-link " + (activeSubMenu == "teams" ? " highlight" : "")) Teams
+          li(class="nav-item " + (activeSubMenu == "matches" ? " active" : ""))
+            a(href="matches" class="nav-link " + (activeSubMenu == "matches" ? " highlight" : "")) Matches
 
-block content
-  div(class="Background u-bottomPadding--large u-topPadding--medium")
-    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
-      div(class="container navcontainer" data-index="0")
-        h1()= name
-
-        div(class="ScheduleMatchList")
-          div(class="MatchSchedule")
-            - if (matches)
-              each match, index in matches.sort(function(a,b){return a.match_id < b.match_id ? 1 : -1;})
-                br
-                div(class="MatchRow MatchRow-match MatchRow-header" )= match.competition + ' - ' + match.round
-                div(class="MatchRow MatchRow-match" )
-                  include matches.pug
-            - if (teams)
-              each team, index in teams.sort(function(a,b){return a.team.id > b.team.id ? -1 :1})
-                include team.pug
               
