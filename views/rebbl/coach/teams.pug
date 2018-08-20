@@ -1,0 +1,14 @@
+extends .\coach.pug 
+
+block append vars
+  - var activeSubMenu = "teams"
+
+block content
+  div(class="Background u-bottomPadding--large u-topPadding--medium")
+    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
+      div(class="container navcontainer" data-index="0")
+        div(class="ScheduleMatchList")
+          div(class="MatchSchedule")
+            each team, index in teams.sort(function(a,b){return a.team.id > b.team.id ? -1 :1})
+              h1 
+                a(href="/rebbl/team/" + team.team.id)= team.team.name

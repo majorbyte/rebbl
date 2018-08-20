@@ -1,0 +1,35 @@
+extends .\coach.pug
+
+block append vars
+  - var activeSubMenu = "details"
+
+block scripts
+  script.
+
+    $(document).ready(function(){
+
+      let input = document.getElementById("timezone");
+      $("#tz_info").text(moment().tz(input.value).format('YYYY-MM-DD HH:mm Z'));
+
+    });
+
+block content
+  div(class="container")
+    h2(style="text-transform: lowercase;" title="because Keji") reddit
+      span(class="highlight")= " /u/" + coachDetails.reddit
+    h3 Contact Data
+    div
+      label(for="coach") Blood Bowl 2 coach name
+      input(type="text" id="coach" name="coach" value=coachDetails.coach  disabled)
+    div
+      label(for="timezone") Timezone
+      input(id="timezone" name="timezone" disabled title="timezone" value=coachDetails.timezone)
+      label(id="tz_info")
+    div
+      label(for="discord") Discord
+      input(type="text" id="discord" name="discord" value=coachDetails.discord  disabled)
+    div
+      label(for="steam") Steam
+      input(type="text" id="steam" name="steam" value=coachDetails.steam disabled)
+    br
+    br

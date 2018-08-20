@@ -71,7 +71,7 @@ block content
             for signup, x in signups.all
               div(class="TableRow")
                 div(style="white-space: nowrap;display: table-cell;width: 250px;")
-                 a(href="/coach/"+encodeURIComponent(signup.coach))= signup.coach
+                 a(href=`/rebbl/coach/${encodeURIComponent(signup.coach)}/details`)= signup.coach
                 div(style="white-space: nowrap;display: table-cell;width: 350px;")= signup.team
                 div(style="white-space: nowrap;display: table-cell;width: 160px;")= signup.race
                 div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.league

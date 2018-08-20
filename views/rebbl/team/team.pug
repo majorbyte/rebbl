@@ -7,12 +7,26 @@ block vars
   - var options = {active: "team", title: " "}
 
 block additionalMainNavigation
-  +nav-link("TEAM","/coach")
+  +nav-link("TEAM","#")
+
 block navigation
-  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;")
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= team.team.name.toUpperCase()
+    a(class="navbar-brand d-xs-none " href="#")= team.coach.name
     div(class="collapse navbar-collapse" id="rebblSubNav")
-      - if (sponsor)
-        img(src=`https://cdn2.rebbl.net/images/sponsors/${sponsor.name.toLowerCase()}.png` style="height:4em;margin: 0 auto" title="sponsored by:")          
+      ul(class="navbar-nav mr-auto")
+        li(class="nav-item " + (activeSubMenu == "details" ? " active" : ""))
+          a(href=`/rebbl/coach/${team.coach.id}/details` class="nav-link " + (activeSubMenu == "details" ? " highlight" : "")) Details
+        li(class="nav-item " + (activeSubMenu == "teams" ? " active" : ""))
+          a(href=`/rebbl/coach/${team.coach.id}/teams` class="nav-link " + (activeSubMenu == "teams" ? " highlight" : "")) Teams
+        li(class="nav-item " + (activeSubMenu == "matches" ? " active" : ""))
+          a(href=`/rebbl/coach/${team.coach.id}/matches` class="nav-link " + (activeSubMenu == "matches" ? " highlight" : "")) Matches
+        -if (sponser)
+          li(class="nav-item ")
+            img(src=`https://cdn2.rebbl.net/images/sponsors/${sponsor.name.toLowerCase()}.png` style="height:3em;" title="sponsored by:")          
+
 block content
   div(class="container")
     h1= team.team.name
