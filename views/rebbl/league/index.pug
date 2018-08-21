@@ -67,7 +67,8 @@ block content
     div(class=`container Season ${div[0].competition.substr(0,9).replace(' ','')} ` style=`${hide ? "display:none": ""}`)
       div(class="row col-12")
         h2
-         a(id=div[0].competition href=`/rebbl/${league}/${div[0].competition}` style="padding-top:180px;margin-top:-180px"  class="highlight")= div[0].competition
+         i(id=div[0].competition  style="padding-top:180px;margin-top:-180px")
+         a( href=`/rebbl/${league}/${div[0].competition}`  class="highlight")= div[0].competition
       div(class="season-table")  
         div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
           div(class="row col-6" style="font-size:1.25em")
