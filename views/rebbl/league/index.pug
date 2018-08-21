@@ -23,8 +23,6 @@ block scripts
       });
       let seasons = ["!{seasons.join('\",\"')}"];
       if (seasons.length > 0 && seasons[0] !== ""){
-        $('.Season').hide();
-        $('.'+seasons[0].replace(' ','')).show();
         $("#dropdownSeason").text(seasons[0]);
         $("#dropdownSeason").parent().addClass('active');
         $(".title").text(seasons[0]);
@@ -53,7 +51,8 @@ block navigation
           div(class="dropdown-menu" aria-labelledby="dropdownDivision")
             each round in rounds.sort(collator.compare)
               - let season = round.substr(0,9).replace(' ', '')
-              a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
+              - let hideSeason = season.toLowerCase().trim() != seasons[0].replace(' ', '').toLowerCase().trim()
+              a(class=`dropdown-item Season ${season}` style=`${hideSeason ? "display:none": ""}` href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
 block content
   -let seasonName = ""
   -let i = -1
@@ -64,10 +63,11 @@ block content
       - seasonName = config.name
       - i = 0
     -let cutoff = config ? config.cutoff[i] : -1;
-    div(class=`container Season ${div[0].competition.substr(0,9).replace(' ','')} `)
+    -let hide = seasonName.toLowerCase().trim() != seasons[0].toLowerCase().trim()
+    div(class=`container Season ${div[0].competition.substr(0,9).replace(' ','')} ` style=`${hide ? "display:none": ""}`)
       div(class="row col-12")
         h2
-         a(name=div[0].competition href=`/rebbl/${league}/${div[0].competition}` style="padding-top:180px;margin-top:-180px"  class="highlight")= div[0].competition
+         a(id=div[0].competition href=`/rebbl/${league}/${div[0].competition}` style="padding-top:180px;margin-top:-180px"  class="highlight")= div[0].competition
       div(class="season-table")  
         div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
           div(class="row col-6" style="font-size:1.25em")
