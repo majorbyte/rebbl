@@ -51,7 +51,8 @@ block navigation
           div(class="dropdown-menu" aria-labelledby="dropdownDivision")
             each round in rounds.sort(collator.compare)
               - let season = round.substr(0,9).replace(' ', '')
-              a(class=`dropdown-item Season ${season}`  href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
+              - let hideSeason = season.toLowerCase().trim() != seasons[0].replace(' ', '').toLowerCase().trim()
+              a(class=`dropdown-item Season ${season}` style=`${hideSeason ? "display:none": ""}` href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
 block content
   -let seasonName = ""
   -let i = -1
