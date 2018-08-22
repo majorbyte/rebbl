@@ -8,7 +8,7 @@ const db = require('../../lib/LeagueService.js')
 router.get('/', util.checkCache, async function(req, res){
   let data = {standings:null, rounds:null, league:req.params.league || 'GMan' };
   data.standings = await db.getStuntyStandings();
-  data.rounds = await db.getDivisions("REBBL - " + (req.params.league || 'GMan') );
+  //data.rounds = await db.getDivisions("REBBL - " + (req.params.league || 'GMan') );
 
   res.render('rebbl/stunty/index', data);
 });

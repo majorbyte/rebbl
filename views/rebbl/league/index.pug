@@ -4,6 +4,7 @@ block vars
   - let seasons = []
   - if (league.toLowerCase() !== "one minute" && league.toLowerCase() !== "rebbll")
     for div, x in standings
+      - if (div[0].competition.toLowerCase().indexOf("rampup") > 0 ) continue;
       - let season = div[0].competition.substr(0,9)
       - if(seasons.indexOf(season) === -1) seasons.push(season)
   - seasons = seasons.sort(function(a,b){ return a > b ? -1 :1})
