@@ -17,10 +17,11 @@ router.use('/coach', require('./coach/coach'));
 
 router.get('/', util.checkCache, async function(req, res, next){
     let data = {bigo:null,gman:null,rel:null, rounds:null, league:req.params.league };
-    data.bigo = await db.getCoachScore("REBBL[\\s-]+Big O", "Season 9",true);
 
-    data.gman =  await db.getCoachScore("REBBL[\\s-]+Gman", "Season 9", true);
-    data.rel =  await db.getCoachScore("REBBL[\\s-]+Rel", "Season 9", true);
+    data.bigo = await db.getCoachScore(new RegExp(`^REBBL[\\s-]+Big O`, 'i'), "Season 9",true);
+
+    data.gman =  await db.getCoachScore(new RegExp(`^REBBL[\\s-]+GMan`, 'i'), "Season 9", true);
+    data.rel =  await db.getCoachScore(new RegExp(`^REBBL[\\s-]+Rel`, 'i'), "Season 9", true);
 
     data.bigocut =  configuration.getPlayoffTickets("Big O");
     data.gmancut =  configuration.getPlayoffTickets("Gman");

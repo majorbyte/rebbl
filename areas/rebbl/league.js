@@ -10,7 +10,12 @@ router.get('/', util.checkCache, async function(req, res){
 
   let league = req.params.league;
   if (league.toLowerCase() !== "rebbll"){
-    league = "REBBL[\\s-]+" + league;
+    league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
+  } else {
+    league = new RegExp(`^${league}`, 'i');
+  }
+  if( req.params.league.toLowerCase() === "rampup"){
+    league = new RegExp(`${req.params.league}$`, 'i');
   }
   data.standings = await db.getCoachScore(league, null, true);
   data.rounds = await db.getDivisions(league);
