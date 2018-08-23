@@ -12,9 +12,9 @@ router.get('/:team_id', util.checkCache, async function(req, res, next){
   await data.roster.map(async player => {
     player.skills.map(async skill => {
       console.log(skill + "+");
-      let description = await skills.skillDescriptions.find(s => s.name.toLowerCase().replace(/[ -']/g,'') === skill.toLowerCase().trim() )
+      let description = await skills.skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() )
       if (description) {
-        description.id = description.name.toLowerCase().replace(/[ -']/g,'');
+        description.id = description.name.toLowerCase().replace(/[ \-']/g,'');
         if (data.skills.indexOf(description) === -1) data.skills.push(description);
       }
 
