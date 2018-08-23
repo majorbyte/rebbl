@@ -3,33 +3,33 @@
 - let playerPos  = player.number > 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
 - let playerId = playerPos === "" ? playerName.replace(/ /g,'') : (player.id ? player.id : player.name.replace(/ /g,'')) 
 - let cls = (player.active && player.casualties_sustained && (player.casualties_sustained.length === 1 && player.casualties_sustained[0] !== "BadlyHurt" )) ? "player-out" : ""
-tr(class="stats "+cls data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId) 
-  td= player.number
-  td
+tr(class="stats "+cls ) 
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.number
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)
     div
       - if( player.xp >= levels[player.level+1] )
         img(src="https://cdn2.rebbl.net/images/level.png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
       - else
         img(src="https://cdn2.rebbl.net/images/skills/" + player.level + ".png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
       div(class="match-stats-TeamLabel-name")= playerName
-  td= playerPos
-  td= player.attributes.ma
-  td= player.attributes.st
-  td= player.attributes.ag
-  td= player.attributes.av
-  td= player.matchplayed
-  td= player.mvp
-  td
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= playerPos
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.ma
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.st
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.ag
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.av
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.matchplayed
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.mvp
+  td(class="td-prevent")
     - if (player.skills)
       each skill in player.skills
-        img(src="https://cdn2.rebbl.net/images/skills/" + skill + ".png" alt="" title=""+skill.replace(/([A-Z])/g, ' $1').trim())
-  td
+        img(src="https://cdn2.rebbl.net/images/skills/" + skill + ".png" alt="" title=""+skill.replace(/([A-Z])/g, ' $1').trim() data-toggle="modal" data-target=`#${skill.toLowerCase()}` style="z-index:9999" )
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)
     each cas in player.casualties_state
       -if (cas !== "BadlyHurt")
         img(src="https://cdn2.rebbl.net/images/skills/" + cas + ".png" alt="" title=""+cas.replace(/([A-Z])/g, ' $1').trim() )
     - if((player.casualties_sustained && player.casualties_sustained[0] === "Dead") &&( player.casualties_state && player.casualties_state.indexOf("Dead") === -1) )    
       img(src="https://cdn2.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
-  td= `${player.xp}/${levels[player.level+1]}`    
+  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= `${player.xp}/${levels[player.level+1]}`    
   - if (player.value > 0)
     td= player.value
 include playerstats.pug
