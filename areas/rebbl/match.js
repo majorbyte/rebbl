@@ -4,7 +4,8 @@ const
   , bloodBowlService = require("../../lib/bloodbowlService.js")
   , util = require('../../lib/util.js')
   , express = require('express')
-  , router = express.Router();
+  , router = express.Router()
+  , skills = require("../../datastore/skillDescriptions.js");
 
 router.get('/unplayed/:match_id', async function(req, res, next){
   try{
@@ -21,6 +22,36 @@ router.get('/:match_id', util.checkCache, async function(req, res, next){
   data.lonersValue = [await bloodBowlService.getLonerCost(data.match.teams[0].idraces), await bloodBowlService.getLonerCost(data.match.teams[1].idraces)]
   if (!data) return next('route');
   data['rounds'] = await leagueService.rounds();
+
+  data.skills =[];
+
+  if (data.match.teams[0].roster) {
+    await data.match.teams[0].roster.map(async player => {
+      player.skills.map(async skill => {
+        console.log(skill + "+");
+        let description = await skills.skillDescriptions.find(s => s.name.toLowerCase().replace(/[ -']/g,'') === skill.toLowerCase().trim() )
+        if (description) {
+          description.id = description.name.toLowerCase().replace(/[ -']/g,'');
+          if (data.skills.indexOf(description) === -1) data.skills.push(description);
+        }
+
+      });
+    });
+  }
+
+  if (data.match.teams[1].roster) {
+    await data.match.teams[1].roster.map(async player => {
+      player.skills.map(async skill => {
+        console.log(skill + "+");
+        let description = await skills.skillDescriptions.find(s => s.name.toLowerCase().replace(/[ -']/g,'') === skill.toLowerCase().trim() )
+        if (description) {
+          description.id = description.name.toLowerCase().replace(/[ -']/g,'');
+          if (data.skills.indexOf(description) === -1) data.skills.push(description);
+        }
+
+      });
+    });
+  }
 
   res.render('rebbl/match/match', data);
 });
