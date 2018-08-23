@@ -31,8 +31,10 @@ router.get('/:coach_id/details', util.checkCache, async function(req, res){
     data.renderExtra = true;
   }
   else {
+    data = {};
+    let regex = new RegExp(req.params.coach_id, "i");
+    data.coachDetails = await accountService.searchAccount({"coach":{$regex:regex}});
     data.renderExtra = false;
-    data.coachDetails = await accountService.searchAccount({"coach":req.params.coach_id});
   }
 
   res.render('rebbl/coach/details', data);
