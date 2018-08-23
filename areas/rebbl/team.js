@@ -20,7 +20,7 @@ router.get('/:team_id', util.checkCache, async function(req, res, next){
 
     });
   });
-  "Bone-Head"res.render('rebbl/team/team', data);
+  res.render('rebbl/team/team', data);
 });
 
 module.exports = router;
