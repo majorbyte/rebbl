@@ -9,7 +9,7 @@ router.get('/', util.checkCache, async function(req,res) {
   
   let leagueRegex;
   let league = req.params.league;
-  if (league.toLowerCase() !== "rebbll"){
+  if (league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){
     leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
   } else {
     leagueRegex = new RegExp(`^${req.params.league}`, 'i');
@@ -21,11 +21,14 @@ router.get('/', util.checkCache, async function(req,res) {
     divRegex = new RegExp(`^${req.params.division}`, 'i');
   }
 
-
-
-
   data.matches = await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
   data.divisions = await db.getDivisions(leagueRegex);
+
+  if(league.toLowerCase() === "xscessively elfly league"){
+    data.matches["1"] = await data.matches["1"].sort(function(a,b){
+      return a.match_id > b.match_id ? -1 : 1 ;
+    })
+  }
 
   res.render('rebbl/division/index', data);
 });
@@ -37,13 +40,20 @@ router.get('/:week', util.checkCache, async function(req,res) {
     let data = {matches:null, divisions:null, league:req.params.league, competition: req.params.division, week: week };
     let leagueRegex;
     let league = req.params.league;
-    if (league.toLowerCase() !== "rebbll"){
+    if (league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){
       leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
     } else {
       leagueRegex = new RegExp(`^${req.params.league}`, 'i');
     }
       let divRegex = new RegExp(`^${req.params.division}$`, 'i');
     data.matches = await db.getLeagues({round: week, league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
+
+    if(league.toLowerCase() === "xscessively elfly league"){
+      data.matches["1"] = await data.matches["1"].sort(function(a,b){
+        return a.match_id > b.match_id ? -1 : 1 ;
+      })
+    }
+
     data.divisions = await db.getDivisions(leagueRegex);
     data.weeks = await db.getWeeks(leagueRegex, divRegex);
 

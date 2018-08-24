@@ -19,7 +19,7 @@ router.get('/update/:round', async function(req, res){
 
 router.get('/updateleague/init', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
-    league.initRebblData();
+    league.initRebblData(req.query.league);
   }
   res.redirect('/');
 });
@@ -43,8 +43,9 @@ router.get('/updateteams', async function(req, res){
 router.get('/updateteams/init', async function(req, res){
   //if (req.query.verify === process.env['verifyToken']){
    //await team.initTemas();
-   await team.fixPastPlayers();
+   //await team.fixPastPlayers();
    //await team.fixTeamStats();
+   await team.quickFixPlayers();
   //}
   res.redirect('/');
 });
