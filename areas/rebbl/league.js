@@ -9,7 +9,7 @@ router.get('/', util.checkCache, async function(req, res){
   let data = {standings:null, rounds:null, league:req.params.league };
 
   let league = req.params.league;
-  if (league.toLowerCase() !== "rebbll"){
+  if (league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){
     league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
   } else {
     league = new RegExp(`^${league}`, 'i');
