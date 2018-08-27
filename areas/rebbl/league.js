@@ -1,6 +1,7 @@
 'use strict';
 const db = require('../../lib/LeagueService.js')
   , configuration = require('../../lib/ConfigurationService.js')
+  , rampup = require("../../lib/Rampup.js")
   , util = require('../../lib/util.js')
   , express = require('express')
   , router = express.Router({mergeParams: true});
@@ -14,14 +15,19 @@ router.get('/', util.checkCache, async function(req, res){
   } else {
     league = new RegExp(`^${league}`, 'i');
   }
-  if( req.params.league.toLowerCase() === "rampup"){
-    league = new RegExp(`${req.params.league}$`, 'i');
-  }
-  data.standings = await db.getCoachScore(league, null, true);
-  data.rounds = await db.getDivisions(league);
 
   data.cutoffs = configuration.getPlayoffTickets(req.params.league);
-  res.render('rebbl/league/index', data);
+  
+  if( req.params.league.toLowerCase() === "rampup"){
+    data.standings = await rampup.getCoachScore();
+    data.rounds = await db.getDivisions(new RegExp(/rampup$/,"i"));
+    res.render('rebbl/league/rampup', data);
+  } else {
+    data.standings = await db.getCoachScore(league, null, true);
+    data.rounds = await db.getDivisions(league);
+    res.render('rebbl/league/index', data);
+  }
+
 });
 
 module.exports = router;

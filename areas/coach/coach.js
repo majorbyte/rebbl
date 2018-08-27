@@ -1,7 +1,5 @@
 'use strict';
 const express = require('express')
-  , leagueService = require('../../lib/LeagueService.js')
-  , wcqService = require('../../lib/WorldCupQualifierService.js')
   , accountService = require("../../lib/accountService.js")
   , util = require('../../lib/util.js')
   , router = express.Router();

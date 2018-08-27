@@ -12,7 +12,6 @@ block scripts
     $(document).ready(function(){
 
       $(".td-prevent").click(function (event) {
-          console.log(event);
           if(event.target.nodeName !== "IMG") event.stopPropagation();
       });
 
