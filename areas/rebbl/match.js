@@ -28,7 +28,6 @@ router.get('/:match_id', util.checkCache, async function(req, res, next){
   if (data.match.teams[0].roster) {
     await data.match.teams[0].roster.map(async player => {
       player.skills.map(async skill => {
-        console.log(skill + "+");
         let description = await skills.skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() )
         if (description) {
           description.id = description.name.toLowerCase().replace(/[ \-']/g,'');
@@ -42,7 +41,6 @@ router.get('/:match_id', util.checkCache, async function(req, res, next){
   if (data.match.teams[1].roster) {
     await data.match.teams[1].roster.map(async player => {
       player.skills.map(async skill => {
-        console.log(skill + "+");
         let description = await skills.skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() )
         if (description) {
           description.id = description.name.toLowerCase().replace(/[ \-']/g,'');

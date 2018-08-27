@@ -33,4 +33,3 @@ table(class="match-stats-table" style="width:100%")
       - let playerName = player.number === 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : player.name
       - let playerPos  = player.number > 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
       include player.pug
-    - console.log(pageSkills)
