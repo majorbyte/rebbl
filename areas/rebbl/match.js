@@ -7,7 +7,7 @@ const
   , router = express.Router()
   , skills = require("../../datastore/skillDescriptions.js");
 
-router.get('/unplayed/:match_id', async function(req, res, next){
+router.get('/unplayed/:match_id',util.checkCache, async function(req, res, next){
   try{
     let match = await leagueService.getUnplayedMatch(req.params.match_id);
 
