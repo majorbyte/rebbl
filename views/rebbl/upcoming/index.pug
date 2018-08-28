@@ -1,0 +1,49 @@
+extends ..\sublayout.pug
+
+block scripts
+  script(src="https://cdn2.rebbl.net/scripts/moment.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/moment-timezone.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/moment-timezone-with-data-2012-2022.min.js")
+  script.
+    $(document).ready(function(){
+        $(".matchTime").each(function(){
+            let time = $(this).text();    
+            $(this).text(moment.tz(time,"UTC").tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm ZZ')); 
+        })
+    });
+    
+    
+block content
+  - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+  for date,key in schedules
+    div(class="row")
+      -console.dir(date)
+      div(class="col-10 offset-sm-1")
+        h2=key
+        each match in date
+          - let url = match.match_uuid ? `/rebbl/match/${ match.match_uuid }` : `/rebbl/match/unplayed/${match.contest_id}`
+          - if (match.opponents)
+          a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
+
+            div(class="row col-12")
+              div(class="col-2")= match.league
+                br
+                i= match.competition
+              div(class="col-2 matchTime")= match.scheduledDate
+              div(class="col-8 row no-gutters")
+                div(class="col-5")
+                  div(class="col-12")
+                    div(class="float-right"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                    div(class="float-right" style="text-align: right;padding-right:5px;")
+                      div(class="TeamLabel-name ")= match.opponents[0].team.name
+                      div(class="TeamLabel-coach ")= match.opponents[0].coach.name
+                div(class="col-1" style="text-align:center" )
+                      span(class="MatchStatus-score")= match.opponents[0].team.score
+                      span(class="MatchStatus-score") -
+                      span(class="MatchStatus-score")= match.opponents[1].team.score
+                div(class="col-5")
+                  div(class="col-12")
+                    div(class="float-left" style="padding-right:5px"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                    div(class="TeamLabel-info TeamLabel-info--noScore")
+                    div(class="TeamLabel-name ")= match.opponents[1].team.name
+                    div(class="TeamLabel-coach ")= match.opponents[1].coach.name

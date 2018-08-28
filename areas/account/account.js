@@ -3,6 +3,7 @@
 const express = require('express')
   , accountService = require("../../lib/accountService.js")
   , leagueService = require("../../lib/LeagueService.js")
+  , datingService = require("../../lib/DatingService.js")
   , util = require('../../lib/util.js')
   , router = express.Router();
 
@@ -33,12 +34,28 @@ router.get('/login', function(req, res){
 router.get('/match',util.ensureAuthenticated, async function(req, res){
   try{
     let match = await leagueService.getUpcomingMatch(req.user.name);
-
-    res.render('account/match',{matches: match} );
+    let user = await accountService.getAccount(req.user.name)
+    res.render('account/match',{matches: match, user:user} );
   } catch(err){
     console.log(err);
   }
+});
 
+router.put('/unplayed/:match_id', util.ensureAuthenticated, async function(req, res, next){
+  try{
+
+    let user = await accountService.getAccount(req.user.name)
+    let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name":user.coach})
+
+    if(contest.length > 0){
+      datingService.updateDate(Number(req.params.match_id), req.body.date);
+      res.send("ok");
+    } else {
+      res.status(403).send();
+    }
+  } catch(err){
+    console.log(err);
+  }
 });
 
 router.post('/update', util.ensureAuthenticated, async function(req, res){
