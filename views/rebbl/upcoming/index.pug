@@ -17,7 +17,6 @@ block content
   - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
   for date,key in schedules
     div(class="row")
-      -console.dir(date)
       div(class="col-10 offset-sm-1")
         h2=key
         each match in date
