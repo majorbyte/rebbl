@@ -8,7 +8,7 @@ block scripts
     $(document).ready(function(){
         $(".matchTime").each(function(){
             let time = $(this).text();    
-            $(this).text(moment.tz(time,"UTC").tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm ZZ')); 
+            $(this).text(moment.tz(time,"UTC").tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm zz(ZZ)')); 
         })
     });
     

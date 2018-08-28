@@ -12,7 +12,7 @@ const  _groupBy = function(xs, key) {
     }, {});
   };
 
-router.get('/', util.checkCache, async function(req, res){
+router.get('/', async function(req, res){
     let n = await datingService.all();    
     let dates = [...new Set(n.map(date=> date.id))];
 
