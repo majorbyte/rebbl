@@ -4,45 +4,86 @@ block scripts
   script(src="https://cdn2.rebbl.net/scripts/moment.min.js")
   script(src="https://cdn2.rebbl.net/scripts/moment-timezone.min.js")
   script(src="https://cdn2.rebbl.net/scripts/moment-timezone-with-data-2012-2022.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
   script.
+    function DateModel() {
+      const self = this;
+      // Editable data
+      self.dates = ko.observableArray([]);
+    }
     $(document).ready(function(){
-        $(".matchTime").each(function(){
-            let time = $(this).text();    
-            $(this).text(moment.tz(time,"UTC").tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm zz(ZZ)')); 
-        })
+        const model = new DateModel();
+        ko.applyBindings(model);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/v1/upcoming",true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {//Call a function when the state changes.
+
+          let dates = xhr.response;
+          dates.map(function(date){
+            date.scheduledDate = moment.tz(date.scheduledDate,"UTC").tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm zz(ZZ)')
+            date.shortDate = date.scheduledDate.substr(0,10);
+            date.shortTime = date.scheduledDate.substr(10,date.scheduledDate.length-10);
+            date.url = date.match_uuid ? "/rebbl/match/" + date.match_uuid : "/rebbl/match/unplayed/"+date.contest_id;
+            date.homeTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.homeTeamLogo.toLowerCase() + '.png';
+            date.awayTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.awayTeamLogo.toLowerCase() + '.png';
+          })
+
+          dates = dates.sort(function(a,b){return a.scheduledDate > b.scheduledDate ? 1 : -1})
+          dates = _groupBy(dates,"shortDate")
+
+          let result = []
+          for(var prop in dates){
+            result.push({date: prop, matches:dates[prop]});
+          }
+
+
+          model.dates(result);
+        }
+
+        xhr.send('');
+
     });
-    
+
+    const _groupBy = function(xs, key) {
+      return xs.reduce(function(rv, x) {
+        (rv[x[key]] = rv[x[key]] || []).push(x);
+        return rv;
+      }, {});
+    };
     
 block content
-  - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-  for date,key in schedules
-    div(class="row")
-      div(class="col-10 offset-sm-1")
-        h2=key
-        each match in date
-          - let url = match.match_uuid ? `/rebbl/match/${ match.match_uuid }` : `/rebbl/match/unplayed/${match.contest_id}`
-          - if (match.opponents)
-          a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
-
-            div(class="row col-12")
-              div(class="col-2")= match.league
-                br
-                i= match.competition
-              div(class="col-2 matchTime")= match.scheduledDate
-              div(class="col-8 row no-gutters")
-                div(class="col-5")
-                  div(class="col-12")
-                    div(class="float-right"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
-                    div(class="float-right" style="text-align: right;padding-right:5px;")
-                      div(class="TeamLabel-name ")= match.opponents[0].team.name
-                      div(class="TeamLabel-coach ")= match.opponents[0].coach.name
-                div(class="col-1" style="text-align:center" )
-                      span(class="MatchStatus-score")= match.opponents[0].team.score
-                      span(class="MatchStatus-score") -
-                      span(class="MatchStatus-score")= match.opponents[1].team.score
-                div(class="col-5")
-                  div(class="col-12")
-                    div(class="float-left" style="padding-right:5px"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
-                    div(class="TeamLabel-info TeamLabel-info--noScore")
-                    div(class="TeamLabel-name ")= match.opponents[1].team.name
-                    div(class="TeamLabel-coach ")= match.opponents[1].coach.name
+  // ko foreach: dates
+  div(class="row")
+    div(class="col-10 offset-sm-1")
+      h2(data-bind="text: date")
+      // ko foreach: matches
+      a(data-bind="attr: { href: url}" class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
+        div(class="row col-12")
+          div(class="col-2") 
+            span(data-bind="text: league")
+            br
+            i(data-bind="text: competition")
+          div(class="col-2 matchTime" data-bind="text:shortTime")
+          div(class="col-8 row no-gutters")
+            div(class="col-5")
+              div(class="col-12")
+                div(class="float-right"): img(data-bind="attr: {src: homeTeamLogo}" alt="" class="TeamLabel-logo" )
+                div(class="float-right" style="text-align: right;padding-right:5px;")
+                  div(class="TeamLabel-name " data-bind="text: homeTeam")
+                  div(class="TeamLabel-coach " data-bind="text: homeCoach")
+            div(class="col-1" style="text-align:center" )
+                  span(class="MatchStatus-score") &nbsp;
+                  span(class="MatchStatus-score") -
+                  span(class="MatchStatus-score") &nbsp;
+            div(class="col-5")
+              div(class="col-12")
+                div(class="float-left" style="padding-right:5px"): img(data-bind="attr: {src: awayTeamLogo}" alt="" class="TeamLabel-logo")
+                div(class="TeamLabel-info TeamLabel-info--noScore")
+                  div(class="TeamLabel-name " data-bind="text: awayTeam")
+                  div(class="TeamLabel-coach " data-bind="text: awayCoach")
+      // /ko
+  // /ko

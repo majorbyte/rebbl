@@ -9,5 +9,7 @@ router.use('/greenhorn', require(`./greenhorn.js`));
 
 router.use('/signups', require(`./signups.js`));
 
+router.use('/upcoming', require(`./upcoming.js`));
+
 
 module.exports = router;
