@@ -47,7 +47,10 @@ router.put('/unplayed/:match_id', util.ensureAuthenticated, async function(req, 
     let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(user.coach, "i")} })
 
     if(contest.length > 0){
-      datingService.updateDate(Number(req.params.match_id), req.body.date);
+      if (req.body.date.length === 16)
+        datingService.updateDate(Number(req.params.match_id), req.body.date);
+      else 
+        datingService.removeDate(Number(req.params.match_id));
       res.send("ok");
     } else {
       res.status(403).send();
