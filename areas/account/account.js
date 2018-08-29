@@ -43,9 +43,8 @@ router.get('/match',util.ensureAuthenticated, async function(req, res){
 
 router.put('/unplayed/:match_id', util.ensureAuthenticated, async function(req, res, next){
   try{
-
     let user = await accountService.getAccount(req.user.name)
-    let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name":user.coach})
+    let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(user.coach, "i")} })
 
     if(contest.length > 0){
       datingService.updateDate(Number(req.params.match_id), req.body.date);
