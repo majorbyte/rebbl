@@ -135,10 +135,10 @@ block content
           strong coach
         div(class="col-4")= match.opponents[1].coach.name
       div(class="row justify-content-center")
-        div(class="col-4 text-right highlight")= "/u/" + match.opponents[0].coach.reddit.toLowerCase()
+        div(class="col-4 text-right highlight")= "/u/" + (match.opponents[0].coach.reddit ? match.opponents[0].coach.reddit.toLowerCase() :"")
         div(class="col-2 text-center")
           strong reddit
-        div(class="col-4 highlight")= "/u/" + match.opponents[1].coach.reddit.toLowerCase()
+        div(class="col-4 highlight")= "/u/" + (match.opponents[1].coach.reddit ? match.opponents[1].coach.reddit.toLowerCase() : "")
       div(class="row justify-content-center")
         div(class="col-4 text-right")= match.opponents[0].coach.discord
         div(class="col-2 text-center")
