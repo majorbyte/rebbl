@@ -195,54 +195,11 @@ p {
   margin-right: 0px;
 }
 
-.Button,.btn {
-  display: inline-block;
-  margin-bottom: 0;
-  text-align: center;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
-  cursor: pointer;
-  background-image: none;
-  border: 1px solid transparent;
-  font-size: 14px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none
-}
 
 .Button:focus,.Button:hover,.btn:focus,.btn:hover {
   color: #fff
 }
 
-.Button,.btn {
-  line-height: 1;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  color: #333;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
-  font-weight: 700;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  max-width: 30ch;
-  outline: none!important;
-  padding: 0em 1.5em 0em;
-  text-transform: uppercase;
-  transition: all .2s ease-out;
-  white-space: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale
-}
 
 .Button:active,.Button:focus,.Button:hover,.btn:active,.btn:focus,.btn:hover {
   outline: none;
@@ -253,7 +210,15 @@ p {
 .Button--primary,.btn-default,.btn-primary {
   background: #ff8900;
   border-color: #c75a00;
-  color: #fff
+  color: #fff;
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-weight: 700;
+}
+
+.primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+  background: #ff8900;
+  border-color: #c75a00;
+  color: #fff;
 }
 
 .Button--primary:hover,.Button--primary:hover:focus,.active.Button--primary,.btn-default.active,.btn-default:hover,.btn-default:hover:focus,.btn-primary.active,.btn-primary:hover,.btn-primary:hover:focus {
@@ -1223,9 +1188,9 @@ html, body {
 }
 main {
 
-  min-height: -webkit-calc(100% - 20px);     /* Chrome */
-  min-height: -moz-calc(100% - 20px);     /* Firefox */
-  min-height: calc(100% - 20px);     /* native */
+  min-height: -webkit-calc(100% - 30px);     /* Chrome */
+  min-height: -moz-calc(100% - 30px);     /* Firefox */
+  min-height: calc(100% - 30px);     /* native */
 }
 
 .footer {

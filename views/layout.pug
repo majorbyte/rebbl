@@ -10,8 +10,9 @@ html(lang="en")
   - if (!active) { var active =  (options && options.active) ? options.active : "" }
   
   block body
-    body(style="padding-top:8rem" )
-      div(class="u-bottomPadding--small-rebbl")
+    body(style="padding-top:170px" )
+      a(href="/")
+        div(class="u-bottomPadding--small-rebbl")
       nav(class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="min-height:80px;z-index:2000;justify-content:unset")
         button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblMainNav" aria-controls="rebblMainNav" aria-expanded="false" aria-label="Toggle navigation")
           span(class="navbar-toggler-icon")
@@ -26,7 +27,6 @@ html(lang="en")
             +nav-link("One Minute")
             +nav-link("Lineman League", "/rebbl/rebbll")
             +nav-link("Elfly", "/rebbl/XScessively Elfly League")
-            +nav-link("wcq","/wcq")
             +nav-link("Account", "/account")
             block additionalMainNavigation
       block navigation
