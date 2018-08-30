@@ -10,9 +10,24 @@ block scripts
       const self = this;
       // Editable data
       self.dates = ko.observableArray([]);
+      self.leagues =  ko.observableArray([])
+      self.visibleLeagues =  ko.observableArray([])
+
+      self.toggle = function(league,event){
+        $(event.currentTarget).toggleClass("btn-secondary");
+        $(event.currentTarget).toggleClass("btn-primary");
+        
+        self.dates().map(function(date){
+          date.matches.map(function(match){
+            match.show(match.league === league ? !match.show(): match.show());
+          });
+        });
+
+      }
     }
+    
+    const model = new DateModel();
     $(document).ready(function(){
-        const model = new DateModel();
         ko.applyBindings(model);
 
         var xhr = new XMLHttpRequest();
@@ -30,6 +45,11 @@ block scripts
             date.url = date.match_uuid ? "/rebbl/match/" + date.match_uuid : "/rebbl/match/unplayed/"+date.contest_id;
             date.homeTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.homeTeamLogo.toLowerCase() + '.png';
             date.awayTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.awayTeamLogo.toLowerCase() + '.png';
+            date.show = ko.observable(true);
+            if(model.leagues.indexOf(date.league) === -1) {
+              model.leagues.push(date.league);
+              model.visibleLeagues.push(date.league);
+            }
           })
 
           dates = dates.sort(function(a,b){return a.scheduledDate > b.scheduledDate ? 1 : -1})
@@ -56,34 +76,42 @@ block scripts
     };
     
 block content
-  // ko foreach: dates
-  div(class="row")
-    div(class="col-10 offset-sm-1")
-      h2(data-bind="text: date")
-      // ko foreach: matches
-      a(data-bind="attr: { href: url}" class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
-        div(class="row col-12")
-          div(class="col-2") 
-            span(data-bind="text: league")
-            br
-            i(data-bind="text: competition")
-          div(class="col-2 matchTime" data-bind="text:shortTime")
-          div(class="col-8 row no-gutters")
-            div(class="col-5")
-              div(class="col-12")
-                div(class="float-right"): img(data-bind="attr: {src: homeTeamLogo}" alt="" class="TeamLabel-logo" )
-                div(class="float-right" style="text-align: right;padding-right:5px;")
-                  div(class="TeamLabel-name " data-bind="text: homeTeam")
-                  div(class="TeamLabel-coach " data-bind="text: homeCoach")
-            div(class="col-1" style="text-align:center" )
-                  span(class="MatchStatus-score") &nbsp;
-                  span(class="MatchStatus-score") -
-                  span(class="MatchStatus-score") &nbsp;
-            div(class="col-5")
-              div(class="col-12")
-                div(class="float-left" style="padding-right:5px"): img(data-bind="attr: {src: awayTeamLogo}" alt="" class="TeamLabel-logo")
-                div(class="TeamLabel-info TeamLabel-info--noScore")
-                  div(class="TeamLabel-name " data-bind="text: awayTeam")
-                  div(class="TeamLabel-coach " data-bind="text: awayCoach")
+  div(class="container")
+    div(class="row justify-content-center")
+      // ko foreach: leagues
+      button(class="btn btn-primary" data-bind="text: $data, click:$parent.toggle" style="height: 2rem;margin-right:5px") derp
       // /ko
-  // /ko
+
+    // ko foreach: dates
+    div(class="row")
+      div(class="col-10 offset-sm-1")
+        h2(data-bind="text: date")
+        // ko foreach: matches
+        // ko if: show
+        a(data-bind="attr: { href: url}" class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
+          div(class="row col-12")
+            div(class="col-2") 
+              span(data-bind="text: league")
+              br
+              i(data-bind="text: competition")
+            div(class="col-2 matchTime" data-bind="text:shortTime")
+            div(class="col-8 row no-gutters")
+              div(class="col-5")
+                div(class="col-12")
+                  div(class="float-right"): img(data-bind="attr: {src: homeTeamLogo}" alt="" class="TeamLabel-logo" )
+                  div(class="float-right" style="text-align: right;padding-right:5px;")
+                    div(class="TeamLabel-name " data-bind="text: homeTeam")
+                    div(class="TeamLabel-coach " data-bind="text: homeCoach")
+              div(class="col-1" style="text-align:center" )
+                    span(class="MatchStatus-score") &nbsp;
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score") &nbsp;
+              div(class="col-5")
+                div(class="col-12")
+                  div(class="float-left" style="padding-right:5px"): img(data-bind="attr: {src: awayTeamLogo}" alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel-info TeamLabel-info--noScore")
+                    div(class="TeamLabel-name " data-bind="text: awayTeam")
+                    div(class="TeamLabel-coach " data-bind="text: awayCoach")
+        // /ko
+        // /ko
+    // /ko
