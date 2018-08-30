@@ -33,7 +33,7 @@ router.get('/login', function(req, res){
 
 router.get('/match',util.ensureAuthenticated, async function(req, res){
   try{
-    let match = await leagueService.getUpcomingMatch(req.user.name);
+    let match = await leagueService.getUpcomingMatch("daerkannon"); // req.user.name);
     let user = await accountService.getAccount(req.user.name)
     res.render('account/match',{matches: match, user:user} );
   } catch(err){
