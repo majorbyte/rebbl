@@ -42,7 +42,7 @@ router.get("/", util.checkCache, async function(req, res){
 
 router.post("/stream/:contest_id", util.ensureAuthenticatedApi, async function(req, res){
     try{
-        let date = await datingService.getDateObject(Number(req.params.contest_id));
+        let date = await datingService.getDate(Number(req.params.contest_id));
         let user = await accountService.getAccount(req.user.name);
 
         if(date && !date.stream){
@@ -60,7 +60,7 @@ router.post("/stream/:contest_id", util.ensureAuthenticatedApi, async function(r
 
 router.post("/unstream/:contest_id", util.ensureAuthenticatedApi, async function(req, res){
     try{
-        let date = await datingService.getDateObject(Number(req.params.contest_id));
+        let date = await datingService.getDate(Number(req.params.contest_id));
 
         if(date && date.stream){
             delete date.stream;
