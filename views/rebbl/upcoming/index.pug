@@ -143,7 +143,7 @@ block content
             i(data-bind="text: competition")
           div(class="col-1") 
             //ko if: streaming && stream()
-            a(data-bind="attr: {href: stream().url, title: stream().name}")
+            a(data-bind="attr: {href: stream().url, title: stream().name}" target="_blank")
               img(src="/images/glitch.png" style="width:24px;height:24px")
             // /ko
             //ko ifnot: streaming
