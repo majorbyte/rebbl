@@ -65,7 +65,9 @@ router.post('/update', util.ensureAuthenticated, async function(req, res){
     let account = { reddit: req.user.name
       , discord:  req.body.discord
       , steam: req.body.steam
-      , timezone: req.body.timezone };
+      , timezone: req.body.timezone
+      , twitch: req.body.twitch
+    };
 
     account = await accountService.saveAccount(account);
 

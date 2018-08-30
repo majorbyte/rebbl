@@ -1,9 +1,20 @@
 extends .\sublayout.pug
+include ..\nav-link
 block vars
   - let options = {active: league, title: "REBBL SEASON 8"}
 
 block scripts
   script.
+
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav mr-auto")
+        +nav-link("Upcoming games", "/rebbl/upcoming")
+
 
 block content
   div(id="myCarousel" class="carousel slide" data-ride="carousel")

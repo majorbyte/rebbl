@@ -22,10 +22,52 @@ block scripts
             match.show(match.league === league ? !match.show(): match.show());
           });
         });
-
       }
+
     }
-    
+
+  - if(user && user.twitch)
+    script.
+      DateModel.prototype.stream = function(date){
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/v1/upcoming/stream/"+date.contest_id, true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function() {//Call a function when the state changes.
+          if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+            date.stream(JSON.parse(xhr.response).stream);
+            date.streaming(true);
+          }
+          if(this.readyState == XMLHttpRequest.DONE && this.status == 403) {
+              btn.removeClass("btn-primary").addClass("btn-danger");
+              btn.prop("disabled",true);
+          }
+        }
+        xhr.send('');
+      }
+
+      DateModel.prototype.unstream = function(date){
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/v1/upcoming/unstream/"+date.contest_id, true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function() {//Call a function when the state changes.
+          if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+            date.stream(null);
+            date.streaming(false);
+          }
+          if(this.readyState == XMLHttpRequest.DONE && this.status == 403) {
+              btn.removeClass("btn-primary").addClass("btn-danger");
+              btn.prop("disabled",true);
+          }
+        }
+
+
+        xhr.send('');
+      }
+
+  script.    
     const model = new DateModel();
     $(document).ready(function(){
         ko.applyBindings(model);
@@ -39,13 +81,17 @@ block scripts
 
           let dates = xhr.response;
           dates.map(function(date){
-            date.scheduledDate = moment.tz(date.scheduledDate,"UTC").tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm zz(ZZ)')
-            date.shortDate = date.scheduledDate.substr(0,10);
-            date.shortTime = date.scheduledDate.substr(10,date.scheduledDate.length-10);
+            let time = moment.tz(date.scheduledDate,"UTC").tz(moment.tz.guess());
+            date.scheduledDate = time.format('YYYY-MM-DD HH:mm zz(ZZ)');
+            date.shortDate = time.format('YYYY-MM-DD');
+            date.shortTime = time.format('HH:mm');
+            date.shortTimeTitle = time.format('zz(ZZ)');
             date.url = date.match_uuid ? "/rebbl/match/" + date.match_uuid : "/rebbl/match/unplayed/"+date.contest_id;
             date.homeTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.homeTeamLogo.toLowerCase() + '.png';
             date.awayTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.awayTeamLogo.toLowerCase() + '.png';
             date.show = ko.observable(true);
+            date.streaming = ko.observable(date.stream ? true: false);
+            date.stream = ko.observable(date.stream);
             if(model.leagues.indexOf(date.league) === -1) {
               model.leagues.push(date.league);
               model.visibleLeagues.push(date.league);
@@ -79,7 +125,7 @@ block content
   div(class="container")
     div(class="row justify-content-center")
       // ko foreach: leagues
-      button(class="btn btn-primary" data-bind="text: $data, click:$parent.toggle" style="height: 2rem;margin-right:5px") derp
+      button(class="btn btn-primary" data-bind="text: $data, click:$parent.toggle" style="margin-right:5px") derp
       // /ko
 
     // ko foreach: dates
@@ -88,30 +134,49 @@ block content
         h2(data-bind="text: date")
         // ko foreach: matches
         // ko if: show
-        a(data-bind="attr: { href: url}" class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
-          div(class="row col-12")
-            div(class="col-2") 
-              span(data-bind="text: league")
-              br
-              i(data-bind="text: competition")
-            div(class="col-2 matchTime" data-bind="text:shortTime")
-            div(class="col-8 row no-gutters")
-              div(class="col-5")
-                div(class="col-12")
-                  div(class="float-right"): img(data-bind="attr: {src: homeTeamLogo}" alt="" class="TeamLabel-logo" )
-                  div(class="float-right" style="text-align: right;padding-right:5px;")
-                    div(class="TeamLabel-name " data-bind="text: homeTeam")
-                    div(class="TeamLabel-coach " data-bind="text: homeCoach")
-              div(class="col-1" style="text-align:center" )
-                    span(class="MatchStatus-score") &nbsp;
-                    span(class="MatchStatus-score") -
-                    span(class="MatchStatus-score") &nbsp;
-              div(class="col-5")
-                div(class="col-12")
-                  div(class="float-left" style="padding-right:5px"): img(data-bind="attr: {src: awayTeamLogo}" alt="" class="TeamLabel-logo")
-                  div(class="TeamLabel-info TeamLabel-info--noScore")
-                    div(class="TeamLabel-name " data-bind="text: awayTeam")
-                    div(class="TeamLabel-coach " data-bind="text: awayCoach")
+        div(class="row col-12")  
+          div(data-bind="text:shortTime, attr: {title: shortTimeTitle}")
+          span :&nbsp;
+          div() 
+            span(data-bind="text: league") 
+            span &nbsp;
+            i(data-bind="text: competition")
+          div(class="col-1") 
+            //ko if: streaming && stream()
+            a(data-bind="attr: {href: stream().url, title: stream().name}")
+              img(src="/images/glitch.png" style="width:24px;height:24px")
+            // /ko
+            //ko ifnot: streaming
+            div(style="min-width:24px") &nbsp;
+            // /ko
+        div(class="row col-12")  
+          a(data-bind="attr: { href: url}" class=" MatchRow-contentWrapper MatchRow-contentWrapper--hover")
+            div(class="row col-12")
+              div(class="col-12 row no-gutters")
+                div(class="col-5")
+                  div(class="col-12")
+                    div(class="float-right"): img(data-bind="attr: {src: homeTeamLogo}" alt="" class="TeamLabel-logo" )
+                    div(class="float-right" style="text-align: right;padding-right:5px;")
+                      div(class="TeamLabel-name " data-bind="text: homeTeam")
+                      div(class="TeamLabel-coach " data-bind="text: homeCoach")
+                div(class="col-1" style="text-align:center" )
+                      span(class="MatchStatus-score") &nbsp;
+                      span(class="MatchStatus-score") -
+                      span(class="MatchStatus-score") &nbsp;
+                div(class="col-5")
+                  div(class="col-12")
+                    div(class="float-left" style="padding-right:5px"): img(data-bind="attr: {src: awayTeamLogo}" alt="" class="TeamLabel-logo")
+                    div(class="TeamLabel-info TeamLabel-info--noScore")
+                      div(class="TeamLabel-name " data-bind="text: awayTeam")
+                      div(class="TeamLabel-coach " data-bind="text: awayCoach")
+                -if(user && user.twitch)
+                  div(class="col-1")
+                    <!-- ko if: streaming() && (stream() && "#{user.reddit}" === stream().name) -->
+                    btn(class="btn btn-danger pull-right" data-bind="click: $root.unstream") unstream
+                    // /ko
+                    //ko ifnot: streaming
+                    btn(class="btn btn-success pull-right" data-bind="click: $root.stream") stream
+                    // /ko
         // /ko
         // /ko
     // /ko
