@@ -1,6 +1,7 @@
 'use strict';
 const db = require('../../lib/LeagueService.js')
   , util = require('../../lib/util.js')
+  , datingService = require("../../lib/DatingService.js")
   , express = require('express')
   , router = express.Router({mergeParams: true});
 
@@ -22,6 +23,14 @@ router.get('/', util.checkCache, async function(req,res) {
   }
 
   data.matches = await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
+
+  let ids = []
+  for(var prop in data.matches){
+    data.matches[prop].map(m => ids.push(m.contest_id));
+  }
+
+  data.dates = await datingService.search({"id":{$in:ids}})
+
   data.divisions = await db.getDivisions(leagueRegex);
 
   if(league.toLowerCase() === "xscessively elfly league"){

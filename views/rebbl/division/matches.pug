@@ -1,4 +1,6 @@
+
 - let url = match.match_uuid ? `/rebbl/match/${ match.match_uuid }` : `/rebbl/match/unplayed/${match.contest_id}`
+- let hasDate = dates.find(x => x.id === match.contest_id)
 - if (match.opponents)
   a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
     div(class="MatchRow-team")
@@ -20,7 +22,15 @@
             span(class="MatchStatus-score is-winner")= match.opponents[1].team.score
           else
             span(class="MatchStatus-score")= match.opponents[0].team.score
-            span(class="MatchStatus-score") -
+            - if (hasDate && hasDate.stream)
+              span(class="MatchStatus-score" style="color:#2F6FAD;font-size:2.3em;width:unset")  
+                div(title=hasDate.stream.name+"@" + hasDate.date+" UTC")
+                  img(src="/images/glitch.png" style="width:24px;height:24px")
+            - else if (hasDate)
+              span(class="MatchStatus-score" style="color:#2F6FAD;font-size:2.3em;width:unset")  
+                i(class="fa fa-clock-o" title=hasDate.date+" UTC")
+            - if(!hasDate)
+              span(class="MatchStatus-score") -
             span(class="MatchStatus-score")= match.opponents[1].team.score
     div(class="MatchRow-team")
       div(class="TeamLabel")
