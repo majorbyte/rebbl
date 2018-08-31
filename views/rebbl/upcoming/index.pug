@@ -14,8 +14,8 @@ block scripts
       self.visibleLeagues =  ko.observableArray([])
 
       self.toggle = function(league,event){
-        $(event.currentTarget).toggleClass("btn-secondary");
-        $(event.currentTarget).toggleClass("btn-primary");
+        $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+        $(event.currentTarget || event.target ).toggleClass("btn-primary");
         
         let index = self.visibleLeagues.indexOf(league);
         if (index > -1){
@@ -27,8 +27,13 @@ block scripts
 
         self.dates().map(function(date){
           date.matches.map(function(match){
-            debugger;
-            let show = self.visibleLeagues().length === 0 || self.visibleLeagues.indexOf(match.league)>-1;
+            let show = false;
+            if(league ==='twitch' && self.visibleLeagues.indexOf(league)>-1){
+              debugger;
+              show = match.stream() ? true: false;
+            } else {
+              show = self.visibleLeagues().length === 0 || self.visibleLeagues.indexOf(match.league)>-1;
+            }
             match.show(show);
           });
         });
@@ -134,8 +139,11 @@ block content
   div(class="container")
     div(class="row justify-content-center")
       // ko foreach: leagues
-      button(class="btn btn-secondary" data-bind="text: $data, click:$parent.toggle" style="margin-right:5px") derp
+      button(class="btn btn-secondary" data-bind="text: $data, click:$parent.toggle" style="margin-right:5px") 
       // /ko
+      button(class="btn btn-secondary" data-bind="click:toggle.bind($data,'twitch',event)" style="margin-right:5px")
+        img(src="/images/glitch.png" style="width:24px;height:24px")
+         
 
     // ko foreach: dates
     // ko if: matches.filter(function(m){return m.show()}).length > 0
