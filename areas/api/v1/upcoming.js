@@ -2,6 +2,7 @@
 const LeagueService = require("../../../lib/LeagueService.js")
   , accountService = require("../../../lib/accountService.js")
   , datingService = require("../../../lib/DatingService.js")
+  , teamService = require("../../../lib/teamservice.js")
   , util = require("../../../lib/util.js")
   , express = require("express")
   , router = express.Router({mergeParams: true});
@@ -15,16 +16,22 @@ router.get("/", util.checkCache, async function(req, res){
 
     let data = [];
 
-    schedules.map(match => {
+    await Promise.all(schedules.map(async function(match) {
         let date = n.find(s => s.id === match.contest_id);
+        let homeTeam = await teamService.getTeamById(match.opponents[0].team.id);
+        let awayTeam = await teamService.getTeamById(match.opponents[0].team.id);
         data.push({
             scheduledDate : date.date,
             stream: date.stream,
             homeCoach: match.opponents[0].coach.name,
             homeTeam: match.opponents[0].team.name,
+            homeTeamValue: homeTeam ? homeTeam.team.nextMatchTV : match.opponents[0].team.value,
+            homeTeamRace: match.opponents[0].team.race,
             homeTeamLogo: match.opponents[0].team.logo,
             awayCoach: match.opponents[1].coach.name,
             awayTeam: match.opponents[1].team.name,
+            awayTeamValue: awayTeam ? awayTeam.team.nextMatchTV : match.opponents[1].team.value,
+            awayTeamRace: match.opponents[1].team.race,
             awayTeamLogo: match.opponents[1].team.logo,
             match_uuid : match.match_uuid,
             contest_id: match.contest_id,
@@ -33,9 +40,8 @@ router.get("/", util.checkCache, async function(req, res){
 
         })
 
-    })
+    }))
 
-    schedules = await schedules.sort((a,b) => a.scheduledDate > b.scheduledDate ? 1 : -1 )
 
     res.send(data);
 });
