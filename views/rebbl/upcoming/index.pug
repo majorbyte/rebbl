@@ -14,8 +14,13 @@ block scripts
       self.visibleLeagues =  ko.observableArray([])
 
       self.toggle = function(league,event){
-        $(event.currentTarget || event.target ).toggleClass("btn-secondary");
-        $(event.currentTarget || event.target ).toggleClass("btn-primary");
+        if (league === 'twitch'){
+          $(event.currentTarget || event.target ).toggleClass("btn-twitch-off");
+          $(event.currentTarget || event.target ).toggleClass("btn-twitch-on");
+        } else {
+          $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+          $(event.currentTarget || event.target ).toggleClass("btn-primary");
+        }
         
         let index = self.visibleLeagues.indexOf(league);
         if (index > -1){
@@ -29,10 +34,15 @@ block scripts
           date.matches.map(function(match){
             let show = false;
             if(league ==='twitch' && self.visibleLeagues.indexOf(league)>-1){
-              debugger;
-              show = match.stream() ? true: false;
+              show = match.stream() ? self.visibleLeagues.length > 1 ? self.visibleLeagues.indexOf(match.league)>-1 : true : false;
             } else {
-              show = self.visibleLeagues().length === 0 || self.visibleLeagues.indexOf(match.league)>-1;
+              let twitch = self.visibleLeagues.indexOf('twitch')>-1;
+              if (twitch){
+                show = (self.visibleLeagues().length === 1 && match.stream()) || (self.visibleLeagues.indexOf(match.league)>-1 && match.stream())
+              } else {
+                show = self.visibleLeagues().length === 0 || self.visibleLeagues.indexOf(match.league)>-1;
+              }
+              
             }
             match.show(show);
           });
@@ -141,9 +151,13 @@ block content
       // ko foreach: leagues
       button(class="btn btn-secondary" data-bind="text: $data, click:$parent.toggle" style="margin-right:5px") 
       // /ko
-      button(class="btn btn-secondary" data-bind="click:toggle.bind($data,'twitch',event)" style="margin-right:5px")
+      button(class="btn btn-twitch-off" data-bind="click:toggle.bind($data,'twitch',event)" style="margin-right:5px")
+        // ko if: visibleLeagues.indexOf('twitch') > -1
+        img(src="/images/glitch_white.png" style="width:24px;height:24px")
+        // /ko         
+        // ko if: visibleLeagues.indexOf('twitch') === -1
         img(src="/images/glitch.png" style="width:24px;height:24px")
-         
+        // /ko         
 
     // ko foreach: dates
     // ko if: matches.filter(function(m){return m.show()}).length > 0

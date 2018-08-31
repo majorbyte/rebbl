@@ -3,7 +3,10 @@ doctype html
 html(lang="en")
   head
     link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css")
-    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.css")
+    - if (process.env.NODE_ENV === 'production')
+      link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.css")
+    - else  
+      link(rel="stylesheet" href="/styles/style.css")
     block head
   block vars
 
