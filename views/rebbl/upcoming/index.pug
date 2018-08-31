@@ -129,6 +129,7 @@ block content
       // /ko
 
     // ko foreach: dates
+    // ko if: matches.filter(function(m){return m.show()}).length > 0
     div(class="row")
       div(class="col-10 offset-sm-1")
         h2(data-bind="text: date")
@@ -180,3 +181,4 @@ block content
         // /ko
         // /ko
     // /ko
+    // /ko    
