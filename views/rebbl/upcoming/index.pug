@@ -93,7 +93,6 @@ block scripts
       }
 
   script.    
-    ko.options.useOnlyNativeEvents = true;
     const model = new DateModel();
     $(document).ready(function(){
         ko.applyBindings(model);
@@ -150,7 +149,7 @@ block content
   div(class="container")
     div(class="row justify-content-center")
       // ko foreach: leagues
-      button(class="btn btn-secondary" data-bind="text: $data, click:$parent.toggle" style="margin-right:5px") 
+      button(class="btn btn-secondary" data-bind="text: $data, click:$parent.toggle.bind(this, $data)" style="margin-right:5px") 
       // /ko
       button(class="btn btn-twitch-off" data-bind="click:toggle.bind(this,'twitch')" style="margin-right:5px")
         // ko if: visibleLeagues.indexOf('twitch') > -1
