@@ -13,7 +13,7 @@ block scripts
       self.leagues =  ko.observableArray([])
       self.visibleLeagues =  ko.observableArray([])
 
-      self.toggle = function(league,event){
+      self.toggle = function(league,data,event){
         if (league === 'twitch'){
           $(event.currentTarget || event.target ).toggleClass("btn-twitch-off");
           $(event.currentTarget || event.target ).toggleClass("btn-twitch-on");
@@ -93,6 +93,7 @@ block scripts
       }
 
   script.    
+    ko.options.useOnlyNativeEvents = true;
     const model = new DateModel();
     $(document).ready(function(){
         ko.applyBindings(model);
@@ -151,7 +152,7 @@ block content
       // ko foreach: leagues
       button(class="btn btn-secondary" data-bind="text: $data, click:$parent.toggle" style="margin-right:5px") 
       // /ko
-      button(class="btn btn-twitch-off" data-bind="click:toggle.bind($data,'twitch',event)" style="margin-right:5px")
+      button(class="btn btn-twitch-off" data-bind="click:toggle.bind(this,'twitch')" style="margin-right:5px")
         // ko if: visibleLeagues.indexOf('twitch') > -1
         img(src="/images/glitch_white.png" style="width:24px;height:24px")
         // /ko         
