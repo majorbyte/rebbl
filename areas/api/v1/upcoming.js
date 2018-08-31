@@ -19,7 +19,7 @@ router.get("/", util.checkCache, async function(req, res){
     await Promise.all(schedules.map(async function(match) {
         let date = n.find(s => s.id === match.contest_id);
         let homeTeam = await teamService.getTeamById(match.opponents[0].team.id);
-        let awayTeam = await teamService.getTeamById(match.opponents[0].team.id);
+        let awayTeam = await teamService.getTeamById(match.opponents[1].team.id);
         data.push({
             scheduledDate : date.date,
             stream: date.stream,
