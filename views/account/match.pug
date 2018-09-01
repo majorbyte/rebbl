@@ -90,11 +90,13 @@ block content
       div(class="row justify-content-center")
         div(class="row col-12 justify-content-center")
           h2= match.competition + " - week " + match.round
-          div(class="row col-10  justify-content-center")
+          div(class="row col-10 justify-content-center")
             - if(user)
-              div(class="col-3 col-sm-6 col-md-4 col-xl-3")
-                input(type="text" class="form-control datetimepicker-input" id=`datetimepicker-${match.contest_id}` data-target=`#datetimepicker-${match.contest_id}` data-toggle="datetimepicker" value=(match.date ? match.date.date : null) data-btn=`#btn-${match.contest_id}`  )
-              button(class="col-md-3 col-6 col-xl-3 pull-right btn btn-secondary" disabled data-contestid= match.contest_id data-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}` ) Set match date
+              span Enter match date in your own local time
+              div(class="row col-12 justify-content-center") 
+                div(class="col-3 col-sm-6 col-md-4 col-xl-3")
+                  input(type="text" class="form-control datetimepicker-input" id=`datetimepicker-${match.contest_id}` data-target=`#datetimepicker-${match.contest_id}` data-toggle="datetimepicker" value=(match.date ? match.date.date : null) data-btn=`#btn-${match.contest_id}`  )
+                button(class="col-md-3 col-6 col-xl-3 pull-right btn btn-secondary" disabled data-contestid= match.contest_id data-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}` ) Set match date
             - if(!user && match.date)
               p planned match start:&nbsp;
                 span(id="matchTime")= match.date.date
