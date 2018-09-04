@@ -2,8 +2,6 @@
 
 const express = require('express')
   , accountService = require("../../lib/accountService.js")
-  , leagueService = require("../../lib/LeagueService.js")
-  , datingService = require("../../lib/DatingService.js")
   , util = require('../../lib/util.js')
   , router = express.Router();
 
@@ -23,7 +21,9 @@ const express = require('express')
 
   router.get('/add', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
-      res.render('admin/user/user', { user: null });
+      let admin = await accountService.getAccount(req.user.name);
+
+      res.render('admin/user/user', { user: null, admin:admin });
   
     } catch(err){
       console.log(err);
@@ -44,7 +44,7 @@ router.get('/:user', util.ensureAuthenticated, util.hasRole("admin"), async func
 
 router.post('/update', util.ensureAuthenticated, async function(req, res){
   try{
-    let account = { reddit: req.user.name
+    let account = { reddit: req.body.name
       , discord:  req.body.discord
       , steam: req.body.steam
       , timezone: req.body.timezone

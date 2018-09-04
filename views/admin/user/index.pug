@@ -34,7 +34,6 @@ block scripts
 
     ko.bindingHandlers.foreachprop = {
         transformObject: function (obj) {
-            debugger;
             var properties = [];
             ko.utils.objectForEach(obj, function (key, value) {
                 properties.push({ key: key, value: value });
