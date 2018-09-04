@@ -44,16 +44,17 @@ router.get('/:user', util.ensureAuthenticated, util.hasRole("admin"), async func
 
 router.post('/update', util.ensureAuthenticated, async function(req, res){
   try{
-    let account = { reddit: req.body.name
+    let account = { reddit: req.body.reddit
       , discord:  req.body.discord
       , steam: req.body.steam
       , timezone: req.body.timezone
       , twitch: req.body.twitch
     };
 
-    account = await accountService.updateAccount(account);
+    await accountService.updateAccount(account);
+    let admin = await accountService.getAccount(req.user.name);
 
-    res.render('account/account', { user: account });
+    res.render('admin/user/user', { user: req.body.reddit, admin:admin  });
   } catch(err){
     console.log(err);
   }
