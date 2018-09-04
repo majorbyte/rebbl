@@ -664,13 +664,6 @@ a:focus,a:hover {
   margin-bottom: -7px
 }
 
-@media (min-width: 992px) {
-  .Tabs-header {
-/*    height:50px*/
-  }
-}
-
-
 .Tabs-scroller-wrapper {
   height: 100%;
   width: 100%;
@@ -732,10 +725,6 @@ a:focus,a:hover {
 
 .Tabs-tab--active,.Tabs-tab--disabled {
   pointer-events: none
-}
-
-.Tabs--darkBackground{
-
 }
 
 .Tabs--darkBackground,.Tabs--rectangular {
@@ -1037,10 +1026,15 @@ a:focus,a:hover {
 }
 
 .signup input, .signup select{
-  margin-top:5px;
+  margin-top:0px;
   margin-bottom:5px;
   width: 375px;
   height: 35px;
+}
+
+.signup label {
+  margin-bottom:0;
+  margin-top:0.5rem;
 }
 
 .error {
@@ -1075,11 +1069,6 @@ label { display: block; }
 .odd{
   background-color: #CAC8C8F5;
 }
-
-.even{
-  /*background-color: #A5A5A5;*/
-}
-
 
 .match-stats-table tr:nth-child(even){
   background-color: #ffffff8f;
@@ -1333,3 +1322,12 @@ body {
   background-color: #ffffff;
   border-color: #6441A4;
 }
+
+
+
+/* -------------------------------------------------------------------- */
+.user-row a { color: #333;}
+
+.user-row:hover a {color: #e67b00;}
+.user-row:hover {border-left:3px solid #e67b00;}
+
