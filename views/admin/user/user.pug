@@ -1,0 +1,360 @@
+extends ../layout.pug
+
+block append vars
+  - var activeSubMenu = "account"
+
+block append scripts
+  script(src="https://cdn2.rebbl.net/scripts/moment.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/moment-timezone.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/moment-timezone-with-data-2012-2022.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn2.rebbl.net/scripts/scripts/knockout-mapping.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/scripts/knockout-es5.js")
+  script.
+    function StrikeModel(data){
+      this.map = (data) => {
+          if (data) {
+              this.id = data.id;
+              this.reason = data.reason;
+              this.start = data.start;
+              this.end = data.end;
+              this.active = data.active;
+              this.editable = false;
+          }
+      };
+      this.snap = () => {
+          this._original = Object.assign({},this);
+      };
+      this.commit = () => {
+          if (this._original != null) {
+              return this._original.map(this);
+          }
+      };
+      this.rollback = () => {
+          if (this._original != null) {
+              this.map(this._original);
+          }
+      };
+      this.map(data);
+      this.snap();
+      ko.track(this);
+    }
+    
+    function UserModel(){
+      let self = this;
+
+      self.reddit = ko.observable();
+      self.coach = ko.observable();
+      self.discord = ko.observable();
+      self.steam = ko.observable();
+      self.timezone = ko.observable();
+      self.twitch = ko.observable();
+      
+      self.roles = ko.observableArray([]);
+      self.strikes = ko.observableArray([]);
+      self.warnings = ko.observableArray([]);
+
+      self.newStrike = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
+      self.newWarning = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
+
+      self.toggle = function(data,event){
+        data.active = !data.active;
+        self.post("/api/v1/admin/user/toggleStrike", {reddit:self.reddit(), id:data.id, strike:data});
+      }
+
+      self.addStrike = function(data,event){
+        self.strikes.push(self.newStrike());
+        self.post("/api/v1/admin/user/addStrike", {reddit:self.reddit(), strike:self.newStrike()});
+        self.newStrike(new StrikeModel({"reason":"","start":"","end":"","active":true}));
+      }
+
+      self.addWarning = function(data,event){
+        self.warnings.push(self.newWarning());
+        self.post("/api/v1/admin/user/addWarning", {reddit:self.reddit(), warning:self.newWarning()});
+        self.newWarning(new StrikeModel({"reason":"","start":"","end":"","active":true}));
+      }
+
+      self.edit = function(data,event){
+        data.editable=true;
+      }
+
+
+      self.saveStrike = function(data,event){
+        data.editable=false;
+        data.commit();
+        self.post("/api/v1/admin/user/updateStrike", {reddit:self.reddit(), strike:data});
+      }
+
+      self.cancelStrike = function(data,event){
+        data.editable=false;
+        data.rollback();
+      }
+
+
+      self.saveWarning = function(data,event){
+        data.editable=false;
+        data.commit();
+        self.post("/api/v1/admin/user/updateWarning", {reddit:self.reddit(), warning:data});
+      }
+
+      self.cancelWarning = function(data,event){
+        data.editable=false;
+        data.rollback();
+      }
+
+      self.removeWarning = function(data,event){
+        data.active = false;
+        self.post("/api/v1/admin/user/updateWarning", {reddit:self.reddit(), warning:data});
+      }
+
+      self.post = function(url, data){
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onreadystatechange = function() {//Call a function when the state changes.
+          if(this.readyState == XMLHttpRequest.DONE && this.status == 500) {
+            console.log(xhr.response);
+          }
+        }
+        
+        xhr.send(JSON.stringify(data));
+
+      } 
+    }
+
+    var mapping = {
+      'strikes': {
+          create: function(options) {
+              return new StrikeModel(options.data);
+          }
+      },
+      'warnings': {
+          create: function(options) {
+              return new StrikeModel(options.data);
+          }
+      },
+      'roles': {
+          create: function(options) {
+              return options.data;
+          }
+      }
+
+    }
+
+    let model = new UserModel(); 
+    $(document).ready(function(){
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/api/v1/admin/user/#{user}",true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+
+           
+        model = ko.mapping.fromJS(xhr.response,mapping,model);
+
+        ko.applyBindings(model);
+
+        $("#timezone").on('change', function(e){
+          $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
+        });
+
+        let select = document.getElementById("timezone");
+        let guessed = moment.tz.guess();
+        
+        let names = moment.tz.names();
+        let l = names.length;
+
+        for(let i = 0; i < l; i++){
+          let tz = names[i];
+          let option = document.createElement("option");
+          option.setAttribute("value", tz);
+          option.text = tz;
+          if (tz === model.timezone()){
+            option.setAttribute("selected", "selected")
+          }
+          select.appendChild(option);
+        }
+      }
+      xhr.send('');
+
+      let select = document.getElementById("timezone");
+
+      let names = moment.tz.names();
+      let l = names.length;
+      let timezone = "#{user ? user.timezone : ''}";  
+      for(let i = 0; i < l; i++){
+        let tz = names[i];
+        let option = document.createElement("option");
+        option.setAttribute("value", tz);
+        option.text = tz;
+        if (tz === timezone){
+          option.setAttribute("selected", "selected")
+        }
+        select.appendChild(option);
+      }
+    });
+
+  -if (admin.roles && admin.roles.indexOf("superadmin") > -1)
+    script.
+      UserModel.prototype.toggleAdmin = function(data,event){
+          $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+          $(event.currentTarget || event.target ).toggleClass("btn-success");
+          if(this.roles.indexOf("admin") > -1 ){
+            this.roles.splice(this.roles.indexOf("admin"),1);
+            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"admin", action:"remove"});
+          } else {
+            this.roles.push("admin")
+            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"admin", action:"add"});
+          }
+      }
+block content
+  div(class="container")
+    h2(class="highlight")= user ? user : "Add new user"
+    nav
+      div(class="nav nav-tabs" id="nav-tab" role="tablist")
+        a(class="nav-item nav-link active" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="true") Info
+        - if(user)
+          a(class="nav-item nav-link" id="nav-warnings-tab" data-toggle="tab" href="#nav-warnings" role="tab" aria-controls="nav-warnings" aria-selected="false") Warnings
+          a(class="nav-item nav-link" id="nav-strikes-tab" data-toggle="tab" href="#nav-strikes" role="tab" aria-controls="nav-strikes" aria-selected="false") Strikes
+          -if (admin.roles && admin.roles.indexOf("superadmin") >-1)
+            a(class="nav-item nav-link" id="nav-donations-tab" data-toggle="tab" href="#nav-donations" role="tab" aria-controls="nav-donations" aria-selected="false") Donations
+    div(class="tab-content" id="nav-tabContent")
+      div(class="tab-pane fade show active" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab")
+        -if (user && admin.roles && admin.roles.indexOf("superadmin")>-1 )
+        h3
+          button(class="btn" data-bind="click: toggleAdmin, css: roles.indexOf('admin') > -1 ? 'btn-success' : 'btn-secondary'  " ) admin
+        form(action="/admin/user/update" method="post" class="container signup")
+          div
+            label(for="reddit") reddit name
+            input(type="text" id="reddit" name="reddit" data-bind="value: reddit")
+          div
+            label(for="coach") Blood Bowl 2 coach name
+            input(type="text" id="coach" name="coach" data-bind="value: coach")
+          div
+            label(for="timezone") Timezone
+            select(id="timezone" name="timezone" required title="timezone")
+          div
+            label(for="discord") Discord
+            input(type="text" id="discord" name="discord" data-bind="value: discord")
+          div
+            label(for="steam") Steam
+            input(type="text" id="steam" name="steam" data-bind="value: steam")
+          div
+            label(for="steam") Twitch
+            input(type="text" id="twitch" name="twitch" data-bind="value: twitch")
+          div(style="clear:both")
+            button(type="submit") Save
+            br
+      div(class="tab-pane fade" id="nav-warnings" role="tabpanel" aria-labelledby="nav-warnings-tab") 
+        div(class="row col-12")
+          h2 Warnings
+        div(class="row col-12")
+          div(class="col-7") Reason
+          div(class="col-2") Date start
+          div(class="col-2") Date end
+        // ko foreach: warnings
+        // ko if: active
+        div(class="row col-12 no-gutter" style="margin-bottom: 5px;")
+          div(class="row col-12 no-gutter" data-bind="click: $root.edit" )
+            // ko if: editable
+            div(class="col-7")
+              input(type="text" class="col-11" data-bind="value:reason " )
+            div(class="col-2")
+              input(type="text" data-bind="value: start")
+            div(class="col-2")
+              input(type="text" data-bind="value: end")
+            div(class="col-1 no-gutter" style="padding:unset")   
+              button(class="btn btn-success " data-bind="click: $root.saveWarning,clickBubble: false") 
+                i(class="fa fa-save")
+              button(class="btn btn-danger float-right" data-bind="click: $root.cancelWarning,clickBubble: false") 
+                i(class="fa fa-ban")
+            // /ko
+            // ko ifnot: editable
+            div(class="col-7" data-bind="text:reason " )
+            div(class="col-2" data-bind="text: start")
+            div(class="col-2" data-bind="text: end")
+            button(class="col-1 btn btn-warning" data-bind="click: $root.removeWarning,clickBubble: false") remove
+            // /ko
+        // /ko
+        // /ko
+        br
+        form(data-bind="submit: addWarning")
+          //ko with: newWarning        
+          div(class="row col-12 no-gutter")
+            div(class="row col-12 no-gutter")
+              div(class="col-7")
+                input(type="text" class="col-11" data-bind="value:reason " )
+              div(class="col-2")
+                input(type="text" data-bind="value: start")
+              div(class="col-2")
+                input(type="text" data-bind="value: end")
+              button(class="col-1 btn btn-success" type="submit") add 
+          // /ko        
+      div(class="tab-pane fade" id="nav-strikes" role="tabpanel" aria-labelledby="nav-strikes-tab") 
+        div(class="row col-12")
+          h2 Active strikes
+        div(class="row col-12")
+          div(class="col-7") Reason
+          div(class="col-2") Date start
+          div(class="col-2") Date end
+        // ko foreach: strikes
+        // ko if: active
+        div(class="row col-12 no-gutter" style="margin-bottom: 5px;")
+          div(class="row col-12 no-gutter" data-bind="click: $root.edit" )
+            // ko if: editable
+            div(class="col-7")
+              input(type="text" class="col-11" data-bind="value:reason " )
+            div(class="col-2")
+              input(type="text" data-bind="value: start")
+            div(class="col-2")
+              input(type="text" data-bind="value: end")
+            div(class="col-1 no-gutter" style="padding:unset")   
+              button(class="btn btn-success " data-bind="click: $root.saveStrike,clickBubble: false") 
+                i(class="fa fa-save")
+              button(class="btn btn-danger float-right" data-bind="click: $root.cancelStrike,clickBubble: false") 
+                i(class="fa fa-ban")
+            // /ko
+            // ko ifnot: editable
+            div(class="col-7" data-bind="text:reason " )
+            div(class="col-2" data-bind="text: start")
+            div(class="col-2" data-bind="text: end")
+            button(class="col-1 btn btn-warning" data-bind="click: $root.toggle,clickBubble: false") deactivate 
+            // /ko
+        // /ko
+        // /ko
+        br
+        form(data-bind="submit: addStrike")
+          //ko with: newStrike        
+          div(class="row col-12 no-gutter")
+            div(class="row col-12 no-gutter")
+              div(class="col-7")
+                input(type="text" class="col-11" data-bind="value:reason " )
+              div(class="col-2")
+                input(type="text" data-bind="value: start")
+              div(class="col-2")
+                input(type="text" data-bind="value: end")
+              button(class="col-1 btn btn-success" type="submit") add 
+          // /ko        
+        div(class="row col-12")
+          h2 Old strikes
+          div(class="row col-12")
+            div(class="col-7") Reason
+            div(class="col-2") Date start
+            div(class="col-2") Date end
+        // ko foreach: strikes
+        // ko ifnot: active
+        div(class="row col-12")
+          div(class="row col-12")
+            div(class="col-7" data-bind="text:reason " )
+            div(class="col-2" data-bind="text: start")
+            div(class="col-2" data-bind="text: end")
+            button(class="col-1 btn btn-warning" data-bind="click: $root.toggle") activate 
+        // /ko
+        // /ko
+
+      -if (admin.roles && admin.roles.indexOf("superadmin")>-1)
+        div(class="tab-pane fade" id="nav-donations" role="tabpanel" aria-labelledby="nav-donations-tab") 

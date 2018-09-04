@@ -69,7 +69,7 @@ router.post('/update', util.ensureAuthenticated, async function(req, res){
       , twitch: req.body.twitch
     };
 
-    account = await accountService.saveAccount(account);
+    account = await accountService.updateAccount(account);
 
     res.render('account/account', { user: account });
   } catch(err){

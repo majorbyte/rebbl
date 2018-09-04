@@ -11,5 +11,7 @@ router.use('/signups', require(`./signups.js`));
 
 router.use('/upcoming', require(`./upcoming.js`));
 
+router.use('/admin', require(`./admin/admin.js`));
+
 
 module.exports = router;

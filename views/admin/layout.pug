@@ -3,6 +3,7 @@ doctype html
 html(lang="en")
   head
     link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css")
+    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/font-awesome.css")
     - if (process.env.NODE_ENV === 'production')
       link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.css")
     - else  
@@ -22,14 +23,8 @@ html(lang="en")
         a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= active.toUpperCase()          
         div(class="collapse navbar-collapse" id="rebblMainNav")
           ul(class="navbar-nav mr-auto")
-            +nav-link("Big O")
-            +nav-link("Gman")
-            +nav-link("REL")
-            +nav-link("RAMPUP", "/rebbl/rampup")
-            +nav-link("Stunty")
-            +nav-link("One Minute")
-            +nav-link("Lineman League", "/rebbl/rebbll")
-            +nav-link("Elfly", "/rebbl/XScessively Elfly League")
+            +nav-link("User", "/admin/user")
+            +nav-link("Strikes", "admini/strikes")
             +nav-link("Account", "/account")
             block additionalMainNavigation
       block navigation
@@ -38,10 +33,7 @@ html(lang="en")
             span(class="navbar-toggler-icon")
           a(class="navbar-brand" href="#") &nbsp;
           div(class="collapse navbar-collapse" id="rebblSubNav")
-            - if (options && options.img)
-              img(src= options.img style="height:4em;margin: 0 auto" title="sponsored by:")          
-            - else  
-              ul(class="navbar-nav mr-auto")
+            ul(class="navbar-nav mr-auto")
       main(role="main")
         block content  
           div(class="jumbotron")
