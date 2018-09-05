@@ -63,6 +63,12 @@ router.get('/:week', util.checkCache, async function(req,res) {
       })
     }
 
+    let ids = []
+    data.matches.map(m => ids.push(m.contest_id));
+  
+    data.dates = await datingService.search({"id":{$in:ids}})
+  
+
     data.divisions = await db.getDivisions(leagueRegex);
     data.weeks = await db.getWeeks(leagueRegex, divRegex);
 
