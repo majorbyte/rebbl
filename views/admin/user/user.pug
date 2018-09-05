@@ -39,7 +39,17 @@ block append scripts
       this.snap();
       ko.track(this);
     }
-    
+    function DonationModel(data){
+      this.map = (data) => {
+          if (data) {
+              this.date = data.date;
+              this.currency = data.currency;
+              this.value = data.value;
+          }
+      };
+      this.map(data);
+      ko.track(this);      
+    }
     function UserModel(){
       let self = this;
 
@@ -57,9 +67,11 @@ block append scripts
       self.roles = ko.observableArray([]);
       self.strikes = ko.observableArray([]);
       self.warnings = ko.observableArray([]);
+      self.donations = ko.observableArray([]);
 
       self.newStrike = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       self.newWarning = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
+      self.newDonation = ko.observable(new DonationModel({"date":"","currency":"","value":0}));
 
       self.toggle = function(data,event){
         data.active = !data.active;
@@ -143,11 +155,38 @@ block append scripts
           create: function(options) {
               return options.data;
           }
+      },
+      'roles': {
+          create: function(options) {
+              return new DonationModel(options.data);
+          }
       }
 
     }
 
+  -if (admin.roles && admin.roles.indexOf("superadmin") > -1)
+    script.
+      UserModel.prototype.toggleAdmin = function(data,event){
+          $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+          $(event.currentTarget || event.target ).toggleClass("btn-success");
+          if(this.roles.indexOf("admin") > -1 ){
+            this.roles.splice(this.roles.indexOf("admin"),1);
+            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"admin", action:"remove"});
+          } else {
+            this.roles.push("admin")
+            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"admin", action:"add"});
+          }
+      }
+
+      UserModel.prototype.addDonation = function(data,event){
+        this.donations.push(this.newDonation());
+        this.post("/api/v1/admin/user/addDonation", {reddit:this.reddit(), donation:this.newDonation()});
+        this.newDonation(new DonationModel({"date":"","currency":"","value":0}));
+      }
+
+  script.
     let model = new UserModel(); 
+      ko.applyBindings(model);
     $(document).ready(function(){
 
       var xhr = new XMLHttpRequest();
@@ -166,7 +205,6 @@ block append scripts
           model.error(xhr.response);
         }
 
-        ko.applyBindings(model);
 
         $("#timezone").on('change', function(e){
           $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
@@ -208,19 +246,7 @@ block append scripts
       }
     });
 
-  -if (admin.roles && admin.roles.indexOf("superadmin") > -1)
-    script.
-      UserModel.prototype.toggleAdmin = function(data,event){
-          $(event.currentTarget || event.target ).toggleClass("btn-secondary");
-          $(event.currentTarget || event.target ).toggleClass("btn-success");
-          if(this.roles.indexOf("admin") > -1 ){
-            this.roles.splice(this.roles.indexOf("admin"),1);
-            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"admin", action:"remove"});
-          } else {
-            this.roles.push("admin")
-            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"admin", action:"add"});
-          }
-      }
+
 block content
   div(class="container")
     // ko if:isEmpty
@@ -376,5 +402,28 @@ block content
 
       -if (admin.roles && admin.roles.indexOf("superadmin")>-1)
         div(class="tab-pane fade" id="nav-donations" role="tabpanel" aria-labelledby="nav-donations-tab") 
+          div(class="row col-12")
+            div(class="col-4" ) Date
+            div(class="col-4" ) Currency
+            div(class="col-4" ) Value
+          // ko foreach: donations
+          div(class="row col-12")
+            div(class="col-4" data-bind="text: date" )
+            div(class="col-4" data-bind="text: currency")
+            div(class="col-4" data-bind="text: value")
+          // /ko 
+          div(class="row col-12")
+            form(data-bind="submit: addDonation" class="col-12")
+              //ko with: newDonation        
+              div(class="row col-12 no-gutter")
+                div(class="col-4")
+                  input(type="text" class="col-11" data-bind="value:date" )
+                div(class="col-4")
+                  input(type="text" data-bind="value: currency")
+                div(class="col-3")
+                  input(type="text" data-bind="value: value")
+              button(class="col-1 btn btn-success" type="submit") add 
+              // /ko        
+       
     // /ko
     // /ko

@@ -54,6 +54,10 @@ block content
       div
         label(for="steam") Twitch
         input(type="text" id="twitch" name="twitch" value=user.twitch )
+      -if (user.showDonation !== undefined && user.donations)
+        div
+          input(type="checkbox" id="showDonation" name="showDonation" checked=user.showDonation style="height:25px;width:25px") 
+          label(for="showDonation" style="display:inline;verticle-align:middle;margin-left:6px") Show that I donated
       div(style="clear:both")
         <button type="submit">Save</button>
         br

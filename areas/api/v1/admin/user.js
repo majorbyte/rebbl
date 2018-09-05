@@ -1,8 +1,8 @@
 'use strict';
 
 const express = require('express')
-  , accountService = require("../../../../../lib/accountService.js")
-  , util = require('../../../../../lib/util.js')
+  , accountService = require("../../../../lib/accountService.js")
+  , util = require('../../../../lib/util.js')
   , router = express.Router();
 
 
@@ -157,6 +157,22 @@ router.post('/toggleRole', util.ensureAuthenticated, util.hasRole("superadmin"),
       , action: req.body.action
     };
     await accountService.toggleRole(req.body.reddit, role);
+
+    res.status(200).send();
+  } catch(err){
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
+router.post('/addDonation', util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
+  try{
+    let donation = { 
+      date: req.body.donation.date
+      , currency: req.body.donation.currency
+      , value: req.body.donation.value
+    };
+    await accountService.addDonation(req.body.reddit, donation);
 
     res.status(200).send();
   } catch(err){
