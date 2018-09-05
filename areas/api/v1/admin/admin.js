@@ -3,7 +3,9 @@
 const express = require('express'),
   router = express.Router();
 
-router.use('/user', require(`./user/user.js`));
+router.use('/user', require(`./user.js`));
+
+router.use('/strikes', require(`./strikes.js`));
 
 
 module.exports = router;
