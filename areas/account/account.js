@@ -67,11 +67,12 @@ router.post('/update', util.ensureAuthenticated, async function(req, res){
       , steam: req.body.steam
       , timezone: req.body.timezone
       , twitch: req.body.twitch
+      , showDonation: (req.body.showDonation === "on")
     };
 
     account = await accountService.updateAccount(account);
 
-    res.render('account/account', { user: account });
+    res.redirect('/account');
   } catch(err){
     console.log(err);
   }

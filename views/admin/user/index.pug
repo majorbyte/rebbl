@@ -14,22 +14,37 @@ block scripts
         self.reddit = ko.observable();
         self.loading = ko.observable(true);
         self.filteredUsers = ko.computed(function() {
-            if(!self.coach() && !self.reddit() && !self.discord()) {
-                return self.users(); 
-            } else {
-                let val = self.coach() || self.reddit() || self.discord();
-                return ko.utils.arrayFilter(self.users(), function(user) {
-                    let regex = new RegExp("^"+val, "i");
+          if(!self.coach() && !self.reddit() && !self.discord()) {
+              return self.users(); 
+          } else {
+            
+            let users = null;
 
-                    return regex.test(user.coach) || regex.test(user.discord) || regex.test(user.reddit)   ;
-                });
+            if(self.coach()){
+              users= ko.utils.arrayFilter(self.users(), function(user) {
+                let regex = new RegExp("^"+self.coach(), "i");
+                return regex.test(user.coach);
+              });
             }
+
+            if(self.discord()){
+              users= ko.utils.arrayFilter(users || self.users(), function(user) {
+                let regex = new RegExp("^"+self.discord(), "i");
+                return regex.test(user.discord);
+              });
+            }
+
+            if(self.reddit()){
+              users= ko.utils.arrayFilter(users || self.users(), function(user) {
+                let regex = new RegExp("^"+self.reddit(), "i");
+                return regex.test(user.reddit);
+              });
+            }
+
+
+            return users;
+          }
         });
-
-        self.edit = function(data,event){
-
-        }
-
     }
 
     ko.bindingHandlers.foreachprop = {
