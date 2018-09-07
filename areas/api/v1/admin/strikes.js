@@ -15,7 +15,8 @@ const express = require('express')
             delete x.teamname;
             delete x.donations;
             delete x.showAmount;
-            delete x.showDonated;
+            delete x.showDonation;
+            delete x.showDonationValue;
             delete x.twitch;
             delete x.steam;
             delete x.discord;

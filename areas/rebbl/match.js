@@ -11,7 +11,7 @@ router.get('/unplayed/:match_id',util.checkCache, async function(req, res, next)
   try{
     let match = await leagueService.getUnplayedMatch(req.params.match_id);
 
-    res.render('account/match',{matches: match} );
+    res.render('rebbl/match/unplayed',{matches: match} );
   } catch(err){
     console.log(err);
   }

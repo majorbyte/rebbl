@@ -1,0 +1,1326 @@
+@charset "UTF-8";
+@font-face {
+  font-family: 'Roboto';
+  src: url(/fonts/roboto-latin-regular-webfont.woff2) format("woff2");
+  font-weight: 400;
+  font-style: normal
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url(/fonts/roboto-latin-medium-webfont.woff2) format("woff2");
+  font-weight: 500;
+  font-style: normal
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url(/fonts/roboto-latin-bold-webfont.woff2) format("woff2");
+  font-weight: 700;
+  font-style: normal
+}
+
+@font-face {
+  font-family: 'Industry';
+  src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+  font-weight: 400;
+  font-style: normal
+}
+
+@font-face {
+  font-family: 'Industry';
+  src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+  font-weight: 500;
+  font-style: normal
+}
+
+@font-face {
+  font-family: 'Industry';
+  src: url(/fonts/industry-bold-webfont.woff2) format("woff2");
+  font-weight: 700;
+  font-style: normal
+}
+
+
+/*!
+ * Bootstrap v3.3.7 (http://getbootstrap.com)
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+html {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%
+}
+
+body {
+  margin: 0
+}
+
+article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary {
+  display: block
+}
+
+
+a {
+  background-color: transparent
+}
+
+a:active,a:hover {
+  outline: 0
+}
+
+.h1,.u-h1,h1 {
+  font-size: 2em;
+  margin: .67em 0
+}
+img {
+  border: 0
+}
+
+button,input,optgroup,select,textarea {
+  color: inherit;
+  font: inherit;
+  margin: 0
+}
+
+button {
+  overflow: visible
+}
+
+button,select {
+  text-transform: none
+}
+
+button,html input[type=button],input[type=reset],input[type=submit] {
+  -webkit-appearance: button;
+  cursor: pointer
+}
+
+
+*,:after,:before,input[type=search] {
+  box-sizing: border-box
+}
+
+html {
+  font-size: 10px;
+  -webkit-tap-highlight-color: transparent
+}
+
+body {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+button,input,select,textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit
+}
+
+a {
+  color: #9a5a0a;
+  text-decoration: none
+}
+
+a:focus,a:hover {
+  color: #b36000;
+  text-decoration: underline
+}
+
+img {
+  vertical-align: middle
+}
+
+.h1,.h2,.h3,.h4,.h5,.h6,.u-h1,.u-h2,.u-h3,.u-h4,.u-h5,.u-h6,h1,h2,h3,h4,h5,h6 {
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit
+}
+
+.h1,.h2,.h3,.u-h1,.u-h2,.u-h3,h1,h2,h3 {
+  margin-top: 1px;
+  margin-bottom: .5px
+}
+
+
+.h1,.u-h1,h1 {
+  font-size: 2rem
+}
+
+p {
+  margin: 0 0 .5px
+}
+
+
+.Container,.container {
+  max-width: 1300px;
+  width:100%;
+
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 40px;
+  padding-right: 40px
+}
+
+.Container:after,.Container:before,.container:after,.container:before {
+  content: " ";
+  display: table
+}
+
+.Container:after,.container:after {
+  clear: both
+}
+
+@media (min-width: 1700px) {
+  .Container,.container {
+    max-width: 1600px;
+  }
+}
+
+@media (max-width: 1000px){
+  .row, .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+}
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+
+.Button:focus,.Button:hover,.btn:focus,.btn:hover {
+  color: #fff
+}
+
+
+.Button:active,.Button:focus,.Button:hover,.btn:active,.btn:focus,.btn:hover {
+  outline: none;
+  text-decoration: none;
+  transition: all .2s ease-out
+}
+
+.Button--primary,.btn-default,.btn-primary {
+  background: #9a5a0a;
+  border-color: #c75a00;
+  color: #fff;
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-weight: 700;
+}
+
+.primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+  background: #9a5a0a;
+  border-color: #c75a00;
+  color: #fff;
+}
+
+.Button--primary:hover,.Button--primary:hover:focus,.active.Button--primary,.btn-default.active,.btn-default:hover,.btn-default:hover:focus,.btn-primary.active,.btn-primary:hover,.btn-primary:hover:focus {
+  background: #c75a00;
+  border-color: #c75a00;
+  box-shadow: none
+}
+
+body,html {
+  font-size: 16px;
+  font-family: "Roboto",Helvetica Neue,Helvetica,Arial,sans-serif;
+  -webkit-font-feature-settings: normal;
+  font-feature-settings: normal;
+  font-variant-position: normal
+}
+
+@media (min-width: 768px) {
+  body,html {
+    font-size:17px
+  }
+}
+
+@media (min-width: 992px) {
+  body,html {
+    font-size:18px
+  }
+}
+
+@media (min-width: 1200px) {
+  body,html {
+    font-size:19px
+  }
+}
+
+@media (min-width: 1600px) {
+  body,html {
+    font-size:20px
+  }
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  margin-top: 20px
+}
+
+a, .highlight {
+  color: #9a5a0a
+}
+
+a:focus,a:hover {
+  color: #e67b00;
+  text-decoration: none;
+  transition: none
+}
+
+.MatchStatus {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  text-align: center;
+  min-width: 80px;
+  padding: 4px 12px;
+  margin: 0 8px;
+  font-size: 14px;
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+  background-color: rgba(51,51,51,.06);
+  line-height: 1;
+  border-radius: 0
+}
+
+.MatchStatus--transparent {
+  background-color: transparent
+}
+
+.MatchStatus-score {
+  display: inline-block;
+  width: 13px;
+  margin: 0 4px;
+  font-size: 20px
+}
+
+.MatchStatus-score.is-winner {
+  font-weight: 700;
+  color:#ada8a8;
+}
+.Section {
+  padding: 40px
+}
+
+@media (min-width: 768px) {
+  .Section {
+    padding:80px
+  }
+}
+
+.Section--thin-top {
+  padding-top: 20px
+}
+
+@media (min-width: 768px) {
+  .Section--thin-top {
+    padding-top:40px
+  }
+}
+
+.Section--no-sides {
+  padding-left: 0;
+  padding-right: 0
+}
+
+.u-bottomPadding--large,div.dataTables_wrapper {
+  padding-bottom: 80px
+}
+
+.u-bottomPadding--small {
+  padding-bottom: 20px
+}
+
+.u-bottomPadding--none {
+  padding-bottom: 0!important
+}
+
+.h1,.u-h1,.u-ui1,h1 {
+  font-size: 2rem;
+  line-height: 1.25
+}
+
+.u-ui5 {
+  font-size: .875rem;
+  line-height: 1
+}
+
+.h1,.h2,.u-h1,.u-h2,h1,h2 {
+  text-transform: uppercase
+}
+
+.h1,.h2,.h3,.h4,.h5,.h6,.u-h1,.u-h2,.u-h3,.u-h4,.u-h5,.u-h6,h1,h2,h3,h4,h5,h6 {
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-weight: 700
+}
+
+
+.h1,.h2,.h3,.h4,.h5,.h6,.u-h1,.u-h2,.u-h3,.u-h4,.u-h5,.u-h6,h1,h2,h3,h4,h5,h6 {
+  margin-bottom: 20px;
+  margin-top: 40px
+}
+
+.u-no-text-transform {
+  text-transform: none!important
+}
+
+
+.MatchRow {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  left: 50%;
+  right: 50%;
+  margin: 0 -50vw;
+  background-color: #4443419c;
+  border: 1px solid rgba(51,51,51,.2);
+  border-top: none;
+  width: 100vw;
+  /*height: 60px;*/
+  min-width:482px;
+
+}
+
+@media (min-width: 768px) {
+  .MatchRow {
+    width:auto;
+    left: auto;
+    right: auto;
+    margin: 0
+  }
+
+  .MatchRow:last-child:not(:first-child) {
+    border-radius: 0 0 4px 4px
+  }
+}
+
+.MatchRow-header{
+  height: 40px;
+  align-items: center;
+  border-bottom: 1px solid #a59d9d4a;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+}
+
+@media (min-width: 768px) {
+  .MatchRow--titleMatch, .MatchRow-header {
+    margin: 0;
+    border-radius: 4px 4px 0 0;
+  }
+}
+
+.MatchRow-status {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  white-space: nowrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center
+}
+
+.MatchRow-team {
+  -webkit-box-flex: 3;
+  -ms-flex: 3;
+  flex: 3
+}
+
+.MatchRow-contentWrapper {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  color: #8c8a8a;
+}
+
+@media (min-width: 768px) {
+  .MatchRow-contentWrapper--hover {
+    margin-left:0
+  }
+}
+
+@media (min-width: 1200px) {
+  .MatchRow-contentWrapper--hover:hover {
+    border-left-color:#9a5a0a;
+    transition: border-left-color 300ms
+  }
+  .MatchRow-contentWrapper--hover--noBorder:hover {
+    border-left-color:#9a5a0a;
+    transition: border-left-color 300ms  }
+}
+
+@media (min-width: 1200px) {
+  .MatchRow-match:hover .Button {
+    display:-webkit-box;
+    display: -ms-flexbox;
+    display: flex
+  }
+}
+
+.TeamLabel {
+  font-size: 1rem;
+  line-height: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+  margin:5px 0px
+}
+
+.TeamLabel--reverse {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse
+}
+
+.TeamLabel-info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0;
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif
+}
+
+
+.TeamLabel--reverse .TeamLabel-info, {
+  text-align: right;
+}
+
+
+.TeamLabel--reverse .TeamLabel-info--noScore {
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: flex-end;
+}
+
+.TeamLabel--reverse .TeamLabel-name {
+  text-align: right;
+}
+
+/*
+@media (min-width: 992px) {
+  .TeamLabel--reverse .TeamLabel-info--noScore {
+    -webkit-box-orient:horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row
+  }
+}*/
+
+
+@media (min-width: 480px) {
+  .TeamLabel-info {
+    padding-left:8px
+  }
+
+  .TeamLabel--reverse .TeamLabel-info {
+    padding-left: 0;
+    padding-right: 8px
+  }
+}
+
+/*@media (min-width: 992px) {*/
+  .TeamLabel-info {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start
+  }
+/*}*/
+
+.TeamLabel-info--noScore {
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start
+}
+
+@media (min-width: 992px) {
+  .TeamLabel-info--noScore {
+    -webkit-box-pack:center;
+    -ms-flex-pack: center;
+    justify-content: center
+  }
+}
+
+.TeamLabel-block {
+  width: 48px;
+  height: 48px;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto
+}
+
+.TeamLabel-logo {
+  width: 48px;
+  height: 48px;
+  fill: rgba(51,51,51,.4)
+}
+
+
+.TeamLabel-name,.TeamLabel-coach{
+  position: relative;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size:1.2em;
+}
+.TeamLabel-coach{
+  color: #6694bf;
+  font-size:0.8em;
+  margin:5px 0px 0px 0px;
+}
+
+@media (min-width: 992px) {
+  .TeamLabel-name,.TeamLabel-coach {
+    -webkit-box-flex:0;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 992px) {
+  .TeamLabel-name {
+    max-width: 20vw;
+  }
+}
+
+
+.Tabs {
+  overflow: hidden;
+  top:-50px;
+}
+
+.Tabs-header {
+  position: relative;
+  width: 100%;
+  /*height: 40px;*/
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-bottom: -7px
+}
+
+.Tabs-scroller-wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: hidden
+}
+
+.Tabs-scroller {
+  position: relative;
+  overflow-x: auto;
+  /*padding-bottom: 25px;*/
+  scroll-behavior: smooth
+}
+
+.Tabs-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  transition: translate 300ms
+}
+
+.Tabs-bar:after {
+  content: '';
+  display: block;
+  -webkit-box-flex: 1;
+  -ms-flex: auto;
+  flex: auto;
+  margin-left: 8px
+}
+
+.Tabs-tab {
+  font-size: .875rem;
+  line-height: 1;
+  text-transform: uppercase;
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 8px 20px;
+  margin: 0 8px;
+  transition: all 300ms
+}
+
+.Tabs-tab:first-child {
+  margin-left: 0
+}
+
+.Tabs-tab:last-child {
+  margin-right: 0
+}
+
+.Tabs-tab:focus,.Tabs-tab:hover {
+  outline: 0
+}
+
+.Tabs-tab--active,.Tabs-tab--disabled {
+  pointer-events: none
+}
+
+.Tabs--darkBackground,.Tabs--rectangular {
+  position: relative;
+  width: auto;
+  left: auto;
+  right: auto;
+  margin-left: 0;
+  margin-right: 0
+}
+
+.Tabs--darkBackground .Tabs-header-wrapper,.Tabs--rectangular .Tabs-header-wrapper {
+  margin-left: -240px;
+  margin-right: -240px
+}
+
+.Tabs--darkBackground .Tabs-header,.Tabs--rectangular .Tabs-header {
+  margin: 0 240px;
+  width: auto
+}
+
+
+.Tabs--darkBackground .Tabs-scroller,.Tabs--rectangular .Tabs-scroller {
+  margin-left: 0
+}
+
+.Tabs--darkBackground .Tabs-bar,.Tabs--rectangular .Tabs-bar {
+  transition: all 0ms
+}
+
+.Tabs--darkBackground .Tabs-bar:after,.Tabs--rectangular .Tabs-bar:after {
+  border-bottom: none
+}
+
+.Tabs--darkBackground .Tabs-tab,.Tabs--rectangular .Tabs-tab {
+  padding: 12px 20px;
+  font-weight: 400;
+  font-size: .875rem;
+  border-bottom: none;
+  transition: all 0ms
+}
+
+.Tabs--darkBackground .Tabs-tab--active,.Tabs--rectangular .Tabs-tab--active {
+  font-weight: 700
+}
+
+.Tabs--darkBackground .Tabs-header-wrapper {
+  /*height: 50px;*/
+  background-color: #333;
+}
+
+.Tabs--darkBackground .Tabs-bar {
+  padding-top: 8px
+}
+
+
+.Tabs--darkBackground .Tabs-tab {
+  color: #fff;
+}
+
+.Tabs--rectangular .Tabs-tab--active {
+  background-color: #9a5a0a;
+  color: #fff;
+  padding-top: 16px;
+  height:50px;
+}
+.Tabs--rectangular .Tabs-header-wrapper {
+  border-bottom: 5px solid #9a5a0a;
+}
+
+@media (min-width: 1200px) {
+  .Tabs--darkBackground .Tabs-bar {
+    padding-top:5px
+  }
+}
+
+.WidgetDay-header,.Wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex
+}
+
+.Wrap {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.divider{
+  margin-right:20px;
+}
+.Alternate:nth-child(2n){
+  background-color: #bbbbbb;
+}
+
+.hidden {
+ display:none;
+}
+
+.TeamLabel-standing {
+  width:75px;
+  height:50px;
+}
+
+.coachNumber {
+  width:50px;
+  height:50px;
+  text-align: center;
+}
+
+.divider:first-child .MatchRow-contentWrapper:nth-child(-n+3) .coachNumber{
+  background-color:#94c16f;
+}
+/*
+.divider:first-of-type{
+  float:left;
+}*/
+
+.row.u-bottomPadding--small{
+  background-image: url(/images/rebbl-wcqheader.png);
+  height: 250px;
+}
+
+.u-bottomPadding--small-rebbl{
+  height: 8em;
+  width: 12em;
+  background: #ffffff00 url(/images/rebbl.png) no-repeat 99%;
+  background-size: 12em;
+  right: 5px;
+  position: fixed;
+  top:0px;
+  z-index: 9999;
+}
+
+
+.col-sm-8 {
+  color: #d22424;
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: white;
+  top: 65%;
+}
+
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1px;
+}
+
+.TableRow, .TableHeader {
+  display:table-row;
+  width: 100%;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+
+.TableHeader{
+  height: 40px;
+  vertical-align: middle;
+}
+
+.table-striped{
+  display:table;
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.table-striped>*:nth-child(even) {
+  background-color:#4443419c;
+  width:100%;
+}
+
+.Standings table>tbody>tr>td {
+  line-height: 1;
+  vertical-align: middle;
+  font-size: 1rem;
+  overflow: hidden;
+}
+
+.table-condensed>tbody>tr>td, table.dataTable--condensed>tbody>tr>td {
+  padding: 5px 20px;
+}
+
+.Standings-details-rank {
+  padding-left: 0!important;
+  white-space: nowrap;
+  display: table-cell;
+  text-align: center;
+}
+.Standings-details-rank.qualified{
+  font-size:1.25em;
+}
+
+
+
+.Standings-details-team {
+  padding-left: 0!important;
+  white-space: nowrap;
+  display: table-cell;
+  vertical-align: top;
+}
+
+.Standings-details-team .TeamLabel-coach{
+  margin:0;
+}
+
+.Standings-details {
+  text-align: center;
+  white-space: nowrap;
+  display: table-cell;
+  width:80px;
+}
+
+.Standings-details.is-positive {
+  color: green;
+}
+
+.Standings-details.is-negative {
+  color: #e50e47;
+}
+
+.Standings-header, .Standings-header-title {
+  text-transform: uppercase;
+}
+
+
+@media (min-width: 1200px) {
+  .TableRow--hover:hover {
+    border-left-color: #9a5a0a;
+    transition: border-left-color 300ms;
+  }
+}
+
+.Standings-divider {
+  display:table-cell;
+}
+
+.Standings-divider--flex{
+  font-size: .75rem;
+  line-height: 1;
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-basis: 100%;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #1877a2;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 0;
+}
+
+.Standings-dividerText {
+  margin-top: .15em;
+  margin-bottom: -.15em;
+}
+
+.Standings-dividerText--correction {
+  margin-top: .7em;
+}
+
+.Standings-divider--flex::after {
+  content: " ";
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  background: rgba(0,160,234,0);
+  font-size: 0;
+  line-height: 0;
+  margin: 0 0 0 2px;
+  border: 1px dashed;
+}
+
+.League-Standings{
+  display: flex;
+  flex-direction: column;
+}
+/*
+@media (min-width: 1200px) {
+  .League-Standings{
+  display:grid;
+  }
+}*/
+
+.Tabs--darkBackground .Tabs-tab--active {
+  color: #9a5a0a;
+}
+.Tabs--darkBackground .Tabs-tab--active-week{
+  border-bottom: 5px solid #fff;
+}
+
+.highlighted-rules{
+  color: #1877a2;
+}
+
+.signup input, .signup select{
+  margin-top:0px;
+  margin-bottom:5px;
+  width: 375px;
+  height: 35px;
+}
+
+.signup label {
+  margin-bottom:0;
+  margin-top:0.5rem;
+}
+
+.error {
+  color: orangered;
+  width: 375px;
+}
+
+.warning {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.warning p{
+  margin:0px;
+  margin-left:10px;
+  padding-top:5px;
+  padding-bottom:5px;
+}
+
+label { display: block; }
+
+.match-stats {
+  text-align:center;
+}
+
+.match-stats-table {
+  border-collapse: collapse;
+  border:none;
+}
+
+.odd{
+  background-color: #333333d6;
+}
+
+.match-stats-table tr:nth-child(even){
+  background-color: #39393a99;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.match-stats-TeamLabel-name {
+    font-size: 1.2em;
+}
+.TeamLabel-position{
+    color: #2F6FAD;
+    font-size: 0.8em;
+    margin: 0px 0px 0px 0px;
+}
+
+
+.TeamLabel-logo-skill{
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 5px;
+
+}
+
+.team-stats{
+  font-size: 16px;
+  text-align: center;
+  width:100%;
+  border-collapse: collapse;
+  background-color: #39393a;
+}
+
+.team-stats thead{
+  border-bottom: 1px solid rgba(51, 51, 51, .2);
+  text-align: left;
+}
+
+.team-stats td:first-child{
+  text-align: left;
+}
+
+.team-stats th{
+  font-size: 20px;
+}
+
+
+*{
+  font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+
+.bg-rebbl {
+  background-color: #333333!important;
+}
+
+.player-out {
+  background-color: #ab072566 !important;
+}
+
+.playerStats{
+  display:none;
+}
+.col-12 table img {
+  width: 32px;
+  height: 32px;
+}
+
+.match-stats img{
+  width: 48px !important;
+  height: 48px !important; 
+}
+
+.stats:hover{
+  color: #1877a2;
+}
+
+@media (max-width: 576px) { .headerText{font-size: 0.3em;} }
+
+@media (min-width: 768px) { .headerText{font-size: 0.5em;} }
+
+@media (min-width: 992px) { .headerText{font-size: 0.6em;} }
+
+@media (min-width: 1200px) { .headerText{font-size: 0.75em;} }
+
+@media (min-width: 1600px) { .headerText{font-size: 1em;} }
+
+.season-table{
+  background-color: rgba(51,51,51,.06);
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.season-table-row:nth-of-type(2n){
+  background-color: #4a4a4a;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+main {
+
+  min-height: -webkit-calc(100% - 30px);     /* Chrome */
+  min-height: -moz-calc(100% - 30px);     /* Firefox */
+  min-height: calc(100% - 30px);     /* native */
+}
+
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  height: 60px; /* Set the fixed height of the footer here */
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+  clear:both;
+  margin-top:20px;
+}
+.footer p{
+  margin:0;
+  
+}
+.footer img{
+  margin-top:5px;
+  height:50px;
+}
+
+@media (max-height: 768px) {
+  .dropdown-menu{
+    max-height:450px;
+    overflow-y: scroll;
+ }
+}
+
+/* --------------------------- */
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  color: #8c8a8a;
+}
+
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+/*.carousel {
+  margin-bottom: 4rem;
+}*/
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  bottom: 3rem;
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel-item {
+  height: 16rem;
+  background-color: #777;
+}
+.carousel-item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 16rem;
+}
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.marketing h2 {
+  font-weight: 400;
+}
+.marketing .col-lg-4 p {
+  margin-right: .75rem;
+  margin-left: .75rem;
+}
+
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.05rem;
+}
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 40em) {
+  /* Bump up size of carousel content */
+  .carousel-caption p {
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 62em) {
+  .featurette-heading {
+    margin-top: 7rem;
+  }
+}
+
+
+@media (max-width: 768px) { .carousel-item h1 {font-size: 1em;}
+.carousel-item p {font-size: 0.8em;} }
+
+@media (min-width: 768px) {  .carousel-item h1{font-size: 1.25em;} 
+.carousel-item p {font-size: 0.8em;} }
+
+@media (min-width: 992px) { .carousel-item h1{font-size: 1.5em;} 
+.carousel-item p {font-size: 1em;}}
+
+@media (min-width: 1200px) { .carousel-item h1{font-size: 2em;} }
+
+@media (min-width: 1600px) { .carousel-item h1{font-size: 2em;} }
+
+.btn-twitch-on{
+  background-color: #6441A4
+}
+.btn-twitch-off{
+  background-color: #ffffff;
+  border-color: #6441A4;
+}
+
+
+
+/* -------------------------------------------------------------------- */
+.user-row a { color: #333;}
+
+.user-row:hover a {color: #e67b00;}
+.user-row:hover {border-left:3px solid #e67b00;}
+

@@ -1,7 +1,11 @@
-extends .\sublayout.pug
+extends ..\no-cache-sub-layout.pug
 include ..\nav-link
+
 block vars
+
   - let options = {active: league, title: "REBBL SEASON 8"}
+
+  - if (!active) { var active =  (options && options.active) ? options.active : "" }
 
 block scripts
   script.
