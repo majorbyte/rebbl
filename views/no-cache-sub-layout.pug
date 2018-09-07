@@ -1,0 +1,53 @@
+include nav-link
+
+block vars
+
+- if (!active) { var active =  (options && options.active) ? options.active : "" }
+
+block body
+  a(href="/")
+    div(class="u-bottomPadding--small-rebbl")
+  nav(class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="min-height:80px;z-index:2000;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblMainNav" aria-controls="rebblMainNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= active.toUpperCase()          
+    div(class="collapse navbar-collapse" id="rebblMainNav")
+      ul(class="navbar-nav mr-auto")
+        +nav-link("Big O")
+        +nav-link("Gman")
+        +nav-link("REL")
+        +nav-link("RAMPUP", "/rebbl/rampup")
+        +nav-link("Stunty")
+        +nav-link("One Minute")
+        +nav-link("Lineman League", "/rebbl/rebbll")
+        +nav-link("Elfly", "/rebbl/XScessively Elfly League")
+        +nav-link("Account", "/account")
+        block additionalMainNavigation
+
+  block navigation
+    nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;")
+      button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+        span(class="navbar-toggler-icon")
+      a(class="navbar-brand" href="#") &nbsp;
+      div(class="collapse navbar-collapse" id="rebblSubNav")
+        - if (options && options.img)
+          img(src= options.img style="height:4em;margin: 0 auto" title="sponsored by:")          
+        - else  
+          ul(class="navbar-nav mr-auto")
+  main(role="main")
+    block content  
+      div(class="jumbotron")
+        div(class="container")
+          h1(class="display-3") REBBL
+
+  footer(class="footer")
+    div( style="float:right;")
+      a(href="https://www.paypal.me/rebblnet" target="_blank")
+        img(src="https://cdn2.rebbl.net/images/donate.png" title="Donate (soon)")  
+      | &nbsp; &nbsp; &nbsp; 
+      a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
+    p(style="padding:10px") &nbsp; © majorbyte 2018 &nbsp; &nbsp; &nbsp;
+  script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/popper-1.14.3.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/bootstrap.min.js")        
+  block scripts

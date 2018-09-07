@@ -52,8 +52,11 @@ block content
         label(for="steam") Steam
         input(type="text" id="steam" name="steam" value=user.steam )
       div
-        label(for="steam") Twitch
+        label(for="twitch") Twitch
         input(type="text" id="twitch" name="twitch" value=user.twitch )
+      div
+        input(type="checkbox" id="useDark" name="useDark" checked=(user.useDark||false) style="height:25px;width:25px") 
+        label(for="useDark" style="display:inline;verticle-align:middle;margin-left:6px") Use rebbl dark mode (beta)
       -if (user.showDonation !== undefined && user.donations)
         div
           input(type="checkbox" id="showDonation" name="showDonation" checked=user.showDonation style="height:25px;width:25px") 

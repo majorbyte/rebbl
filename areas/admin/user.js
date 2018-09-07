@@ -21,9 +21,9 @@ const express = require('express')
 
   router.get('/add', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
-      let admin = await accountService.getAccount(req.user.name);
+      //let admin = await accountService.getAccount(req.user.name);
 
-      res.render('admin/user/user', { user: null, admin:admin });
+      res.render('admin/user/user', { user: null, admin:res.locals.user });
   
     } catch(err){
       console.log(err);
@@ -32,9 +32,9 @@ const express = require('express')
 
 router.get('/:user', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
   try{
-    let admin = await accountService.getAccount(req.user.name);
+   //let admin = await accountService.getAccount(req.user.name);
   
-    res.render('admin/user/user', { user: req.params.user, admin:admin });
+    res.render('admin/user/user', { user: req.params.user, admin:res.locals.user });
 
   } catch(err){
     console.log(err);
@@ -52,9 +52,9 @@ router.post('/update', util.ensureAuthenticated, async function(req, res){
     };
 
     await accountService.updateAccount(account);
-    let admin = await accountService.getAccount(req.user.name);
+    //let admin = await accountService.getAccount(req.user.name);
 
-    res.render('admin/user/user', { user: req.body.reddit, admin:admin  });
+    res.render('admin/user/user', { user: req.body.reddit, admin:res.locals.user  });
   } catch(err){
     console.log(err);
   }

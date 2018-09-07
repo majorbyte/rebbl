@@ -49,10 +49,10 @@ router.get("/", util.checkCache, async function(req, res){
 router.post("/stream/:contest_id", util.ensureAuthenticatedApi, async function(req, res){
     try{
         let date = await datingService.getDate(Number(req.params.contest_id));
-        let user = await accountService.getAccount(req.user.name);
+        //let user = await accountService.getAccount(req.user.name);
 
         if(date && !date.stream){
-            date.stream = {name: user.reddit, url:user.twitch};
+            date.stream = {name: user.reddit, url:res.locals.user.twitch};
             await datingService.update(date.id, date);
             res.status(200).send(date);
         } else {

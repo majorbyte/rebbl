@@ -19,7 +19,7 @@ const express = require('express')
   , path = require('path')
   , fs = require('fs')
   , passport = require('passport')
-  , util = require('util')
+  , util = require("./lib/util.js")
   , session = require('express-session')
   , methodOverride = require('method-override')
   , bodyParser = require("body-parser")
@@ -82,7 +82,7 @@ let sessionObject = {
   , cookie: {maxAge:180*24*60*60*1000} // Let's start with half a year
   , resave: false
   , saveUninitialized: false
-  , store: new NedbStore({ filename: 'datastore/sessions.db' })
+  , store: new NedbStore({ filename: 'datastore/sessions.db', autoCompactInterval:60000 })
 };
 
 if (process.env.NODE_ENV === 'production'){
@@ -104,6 +104,7 @@ app.use(passport.session());
 // serve static files
 app.use(express.static(path.join(__dirname, 'public-images'), {maxAge: 7*24*60*60*1000, etag: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
 //let's encrypt
 app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
 
@@ -112,6 +113,8 @@ app.use('/robots.txt', express.static(path.join(__dirname, 'robots.txt')));
 
 // parse request bodies (req.body)
 app.use(express.urlencoded({ extended: true }));
+
+app.use(util.checkAuthenticated);
 
 app.use('/', require('./areas/routes.js'));
 

@@ -13,12 +13,12 @@ const express = require('express')
 
 router.get('/', util.ensureAuthenticated, async function(req, res){
   try{
-    let user = await accountService.getAccount(req.user.name);
+    //let user = await accountService.getAccount(req.user.name);
 
-    if (!user){
+    if (!res.locals.user){
       res.redirect('/signup');
     } else {
-      res.render('account/account', { user: user });
+      res.render('account/account', { user: res.locals.user });
     }
 
 
@@ -34,8 +34,8 @@ router.get('/login', function(req, res){
 router.get('/match',util.ensureAuthenticated, async function(req, res){
   try{
     let match = await leagueService.getUpcomingMatch(req.user.name);
-    let user = await accountService.getAccount(req.user.name)
-    res.render('account/match',{matches: match, user:user} );
+    //let user = await accountService.getAccount(req.user.name)
+    res.render('account/match',{matches: match, user:res.locals.user} );
   } catch(err){
     console.log(err);
   }
@@ -43,8 +43,8 @@ router.get('/match',util.ensureAuthenticated, async function(req, res){
 
 router.put('/unplayed/:match_id', util.ensureAuthenticated, async function(req, res, next){
   try{
-    let user = await accountService.getAccount(req.user.name)
-    let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(user.coach, "i")} })
+   // let user = await accountService.getAccount(req.user.name)
+    let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(res.locals.user.coach, "i")} })
 
     if(contest.length > 0){
       if (req.body.date.length === 16)
@@ -67,6 +67,7 @@ router.post('/update', util.ensureAuthenticated, async function(req, res){
       , steam: req.body.steam
       , timezone: req.body.timezone
       , twitch: req.body.twitch
+      , useDark: req.body.useDark
       , showDonation: (req.body.showDonation === "on")
     };
 
