@@ -33,7 +33,10 @@ block content
             div(class="col-4" style=";overflow:hidden") 
               a(href=`/rebbl/coach/${coach.id}` )= coach.name
             div(class="col-7" style=";overflow:hidden") 
-              a(href=`/rebbl/team/${coach.teamId}` )= coach.team
+              -if (coach.team.indexOf("[colour") === 0)
+                a(href=`/rebbl/team/${coach.teamId}`)= coach.team.substr(19, coach.team.length-17)
+              - else
+                a(href=`/rebbl/team/${coach.teamId}` )= coach.team
           div(class="col-2" style=";overflow:hidden")= coach.race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
           div(class="row col-4" )
             div(class="col-2" )= coach.points

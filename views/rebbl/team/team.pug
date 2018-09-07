@@ -40,7 +40,11 @@ block navigation
 
 block content
   div(class="container")
-    h1= team.team.name
+
+    - if (team.team.name.indexOf('[colour=') > -1)
+      h1(style=("color:#" + team.team.name.substr(11,6)) )= team.team.name.substr(19, team.team.name.length-17)
+    - else
+      h1= team.team.name
       - let building = team.team.cards.find(function(a) { return a.type === "Building" }) 
       div(class="float-right")
         -if (team.team.apothecary > 0)

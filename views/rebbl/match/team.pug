@@ -1,5 +1,9 @@
 
-h2= team.teamname
+- if (team.teamname.indexOf('[colour=') > -1)
+  h2(style=("color:#" + team.teamname.substr(11,6)) )= team.teamname.substr(19, team.teamname.length-17)
+- else
+  h2= team.teamname
+
 hr
 table(class="match-stats-table" style="width:100%")
   colgroup
@@ -30,6 +34,6 @@ table(class="match-stats-table" style="width:100%")
     - let isAdminned = team.mvp != 1
     - let pageSkills = []
     each player in team.roster
-      - let playerName = player.number === 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : player.name
+      - let playerName = (player.number === 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : player.name) + ""
       - let playerPos  = player.number > 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
       include player.pug

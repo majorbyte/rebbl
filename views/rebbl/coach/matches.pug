@@ -21,7 +21,11 @@ block content
                     div(class="TeamLabel TeamLabel--reverse")
                       div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                       div(class="TeamLabel-info TeamLabel-info--noScore")
-                        div(class="TeamLabel-name ")= match.opponents[0].team.name
+                        - let tn = match.opponents[0].team.name
+                        - if (tn.indexOf('[colour=') > -1)
+                          div(class="TeamLabel-name " style=("color:#" + tn.substr(11,6)) )= tn.substr(19, tn.length-17)
+                        -else
+                          div(class="TeamLabel-name ")= tn
                         div(class="TeamLabel-coach ")= match.opponents[0].coach.name
                   div(class="MatchRow-status")
                     span(class="MatchStatus MatchStatus--transparent")
@@ -42,6 +46,10 @@ block content
                     div(class="TeamLabel")
                       div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                       div(class="TeamLabel-info TeamLabel-info--noScore")
-                        div(class="TeamLabel-name ")= match.opponents[1].team.name
+                        - let on = match.opponents[1].team.name
+                        - if (on.indexOf('[colour=') > -1)
+                          div(class="TeamLabel-name " style=("color:#" + on.substr(11,6) ) )= on.substr(19, on.length-17)
+                        -else
+                          div(class="TeamLabel-name ")= on
                         div(class="TeamLabel-coach ")= match.opponents[1].coach.name
 

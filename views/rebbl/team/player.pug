@@ -1,5 +1,5 @@
 - let levels = [0,0,6,16,31,51,76,176,"*"]
-- let playerName = player.number === 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : player.name
+- let playerName = (player.number === 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : player.name) + ""
 - let playerPos  = player.number > 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
 - let playerId = playerPos === "" ? playerName.replace(/ /g,'') : (player.id ? player.id : player.name.replace(/ /g,'')) 
 - let cls = (player.active && player.casualties_sustained && (player.casualties_sustained.length === 1 && player.casualties_sustained[0] !== "BadlyHurt" )) ? "player-out" : ""
@@ -12,7 +12,7 @@ tr(class="stats "+cls )
       - else
         img(src="https://cdn2.rebbl.net/images/skills/" + player.level + ".png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
       - if (playerName.indexOf('[colour=') > -1)
-        div(class="match-stats-TeamLabel-name" style="color:#"+playerName.substr(10,8) )= playerName.substr(20, playerName.length-18)
+        div(class="match-stats-TeamLabel-name" style="color:#"+playerName.substr(11,6))= playerName.substr(20, playerName.length-18)
       - else
         div(class="match-stats-TeamLabel-name")= playerName
   td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= playerPos
