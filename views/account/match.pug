@@ -21,7 +21,8 @@ block scripts
         let timezones = $(".timezone");
 
         timezones.each(function(zone){
-          $(timezones[zone]).find(".time").text(moment().tz($(timezones[zone]).text()).format('YYYY-MM-DD HH:mm ZZ'));
+          if ($(timezones[zone]).text().length > 0)
+            $(timezones[zone]).find(".time").text(moment().tz($(timezones[zone]).text()).format('YYYY-MM-DD HH:mm ZZ'));
         });
 
         $(".btn").on("click", function(event){
