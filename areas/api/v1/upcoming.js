@@ -55,7 +55,7 @@ router.post("/stream/:contest_id", util.ensureAuthenticatedApi, async function(r
         //let user = await accountService.getAccount(req.user.name);
 
         if(date && !date.stream){
-            date.stream = {name: user.reddit, url:res.locals.user.twitch};
+            date.stream = {name: req.user.name, url:res.locals.user.twitch};
             await datingService.update(date.id, date);
             res.status(200).send(date);
         } else {
