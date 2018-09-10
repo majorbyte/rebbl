@@ -7,11 +7,11 @@ const express = require('express')
   , router = express.Router();
 
   /*
-router.get('/', util.ensureAuthenticated, async function(req, res){
+router.get('/', util.ensureLoggedIn, async function(req, res){
   res.render('signup/closed');
 });*/
 
-router.post('/confirm-rampup',util.ensureAuthenticated, async function(req, res){
+router.post('/confirm-rampup',util.ensureLoggedIn, async function(req, res){
   try {
     req.body.saveType = "rampup";
     let user = await signupService.saveSignUp(req.user.name, req.body);
@@ -27,7 +27,7 @@ router.post('/confirm-rampup',util.ensureAuthenticated, async function(req, res)
 });
 
 
-router.get('/', util.ensureAuthenticated, async function(req, res){
+router.get('/', util.ensureLoggedIn, async function(req, res){
   try{
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
@@ -43,7 +43,7 @@ router.get('/', util.ensureAuthenticated, async function(req, res){
   }
 });
 
-router.get('/change', util.ensureAuthenticated, async function(req, res){
+router.get('/change', util.ensureLoggedIn, async function(req, res){
   try {
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
