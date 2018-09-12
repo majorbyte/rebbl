@@ -9,7 +9,7 @@ const express = require('express')
 
   router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
-      accountService.searchAccounts({"strikes": {$exists:true}}).then(function(data){
+      accountService.searchAccounts({$or: [{"bans": {$exists:true}},{"strikes": {$exists:true}}]}).then(function(data){
         data.map(x => {
             delete x._id;
             delete x.teamname;
@@ -17,6 +17,7 @@ const express = require('express')
             delete x.showAmount;
             delete x.showDonation;
             delete x.showDonationValue;
+            delete x.useDark;
             delete x.twitch;
             delete x.steam;
             delete x.discord;
