@@ -65,13 +65,25 @@ block append scripts
       self.twitch = ko.observable();
       
       self.roles = ko.observableArray([]);
+      self.bans = ko.observableArray([]);
       self.strikes = ko.observableArray([]);
       self.warnings = ko.observableArray([]);
       self.donations = ko.observableArray([]);
 
+      self.newBan = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       self.newStrike = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       self.newWarning = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       self.newDonation = ko.observable(new DonationModel({"date":"","currency":"","value":0}));
+
+      self.toggleBan = function(data,event){
+        data.active = !data.active;
+        self.post("/api/v1/admin/user/toggleBan", {reddit:self.reddit(), id:data.id, ban:data});
+      }
+      self.addBan = function(data,event){
+        self.bans.push(self.newBan());
+        self.post("/api/v1/admin/user/addBan", {reddit:self.reddit(), ban:self.newBan()});
+        self.newBan(new StrikeModel({"reason":"","start":"","end":"","active":true}));
+      }
 
       self.toggle = function(data,event){
         data.active = !data.active;
@@ -93,7 +105,6 @@ block append scripts
       self.edit = function(data,event){
         data.editable=true;
       }
-
 
       self.saveStrike = function(data,event){
         data.editable=false;
@@ -141,6 +152,11 @@ block append scripts
     }
 
     var mapping = {
+      'bans': {
+          create: function(options) {
+              return new StrikeModel(options.data);
+          }
+      },
       'strikes': {
           create: function(options) {
               return new StrikeModel(options.data);
@@ -264,6 +280,7 @@ block content
         - if(user)
           a(class="nav-item nav-link" id="nav-warnings-tab" data-toggle="tab" href="#nav-warnings" role="tab" aria-controls="nav-warnings" aria-selected="false") Warnings
           a(class="nav-item nav-link" id="nav-strikes-tab" data-toggle="tab" href="#nav-strikes" role="tab" aria-controls="nav-strikes" aria-selected="false") Strikes
+          a(class="nav-item nav-link" id="nav-bans-tab" data-toggle="tab" href="#nav-bans" role="tab" aria-controls="nav-bans" aria-selected="false") Bans
           -if (admin.roles && admin.roles.indexOf("superadmin") >-1)
             a(class="nav-item nav-link" id="nav-donations-tab" data-toggle="tab" href="#nav-donations" role="tab" aria-controls="nav-donations" aria-selected="false") Donations
     div(class="tab-content" id="nav-tabContent")
@@ -397,6 +414,53 @@ block content
             div(class="col-2" data-bind="text: start")
             div(class="col-2" data-bind="text: end")
             button(class="col-1 btn btn-warning" data-bind="click: $root.toggle") activate 
+        // /ko
+        // /ko
+
+      div(class="tab-pane fade" id="nav-bans" role="tabpanel" aria-labelledby="nav-bans-tab") 
+        div(class="row col-12")
+          h2 Active bans
+        div(class="row col-12")
+          div(class="col-7") Reason
+          div(class="col-2") Date start
+          div(class="col-2") Date end
+        // ko foreach: bans
+        // ko if: active
+        div(class="row col-12 no-gutter" style="margin-bottom: 5px;")
+          div(class="row col-12 no-gutter")
+            div(class="col-7" data-bind="text:reason " )
+            div(class="col-2" data-bind="text: start")
+            div(class="col-2" data-bind="text: end")
+            button(class="col-1 btn btn-warning" data-bind="click: $root.toggleBan,clickBubble: false") deactivate 
+        // /ko
+        // /ko
+        br
+        form(data-bind="submit: addBan")
+          //ko with: newBan        
+          div(class="row col-12 no-gutter")
+            div(class="row col-12 no-gutter")
+              div(class="col-7")
+                input(type="text" class="col-11" data-bind="value:reason " )
+              div(class="col-2")
+                input(type="text" data-bind="value: start")
+              div(class="col-2")
+                input(type="text" data-bind="value: end")
+              button(class="col-1 btn btn-success" type="submit") add 
+          // /ko        
+        div(class="row col-12")
+          h2 Old bans
+          div(class="row col-12")
+            div(class="col-7") Reason
+            div(class="col-2") Date start
+            div(class="col-2") Date end
+        // ko foreach: bans
+        // ko ifnot: active
+        div(class="row col-12")
+          div(class="row col-12")
+            div(class="col-7" data-bind="text:reason " )
+            div(class="col-2" data-bind="text: start")
+            div(class="col-2" data-bind="text: end")
+            button(class="col-1 btn btn-warning" data-bind="click: $root.toggleBan") activate 
         // /ko
         // /ko
 

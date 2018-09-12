@@ -12,6 +12,7 @@ block scripts
         self.coach = ko.observable();
         self.reddit = ko.observable();
         self.loading = ko.observable(true);
+        self.showAll = ko.observable(false);
         self.filteredUsers = ko.computed(function() {
           if(!self.coach() && !self.reddit() ) {
               return self.users(); 
@@ -37,6 +38,13 @@ block scripts
             return users;
           }
         });
+
+        self.toggle = function(data,event){
+          $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+          $(event.currentTarget || event.target ).toggleClass("btn-success");
+
+          self.showAll(!self.showAll());
+        }
     }
 
     ko.bindingHandlers.foreachprop = {
@@ -82,29 +90,41 @@ block content
   div(class="container")
     div(class="row col-12")
       div(class="col-2") Coach
-      div(class="col-2") Reddit
-      div(class="col-2") Timezone
-      a(role="button" class="col-2 btn btn-primary" data-bind="attr:{href: 'user/add' }" aria-pressed="true") new
-    div(class="row col-12")
-      div(class="col-2") 
-        label(style="float: left; margin-left: -75px;") search
-        input(data-bind="textInput : coach")
-      div(class="col-2") 
-        input(data-bind="textInput : reddit")
+      div(class="col-2") Awarded By
+      div(class="col-2") Start
+      div(class="col-2") End
+      div(class="col-4") Reason
+        button(class="btn btn-secondary" data-bind="click:toggle" style="margin-right:5px;float:right") Show All
+    hr
     //ko if: loading
     div(class="row col-12 justify-content-center")
       i(class="fa fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
     // /ko
     div(data-bind="foreach: filteredUsers" )
+      //ko if: $data.strikes != undefined
       div(data-bind="foreach: strikes" )
+        // ko if: $root.showAll() || $data.active 
         div(class="user-row row col-12")
-          a(class="col-12" data-bind="attr:{href: 'user/' + $parent.reddit }")   
-            div(class="col-12 row" data-bind="foreachprop: $data")
-              // ko if: key !== 'roles'
-              div(data-bind="text: value" class="col-2" style="overflow:hidden;")
-              // /ko
-              div(style="min-width:25px;margin-left:-25px;")
-
+          a(class="col-12 row" data-bind="attr:{href: 'user/' + $parent.reddit }")   
+            div(data-bind="text: $parent.coach" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: awardedBy" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: start" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: end" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: reason" class="col-4" style="overflow:hidden;")
+        // /ko
+      // /ko
+      //ko if: $data.bans !== undefined
+      div(data-bind="foreach: bans" )
+        // ko if: $root.showAll() || $data.active 
+        div(class="user-row row col-12")
+          a(class="col-12 row" data-bind="attr:{href: 'user/' + $parent.reddit }")   
+            div(data-bind="text: $parent.coach" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: awardedBy" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: start" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: end" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: reason" class="col-4" style="overflow:hidden;")
+        // /ko
+      // /ko
 
 
 

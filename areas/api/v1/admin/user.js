@@ -16,10 +16,13 @@ const express = require('express')
             delete x.donations;
             delete x.showAmount;
             delete x.showDonation;
-            delete x.showDonationValue
+            delete x.showDonationValue;
+            delete x.useDark;
             delete x.twitch;
             delete x.steam;
             delete x.strikes;
+            delete x.warnings;
+            delete x.bans;
         });  
         res.status(200).send(data);
       });
@@ -65,7 +68,7 @@ router.post('/addStrike', util.ensureAuthenticated, util.hasRole("admin"), async
       , start: req.body.strike.start
       , end: req.body.strike.end
       , active: req.body.strike.active
-      , awardedBy: req.user.name
+      , awardedBy: res.locals.user.reddit
     };
 
     let strikes = await accountService.addStrike(req.body.reddit, strike);
@@ -121,7 +124,7 @@ router.post('/addWarning', util.ensureAuthenticated, util.hasRole("admin"), asyn
       , start: req.body.warning.start
       , end: req.body.warning.end
       , active: req.body.warning.active
-      , awardedBy: req.user.name
+      , awardedBy: res.locals.user.reddit
     };
 
     let warnings = await accountService.addWarning(req.body.reddit, warning);
@@ -174,6 +177,44 @@ router.post('/addDonation', util.ensureAuthenticated, util.hasRole("superadmin")
       , value: req.body.donation.value
     };
     await accountService.addDonation(req.body.reddit, donation);
+
+    res.status(200).send();
+  } catch(err){
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
+router.post('/addBan', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  try{
+    let ban = { 
+      reason: req.body.ban.reason
+      , start: req.body.ban.start
+      , end: req.body.ban.end
+      , active: req.body.ban.active
+      , awardedBy: res.locals.user.reddit
+    };
+
+    let bans = await accountService.addBan(req.body.reddit, ban);
+
+    res.status(200).send(bans);
+  } catch(err){
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
+router.post('/toggleBan', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  try{
+    let ban = { 
+      id: Number(req.body.ban.id)
+      , reason: req.body.ban.reason
+      , start: req.body.ban.start
+      , end: req.body.ban.end
+      , active: req.body.ban.active
+    };
+
+    await accountService.setBan(req.body.reddit,ban.id, ban);
 
     res.status(200).send();
   } catch(err){
