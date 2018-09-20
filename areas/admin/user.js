@@ -45,6 +45,7 @@ router.get('/:user', util.ensureAuthenticated, util.hasRole("admin"), async func
 router.post('/update', util.ensureAuthenticated, async function(req, res){
   try{
     let account = { reddit: req.body.reddit
+      , coach: req.body.coach      
       , discord:  req.body.discord
       , steam: req.body.steam
       , timezone: req.body.timezone
