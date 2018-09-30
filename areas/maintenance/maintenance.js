@@ -24,6 +24,14 @@ router.get('/updateleague/init', async function(req, res){
   res.redirect('/');
 });
 
+router.get('/updateleague/fix', async function(req, res){
+  if (req.query.verify === process.env['verifyToken']){
+    league.rel9fix();
+  }
+  res.redirect('/');
+});
+
+
 
 router.get('/updateleague', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
