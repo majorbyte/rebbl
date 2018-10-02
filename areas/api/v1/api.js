@@ -7,6 +7,8 @@ router.use('/standings', require(`./standings.js`));
 
 router.use('/greenhorn', require(`./greenhorn.js`));
 
+router.use('/oi', require(`./oi.js`));
+
 router.use('/signups', require(`./signups.js`));
 
 router.use('/upcoming', require(`./upcoming.js`));

@@ -50,19 +50,18 @@ router.get('/change', util.ensureLoggedIn, async function(req, res){
     let account = await accountService.getAccount(req.user.name);
 
     // Disabled while during season
-    /*  
     if(!signup && user){
       res.render('signup/signup-existing', { user: user});
       return;
-    }*/
+    }
 
     if (!signup){
       if(account){
-        //res.render('signup/signup-new-coach', {user: {account: account}});
-        res.render('signup/signup-rampup', {user: {account: account}});
+        res.render('signup/signup-new-coach', {user: {account: account}});
+        //res.render('signup/signup-rampup', {user: {account: account}});
       } else {
-        //res.render('signup/signup-new-coach', {user: req.user.name});
-        res.render('signup/signup-rampup', {user: req.user.name});
+        res.render('signup/signup-new-coach', {user: req.user.name});
+        //res.render('signup/signup-rampup', {user: req.user.name});
       }
       return;
     }
@@ -94,7 +93,7 @@ router.get('/change', util.ensureLoggedIn, async function(req, res){
     console.log(err);
   }
 });
-/*
+
 router.get('/reroll', util.ensureAuthenticated, async function(req, res){
   try {
     let user = await signupService.getExistingTeam(req.user.name);
@@ -131,9 +130,9 @@ router.post('/confirm-existing',util.ensureAuthenticated, async function(req, re
     delete req.body.team;
 
     req.body.saveType = "existing";
-    await signupService.saveSignUp(req.user.name, req.body);
+    let user = await signupService.saveSignUp(req.user.name, req.body);
 
-    res.redirect('/signup');
+    res.render('signup/signup-confirmed-oi', {user: user});
   } catch (err){
     console.log(err);
   }
@@ -150,8 +149,8 @@ router.post('/confirm-reroll', util.ensureAuthenticated, async function(req, res
     if (user.error){
       res.render('signup/signup-reroll', {user: user});
     } else {
-      //res.render('signup/signup-confirmed-greenhorn', {user: user});
-      res.redirect('/signup');
+      res.render('signup/signup-confirmed-greenhorn', {user: user});
+      //res.redirect('/signup');
     }
   } catch (err){
     console.log(err);
@@ -166,8 +165,8 @@ router.post('/confirm-new', util.ensureAuthenticated, async function(req, res){
     if (user.error){
       res.render('signup/signup-new-coach', {user: user});
     } else {
-      //res.render('signup/signup-confirmed-greenhorn', {user: user});
-      res.redirect('/signup');
+      res.render('signup/signup-confirmed-greenhorn', {user: user});
+      //res.redirect('/signup');
     }
   } catch (err){
     console.log(err);
@@ -177,6 +176,16 @@ router.post('/confirm-new', util.ensureAuthenticated, async function(req, res){
 router.post('/confirm-greenhorn', util.ensureAuthenticated, async function(req, res){
   try{
     await signupService.saveGreenhornSignUp(req.user.name);
+
+    res.redirect('/signup');
+  } catch (err){
+    console.log(err);
+  }
+});
+
+router.post('/confirm-oi', util.ensureAuthenticated, async function(req, res){
+  try{
+    await signupService.saveOISignUp(req.user.name);
 
     res.redirect('/signup');
   } catch (err){
@@ -203,6 +212,15 @@ router.post('/resign-greenhorn', util.ensureAuthenticated, async function(req,re
   }
 });
 
+router.post('/resign-oi', util.ensureAuthenticated, async function(req,res){
+  try{
+    await signupService.resignOI(req.user.name);
+    res.redirect('/signup');
+  } catch (err){
+    console.log(err);
+  }
+});
+
 router.post('/confirm', util.ensureAuthenticated, async function(req,res){
   try{
     await signupService.confirm(req.user.name);
@@ -211,7 +229,7 @@ router.post('/confirm', util.ensureAuthenticated, async function(req,res){
     console.log(err);
   }
 });
-*/
+
 
 
 router.get('/signups', util.checkCache, async function(req,res){

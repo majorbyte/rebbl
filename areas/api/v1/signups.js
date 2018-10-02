@@ -5,10 +5,7 @@ const db = require('../../../lib/signupService.js')
   , router = express.Router();
 
 
-router.get('/', util.ensureAuthenticated, async function(req, res, next){
-  if (['FullMetalCOS', 'minorbyte', 'Harringzord', 'Miraskadu'].indexOf(req.user.name) === -1 ){
-    next( new Error(403) );
-  } else {
+router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res, next){
     const data = await db.getSignUps({});
 
     const csv = data.all.map(function(row){
@@ -21,8 +18,8 @@ router.get('/', util.ensureAuthenticated, async function(req, res, next){
     res.set('Content-Type', 'application/octet-stream');
     res.attachment('signups.csv');
     res.status(200).send(csv.join('\r\n'));
-  }
-});
+
+  });
 
 
 module.exports = router;
