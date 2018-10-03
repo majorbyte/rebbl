@@ -157,7 +157,7 @@ router.post('/confirm-reroll', util.ensureAuthenticated, async function(req, res
   }
 });
 
-router.post('/confirm-new', util.ensureAuthenticated, async function(req, res){
+router.post('/confirm-new', util.ensureLoggedIn, async function(req, res){
   try {
     req.body.saveType = "new";
     let user = await signupService.saveSignUp(req.user.name, req.body);
