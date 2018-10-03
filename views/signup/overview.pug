@@ -3,7 +3,7 @@ extends ..\account\sublayout.pug
 block content
   div(class="container")
     - if (user.isNew)
-      h2= "Welcome to REBBL Season 9, "
+      h2= "Welcome to REBBL Season 10, "
         span(class="highlight")= user.reddit
         span !
 
@@ -11,14 +11,14 @@ block content
         a(href="/signup/change" class="highlighted-rules")= " here"
     - if(user.hasOwnProperty('signedUp'))
       - if (!user.signedUp)
-        h2= "Welcome back to REBBL Season 9, "
+        h2= "Welcome back to REBBL Season 10, "
           span(class="highlight")= user.coach
           span !
 
         p You haven't signed up yet, so continue with your sign up
           a(href="/signup/change" class="highlighted-rules")= " here"
       - else
-        h2= "Welcome back to REBBL Season 9, "
+        h2= "Welcome back to REBBL Season 10, "
           span(class="highlight")= user.coach
           span !
 
@@ -28,7 +28,7 @@ block content
             span(style="font-size:0.75em" )= " (" + user.race + ")"
             span= " to the following:"
           div
-            h3= "REBBL SEASON 9 - " + user.league
+            h3= "REBBL SEASON 10 - " + user.league
             //- if(!user.teamExist)
               div(class="warning")
                 p Your team is either misspelled or not yet existing
@@ -37,19 +37,29 @@ block content
               form(action="/signup/change" method="get" style="float:left;margin-right:116px;")
                 button(type="submit") Change
 
-            //form(action="/signup/confirm" method="post" )
+            //- form(action="/signup/confirm" method="post" )
               -if(user.confirmed)
                 span Thank you for confirming!
               -else
                 button(type="submit") Confirm
 
-            //form(action="/signup/resign" method="post" )
+            form(action="/signup/resign" method="post" )
               br
               button(type="submit") Resign
 
           -if (user.greenHorn)
             div
               h3 THE GREENHORN CUP
+            form(action="/signup/resign-greenhorn" method="post" )
+              br
+              button(type="submit") Resign
+
+          -if (user.OI)
+            div
+              h3 THE OPEN INVITATIONAL
+            form(action="/signup/resign-oi" method="post" )
+              br
+              button(type="submit") Resign
 
           p Nagivate
            a(href="/signup/signups" class="highlighted-rules") &nbsp;here

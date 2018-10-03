@@ -6,7 +6,7 @@ const db = require('../../../lib/signupService.js')
 
 router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res,next){
 
-  const data = await db.getSignUps({'greenHorn':true}).all;
+  const data = await db.getSignUps({'OI':true}).all;
 
   const csv = data.map(function(row){
     return `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.timezone)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.coach)},${JSON.stringify(row.steam)},${JSON.stringify(row.league)}`
