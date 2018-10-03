@@ -23,6 +23,8 @@ const express = require('express')
             delete x.strikes;
             delete x.warnings;
             delete x.bans;
+            delete x.teamn;
+            delete x.race;
         });  
         res.status(200).send(data);
       });
