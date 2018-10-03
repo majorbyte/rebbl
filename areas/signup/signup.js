@@ -28,7 +28,6 @@ router.post('/confirm-rampup',util.ensureLoggedIn, async function(req, res){
 
 
 router.get('/', util.ensureLoggedIn, async function(req, res){
-  req.user.name = "DavidLeClair";
   try{
     let user = await signupService.getExistingTeam(req.user.name);
     let signup = await signupService.getSignUp(req.user.name);
