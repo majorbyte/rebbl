@@ -22,6 +22,9 @@ const express = require('express')
             delete x.steam;
             delete x.discord;
             delete x.roles;
+            delete x.teamn;
+            delete x.race;
+
         });  
         res.status(200).send(data);
       });

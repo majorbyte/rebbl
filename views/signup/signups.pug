@@ -29,14 +29,14 @@ block content
                 div(style="display: table-cell;width: 100px;")= league
                   span(class="highlight" style="float:right;margin-right:15px")= total
                 for race in races
-                  - let stat = signups.grouped.filter(function(a){ return a.league === league && a.race === race });
+                  - let stat = signups.grouped.filter(function(a){ return a.league === league && a.race.trim() === race.trim() });
                   div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat[0] ? stat[0].count: 0
             div(class="TableRow")
               - let _total = signups.grouped.reduce(function(p, c){ return p + c.count; }, 0);
               div(style="display: table-cell;width: 100px;") Total
                 span(class="highlight" style="float:right;margin-right:15px")= _total
               for race in races
-                - let stat = signups.grouped.reduce(function(p, c){ return c.race === race ? p + c.count : p; }, 0);
+                - let stat = signups.grouped.reduce(function(p, c){ return c.race.trim() === race.trim() ? p + c.count : p; }, 0);
                 div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat
         br
         - let data = ["existing", "reroll", "new"]
@@ -73,7 +73,7 @@ block content
                 div(style="white-space: nowrap;display: table-cell;width: 250px;")
                  a(href=`/rebbl/coach/${encodeURIComponent(signup.coach)}/details`)= signup.coach
                 div(style="white-space: nowrap;display: table-cell;width: 350px;")= signup.team
-                div(style="white-space: nowrap;display: table-cell;width: 160px;")= signup.race
+                div(style="white-space: nowrap;display: table-cell;width: 160px;")= signup.race.trim()
                 div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.league
                 div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.saveType.replace("existing", "staying").replace("reroll", "rerolling")
                 div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.timezone
