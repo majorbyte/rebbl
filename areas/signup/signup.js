@@ -138,6 +138,28 @@ router.post('/confirm-existing',util.ensureAuthenticated, async function(req, re
   }
 });
 
+router.get('/signup-oi',util.ensureAuthenticated, async function(req, res){
+  try{
+
+    let user = await signupService.getSignUp(req.user.name);
+
+    res.render('signup/signup-confirmed-oi', {user: user});
+  } catch (err){
+    console.log(err);
+  }
+});
+
+router.get('/signup-greenhorn',util.ensureAuthenticated, async function(req, res){
+  try{
+
+    let user = await signupService.getSignUp(req.user.name);
+
+    res.render('signup/signup-confirmed-greenhorn', {user: user});
+  } catch (err){
+    console.log(err);
+  }
+});
+
 router.post('/confirm-reroll', util.ensureAuthenticated, async function(req, res){
   try{
     //remove unwanted input

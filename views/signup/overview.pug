@@ -53,6 +53,11 @@ block content
             form(action="/signup/resign-greenhorn" method="post" )
               br
               button(type="submit") Resign
+          -else if(user.saveType !== "existing")
+            div
+              h3 You can still sign up for THE GREENHORN CUP
+              a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
+
 
           -if (user.OI)
             div
@@ -60,6 +65,11 @@ block content
             form(action="/signup/resign-oi" method="post" )
               br
               button(type="submit") Resign
+          -else if(user.saveType === "existing")
+            div
+              h3 You can still sign up for THE OPEN INVITATIONAL
+              a(href="/signup/signup-oi") Sign me up for OI
+                
 
           p Nagivate
            a(href="/signup/signups" class="highlighted-rules") &nbsp;here
