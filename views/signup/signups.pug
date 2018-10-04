@@ -59,7 +59,10 @@ block content
                 div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;")= stat
         br
         br
-        div(style="grid-template-columns: auto;display:grid;clear:both")
+        div
+          div(class="btn btn-outline-primary" id="oi") OI
+          div(class="btn btn-outline-primary" id="greenhorn") Greenhorn
+        div(style="grid-template-columns: auto;clear:both")
           div(class="table-striped TeamLabel-info")
             div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
               div(style="white-space: nowrap;display: table-cell;width: 250px;" class="Standings-header") Coach
@@ -69,7 +72,7 @@ block content
               div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") State
               div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") Timezone
             for signup, x in signups.all
-              div(class="TableRow")
+              div(class="TableRow " + (signup.OI ? "OI" : (signup.greenHorn ? "greenhorn" : "normal") ))
                 div(style="white-space: nowrap;display: table-cell;width: 250px;")
                  a(href=`/rebbl/coach/${encodeURIComponent(signup.coach)}/details`)= signup.coach
                 div(style="white-space: nowrap;display: table-cell;width: 350px;")= signup.team
@@ -77,3 +80,41 @@ block content
                 div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.league
                 div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.saveType.replace("existing", "staying").replace("reroll", "rerolling")
                 div(style="white-space: nowrap;display: table-cell;width: 80px;")= signup.timezone
+
+block append scripts
+  script.
+    $(document).ready(function(){
+      
+      $("#oi").on("click", function(event){
+        $(this).toggleClass("active");
+        if ($(this).hasClass("active")){
+          $(".TableRow.normal").hide();
+          $(".TableRow.greenhorn").hide();
+          $(".TableRow.OI").show();
+        } else {
+          $(".TableRow").show();
+        }
+        if ($("#greenhorn").hasClass("active")){
+          $("#greenhorn").toggleClass("active")
+        }
+      });
+
+      $("#greenhorn").on("click", function(event){
+        $(this).toggleClass("active");
+        if ($(this).hasClass("active")){
+          $(".TableRow.normal").hide();
+          $(".TableRow.OI").hide();
+          $(".TableRow.greenhorn").show();
+        } else {
+          $(".TableRow").show();
+        }
+
+        if ($("#oi").hasClass("active")){
+          $("#oi").toggleClass("active")
+        }
+      })
+
+
+    })
+
+  
