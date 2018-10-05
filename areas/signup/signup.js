@@ -50,7 +50,7 @@ router.get('/change', util.ensureLoggedIn, async function(req, res){
     let account = await accountService.getAccount(req.user.name);
 
     // Disabled while during season
-    if(!signup && user){
+    if(!signup && user && user.team){
       res.render('signup/signup-existing', { user: user});
       return;
     }
