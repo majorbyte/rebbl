@@ -40,23 +40,33 @@ block content
                 div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat
         br
         - let data = ["existing", "reroll", "new"]
-        div(style="grid-template-columns: auto;display:grid;clear:both;width:400px;")
+        div(style="grid-template-columns: auto;display:grid;clear:both;width:600px;")
           div(class="table-striped TeamLabel-info")
             div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
               div(style=";display: table-cell;width: 100px;" class="Standings-header") League
               for d in data
-                div(style="display: table-cell;width: 10px;;" class="Standings-header" title=race)= d
+                div(style="display: table-cell;width: 10px;;" class="Standings-header" )= d
+              div(style="display: table-cell;width: 50px;;" class="Standings-header" ) OI
+              div(style="display: table-cell;width: 10px;;" class="Standings-header" ) GHC
             for league in leagues
               div(class="TableRow")
                 div(style="display: table-cell;width: 100px;")= league
                 for d in data
                   - let stat = signups.all.reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0);
                   div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat
+                - let stat = signups.all.reduce(function(p, c){ return c.league === league && c.OI ? p+1 : p; }, 0);
+                div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat
+                - stat = signups.all.reduce(function(p, c){ return c.league === league && c.greenHorn ? p+1 : p; }, 0);
+                div(style="white-space: nowrap;display: table-cell;width: 10px;")= stat
             div(class="TableRow")
               div(style="display: table-cell;width: 100px;") Total
               for d in data
                 - let stat = signups.all.reduce(function(p, c){ return c.saveType === d ? p+1 : p; }, 0);
                 div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;")= stat
+              - let stat = signups.all.reduce(function(p, c){ return c.OI ? p+1 : p; }, 0);
+              div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;")= stat
+              - stat = signups.all.reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0);
+              div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;")= stat
         br
         br
         div
