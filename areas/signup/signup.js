@@ -273,7 +273,7 @@ router.get('/signups', util.checkCache, async function(req,res){
 
     });
 
-    res.render('signup/signups', {signups: signups});
+    res.render('signup/signups', {signups: signups, isAdmin: util.hasRole("admin")});
   } catch (err){
     console.log(err);
   }

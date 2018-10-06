@@ -23,8 +23,6 @@ const express = require('express')
             delete x.strikes;
             delete x.warnings;
             delete x.bans;
-            delete x.teamn;
-            delete x.race;
         });  
         res.status(200).send(data);
       });
@@ -54,6 +52,8 @@ router.post('/update', util.ensureAuthenticated, util.hasRole("admin"), async fu
       , steam: req.body.steam
       , timezone: req.body.timezone
       , twitch: req.body.twitch
+      , team: req.body.team
+      , race: req.body.race
     };
 
     account = await accountService.updateAccount(account);
