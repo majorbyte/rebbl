@@ -83,9 +83,9 @@ block content
           div
             label(for="league") League
             select(name="league" id="league")
-              option(value="BIG O" selected=user.league==="BIG O") BIG O
-              option(value="GMAN" selected=user.league==="GMAN") GMAN
-              option(value="REL" selected=user.league==="REL") REL
+              option(value="BIG O" selected=user.league==="BIG O") BIG O - the Oceanic region
+              option(value="GMAN" selected=user.league==="GMAN") GMAN - the European region
+              option(value="REL" selected=user.league==="REL") REL  - the Americas region (North America &amp; South America)
           div
             label(for="timezone") Timezone
             select(id="timezone" name="timezone" required title="timezone")
@@ -155,9 +155,9 @@ block content
             label(for="league") League
             select(name="league" id="league" required)
               option(value="" disabled selected style="color: #9b959166;") Select your league
-              option(value="BIG O") BIG O
-              option(value="GMAN") GMAN
-              option(value="REL") REL
+              option(value="BIG O" selected=user.league==="BIG O") BIG O - the Oceanic region
+              option(value="GMAN" selected=user.league==="GMAN") GMAN - the European region
+              option(value="REL" selected=user.league==="REL") REL  - the Americas region (North America &amp; South America)
           div
             label(for="timezone") Timezone
             select(id="timezone" name="timezone" required title="timezone")

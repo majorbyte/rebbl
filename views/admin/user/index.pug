@@ -15,7 +15,7 @@ block scripts
         self.loading = ko.observable(true);
         self.filteredUsers = ko.computed(function() {
           if(!self.coach() && !self.reddit() && !self.discord()) {
-              return self.users(); 
+              return self.users().sort((a,b) => a.coach.toLowerCase() > b.coach.toLowerCase() ? 1 : -1 ); 
           } else {
             
             let users = null;
@@ -51,7 +51,8 @@ block scripts
         transformObject: function (obj) {
             var properties = [];
             ko.utils.objectForEach(obj, function (key, value) {
-                properties.push({ key: key, value: value });
+                if (["coach","reddit","discord","timezone"].indexOf(key)>-1)
+                  properties.push({ key: key, value: value });
             });
             properties = properties.sort(function(a,b){return a.key > b.key ? 1 : -1;})
             return properties;

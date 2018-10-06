@@ -20,6 +20,8 @@ block append scripts
               this.end = data.end;
               this.active = data.active;
               this.editable = false;
+              this.team = data.team;
+              this.race = data.race;
           }
       };
       this.snap = () => {
@@ -60,7 +62,9 @@ block append scripts
       self.reddit = ko.observable();
       self.coach = ko.observable();
       self.discord = ko.observable();
+      self.race = ko.observable();
       self.steam = ko.observable();
+      self.team = ko.observable();
       self.timezone = ko.observable();
       self.twitch = ko.observable();
       
@@ -305,8 +309,14 @@ block content
             label(for="steam") Steam
             input(type="text" id="steam" name="steam" data-bind="value: steam")
           div
-            label(for="steam") Twitch
+            label(for="twitch") Twitch
             input(type="text" id="twitch" name="twitch" data-bind="value: twitch")
+          div
+            label(for="team") Team
+            input(type="text" id="team" name="team" data-bind="value: team")
+          div
+            label(for="race") Race
+            input(type="text" id="race" name="race" data-bind="value: race")
           div(style="clear:both")
             button(type="submit") Save
             br
