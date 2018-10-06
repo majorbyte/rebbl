@@ -19,7 +19,7 @@ router.get('/update/:round', async function(req, res){
 
 router.get('/updateleague/init', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
-    league.initRebblData(req.query.league);
+    league.initRebblData(req.query.league, req.query.comp);
   }
   res.redirect('/');
 });
