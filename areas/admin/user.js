@@ -42,7 +42,7 @@ router.get('/:user', util.ensureAuthenticated, util.hasRole("admin"), async func
 });
 
 
-router.post('/update', util.ensureAuthenticated, async function(req, res){
+router.post('/update', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
   try{
     let account = { reddit: req.body.reddit
       , coach: req.body.coach      
@@ -50,6 +50,8 @@ router.post('/update', util.ensureAuthenticated, async function(req, res){
       , steam: req.body.steam
       , timezone: req.body.timezone
       , twitch: req.body.twitch
+      , team: req.body.team
+      , race: req.body.race
     };
 
     await accountService.updateAccount(account);
