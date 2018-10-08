@@ -256,24 +256,7 @@ router.post('/confirm', util.ensureAuthenticated, async function(req,res){
 
 router.get('/signups', util.checkCache, async function(req,res){
   try{
-    let signups = await signupService.getSignUps();
-
-    signups.all = signups.all.sort(function(a,b){
-
-      if(a.league > b.league) return 1;
-      if(a.league < b.league) return -1;
-
-      if(a.saveType.replace("reroll", "f") > b.saveType.replace("reroll", "f")) return 1;
-      if(b.saveType.replace("reroll", "f") > a.saveType.replace("reroll", "f")) return -1;
-
-      if (a.coach.toLowerCase() < b.coach.toLowerCase()) return -1;
-      if (a.coach.toLowerCase() > b.coach.toLowerCase()) return 1;
-
-      return 0;
-
-    });
-
-    res.render('signup/signups', {signups: signups, isAdmin: util.hasRole("admin")});
+    res.render('signup/signups', {});
   } catch (err){
     console.log(err);
   }

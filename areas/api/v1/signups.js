@@ -19,7 +19,31 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
     res.attachment('signups.csv');
     res.status(200).send(csv.join('\r\n'));
 
+});
+
+
+router.get('/page', util.checkCache, async function(req, res, next){
+  const data = await db.getSignUps({});
+
+  const ret = data.all.map(function(row){
+
+    return {
+      team: row.team,
+      coach: row.coach,
+      race: row.race,
+      timezone: row.timezone,
+      saveType: row.saveType,
+      TV: row.currentTV,
+      league: row.league,
+      OI: row.OI,
+      greenHorn: row.greenHorn
+    }
+
   });
+  res.status(200).send(ret);
+});
+
+
 
 
 module.exports = router;

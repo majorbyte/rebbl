@@ -230,6 +230,21 @@ var Model = function(){
         }
     });
 
+    self.allPlayerIds = ko.computed(function(){
+        let players =[];
+        self.teams().map(function(team){
+            if (!team.roster){
+                console.log(team.name);
+                return;
+            } 
+            players = team.roster.reduce(function(p,c){
+                p.push(c.id);
+                return p;
+            },players);
+        },players);
+        return players;
+    });
+
     self.filteredPlayers = ko.computed(function(){
         self.pageNumber(0);
         let getPlayers = function(teams){
@@ -366,7 +381,14 @@ var Model = function(){
     self.setSelectedTeam = function(data,event){
         let team = new TeamModel();
 
+        for(let i = data.players.length-1;i> -1 ;i-- ){
+            let player =self.allPlayerIds().find(p => p === data.players[i].id);
+            if(!player){
+                data.players.splice(i,1);
+            }
+        }
         team.map(data);
+
 
         self.mixedTeam(team);
     }
@@ -410,7 +432,7 @@ ko.bindingHandlers.toggle = {
 
 $(document).ready(function(){
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://cdn2.rebbl.net/scripts/rabbl/data/teams.json",true)
+    xhr.open("GET", "https://cdn2.rebbl.net/scripts/rabbl/data/teams.v3.json",true)
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.responseType = 'json';
 
