@@ -193,8 +193,8 @@ var Model = function(){
 
     ko.computed(function(){
         console.log("alliance change");
-    //    self.mixedTeam(new TeamModel());
-      //  self.mixedTeam().alliance(self.selectedAlliance());
+        self.mixedTeam(new TeamModel());
+        self.mixedTeam().alliance(self.selectedAlliance());
     })
 
     self.filteredTeams = ko.computed(function() {
