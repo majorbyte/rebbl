@@ -12,7 +12,7 @@ router.get('/', util.checkCache, async function(req,res) {
   let league = req.params.league;
   if(league.toLowerCase() == "open invitational"){
     leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
-  } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){
+  } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "the rebbl rabbl mixer" ){
     leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
   } else {
     leagueRegex = new RegExp(`^${req.params.league}`, 'i');
@@ -53,7 +53,7 @@ router.get('/:week', util.checkCache, async function(req,res) {
     let league = req.params.league;
     if(league.toLowerCase() == "open invitational"){
       leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
-    } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){
+    } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "the rebbl rabbl mixer" ){
       leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
     } else {
       leagueRegex = new RegExp(`^${req.params.league}`, 'i');
