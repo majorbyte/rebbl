@@ -10,12 +10,16 @@ router.get('/', util.checkCache, async function(req, res){
   let data = {standings:null, rounds:null, league:req.params.league };
 
   let league = req.params.league;
+
   if(league.toLowerCase() == "open invitational"){
     league = new RegExp(`^ReBBL Open Invitational`, 'i');
-  } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "the rebbl rabbl mixer" ){
+  } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" ){
     league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
   }  
   else {
+    if (league === "rabble"){
+      league = "the rebbl rabble mixer";
+    }
     league = new RegExp(`^${league}`, 'i');
   }
 
