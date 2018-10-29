@@ -8,6 +8,21 @@ block scripts
 
     $(document).ready(function(){
 
+
+
+      $("#copy").click(function(){
+        console.log("click");
+        var copyText = document.getElementById("reddit");
+        $("#reddit").prop('disabled',false);
+        /* Select the text field */
+        copyText.select();
+
+        /* Copy the text inside the text field */
+        document.execCommand("copy");
+        $("#reddit").prop('disabled',true);
+
+      });
+
       let input = document.getElementById("timezone");
       $("#tz_info").text(moment().tz(input.value).format('YYYY-MM-DD HH:mm Z'));
 
@@ -15,12 +30,20 @@ block scripts
 
 block content
   div(class="container")
-    h2(style="text-transform: lowercase;" title="because Keji") reddit
-      span(class="highlight")= " /u/" + coachDetails.reddit
+    - if(coachDetails.roles && coachDetails.roles.indexOf("admin")>-1)
+      h1(class="highlight") &nbsp;
+        img(style="float:left" src="https://cdn2.rebbl.net/images/skills/StaffMember.png")
+        = coachDetails.coach
+    - else
+      h1(class="highlight")= coachDetails.coach
     h3 Contact Data
     div
       label(for="coach") Blood Bowl 2 coach name
       input(type="text" id="coach" name="coach" value=coachDetails.coach  disabled)
+    div
+      label(for="coach") Reddit
+      input(type="text" id="reddit" name="coach" value="/u/" + coachDetails.reddit.toLowerCase()  disabled)
+      span(id="copy" title="copy to clipboard")= '📋'
     div
       label(for="timezone") Timezone
       input(id="timezone" name="timezone" disabled title="timezone" value=coachDetails.timezone)
