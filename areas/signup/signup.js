@@ -6,11 +6,11 @@ const express = require('express')
   , accountService = require('../../lib/accountService.js')
   , router = express.Router();
 
-  /*
+  
 router.get('/', util.ensureLoggedIn, async function(req, res){
   res.render('signup/closed');
-});*/
-
+});
+/*
 router.post('/confirm-rampup',util.ensureLoggedIn, async function(req, res){
   try {
     req.body.saveType = "rampup";
@@ -251,7 +251,7 @@ router.post('/confirm', util.ensureAuthenticated, async function(req,res){
     console.log(err);
   }
 });
-
+*/
 
 
 router.get('/signups', util.checkCache, async function(req,res){
