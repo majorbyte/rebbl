@@ -65,8 +65,8 @@ block content
     - if (config && seasonName !== config.name)
       - seasonName = config.name
       - i = 0
-    -let cutoff = config ? (config.cutoff[i] === -1 ? 2 : config.cutoff[i]) : -1;
-    -let cutin = config.cutoff[i] === -1
+    -let cutoff = config ? (config.cutoff[i] === -1 ? 2 : config.cutoff[i]) : -1
+    -let cutin = config ? config.cutoff[i] === -1 : false
     -let hide = seasonName.toLowerCase().trim() != (seasons[0] || "").toLowerCase().trim()
     -if( league.toLowerCase() === "one minute" )
       - cutoff = cutoffs[0].cutoff[i]
