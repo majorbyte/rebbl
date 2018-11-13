@@ -1,7 +1,7 @@
 extends ..\..\no-cache-sub-layout.pug
 
 block vars
-  - let options = {active: league, title: "REBBL SEASON 8"}
+  - let options = {active: league, title: "REBBL SEASON 10"}
   - let seasons = []
   - let ignoreLeagues = ["one minute", "rebbll", "xscessively elfly league", "open invitational", "greenhorn cup", "rabble"]
   - if (ignoreLeagues.indexOf(league.toLowerCase()) === -1)
@@ -65,7 +65,8 @@ block content
     - if (config && seasonName !== config.name)
       - seasonName = config.name
       - i = 0
-    -let cutoff = config ? config.cutoff[i] : -1;
+    -let cutoff = config ? (config.cutoff[i] === -1 ? 2 : config.cutoff[i]) : -1;
+    -let cutin = config.cutoff[i] === -1
     -let hide = seasonName.toLowerCase().trim() != (seasons[0] || "").toLowerCase().trim()
     -if( league.toLowerCase() === "one minute" )
       - cutoff = cutoffs[0].cutoff[i]
@@ -110,12 +111,20 @@ block content
               div(class="col-2")= coach.loss 
               div(class="col-2")= coach.games
               div(class="col-2 text-right" )= coach.tddiff
-          - if (y+1 == cutoff)
+          - if (y+1 == cutoff && !cutin)
             div(class="row col-12 season-table-row")
               div(class="col-1 Standings-divider--flex")
                 span(class="Standings-dividerText--correction")
               div(class="col-6 Standings-divider--flex" )
                 span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
+              div(class="col-5 Standings-divider--flex")
+                span(class="Standings-dividerText--correction")
+          - if (y+1 == cutoff && cutin)
+            div(class="row col-12 season-table-row")
+              div(class="col-1 Standings-divider--flex")
+                span(class="Standings-dividerText--correction")
+              div(class="col-6 Standings-divider--flex" )
+                span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Playins Cutin &nbsp; &nbsp;
               div(class="col-5 Standings-divider--flex")
                 span(class="Standings-dividerText--correction")
           - if (league.toLowerCase() === "one minute" && y+1 == cutoff+2)
