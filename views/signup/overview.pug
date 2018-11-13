@@ -43,7 +43,7 @@ block content
               -else
                 button(type="submit") Confirm
 
-            form(action="/signup/resign" method="post" )
+            //form(action="/signup/resign" method="post" )
               br
               button(type="submit") Resign
 
@@ -53,7 +53,7 @@ block content
             form(action="/signup/resign-greenhorn" method="post" )
               br
               button(type="submit") Resign
-          -else if(user.saveType !== "existing")
+          //-else if(user.saveType !== "existing")
             div
               h3 You can still sign up for THE GREENHORN CUP
               a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
@@ -65,7 +65,7 @@ block content
             form(action="/signup/resign-oi" method="post" )
               br
               button(type="submit") Resign
-          -else if(user.saveType === "existing")
+          //-else if(user.saveType === "existing")
             div
               h3 You can still sign up for THE OPEN INVITATIONAL
               a(href="/signup/signup-oi") Sign me up for OI
