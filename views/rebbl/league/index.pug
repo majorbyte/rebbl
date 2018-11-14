@@ -9,7 +9,7 @@ block vars
       - if (div[0].competition.toLowerCase().indexOf("rampup") > 0 ) continue;
       - let season = div[0].competition.substr(0,9)
       - if(seasons.indexOf(season) === -1) seasons.push(season)
-  - seasons = seasons.sort(function(a,b){ return a > b ? -1 :1})
+  - seasons = seasons.sort(function(a,b){ return parseInt(a.replace(/season/i,'')) > parseInt(b.replace(/season/i,'')) ? -1 :1})
   - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 block scripts
