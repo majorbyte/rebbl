@@ -30,7 +30,7 @@ router.get("/", util.checkCache, async function(req, res, next){
 
     data.playerData = await ts.getPlayerStats();
 
-    data.articles = await configuration.getArticles();
+    data.articles = [];// await configuration.getArticles();
     res.render("rebbl/index", data);
 });
 

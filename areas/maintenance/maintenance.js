@@ -4,6 +4,7 @@ const league = require('../../lib/LeagueService.js')
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , express = require('express')
+  , util = require('../../lib/util.js')
   , router = express.Router();
 
 router.get('/update/:round', async function(req, res){
@@ -21,6 +22,11 @@ router.get('/updateleague/init', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
     league.initRebblData(req.query.league, req.query.comp);
   }
+  res.redirect('/');
+});
+
+router.get('/updateleague/admininit', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  if (req.query.league) league.initRebblData(req.query.league, req.query.comp);
   res.redirect('/');
 });
 
