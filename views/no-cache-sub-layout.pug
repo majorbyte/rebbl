@@ -47,7 +47,12 @@ block body
       | &nbsp; &nbsp; &nbsp; 
       a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
     p(style="padding:10px") &nbsp; © majorbyte 2018 &nbsp; &nbsp; &nbsp;
-  script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/popper-1.14.3.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/bootstrap.min.js")        
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/popper-1.14.3.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/bootstrap.min.js")        
+  -else
+    script(src="/scripts/jquery-3.3.1.slim.min.js")
+    script(src="/scripts/popper-1.14.3.min.js")
+    script(src="/scripts/bootstrap.min.js")        
   block scripts

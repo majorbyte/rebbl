@@ -2,11 +2,13 @@ include nav-link
 doctype html
 html(lang="en")
   head
-    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css")
-    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/font-awesome.css")
     - if (process.env.NODE_ENV === 'production')
+      link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css")
+      link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/font-awesome.css")
       link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.css")
     - else  
+      link(rel="stylesheet" href="/styles/bootstrap.min.css")
+      link(rel="stylesheet" href="/styles/font-awesome.css")
       link(rel="stylesheet" href="/styles/style.css")
     block head
   block vars
@@ -46,7 +48,12 @@ html(lang="en")
           | &nbsp; &nbsp; &nbsp; 
           a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
         p(style="padding:10px") &nbsp; © majorbyte 2018 &nbsp; &nbsp; &nbsp;
-      script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-      script(src="https://cdn2.rebbl.net/scripts/popper-1.14.3.min.js")
-      script(src="https://cdn2.rebbl.net/scripts/bootstrap.min.js")        
+      - if (process.env.NODE_ENV === 'production')
+        script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+        script(src="https://cdn2.rebbl.net/scripts/popper-1.14.3.min.js")
+        script(src="https://cdn2.rebbl.net/scripts/bootstrap.min.js")        
+      - else
+        script(src="/scripts/jquery-3.3.1.slim.min.js")
+        script(src="/scripts/popper-1.14.3.min.js")
+        script(src="/scripts/bootstrap.min.js")        
       block scripts

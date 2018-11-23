@@ -92,9 +92,14 @@ block content
             // /ko
 
 block append scripts
-  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-  script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
   script.
 
     function DataModel() {
