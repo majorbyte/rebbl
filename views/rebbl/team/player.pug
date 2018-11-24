@@ -1,6 +1,10 @@
+
 - let levels = [0,0,6,16,31,51,76,176,"*"]
 - let playerName = (player.number === 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : player.name) + ""
-- let playerPos  = player.number > 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
+- let playerPos = "" 
+- if (player.number > 0)
+  - let playerType = player.type.split('_')
+  - playerPos  = playerType.length === 3 ? playerType[2].replace(/([A-Z])/g, ' $1') : playerType[1].replace(/([A-Z])/g, ' $1') 
 - let playerId = playerPos === "" ? playerName.replace(/ /g,'') : (player.id ? player.id : player.name.replace(/ /g,'')) 
 - let cls = (player.active && player.casualties_sustained && (player.casualties_sustained.length === 1 && player.casualties_sustained[0] !== "BadlyHurt" )) ? "player-out" : ""
 - let imagePath = "/images/"
