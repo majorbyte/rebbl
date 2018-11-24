@@ -5,6 +5,7 @@ const league = require('../../lib/LeagueService.js')
   , signUp = require('../../lib/signupService.js')
   , express = require('express')
   , util = require('../../lib/util.js')
+  , reddit = require("./lib/RedditService.js")
   , router = express.Router();
 
 router.get('/update/:round', async function(req, res){
@@ -42,6 +43,7 @@ router.get('/updateleague/fix', async function(req, res){
 router.get('/updateleague', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
     league.getRebblData(req.query.league);
+    reddit.check();
   }
   res.redirect('/');
 });
