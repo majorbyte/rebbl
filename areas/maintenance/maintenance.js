@@ -5,7 +5,7 @@ const league = require('../../lib/LeagueService.js')
   , signUp = require('../../lib/signupService.js')
   , express = require('express')
   , util = require('../../lib/util.js')
-  , reddit = require("./lib/RedditService.js")
+  , reddit = require("../../lib/RedditService.js")
   , router = express.Router();
 
 router.get('/update/:round', async function(req, res){
