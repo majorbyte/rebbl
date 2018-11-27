@@ -1,7 +1,6 @@
 "use strict";
-const db = require("../lib/LeagueService.js")
-  , ts = require("../lib/teamservice.js")
-  , configuration = require("../lib/ConfigurationService.js")
+const 
+  leageuService = require("../lib/LeagueService.js")
   , util = require("../lib/util.js")
   , express = require("express")
   , router = express.Router();
@@ -17,21 +16,26 @@ router.use("/coach", require("./coach/coach.js"));
 router.use("/admin", require("./admin/admin.js"));
 
 router.get("/", util.checkCache, async function(req, res, next){
-    let data = {bigo:null,gman:null,rel:null, rounds:null, league:req.params.league };
+  let data = {}
 
-    data.bigo = await db.getCoachScore(new RegExp(`^REBBL[\\s-]+Big O`, "i"), "Season 9",true);
+  let c = new RegExp(`^(^Season 10)|(^REL Rampup)|(^GMAN Rampup)`, "i");
+  let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
 
-    data.gman =  await db.getCoachScore(new RegExp(`^REBBL[\\s-]+GMan`, "i"), "Season 9", true);
-    data.rel =  await db.getCoachScore(new RegExp(`^REBBL[\\s-]+Rel`, "i"), "Season 9", true);
+  await new Promise(resolve =>
+    leageuService.originalFind({ "league":{"$regex":l}, "competition":{"$regex":c} }).sort({ match_uuid: -1 }).limit(20).exec(function(err,docs){
+      data.rebbl = docs;
+      resolve();
+    })
+  );
 
-    data.bigocut =  configuration.getPlayoffTickets("Big O");
-    data.gmancut =  configuration.getPlayoffTickets("Gman");
-    data.relcut =  configuration.getPlayoffTickets("Rel");
-
-    data.playerData = await ts.getPlayerStats();
-
-    data.articles = [];// await configuration.getArticles();
-    res.render("rebbl/index", data);
+  let s  = new RegExp("(The REBBL Rabble Mixer)|(XScessively Elfly League)|(Rebbl One Minute League)|(REBBLL )","i")
+  await new Promise(resolve =>
+    leageuService.originalFind({ "league":{"$regex":s} }).sort({ match_uuid: -1 }).limit(20).exec(function(err,docs){
+      data.sides = docs;
+      resolve();
+    })
+  );
+  res.render("rebbl/index", {data:data});
 });
 
 module.exports = router;
