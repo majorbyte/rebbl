@@ -23,7 +23,7 @@ router.get("/", util.checkCache, async function(req, res, next){
 
   await new Promise(resolve =>
     leageuService.originalFind({ "league":{"$regex":l}, "competition":{"$regex":c} }).sort({ match_uuid: -1 }).limit(20).exec(function(err,docs){
-      data.rebbl = docs;
+      data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);;
       resolve();
     })
   );
@@ -31,7 +31,7 @@ router.get("/", util.checkCache, async function(req, res, next){
   let s  = new RegExp("(The REBBL Rabble Mixer)|(XScessively Elfly League)|(Rebbl One Minute League)|(REBBLL )","i")
   await new Promise(resolve =>
     leageuService.originalFind({ "league":{"$regex":s} }).sort({ match_uuid: -1 }).limit(20).exec(function(err,docs){
-      data.sides = docs;
+      data.sides = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
       resolve();
     })
   );
