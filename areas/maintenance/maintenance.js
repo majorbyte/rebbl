@@ -33,7 +33,7 @@ router.get('/updateleague/admininit', util.ensureAuthenticated, util.hasRole("ad
 
 router.get('/updateleague/fix', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
-    league.rel9fix();
+    league.LinemanleagueFix();
   }
   res.redirect('/');
 });
