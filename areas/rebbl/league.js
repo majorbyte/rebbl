@@ -23,13 +23,13 @@ router.get('/', util.checkCache, async function(req, res){
     league = new RegExp(`^${league}`, 'i');
   }
 
-  data.cutoffs = configuration.getPlayoffTickets(req.params.league);
   
   if( req.params.league.toLowerCase() === "rampup"){
     data.standings = await rampup.getCoachScore();
     data.rounds = await db.getDivisions(new RegExp(/rampup$/,"i"));
     res.render('rebbl/league/rampup', data);
   } else {
+    data.cutoffs = configuration.getPlayoffTickets(req.params.league);
     data.standings = await db.getCoachScore(league, null, true);
     data.rounds = await db.getDivisions(league);
     res.render('rebbl/league/index', data);
