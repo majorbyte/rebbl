@@ -3,11 +3,12 @@ extends ..\..\no-cache-sub-layout.pug
 block vars
   - let options = {active: league, title: "REBBL SEASON 10"}
   - let seasons = []
-  - let ignoreLeagues = ["one minute", "rebbll", "xscessively elfly league", "open invitational", "greenhorn cup", "rabble"]
+  - let ignoreLeagues = ["rebbll", "xscessively elfly league", "open invitational", "greenhorn cup", "rabble"]
   - if (ignoreLeagues.indexOf(league.toLowerCase()) === -1)
     for div, x in standings
       - if (div[0].competition.toLowerCase().indexOf("rampup") > 0 ) continue;
       - let season = div[0].competition.substr(0,9)
+      - if(season.indexOf("season") === -1) season = div[0].season;
       - if(seasons.indexOf(season) === -1) seasons.push(season)
   - seasons = seasons.sort(function(a,b){ return parseInt(a.replace(/season/i,'')) > parseInt(b.replace(/season/i,'')) ? -1 :1})
   - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
@@ -62,7 +63,7 @@ block content
   for div, x in standings
   
     - i++
-    -let config = cutoffs.find((c) => div[0].competition.toLowerCase().indexOf(c.name) > -1 )
+    -let config = cutoffs.find((c) => div[0].season.toLowerCase() === c.name.toLowerCase() )
     - if (config && seasonName !== config.name)
       - seasonName = config.name
       - i = 0
@@ -70,9 +71,7 @@ block content
     -let cutoff = config ? (config.cutoff[i] === -1 ? 2 : config.cutoff[i]) : -1
     -let cutin = config ? config.cutoff[i] === -1 : false
     -let hide = seasonName.toLowerCase().trim() != (seasons[0] || "").toLowerCase().trim()
-    -if( league.toLowerCase() === "one minute" )
-      - cutoff = cutoffs[0].cutoff[i]
-    div(class=`container Season ${div[0].competition.substr(0,9).replace(' ','')} ` style=`${hide ? "display:none": ""}`)
+    div(class=`container Season ${div[0].season.replace(' ','')} ` style=`${hide ? "display:none": ""}`)
       div(class="row col-12")
         h2
          i(id=div[0].competition  style="padding-top:180px;margin-top:-180px")
@@ -128,8 +127,8 @@ block content
               div(class="col-6 Standings-divider--flex" )
                 span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Playins Cutin &nbsp; &nbsp;
               div(class="col-5 Standings-divider--flex")
-                span(class="Standings-dividerText--correction")
-          - if (league.toLowerCase() === "one minute" && y+1 == cutoff+2)
+                span(class="Standings-dividerText--correction")              
+          - if (league.toLowerCase() === "one minute" && seasonName === "season 2" && y+1 == cutoff+2)
             div(class="row col-12 season-table-row")
               div(class="col-1 Standings-divider--flex")
                 span(class="Standings-dividerText--correction")
