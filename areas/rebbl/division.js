@@ -12,11 +12,14 @@ router.get('/', util.checkCache, async function(req,res) {
   let league = req.params.league;
   if(league.toLowerCase() == "open invitational"){
     leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
-  } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" ){
+  } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
     leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
   } else {
     if (league === "rabble"){
       league = "the rebbl rabble mixer";
+    }
+    if (league === "eurogamer"){
+      league = "REBBL Eurogamer Open";
     }
     leagueRegex = new RegExp(`^${league}`, 'i');
   }
@@ -56,13 +59,16 @@ router.get('/:week', util.checkCache, async function(req,res) {
     let league = req.params.league;
     if(league.toLowerCase() == "open invitational"){
       leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
-    } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" ){
+    } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
       leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
     } else {
       if (league === "rabble"){
         league = "the rebbl rabble mixer";
       }
-      leagueRegex = new RegExp(`^${league}`, 'i');
+      if (league === "eurogamer"){
+        league = "REBBL Eurogamer Open";
+      }
+        leagueRegex = new RegExp(`^${league}`, 'i');
     }
       let divRegex = new RegExp(`^${req.params.division}$`, 'i');
     data.matches = await db.getLeagues({round: week, league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
