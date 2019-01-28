@@ -43,7 +43,7 @@ block content
     div
       label(for="coach") Reddit
       input(type="text" id="reddit" name="coach" value="/u/" + coachDetails.reddit.toLowerCase()  disabled)
-      span(id="copy" title="copy to clipboard")= '📋'
+      span(id="copy" title="copy to clipboard" style="cursor:pointer")= '📋'
     div
       label(for="timezone") Timezone
       input(id="timezone" name="timezone" disabled title="timezone" value=coachDetails.timezone)
