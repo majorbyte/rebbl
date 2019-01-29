@@ -1,0 +1,154 @@
+extends ../layout.pug
+
+
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+
+    function TrophyModel(data){
+      this.map = (data) => {
+          if (data) {
+              this.name = data.name;
+              this.title = data.title;
+              this.filename = data.filename;
+              this.file = data.file;
+          }
+      };
+      this.map(data);
+
+
+      this.onFileSelectedEvent = function(data,event){
+        data.file = event.target.files[0];
+      }
+
+      ko.track(this);      
+    }  
+
+    function DataModel() {
+        const self = this;
+        // Editable data
+        self.trophies=ko.observableArray([]);
+        self.loading = ko.observable(false);
+
+        self.newTrophy =  ko.observable(new TrophyModel({"name":"","filename":""}));
+
+        self.addTrophy = function(data,event){
+
+
+          function cb(filename){
+            self.newTrophy().filename = filename;
+            self.trophies.push(self.newTrophy());
+            self.post("/api/v1/admin/trophies/save", self.newTrophy());
+            self.newTrophy(new TrophyModel({"reason":"","start":"","end":"","active":true}));
+          }
+          self.postFile("/api/v1/admin/trophies/upload", self.newTrophy().file, cb);
+
+
+        }
+
+        self.post = function(url, data){
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", url,true)
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.responseType = 'json';
+
+          xhr.onreadystatechange = function() {//Call a function when the state changes.
+            if(this.readyState == XMLHttpRequest.DONE && this.status == 500) {
+              console.log(xhr.response);
+            }
+          }
+          
+          xhr.send(JSON.stringify(data));
+        } 
+
+        self.postFile = function(url, data, cb){
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", url,true)
+          xhr.contentType = false;
+          xhr.processData = false;
+
+          xhr.onreadystatechange = function() {//Call a function when the state changes.
+            if(this.readyState == XMLHttpRequest.DONE && this.status == 500) {
+              console.log(xhr.response);
+            } else if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+              cb(xhr.response);
+            }
+          }
+          
+          var image = new FormData();
+          image.append("image", data);
+
+          xhr.send(image);
+        } 
+    }
+
+    var mapping = {
+      'trophies': {
+          create: function(options) {
+              return new TrophyModel(options.data);
+          }
+      }
+    }
+
+    let model = new DataModel();
+    $(document).ready(function(){
+        ko.applyBindings(model);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/v1/admin/trophies",true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {//Call a function when the state changes.
+          if(xhr.response && xhr.status === 200){   
+            model = ko.mapping.fromJS(xhr.response,mapping,model);
+          } 
+        }
+
+        xhr.send('');
+
+    });
+
+    
+
+block content
+  div(class="container")
+    //ko if: loading
+    div(class="row col-12 justify-content-center")
+      i(class="fa fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
+    // /ko
+    div(class="row col-12")
+      div(class="col-4") Name
+      div(class="col-4") Title 
+      div(class="col-4") Image
+    // ko foreach: trophies
+    div(class="row col-12")
+      div(class="col-4" data-bind="text: name" )
+      div(class="col-4" data-bind="text: title")
+      img(data-bind="attr:{src: 'https://cdn2.rebbl.net/' + filename }")
+    // /ko 
+    div(class="row col-12")
+      form(data-bind="submit: addTrophy" class="col-12")
+        //ko with: newTrophy        
+        div(class="row col-12 no-gutter")
+          div(class="col-4")
+            input(type="text" class="col-11" data-bind="value:name" )
+          div(class="col-4")
+            input(type="text" class="col-11" data-bind="value:title" )
+          div(class="col-4")
+            input(data-bind="event:{ change: onFileSelectedEvent}" type="file" accept="image/*" class="fileChooser")
+        button(class="col-1 btn btn-success" type="submit") add 
+        // /ko        
+
+
+
+

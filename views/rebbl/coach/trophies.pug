@@ -1,0 +1,16 @@
+extends .\coach.pug
+
+block append vars
+  - var activeSubMenu = "trophies"
+
+
+block content
+   div(class="container")
+     div(class="row col-12")
+      each trophy, index in coachDetails.trophies.sort(function(a,b){return a.date < b.date ? -1 : 1;})
+        div(class="col-3")
+          img(src="https://cdn2.rebbl.net/" + trophy.filename title=trophy.title alt="" class="")
+          br
+          h2(style="text-align: center;margin-bottom: 0px;")= trophy.title
+          h4(style="text-align: center;margin-top: 0px;")= trophy.date
+

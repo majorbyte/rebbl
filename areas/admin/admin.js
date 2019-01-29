@@ -14,7 +14,7 @@ router.use('/contest', require(`./contest.js`));
 
 router.use('/unplayed', require(`./unplayed.js`));
 
-
+router.use('/trophies', require(`./trophies.js`));
 
 router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
   res.redirect("user");
