@@ -61,6 +61,18 @@ block append scripts
       this.map(data);
       ko.track(this);      
     }
+    function TrophyModel(data){
+            this.map = (data) => {
+          if (data) {
+              this.name = data.name;
+              this.title = data.title;
+              this.filename = data.filename;
+              this.date = data.date;
+          }
+      };
+      this.map(data);
+      ko.track(this); 
+    }
     function UserModel(){
       let self = this;
 
@@ -82,11 +94,14 @@ block append scripts
       self.strikes = ko.observableArray([]);
       self.warnings = ko.observableArray([]);
       self.donations = ko.observableArray([]);
+      self.trophies = ko.observableArray([]);
+      self.availableTrophies = ko.observableArray([]);
 
       self.newBan = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       self.newStrike = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       self.newWarning = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       self.newDonation = ko.observable(new DonationModel({"date":"","currency":"","value":0}));
+      self.newTrophy = ko.observable(new TrophyModel({"date":"","filename":"","title":"","name":""}));
 
       self.toggleBan = function(data,event){
         data.active = !data.active;
@@ -113,6 +128,23 @@ block append scripts
         self.warnings.push(self.newWarning());
         self.post("/api/v1/admin/user/addWarning", {reddit:self.reddit(), warning:self.newWarning()});
         self.newWarning(new StrikeModel({"reason":"","start":"","end":"","active":true}));
+      }
+      
+      self.addTrophy = function(data,event){
+
+        const t = self.availableTrophies().find(x => x.name === self.newTrophy().name);
+
+        self.newTrophy().filename = t.filename;
+
+        self.trophies.push(self.newTrophy());
+        self.post("/api/v1/admin/user/addTrophy", {reddit:self.reddit(), trophy:self.newTrophy()});
+        self.newTrophy(new TrophyModel({"date":"","filename":"","title":"","name":""}));
+      }
+
+      self.deleteTrophy = function(data,event){
+
+        self.post("/api/v1/admin/user/deleteTrophy", {reddit:self.reddit(), trophy:data});
+        self.trophies.splice(self.trophies().indexOf(data),1);
       }
 
       self.edit = function(data,event){
@@ -162,6 +194,23 @@ block append scripts
         xhr.send(JSON.stringify(data));
 
       } 
+
+      self.loadAvailableTrophies = function(){
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/v1/admin/trophies",true)      
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+        xhr.onload  = function() {//Call a function when the state changes.
+
+          if(xhr.response && xhr.status === 200){
+            let temp = new UserModel(); 
+
+            temp = ko.mapping.fromJS(xhr.response,mapping,temp);
+            self.availableTrophies(temp.trophies());
+          } 
+        }
+        xhr.send('');
+      }
     }
 
     var mapping = {
@@ -185,13 +234,19 @@ block append scripts
               return options.data;
           }
       },
-      'roles': {
+      'donations': {
           create: function(options) {
               return new DonationModel(options.data);
           }
+      },
+      'trophies':{
+          create: function(options) {
+              return new TrophyModel(options.data);
+          }
       }
-
     }
+
+
 
   -if (admin.roles && admin.roles.indexOf("superadmin") > -1)
     script.
@@ -214,6 +269,7 @@ block append scripts
       }
 
   script.
+    
     let model = new UserModel(); 
       ko.applyBindings(model);
     $(document).ready(function(){
@@ -227,6 +283,7 @@ block append scripts
 
         if(xhr.response && xhr.status === 200){   
           model = ko.mapping.fromJS(xhr.response,mapping,model);
+          model.loadAvailableTrophies();
         } else if(!xhr.response) {
           model.isEmpty(true);
         } else {
@@ -273,6 +330,9 @@ block append scripts
         }
         select.appendChild(option);
       }
+
+
+
     });
 
 
@@ -291,6 +351,7 @@ block content
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
         a(class="nav-item nav-link active" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="true") Info
         - if(user)
+          a(class="nav-item nav-link" id="nav-trophies-tab" data-toggle="tab" href="#nav-trophies" role="tab" aria-controls="nav-trophies" aria-selected="false") Trophies
           a(class="nav-item nav-link" id="nav-warnings-tab" data-toggle="tab" href="#nav-warnings" role="tab" aria-controls="nav-warnings" aria-selected="false") Warnings
           a(class="nav-item nav-link" id="nav-strikes-tab" data-toggle="tab" href="#nav-strikes" role="tab" aria-controls="nav-strikes" aria-selected="false") Strikes
           a(class="nav-item nav-link" id="nav-bans-tab" data-toggle="tab" href="#nav-bans" role="tab" aria-controls="nav-bans" aria-selected="false") Bans
@@ -329,6 +390,43 @@ block content
           div(style="clear:both")
             button(type="submit") Save
             br
+      div(class="tab-pane fade" id="nav-trophies" role="tabpanel" aria-labelledby="nav-trophies-tab") 
+        div(class="row col-12")
+          h2 Trophies
+        div(class="row col-12")
+          div(class="col-2") Date
+          div(class="col-3") Trophy
+          div(class="col-3") Title
+        // ko foreach: trophies
+        div(class="row col-12 no-gutter" style="margin-bottom: 5px;")
+          div(class="col-2" data-bind="text: date " )
+          div(class="col-3" data-bind="text: name ")
+          div(class="col-3" data-bind="text: title ")
+          div(class="col-3")
+            img(data-bind="attr:{src: 'https://cdn2.rebbl.net/' + filename }")
+          div(class="col-1")
+            button(class="btn btn-danger float-right" data-bind="click: $root.deleteTrophy,clickBubble: false") 
+              i(class="fa fa-ban")
+
+        // /ko
+        br
+        form(data-bind="submit: addTrophy")
+          //ko with: newTrophy        
+          div(class="row col-12 no-gutter")
+            div(class="row col-12 no-gutter")
+              div(class="col-4") Date
+              div(class="col-3") Trophy
+              div(class="col-4") Title
+            div(class="row col-12 no-gutter")
+              div(class="col-4")
+                input(type="text" class="col-11" data-bind="value:date " )
+              div(class="col-3")
+                select(data-bind="options: $root.availableTrophies, optionsText:'name',optionsValue:'name', value: name")
+              div(class="col-4")
+                input(type="text" class="col-11" data-bind="value:title " )
+              button(class="col-1 btn btn-success" type="submit") add 
+          // /ko        
+
       div(class="tab-pane fade" id="nav-warnings" role="tabpanel" aria-labelledby="nav-warnings-tab") 
         div(class="row col-12")
           h2 Warnings

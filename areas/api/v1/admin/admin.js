@@ -13,7 +13,7 @@ router.use('/contest', require(`./contest.js`));
 
 router.use('/unplayed', require(`./unplayed.js`));
 
-
+router.use('/trophies', require(`./trophies.js`));
 
 router.post("/clearcache",  util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
   try{

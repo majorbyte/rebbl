@@ -23,5 +23,8 @@ block navigation
             a(href="teams" class="nav-link " + (activeSubMenu == "teams" ? " highlight" : "")) Teams
           li(class="nav-item " + (activeSubMenu == "matches" ? " active" : ""))
             a(href="matches" class="nav-link " + (activeSubMenu == "matches" ? " highlight" : "")) Matches
+        -if (coachDetails && coachDetails.trophies)
+          li(class="nav-item " + (activeSubMenu == "trophies" ? " active" : ""))
+            a(href="trophies" class="nav-link " + (activeSubMenu == "trophies" ? " highlight" : "")) Trophies
 
               

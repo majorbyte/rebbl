@@ -188,6 +188,40 @@ router.post('/addDonation', util.ensureAuthenticated, util.hasRole("superadmin")
   }
 });
 
+router.post('/addTrophy', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  try{
+    let trophy = { 
+      date: req.body.trophy.date
+      , filename: req.body.trophy.filename
+      , name: req.body.trophy.name
+      , title: req.body.trophy.title
+    };
+    await accountService.addTrophy(req.body.reddit, trophy);
+
+    res.status(200).send();
+  } catch(err){
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
+router.post('/deleteTrophy', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  try{
+    let trophy = { 
+      date: req.body.trophy.date
+      , filename: req.body.trophy.filename
+      , name: req.body.trophy.name
+      , title: req.body.trophy.title
+    };
+    await accountService.deleteTrophy(req.body.reddit, trophy);
+
+    res.status(200).send();
+  } catch(err){
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
 router.post('/addBan', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
   try{
     let ban = { 
