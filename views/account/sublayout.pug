@@ -1,6 +1,6 @@
 extends ..\layout.pug 
 
-block prepend vars
+block vars
   - var title = "REBBL"
   - var active = "account"
   - var activeSubMenu = "sign up"
@@ -18,10 +18,12 @@ block navigation
     div(class="collapse navbar-collapse" id="rebblSubNav")
       ul(class="navbar-nav mr-auto")
         li(class="nav-item " + (activeSubMenu == "account" ? " active" : ""))
-          a(href="/account" class="nav-link " + (activeSubMenu == "account" ? " highligh" : "")) Account
+          a(href="/account" class="nav-link " + (activeSubMenu == "account" ? " highlight" : "")) Account
+        li(class="nav-item " + (activeSubMenu == "trophies" ? " active" : ""))
+          a(href="/account/trophies" class="nav-link " + (activeSubMenu == "trophies" ? " highlight" : "")) Trophies
         li(class="nav-item " + (activeSubMenu == "match" ? " active" : ""))
-          a(href="/account/match" class="nav-link " + (activeSubMenu == "match" ? " highligh" : "")) Match
+          a(href="/account/match" class="nav-link " + (activeSubMenu == "match" ? " highlight" : "")) Match
         li(class="nav-item " + (activeSubMenu == "sign up" ? " active" : ""))
-          a(href="/signup" class="nav-link " + (activeSubMenu == "sign up" ? " highligh" : "")) Sign up
+          a(href="/signup" class="nav-link " + (activeSubMenu == "sign up" ? " highlight" : "")) Sign up
         li(class="nav-item " + (activeSubMenu == "signups" ? " active" : ""))
-          a(href="/signup/signups" class="nav-link " + (activeSubMenu == "signups" ? " highligh" : "")) Signups
+          a(href="/signup/signups" class="nav-link " + (activeSubMenu == "signups" ? " highlight" : "")) Signups

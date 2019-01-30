@@ -31,6 +31,13 @@ block scripts
         $("#dropdownSeason").parent().addClass('active');
         $(".title").text(seasons[0]);
       }
+
+      $('.trophy-toggle').click(function(e){
+        console.dir(e);
+        $('#modal-title').text(e.target.title + (e.target.dataset.date.length > 0 ? " - " + e.target.dataset.date : "") );
+        $('#modal-image').attr('src',e.target.src);
+        $('#trophy').modal();
+      })
     });
     
 block navigation
@@ -99,6 +106,11 @@ block content
                 - if(coach.account && coach.account.donations && coach.account.showDonation)
                   | &nbsp; &nbsp; 
                   img(src="/images/gold.png" style="height:25px;float:right;margin-top: 2px;" title="donator")
+                - if(coach.account && coach.account.trophies)
+                  -let trophy = coach.account.trophies.find(f => f.display)
+                  -if(trophy)
+                    | &nbsp; &nbsp; 
+                    img(src="https://cdn2.rebbl.net/" + trophy.filename style="height:25px;float:right;margin-top: 2px;" title=trophy.title class="trophy-toggle" data-target="#trophy" data-date=trophy.date)
               div(class="col-7" style=";overflow:hidden") 
                 -if (coach.team.indexOf("[colour") === 0)
                   a(href=`/rebbl/team/${coach.teamId}`)= coach.team.substr(19, coach.team.length-17)
@@ -136,3 +148,12 @@ block content
                 span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Wildcards &nbsp; &nbsp;
               div(class="col-5 Standings-divider--flex")
                 span(class="Standings-dividerText--correction")                
+  div(class="modal" tabindex="-1" role="dialog" id=`trophy`)
+    div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+      div(class="modal-content")
+        div(class="modal-header")
+          h5(class="modal-title" id="modal-title")
+        div(class="modal-body")
+          img(src="" alt="" style="display:block;margin-left:auto;margin-right:auto" id="modal-image")
+        div(class="modal-footer")
+          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close                
