@@ -1,6 +1,7 @@
 "use strict";
 const 
   leageuService = require("../lib/LeagueService.js")
+  , datingService = require("../lib/DatingService.js")
   , util = require("../lib/util.js")
   , express = require("express")
   , router = express.Router();
@@ -35,6 +36,25 @@ router.get("/", util.checkCache, async function(req, res, next){
       resolve();
     })
   );
+
+   
+  let d = await datingService.all();
+  const now = new Date(Date.now());
+  d = d.filter(a => new Date(a.date) > now ).sort((a,b) => a.date < b.date ? -1 : 1).splice(0,20);
+
+  
+
+  data.upcoming = await leageuService.searchLeagues({"contest_id": {$in:[...new Set(d.map(x => x.id))]}})
+
+  await Promise.all(data.upcoming.map(async function(match) {
+    let date = d.find(s => s.id === match.contest_id);
+    match.date = date.date;
+    if(date.stream)
+     match.stream=date.stream;
+  }));
+
+  data.upcoming = data.upcoming.sort((a,b) => a.date < b.date ? -1 : 1)
+
   res.render("rebbl/index", {data:data});
 });
 

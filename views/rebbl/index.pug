@@ -330,3 +330,83 @@ block content
                             span 3
                           div(class="col-4 align-center")
                             img(class="pull-right" src="https://cdn2.rebbl.net/images/stadium/foodarea.png" style="height:40px;")     
+    br
+    br
+    div(class="row col-12 no-gutters")
+      div(class="slider-frame")
+        h2(style="margin-left:50px;margin-top:10px") UPCOMING GAMES
+        div(class="btn prev")
+          i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
+        div(class="btn next")
+          i(class="fa fa-chevron-right" style="position: absolute;top: 47%;")
+        div(class="slider-container")
+          for match in data.upcoming
+            div(class="slide")
+              div(class="col-12 no-gutters slide-gutter" style="padding:0 15px;")
+                div(class="row col-12 no-gutters slide-overflow" style="border:1px dashed  rgb(154, 90, 10);")
+                  -let league = match.league
+                  div(class="col-2 no-gutters")
+                    -if (match.league.toLowerCase() === 'rebbl one minute league')
+                      -league= "One Minute"
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_human_01.png" )
+                    -if (match.league.toLowerCase() === 'the rebbl rabble mixer')
+                      -league="rabble"
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_highelf_20.png" )
+                    -if (match.league.toLowerCase() === 'xscessively elfly league')
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_highelf_08.png" )
+                    -if (match.league.toLowerCase() === 'rebbll ')
+                      -league = "rebbll"
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_14.png" )
+                    -if (match.league.toLowerCase() === 'rebbl - big o')
+                      -league="Big O"
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_amazon_14.png" )
+                    -if (match.league.toLowerCase() === 'rebbl - gman')
+                      -league="Gman"
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_23.png" )
+                    -if (match.league.toLowerCase() === 'rebbl - rel')
+                      -league="REL"
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
+                    -if (match.league.toLowerCase() === 'gman rampup')
+                      -league="rampup"
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_human_15.png" )
+                    -if (match.league.toLowerCase() === 'rel rampup')
+                      -league="rampup"
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_orc_17.png" )                      
+                    -if (match.stream)
+                      a(target="_blank" href=match.stream.url title=match.stream.name)
+                        img(src="/images/glitch.png" style="width:32px;height:32px;margin-left: 7px;")
+                  div(class="col-10 no-gutters")
+                    a(href=`/rebbl/${league}`)= match.league.replace(/rebbl - /i,'')
+                    br
+                    a(href=href=`/rebbl/${league}/${match.competition}` style="font-size:0.9rem")= match.competition.replace(/season 10 - /i,'')
+
+                  div(class="col-12" style="margin-bottom:10px")    
+                    -let url=`/rebbl/match/unplayed/${match.contest_id}`
+                    a(href=url class="MatchRow-contentWrapper")
+                      div(class="row col-12 no-gutters" style="margin: 0 auto;")
+                        div(class="col-10 no-gutters")
+                          div(class="col-12 no-gutters" style="font-size:0.8rem")
+                            span(class="pull-left")= match.opponents[0].team.name
+                            br
+                            span(class="TeamLabel-coach pull-left")= match.opponents[0].coach.name
+                        div(class="col-2 no-gutters" style="font-size:2rem;text-align:center") 
+                          img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
+                        div(class="row col-12 no-gutters")
+                          div(class="col-12 row no-gutters"  style="margin:0 auto;text-align:center")
+                            span(style="display:block;margin-left:auto;margin-right:auto")= match.date + "UTC"
+                        div(class="col-2 no-gutters" style="font-size:1.5rem;text-align:center")
+                          img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)
+                        div(class="col-10 no-gutters")
+                          div(class="col-12 no-gutters" style="font-size:0.8rem")
+                            span(class="pull-right" style="font-size:0.8rem")= match.opponents[1].team.name
+                            br
+                            span(class="TeamLabel-coach pull-right")= match.opponents[1].coach.name  
+                        //div(class="col-12 no-gutters row" style="margin-top:25px")
+                          div(class="col-4 align-center")
+                            img(src="https://cdn2.rebbl.net/images/skills/Dead.png" style="height:32px;") 
+                            span 2
+                          div(class="col-4 align-center")
+                            img(src="https://cdn2.rebbl.net/images/skills/SmashedHand.png" style="height:32px;")
+                            span 3
+                          div(class="col-4 align-center")
+                            img(class="pull-right" src="https://cdn2.rebbl.net/images/stadium/foodarea.png" style="height:40px;")                              
