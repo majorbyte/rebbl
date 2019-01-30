@@ -34,16 +34,48 @@ router.get('/login', function(req, res){
 router.get('/match',util.ensureAuthenticated, async function(req, res){
   try{
     let match = await leagueService.getUpcomingMatch(req.user.name);
-    //let user = await accountService.getAccount(req.user.name)
     res.render('account/match',{matches: match, user:res.locals.user} );
   } catch(err){
     console.log(err);
   }
 });
 
+router.get('/trophies',util.ensureAuthenticated, async function(req, res){
+  try{
+
+    const user =  await accountService.searchAccount({"reddit": {$regex: new RegExp(`^${req.user.name}`,"i")}});
+
+    res.render('account/trophies',{user:user} );
+  } catch(err){
+    console.log(err);
+  }
+});
+
+
+router.post('/trophies/show',util.ensureAuthenticated, async function(req, res){
+  try{
+    
+    const user = await accountService.updateTrophy(req.user.name, Number(req.body.index));
+
+    res.render('account/trophies',{user:user} );
+  } catch(err){
+    console.log(err);
+  }
+});
+router.post('/trophies/hide',util.ensureAuthenticated, async function(req, res){
+  try{
+    
+    const user = await accountService.hideTrophy(req.user.name, Number(req.body.index));
+
+    res.render('account/trophies',{user:user} );
+  } catch(err){
+    console.log(err);
+  }
+});
+
+
 router.put('/unplayed/:match_id', util.ensureAuthenticated, async function(req, res, next){
   try{
-   // let user = await accountService.getAccount(req.user.name)
     let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(res.locals.user.coach, "i")} })
 
     if(contest.length > 0){
