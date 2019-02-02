@@ -13,7 +13,6 @@ block scripts
     script(src="/scripts/knockout-es5.js")
 
   script.
-
     function TrophyModel(data){
       this.map = (data) => {
           if (data) {
@@ -42,15 +41,33 @@ block scripts
         self.newTrophy =  ko.observable(new TrophyModel({"name":"","filename":""}));
 
         self.addTrophy = function(data,event){
-
-
           function cb(filename){
             self.newTrophy().filename = filename;
             self.trophies.push(self.newTrophy());
             self.post("/api/v1/admin/trophies/save", self.newTrophy());
-            self.newTrophy(new TrophyModel({"reason":"","start":"","end":"","active":true}));
+            self.newTrophy(new TrophyModel({"name":"","filename":""}));
           }
           self.postFile("/api/v1/admin/trophies/upload", self.newTrophy().file, cb);
+        }
+        
+        self.deleteTrophy = function(data,event){
+
+          $("modal-title").text(`Delete trophy ${data.name}?`)
+          $('#modal-image').attr('src', `https://cdn2.rebbl.net/${data.filename}`);
+
+          var f = function(){
+            self.post("/api/v1/admin/trophies/delete", data);
+
+            self.trophies.splice(self.trophies.indexOf(data),1);
+
+            $("#btn-delete").off("click",  f);
+
+            $('#trophy').modal('hide');  
+            $('#trophy').modal('dispose');  
+          }
+
+          $("#btn-delete").on("click",  f);
+          $('#trophy').modal();
 
 
         }
@@ -135,6 +152,9 @@ block content
       div(class="col-4" data-bind="text: name" )
       div(class="col-4" data-bind="text: title")
       img(data-bind="attr:{src: 'https://cdn2.rebbl.net/' + filename }")
+      div(class="col-1")
+        button(class="btn btn-danger float-right trophy-toggle" data-bind="click: $root.deleteTrophy,clickBubble: false") 
+          i(class="fa fa-ban")      
     // /ko 
     div(class="row col-12")
       form(data-bind="submit: addTrophy" class="col-12")
@@ -150,5 +170,15 @@ block content
         // /ko        
 
 
+  div(class="modal" tabindex="-1" role="dialog" id=`trophy`)
+    div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+      div(class="modal-content")
+        div(class="modal-header")
+          h5(class="modal-title" id="modal-title") Delete trophy
+        div(class="modal-body")
+          img(src="" alt="" style="display:block;margin-left:auto;margin-right:auto" id="modal-image")
+        div(class="modal-footer")
+          button( type="button" class="btn btn-primary" id="btn-delete") Delete   
+          button( type="button" class="btn btn-secondary" data-dismiss="modal") Cancel   
 
 

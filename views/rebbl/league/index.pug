@@ -33,7 +33,6 @@ block scripts
       }
 
       $('.trophy-toggle').click(function(e){
-        console.dir(e);
         $('#modal-title').text(e.target.title + (e.target.dataset.date.length > 0 ? " - " + e.target.dataset.date : "") );
         $('#modal-image').attr('src',e.target.src);
         $('#trophy').modal();

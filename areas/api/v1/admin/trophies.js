@@ -48,6 +48,16 @@ router.post('/save', util.ensureAuthenticated, util.hasRole("admin"), async (req
   res.status(200).send(item);
 });
 
+router.post('/delete', util.ensureAuthenticated, util.hasRole("admin"), async (req, res) => {
+  const
+    filename = req.body.filename
+    , name = req.body.name
+    , item = {"name":name, "filename":filename};
+    
+  await trophyService.delete(item);
+  res.status(200).send(item);
+});
+
 
 router.get("/", util.ensureAuthenticated, util.hasRole("admin"),async (req,res) => {
     
