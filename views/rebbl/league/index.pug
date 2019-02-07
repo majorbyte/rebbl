@@ -93,9 +93,13 @@ block content
             div(class="col-2" ) Pts.
             div(class="col-2") W  
             div(class="col-2") D  
-            div(class="col-2") L  
-            div(class="col-2") P
-            div(class="col-2 text-right") ΔTD
+            div(class="col-2") L
+            - if (league.toLowerCase() === "eurogamer")              
+              div(class="col-2") ΔTD
+              div(class="col-2 text-right") SoS
+            - else
+              div(class="col-2") P
+              div(class="col-2 text-right") ΔTD
         each coach, y in div
           div(class="row col-12 season-table-row")
             div(class="row col-6")
@@ -121,8 +125,12 @@ block content
               div(class="col-2")= coach.win 
               div(class="col-2")= coach.draw 
               div(class="col-2")= coach.loss 
-              div(class="col-2")= coach.games
-              div(class="col-2 text-right" )= coach.tddiff
+              - if (league.toLowerCase() === "eurogamer")              
+                div(class="col-2 " )= coach.tddiff
+                div(class="col-2 text-right" title=Math.round(coach.strength*100)/100)= Math.round(coach.strengthOfSchedule*100)/100
+              - else
+                div(class="col-2")= coach.games
+                div(class="col-2 text-right" )= coach.tddiff
           - if (y+1 == cutoff && !cutin)
             div(class="row col-12 season-table-row")
               div(class="col-1 Standings-divider--flex")
