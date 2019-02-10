@@ -10,8 +10,13 @@ router.get('/', util.checkCache, async function(req,res) {
   
   let leagueRegex;
   let league = req.params.league;
+  let divRegex = new RegExp(`^${req.params.division}$`, 'i');
   if(league.toLowerCase() == "open invitational"){
     leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
+  } else if (league === "playins - s10"){
+    leagueRegex = new RegExp(`^ReBBL Playoffs`,'i');
+    let comp = "Play-Ins Qualifier";
+    divRegex = new RegExp(`^${comp}`, 'i');
   } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
     leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
   } else {
@@ -23,7 +28,7 @@ router.get('/', util.checkCache, async function(req,res) {
     }
     leagueRegex = new RegExp(`^${league}`, 'i');
   }
-  let divRegex = new RegExp(`^${req.params.division}$`, 'i');
+
   
   if( req.params.league.toLowerCase() === "rampup"){
     leagueRegex = new RegExp(`${league}$`, 'i');

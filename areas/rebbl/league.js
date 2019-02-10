@@ -8,11 +8,14 @@ const db = require('../../lib/LeagueService.js')
 
 router.get('/', util.checkCache, async function(req, res){
   let data = {standings:null, rounds:null, league:req.params.league };
+  let comp = false;
+  let league = req.params.league.toLowerCase();
 
-  let league = req.params.league;
-
-  if(league.toLowerCase() == "open invitational"){
+  if(league == "open invitational"){
     league = new RegExp(`^ReBBL Open Invitational`, 'i');
+  } else if (league === "playins - s10"){
+    league = new RegExp(`^ReBBL Playoffs`,'i');
+    comp = "Play-Ins Qualifier";
   } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer" ){
     league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
   }  
@@ -34,7 +37,7 @@ router.get('/', util.checkCache, async function(req, res){
     res.render('rebbl/league/rampup', data);
   } else {
     data.cutoffs = configuration.getPlayoffTickets(req.params.league);
-    data.standings = await db.getCoachScore(league, null, true);
+    data.standings = await db.getCoachScore(league, comp || null, true);
     data.rounds = await db.getDivisions(league);
     res.render('rebbl/league/index', data);
   }
