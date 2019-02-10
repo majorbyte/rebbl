@@ -3,7 +3,7 @@ extends ..\..\no-cache-sub-layout.pug
 block vars
   - let options = {active: league, title: "REBBL SEASON 10"}
   - let seasons = []
-  - let ignoreLeagues = ["xscessively elfly league", "open invitational", "greenhorn cup", "rabble", "eurogamer"]
+  - let ignoreLeagues = ["xscessively elfly league", "open invitational", "greenhorn cup", "rabble", "eurogamer", "playins - s10"]
   - if (ignoreLeagues.indexOf(league.toLowerCase()) === -1)
     for div, x in standings
       - if (div[0].competition.toLowerCase().indexOf("rampup") > 0 ) continue;
@@ -67,7 +67,6 @@ block content
   -let seasonName = ""
   -let i = -1
   for div, x in standings
-  
     - i++
     -let config = cutoffs.find((c) => div[0].season.toLowerCase() === c.name.toLowerCase() )
     - if (config && seasonName !== config.name)
@@ -76,7 +75,7 @@ block content
     - if (["Alpha","Bravo","Charlie","Delta","Echo","Foxtrot"].indexOf(div[0].competition) > -1 ) config = cutoffs.find((c) => c.name === "season 5"  )
     -let cutoff = config ? (config.cutoff[i] === -1 ? 2 : config.cutoff[i]) : -1
     -let cutin = config ? config.cutoff[i] === -1 : false
-    -let hide = seasonName.toLowerCase().trim() != (seasons[0] || "").toLowerCase().trim()
+    -let hide = seasons.length != 0 && (seasonName.toLowerCase().trim() != (seasons[0] || "").toLowerCase().trim())
     div(class=`container Season ${div[0].season.replace(' ','')} ` style=`${hide ? "display:none": ""}`)
       div(class="row col-12")
         h2
