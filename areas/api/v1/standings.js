@@ -134,14 +134,22 @@ router.get('/csv/:league/:filter', util.ensureAuthenticated, util.hasRole("admin
 
 router.get('/:league', util.checkCache, async function(req, res){
   let league = req.params.league;
-  if (league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){
+  let filter= null
+  if (league.toLowerCase().indexOf("eurogamer") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){
     league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
+    filter= "Season 10";
   } else {
     league = new RegExp(`^${league}`, 'i');
   }
 
-  let standings = await db.getCoachScore(league,"Season 9",false);
-
+  let standings = [];
+  if (req.params.league.toLowerCase().indexOf("eurogamer") === -1){
+    standings = await db.getCoachScore(league,filter,false);
+  }else{
+    let data = await db.getCoachScore(league,filter,true);
+    for(var prop in data)
+    standings =standings.concat(data[prop]);
+  }
   
   standings.map(d => {
     delete d.account
@@ -173,6 +181,7 @@ router.get('/:league', util.checkCache, async function(req, res){
       if (b.loss > a.loss) {
         return -1
       }
+
       return 0;
     })
   );

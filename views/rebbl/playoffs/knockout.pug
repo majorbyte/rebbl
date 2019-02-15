@@ -1,0 +1,122 @@
+extends ..\..\no-cache-sub-layout.pug
+
+
+block scripts
+  link(rel="stylesheet" href="/styles/knockout.css")
+  script.
+    $(document).ready(function(){
+      $('li').click(function(e){
+
+        let v = e.currentTarget.attributes['data-coachid'].nodeValue;
+        let s = "li[data-coachid='" + v + "']" ;
+        $(s).toggleClass("highlight");
+
+      });
+    });
+block vars
+  - var options = {active: league, title: league}
+
+block navigation
+
+block content
+  - console.dir(matches)
+  - let roundCSS =["zero","one","two","three","four","five","six"]
+  section(id="bracket")
+    div(class="container-ko")
+      div(class="split split-one")
+        for week, x in matches
+          - if(x >= 5) continue;
+          div(class=`round round-${roundCSS[x]} `)
+            //div(class="round-details")= "Round " + x
+            - let l = week.length/2
+            for match,n in week.slice(0 ,l)
+              include knockouttemplate.pug
+              -if (l==2 && n == 0)
+                div(class="semis-l" style="width: 121%;margin-left: -40px;margin-top: -24px;")
+                  div(class="round-details" style="font-size: 20px;" ) semifinals
+                  ul(class ="matchup championship" style="padding:0px")
+                    - match = matches['5'][0]
+                    - let css = match.winner && match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
+                    li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
+                      -if (match.opponents[0].team.logo.length > 0) 
+                        img(class="" style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
+                      div(class="teamname" title=match.opponents[0].team.name)= match.opponents[0].coach.name
+                      div(class="score") 
+                        -if(match.winner && match.winner.coach.id === match.opponents[0].coach.id)
+                          strong= match.opponents[0].team.score
+                        -else
+                          div= match.opponents[0].team.score
+                    - css = match.winner && match.winner.coach.id === match.opponents[0].coach.id ? "looser" :""  
+                    li(class=`team team-bottom ${css}` data-coachid=match.opponents[1].coach.id) 
+                      -if (match.opponents[0].team.logo.length > 0) 
+                        img( style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)
+                      div(class="teamname" title=match.opponents[1].team.name)= match.opponents[1].coach.name
+                      div(class="score")
+                        -if(match.winner && match.winner.coach.id === match.opponents[1].coach.id)
+                          strong= match.opponents[1].team.score
+                        -else
+                          div= match.opponents[1].team.score
+
+      div(class="champion")
+        -let match 
+        div(class="final")
+          i(class="fa fa-trophy")
+          div(class="round-details") Superbowl X 
+          ul(class="matchup championship")
+            - match = matches['6'][0]
+            - css = match.winner && match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
+            li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
+              div(class="teamname" title=match.opponents[0].team.name)= match.opponents[0].coach.name
+                div(class="score") 
+                  -if (match.opponents[0].team.logo.length > 0) 
+                    img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png` style="float:left")
+                  -if(match.winner &&  match.winner.coach.id === match.opponents[0].coach.id)
+                    strong= match.opponents[0].team.score
+                  -else
+                    div= match.opponents[0].team.score
+            - css = match.winner && match.winner.coach.id === match.opponents[0].coach.id ? "looser" :""  
+            li(class=`team team-bottom ${css}` data-coachid=match.opponents[1].coach.id) 
+              div(class="score")
+                -if (match.opponents[1].team.logo.length > 0) 
+                  img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png` style="float:right")
+                -if(match.winner && match.winner.coach.id === match.opponents[1].coach.id)
+                  strong= match.opponents[1].team.score
+                -else
+                  div= match.opponents[1].team.score
+                div(class="teamname" title=match.opponents[1].team.name)= match.opponents[1].coach.name
+      div(class="split split-two")
+        - let m = [];
+        - for(var t in matches) m.push(matches[t]);
+        - let x = m.length -2
+        while x > 0
+          div(class=`round round-${roundCSS[x]} `)
+            //div(class="round-details")= "Round " + x--
+            - x--
+            - let l = m[x].length/2
+            for match,n in m[x].slice(l ,2*l)
+              include knockouttemplaterev.pug
+              -if (l==2 && n == 0)
+                div(class="semis-r" style="width: 121%;margin-top: -24px;")
+                  div(class="round-details" style="font-size:20px") semifinals
+                  ul(class ="matchup championship" style="padding:0px")
+                    - match = matches['5'][1]
+                    - css =match.winner &&  match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
+                    li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
+                      div(class="score") 
+                        -if(match.winner && match.winner.coach.id === match.opponents[0].coach.id)
+                          strong= match.opponents[0].team.score
+                        -else
+                          div= match.opponents[0].team.score
+                      div(class="teamname" title=match.opponents[0].team.name)= match.opponents[0].coach.name
+                      -if (match.opponents[0].team.logo.length > 0) 
+                        img(class="" style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
+                    - css =match.winner &&  match.winner.coach.id === match.opponents[0].coach.id ? "looser" :""  
+                    li(class=`team team-bottom ${css}` data-coachid=match.opponents[1].coach.id) 
+                      div(class="score")
+                        -if(match.winner && match.winner.coach.id === match.opponents[1].coach.id)
+                          strong= match.opponents[1].team.score
+                        -else
+                          div= match.opponents[1].team.score
+                      div(class="teamname" title=match.opponents[1].team.name)= match.opponents[1].coach.name
+                      -if (match.opponents[1].team.logo.length > 0) 
+                        img(class="" style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)
