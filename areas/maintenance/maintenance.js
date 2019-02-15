@@ -1,6 +1,6 @@
 'use strict';
 const league = require('../../lib/LeagueService.js')
-  , wcq = require('../../lib/WorldCupQualifierService.js')
+  , cripple = require('../../lib/crippleService.js')
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , express = require('express')
@@ -8,12 +8,9 @@ const league = require('../../lib/LeagueService.js')
   , reddit = require("../../lib/RedditService.js")
   , router = express.Router();
 
-router.get('/update/:round', async function(req, res){
+router.get('/update/cripple', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
-    let round = parseInt(req.params.round);
-    if (!round) return next('route');
-
-    wcq.getLeagueData(round);
+    cripple.getMatches();
   }
   res.redirect('/');
 });
