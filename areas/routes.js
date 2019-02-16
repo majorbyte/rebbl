@@ -10,6 +10,7 @@ router.use("/api", require("./api/api.js"));
 router.use("/maintenance", require("./maintenance/maintenance.js"));
 router.use("/wcq", require("./wcq/wcq.js"));
 router.use("/rebbl", require("./rebbl/rebbl.js"));
+router.use("/cripple", require("./cripple/cripple.js"));
 router.use("/account", require("./account/account.js"));
 router.use("/signup", require("./signup/signup.js"));
 router.use("/auth", require("./account/auth.js"));
