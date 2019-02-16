@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'production'){
 
 const express = require('express')
   , path = require('path')
-  , fs = require('fs')
+  , crippleService = require('./lib/crippleService.js')
   , passport = require('passport')
   , util = require("./lib/util.js")
   , session = require('express-session')
@@ -134,6 +134,18 @@ app.use(function(req, res,next){
 
 const port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
-app.listen(port);
+
+io.on('connection', async function (socket) {
+
+  let data = await crippleService.getCasualties();
+      
+  socket.emit('cripple', data);
+});
+
+crippleService.init(io);
+
+server.listen(port);
 console.log(`Express started on port ${port}`);

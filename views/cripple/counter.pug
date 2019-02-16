@@ -4,6 +4,7 @@ html
 
     link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/odometer-theme-car.css")
     script(src="https://cdn2.rebbl.net/scripts/odometer.js")
+    script(src="/scripts/socket.io.js")
 
     style.
       .odometer {
@@ -33,7 +34,9 @@ html
         div(id="allmeter" class="odometer" style="font-size:30px !important;border-radius:unset;padding:0px")
 
     script.
-      var ws = new WebSocket('ws://localhost:40510');
+
+      var socket = io.connect('/');
+      socket.on('cripple', function(data) {update(data)});
 
       const compact = window.location.search.indexOf("compact") > -1;
 
@@ -43,17 +46,9 @@ html
       else element = document.getElementById("full");
 
       element.parentNode.removeChild(element);
-
-      // event emmited when connected
-      ws.onopen = function () {
-
-      }
-
-      // event emmited when receiving message 
-      ws.onmessage = function (e) {
-
-
-        const data = JSON.parse(e.data);
+      
+      //event emmited when receiving message 
+      function update(data) {
         const odometer = document.getElementById("odometer");
         odometer.innerHTML = data.Dead;
 

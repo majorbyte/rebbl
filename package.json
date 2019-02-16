@@ -21,6 +21,7 @@
     "passport": "^0.4.0",
     "passport-reddit": "^0.2.4",
     "pug": "^2.0.3",
+    "socket.io": "^2.2.0",
     "thenify": "^3.3.0",
     "tough-cookie": "^2.4.2",
     "ws": "^6.1.3"
