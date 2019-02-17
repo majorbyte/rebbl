@@ -52,7 +52,7 @@ router.get('/', util.checkCache, async function(req,res) {
     })
   }
 
-  res.render('rebbl/division/knockout', data);
+  res.render('rebbl/division/index', data);
 });
 
 router.get('/:week', util.checkCache, async function(req,res) {
