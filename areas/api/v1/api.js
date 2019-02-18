@@ -15,5 +15,6 @@ router.use('/upcoming', require(`./upcoming.js`));
 
 router.use('/admin', require(`./admin/admin.js`));
 
+router.use('/cripple', require('./cripple.js'));
 
 module.exports = router;
