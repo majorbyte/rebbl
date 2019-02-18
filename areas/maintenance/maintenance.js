@@ -9,8 +9,15 @@ const league = require('../../lib/LeagueService.js')
   , router = express.Router();
 
 router.get('/update/cripple', async function(req, res){
-  if (req.query.verify === process.env['verifyToken']){
+  //if (req.query.verify === process.env['verifyToken']){
     cripple.getMatches();
+//  }
+  res.redirect('/');
+});
+
+router.get('/update/cripple/calculate', async function(req, res){
+  if (req.query.verify === process.env['verifyToken']){
+    cripple.calculateStandings("REBBL Cripple Ladder");
   }
   res.redirect('/');
 });

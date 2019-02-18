@@ -1,0 +1,254 @@
+extends ..\layout.pug
+block vars
+  - let options = {active: league, title: "REBBL SEASON 10"}
+
+
+
+block append scripts
+  link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/odometer-theme-car.css")
+  script(src="https://cdn2.rebbl.net/scripts/odometer.js")
+  script(src="/scripts/socket.io.js")
+  style.
+    .odometer {font-size: 100px;}
+
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+    function CoachModel(data){
+      this.map = (data) => {
+        if(data){
+          this.id = data.id;
+          this.name = data.name;
+        }
+      };
+      this.map(data);
+      ko.track(this);
+    }
+
+    function TeamModel(data){
+      this.map = (data) => {
+          if (data) {
+            this.id = data.id;
+            this.created = data.created;
+            this.datelastmatch = data.datelastmatch;
+            this.name = data.name;
+            this.idcoach = data.idcoach;
+            this.idraces = data.idraces;
+            this.logo = data.logo;
+            this.teamcolor = data.teamcolor;
+            this.leitmotiv = data.leitmotiv;
+            this.value = data.value;
+            this.popularity = data.popularity;
+            this.cash = data.cash;
+            this.cheerleaders = data.cheerleaders;
+            this.balms = data.balms;
+            this.apothecary = data.apothecary;
+            this.rerolls = data.rerolls;
+            this.assistantcoaches = data.assistantcoaches;
+            this.nbplayers = data.nbplayers;
+            this.stadiumname = data.stadiumname;
+            this.stadiumlevel = data.stadiumlevel;
+            this.stadiumtype = data.stadiumtype;
+          }
+      };
+
+      this.races = [
+        {id:13,name:"Amazon"}
+        ,{id:24,name:"Bretonnian"}
+        ,{id:8,name:"Chaos"}
+        ,{id:21,name:"Chaos Dwarf"}
+        ,{id:9,name:"Dark Elf"}
+        ,{id:2,name:"Dwarf"}
+        ,{id:14,name:"Elven Union"}
+        ,{id:6,name:"Goblin"}
+        ,{id:11,name:"Halfling"}
+        ,{id:15,name:"High Elf"}
+        ,{id:1,name:"Human"}
+        ,{id:16,name:"Khemri"}
+        ,{id:25,name:"Kislev"}
+        ,{id:5,name:"Lizardman"}
+        ,{id:17,name:"Necromantic"}
+        ,{id:12,name:"Norse"}
+        ,{id:18,name:"Nurgle"}
+        ,{id:4,name:"Orc"}
+        ,{id:19,name:"Ogre"}
+        ,{id:3,name:"Skaven"}
+        ,{id:10,name:"Undead"}
+        ,{id:22,name:"Underworld Denizens"}
+        ,{id:20,name:"Vampire"}
+        ,{id:7,name:"Wood Elf"}
+      ];
+
+      this.teamRace = function(){
+        const id = this.idraces;
+        const race = this.races.find(r => r.id ===id );
+        return race ? race.name : id;
+      }
+
+      this.teamColor = function(){
+         return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? "#"+this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1]  : "inherit";
+      }
+
+      this.teamName = function(){
+        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? this.name.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'') : this.name;
+      }
+
+      this.map(data);
+      ko.track(this);
+    }
+    function ScoreModel(data){
+      this.map = (data) => {
+        if (data) {
+          this.competition = data.competition;	
+          this.teamId = data.teamId;	
+          this.draws = data.draws;	
+          this.gp = data.gp;	
+          this.limFactor = data.limFactor;	
+          this.score = data.score;	
+          this.winPercentage = data.winPercentage;	
+          this.wins = data.wins;	
+          this.team = new TeamModel(data.team);
+          this.coach = new CoachModel(data.coach);
+        }
+      };
+      this.map(data);
+      ko.track(this); 
+    }
+
+    function StandingsModel(data){
+
+      this.scores = ko.observableArray()
+
+    }
+
+    var mapping = {
+      '': {
+          create: function(options) {
+              return new ScoreModel(options.data);
+          }
+      }
+    }
+
+    let model = new StandingsModel(); 
+    ko.applyBindings(model);
+    $(document).ready(function(){
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/api/v1/cripple/standings",true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+
+        if(xhr.response && xhr.status === 200){   
+          model = ko.mapping.fromJS(xhr.response,mapping,model.scores);
+        } else {
+          model.isError(true);
+          model.error(xhr.response);
+        }
+      }
+      xhr.send('');
+
+      var socket = io.connect('/');
+      socket.on('cripple', function(data) {update(data)});
+
+      //event emmited when receiving message 
+      function update(data) {
+        const odometer = document.getElementById("odometer");
+        odometer.innerHTML = data.Dead;
+
+        const movement = document.getElementById("movement");
+        movement.innerHTML = data.SmashedAnkle + data.SmashedHip;
+
+        const armour = document.getElementById("armour");
+        armour.innerHTML = data.SeriousConcussion + data.FracturedSkull ;
+
+        const strength = document.getElementById("strength");
+        strength.innerHTML = data.SmashedCollarBone;
+
+        const agility = document.getElementById("agility");
+        agility.innerHTML = data.BrokenNeck;
+
+        const niggling = document.getElementById("niggling");
+        niggling.innerHTML = data.DamagedBack + data.SmashedKnee;
+      }
+    });
+
+    
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav mr-auto")
+        li( class="nav-item active")
+          div(class="nav-link") DISPLAY 
+
+block content
+  div(class=`container `)
+    div(class="row col-12")
+      h2
+        i(style="padding-top:180px;margin-top:-180px")
+        span REBBL Cripple Ladder
+    div(style="background:url(https://cdn2.rebbl.net/images/counterbackground.png) no-repeat;background-size:cover")
+      div(class="row col-12 justify-content-center")
+        div(style="margin-left: auto;margin-right:auto")
+          img(src="https://cdn2.rebbl.net/images/skills/Dead.png" style="vertical-align:middle")
+          div(id="odometer" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")
+          img(src="https://cdn2.rebbl.net/images/skills/MovementBust.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px")
+          div(id="movement" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")
+          img(src="https://cdn2.rebbl.net/images/skills/ArmourBust.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px")
+          div(id="armour" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")
+          img(src="https://cdn2.rebbl.net/images/skills/StrengthBust.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px")
+          div(id="strength" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")
+          img(src="https://cdn2.rebbl.net/images/skills/AgilityBust.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px")
+          div(id="agility" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")
+          img(src="https://cdn2.rebbl.net//images/skills/NigglingInjury2.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px  ")
+          div(id="niggling" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")        
+    div(class="season-table")  
+      div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
+        div(class="row col-6" style="font-size:1.25em")
+          div(class="col-1" ) #
+          div(class="col-4" ) Coach
+          div(class="col-7" ) Team
+        div(class="col-3" style="font-size:1.25em") Race
+        div(class="row col-3" style="font-size:1.25em")
+          div(class="col-3" ) Pts.
+          div(class="col-3") W  
+          div(class="col-3") D  
+          div(class="col-3") L
+      // ko foreach: model.scores
+      div(class="row col-12 season-table-row")
+        div(class="row col-6")
+          div(class="col-1" data-bind="text: ($index() + 1) ")
+          div(class="col-4" style=";overflow:hidden") 
+            span(data-bind="text: $data.coach ? $data.coach.name : '-'" )
+          div(class="col-7" style=";overflow:hidden") 
+            //- if (score.team && /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(score.team.name))
+            // span(style="color:#"+score.team.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1])= score.team.name.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'')
+            // - else
+            span(data-bind="text: $data.team ? $data.team.teamName() : '-', style:{color: $data.team ? $data.team.teamColor() : 'inherit'}")
+        
+        div(class="col-3" style=";overflow:hidden" data-bind="text: $data.team ? $data.team.teamRace() : '-' ")
+        div(class="row col-3" )
+          div(class="col-3" data-bind="text: Math.round($data.score*100)/100")
+          div(class="col-3" data-bind="text: $data.wins")
+          div(class="col-3" data-bind="text: $data.draws")
+          div(class="col-3" data-bind="text: $data.gp")
+      // ko if: ($index() === 3)
+      div(class="row col-12 season-table-row")
+        div(class="col-1 Standings-divider--flex")
+          span(class="Standings-dividerText--correction")
+        div(class="col-6 Standings-divider--flex" )
+          span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
+        div(class="col-5 Standings-divider--flex")
+          span(class="Standings-dividerText--correction")
+      // /ko
+      // /ko

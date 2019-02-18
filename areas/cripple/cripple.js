@@ -14,7 +14,7 @@ router.use('/counter', require(`./counter.js`));
 
 router.use('/match', require(`./match.js`));
 
-router.use('/:league', require(`./league.js`));
+router.use('/standings', require(`./standings.js`));
 
 
 module.exports = router;
