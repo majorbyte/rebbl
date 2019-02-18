@@ -241,7 +241,7 @@ block content
           div(class="col-3" data-bind="text: Math.round($data.score*100)/100")
           div(class="col-3" data-bind="text: $data.wins")
           div(class="col-3" data-bind="text: $data.draws")
-          div(class="col-3" data-bind="text: $data.gp")
+          div(class="col-3" data-bind="text: $data.gp - $data.wins - $data.draws")
       // ko if: ($index() === 3)
       div(class="row col-12 season-table-row")
         div(class="col-1 Standings-divider--flex")
