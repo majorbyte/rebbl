@@ -43,7 +43,11 @@ router.get('/page', util.checkCache, async function(req, res, next){
   res.status(200).send(ret);
 });
 
+router.get('/rookie/:coach', async function(req, res, next){
+  const data = await db.getRookieTeam(req.params.coach);
 
+  res.status(200).send(JSON.stringify({"team":data.team, race:data.race}));
+});
 
 
 module.exports = router;

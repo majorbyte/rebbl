@@ -10,7 +10,7 @@ const express = require('express')
 router.get('/', util.ensureLoggedIn, async function(req, res){
   res.render('signup/closed');
 });
-*/
+
 router.post('/confirm-rampup',util.ensureLoggedIn, async function(req, res){
   try {
     req.body.saveType = "rampup";
@@ -25,7 +25,7 @@ router.post('/confirm-rampup',util.ensureLoggedIn, async function(req, res){
     console.log(err);
   }
 });
-
+*/
 
 router.get('/', util.ensureLoggedIn, async function(req, res){
   try{
@@ -50,18 +50,18 @@ router.get('/change', util.ensureLoggedIn, async function(req, res){
     let account = await accountService.getAccount(req.user.name);
 
     // Disabled while during season
-    /*if(!signup && user && user.team){
+    if(!signup && user && user.team){
       res.render('signup/signup-existing', { user: user});
       return;
-    }*/
+    }
 
     if (!signup){
       if(account){
-        //res.render('signup/signup-new-coach', {user: {account: account}});
-        res.render('signup/signup-rampup', {user: {account: account}});
+        res.render('signup/signup-new-coach', {user: {account: account}});
+        //res.render('signup/signup-rampup', {user: {account: account}});
       } else {
-        //res.render('signup/signup-new-coach', {user: req.user.name});
-        res.render('signup/signup-rampup', {user: req.user.name});
+        res.render('signup/signup-new-coach', {user: req.user.name});
+        //res.render('signup/signup-rampup', {user: req.user.name});
       }
       return;
     }
@@ -93,7 +93,7 @@ router.get('/change', util.ensureLoggedIn, async function(req, res){
     console.log(err);
   }
 });
-/*
+
 router.get('/reroll', util.ensureAuthenticated, async function(req, res){
   try {
     let user = await signupService.getExistingTeam(req.user.name);
@@ -251,7 +251,6 @@ router.post('/confirm', util.ensureAuthenticated, async function(req,res){
     console.log(err);
   }
 });
-*/
 
 
 router.get('/signups', util.checkCache, async function(req,res){

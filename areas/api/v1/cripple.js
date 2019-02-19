@@ -6,7 +6,7 @@ const crippleService = require('../../../lib/crippleService.js')
 
 router.get('/standings', util.checkCache, async function(req, res){
   let data = await crippleService.getStandings();
-
+  data = data.filter(x => x.gp > 9);
   data = data.sort((a,b) => a.score > b.score ? -1 : 1);
   
   res.status(200).send(data);
