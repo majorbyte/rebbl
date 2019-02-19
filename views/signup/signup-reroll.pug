@@ -33,7 +33,7 @@ block append scripts
 block content
   form(action="/signup/confirm-reroll" method="post" class="container signup")
     div
-      h1 Welcome back to season 10,
+      h1 Welcome back to season 11,
         span(class="highlight")= " " +  user.coach
         span !
     fieldset
@@ -100,6 +100,6 @@ block content
       h3 By pressing complete, you confirm that you have read and will abide by our rules
         a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules")= " as described here"
 
-      button(type="submit") Complete
+      button(type="submit" class="btn btn-primary") Complete
     br
     br

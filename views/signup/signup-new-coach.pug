@@ -26,6 +26,22 @@ block append scripts
       }
       $("#tz_info").text(moment().tz(guessed).format('YYYY-MM-DD HH:mm ZZ'));
 
+      $("#rebbrl").on("click", function(e){
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/api/v1/signups/rookie/" + $("#coach").val() ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {//Call a function when the state changes.
+
+          if(xhr.response && xhr.status === 200){   
+            $("#team").val(xhr.response.team);   
+            $("#race").val(xhr.response.race);
+          }
+        }
+        xhr.send('');
+
+      })
     });
 
 
@@ -51,6 +67,8 @@ block content
           div
             label(for="team") Team name
             input(type="text" id="team" name="team" value=user.team required placeholder="team name" title="team name")
+          div
+            button(type="button" class="btn btn-default" id="rebbrl" name="rebbrl" ) Use my ReBBRL team
           div
             label(for="race") Team race
             select(id="race" name="race" required)
@@ -102,7 +120,7 @@ block content
             h3 By pressing complete, you confirm that you have read and will abide by our rules
               a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules")= " as described here"
 
-        button(type="submit") Complete
+        button(type="submit" class="btn btn-primary") Complete
       - } else {
         h3 The first thing what we would like you to do, is to read thoroughly through
           a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " our rules"
@@ -123,6 +141,10 @@ block content
           div
             label(for="team") Team name
             input(type="text" id="team" name="team" value="" required placeholder="team name" title="team name")
+          div
+            button(type="button" class="btn btn-default" id="rebbrl" name="rebbrl" ) Use my ReBBRL team
+            
+          br
           div
             label(for="race") Team race
             select(id="race" name="race" required)
@@ -174,7 +196,7 @@ block content
             h3 By pressing complete, you confirm that you have read and will abide by our rules
               a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " as described here"
               span .
-        button(type="submit") Complete
+        button(type="submit" class="btn btn-primary") Complete
         br
         br
       - }

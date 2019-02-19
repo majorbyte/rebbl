@@ -52,7 +52,7 @@ block content
             div(style="display: table-cell;width: 50px;;" class="Standings-header" ) OI
             div(style="display: table-cell;width: 10px;;" class="Standings-header" ) GHC
           // ko foreach: {data: leagues, as: 'league'}
-          div(class="TableRow")
+          div(class="TableRow" )
             div(style="display: table-cell;width: 100px;" data-bind="text:league")
             // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
             div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0)")
@@ -113,16 +113,25 @@ block append scripts
       self.greenhorn = ko.observable(false);
 
       self.toggleOI = function(){
+        $(".TableRow").hide();
+        $(".TableRow").show();
         self.OI(!self.OI());
         if (self.OI()){
           self.greenhorn(false);
         }
+        $(".TableRow").hide();
+        $(".TableRow").show();
+
       }
       self.toggleGreenhorn = function(){
+        $(".TableRow").hide();
+        $(".TableRow").show();
         self.greenhorn(!self.greenhorn());
         if (self.greenhorn()){
           self.OI(false);
         }
+        $(".TableRow").hide();
+        $(".TableRow").show();
       }
 
       self.filteredUsers = ko.computed(function(){
