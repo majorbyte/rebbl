@@ -9,9 +9,9 @@ const league = require('../../lib/LeagueService.js')
   , router = express.Router();
 
 router.get('/update/cripple', async function(req, res){
-  //if (req.query.verify === process.env['verifyToken']){
+  if (req.query.verify === process.env['verifyToken']){
     cripple.getMatches();
-//  }
+  }
   res.redirect('/');
 });
 
