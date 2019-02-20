@@ -29,6 +29,7 @@ router.get('/page', util.checkCache, async function(req, res, next){
 
     return {
       team: row.team,
+      teamId: row.teamId,
       coach: row.coach,
       race: row.race,
       timezone: row.timezone,
