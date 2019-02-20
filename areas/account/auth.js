@@ -17,16 +17,22 @@ router.get('/reddit', function(req, res, next){
 });
 
 router.get('/reddit/callback', function(req, res, next){
-  // Check for origin via state token
-  if (req.query.state == req.session.state){
-    passport.authenticate('reddit', {
-      successRedirect: req.session.returnUrl || '/',
-      failureRedirect: '/login'
-    })(req, res, next);
+  try {
+    // Check for origin via state token
+    if (req.query.state == req.session.state){
+      passport.authenticate('reddit', {
+        successRedirect: req.session.returnUrl || '/',
+        failureRedirect: '/login'
+      })(req, res, next);
+    }
+    else {
+      next( new Error(403) );
+    }
+  }catch(ex){
+      console.log(ex.message)
+      console.log(ex.stack);
   }
-  else {
-    next( new Error(403) );
-  }
+
 });
 
 module.exports = router;
