@@ -1,4 +1,4 @@
-ul(class="matchup")
+ul(class="matchup spoiler" )
   - if(match.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && match.opponents[1].team.name.toLowerCase().indexOf("admin") === -1 )
     - let css =match.winner &&  match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
       li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)

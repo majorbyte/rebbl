@@ -2,7 +2,7 @@ extends ..\..\no-cache-sub-layout.pug
 
 
 block scripts
-  link(rel="stylesheet" href="/styles/knockout.css")
+  link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/knockout.css")
   script.
     $(document).ready(function(){
       $('li').click(function(e){
@@ -34,7 +34,7 @@ block content
               -if (l==2 && n == 0)
                 div(class="semis-l" style="width: 121%;margin-left: -40px;margin-top: -24px;")
                   div(class="round-details" style="font-size: 20px;" ) semifinals
-                  ul(class ="matchup championship" style="padding:0px")
+                  ul(class ="matchup championship spoiler" style="padding:0px")
                     - match = matches['5'][0]
                     - let css = match.winner && match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
                     li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
@@ -62,7 +62,7 @@ block content
         div(class="final")
           i(class="fa fa-trophy")
           div(class="round-details") Superbowl X 
-          ul(class="matchup championship")
+          ul(class="matchup championship spoiler")
             - match = matches['6'][0]
             - css = match.winner && match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
             li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
@@ -98,7 +98,7 @@ block content
               -if (l==2 && n == 0)
                 div(class="semis-r" style="width: 121%;margin-top: -24px;")
                   div(class="round-details" style="font-size:20px") semifinals
-                  ul(class ="matchup championship" style="padding:0px")
+                  ul(class ="matchup championship spoiler" style="padding:0px")
                     - match = matches['5'][1]
                     - css =match.winner &&  match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
                     li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)

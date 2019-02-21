@@ -40,7 +40,6 @@ tr(class="stats "+cls )
     - if((player.casualties_sustained && player.casualties_sustained[0] === "Dead") &&( player.casualties_state && player.casualties_state.indexOf("Dead") === -1) )    
       img(src=`${imagePath}skills/Dead.png` alt="" title="Dead" )
   td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= `${player.xp}/${levels[player.level+1]}`    
-  - if (player.value > 0)
-    td= player.value
+  td= player.value || 0
 include playerstats.pug
         
