@@ -138,6 +138,11 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 
+let dataService = require("./lib/DataService.js");
+
+dataService.rebbl.init("rebbl").then(x=>x);
+dataService.cripple.init("cripple").then(x=>x);
+
 io.on('connection', async function (socket) {
 
   let data = await crippleService.getCasualties();

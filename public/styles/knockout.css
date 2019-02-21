@@ -95,3 +95,9 @@ li.highlight {background-color: #e67b00; color:#fff}
   .round-details {font-size: 90%;}
 
 }
+
+.spoiler, .spoiler > * {transition: color 0.5s, opacity 0.5s;}
+.spoiler:not(:hover) > li {color: transparent;background-color: #fff;color: #0e0e0e;opacity: 1;}
+.spoiler:not(:hover) .looser {opacity: 1;}
+.spoiler .score {transition: color 0.5s, opacity 0.5s;}
+.spoiler:not(:hover) .score {opacity: 0;}
