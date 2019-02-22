@@ -18,6 +18,7 @@ if (process.env.NODE_ENV === 'production'){
 const express = require('express')
   , path = require('path')
   , crippleService = require('./lib/crippleService.js')
+  , signupService = require('./lib/signupService.js')
   , passport = require('passport')
   , util = require("./lib/util.js")
   , session = require('express-session')
@@ -148,9 +149,14 @@ io.on('connection', async function (socket) {
   let data = await crippleService.getCasualties();
       
   socket.emit('cripple', data);
+
+  data = await signupService.getSignUps();
+
+  socket.emit('signup', {count:data.all.length});
 });
 
 crippleService.init(io);
+signupService.init(io);
 
 
 
