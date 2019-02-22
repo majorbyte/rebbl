@@ -1,23 +1,23 @@
 - let css = match.winner ? " played" :  ""
 ul(class="matchup spoiler"+css)
-  //- if( match.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && match.opponents[1].team.name.toLowerCase().indexOf("admin") === -1 )
-  - css = match.winner && match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
-    li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
-      -if (match.opponents[0].team.logo.length > 0) 
-        img(class="" style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
-      div(class="teamname" title=match.opponents[0].team.name)= match.opponents[0].coach.name 
-      div(class="score") 
-        -if(match.winner && match.winner.coach.id === match.opponents[0].coach.id)
-          strong= match.opponents[0].team.score
-        -else
-          div= match.opponents[0].team.score
-    - css = match.winner && match.winner.coach.id === match.opponents[0].coach.id ? "looser" :""
-    li(class=`team team-bottom ${css}` data-coachid=match.opponents[1].coach.id) 
-      -if (match.opponents[1].team.logo.length > 0) 
-        img( style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)
-      div(class="teamname" title=match.opponents[1].team.name)= match.opponents[1].coach.name
-      div(class="score")
-        -if(match.winner && match.winner.coach.id === match.opponents[1].coach.id)
-          strong= match.opponents[1].team.score
-        -else
-          div= match.opponents[1].team.score
+  - if( match.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && match.opponents[1].team.name.toLowerCase().indexOf("admin") === -1 )
+    - css = match.winner && match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
+      li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
+        -if (match.opponents[0].team.logo.length > 0) 
+          img(class="" style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
+        div(class="teamname" title=match.opponents[0].team.name)= match.opponents[0].coach.name 
+        div(class="score") 
+          -if(match.winner && match.winner.coach.id === match.opponents[0].coach.id)
+            strong= match.opponents[0].team.score
+          -else
+            div= match.opponents[0].team.score
+      - css = match.winner && match.winner.coach.id === match.opponents[0].coach.id ? "looser" :""
+      li(class=`team team-bottom ${css}` data-coachid=match.opponents[1].coach.id) 
+        -if (match.opponents[1].team.logo.length > 0) 
+          img( style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)
+        div(class="teamname" title=match.opponents[1].team.name)= match.opponents[1].coach.name
+        div(class="score")
+          -if(match.winner && match.winner.coach.id === match.opponents[1].coach.id)
+            strong= match.opponents[1].team.score
+          -else
+            div= match.opponents[1].team.score
