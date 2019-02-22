@@ -1,0 +1,42 @@
+html
+  head
+
+
+    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/odometer-theme-car.css")
+    script(src="https://cdn2.rebbl.net/scripts/odometer.js")
+    script(src="/scripts/socket.io.js")
+
+    style.
+      .odometer {font-size: 100px;}
+      .odometer-digit:last-child{
+        background-color:unset !important;
+        background-image: -webkit-linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100% ) !important;
+        background-image: -moz-linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100% ) !important;
+        background-image: -o-linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100% ) !important;
+        background-image: -ms-linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100%) !important;
+        background-image: linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100%) !important;}
+      .odometer-digit:last-child{
+        font-family: "Arimo", monospace;
+        color: #eee0d3 !important; 
+      }  
+
+  body
+    div(style="background: url(https://cdn2.rebbl.net/images/signups.png) no-repeat;height:300px")
+      div(id="odometer" class="odometer" style="display:none;font-size: 75px !important;padding: 0px;top: 75px;opacity: 0.6;left: 60px;")
+
+    script.
+
+      var socket = io.connect('/');
+      socket.on('signup', function(data) {update(data)});
+
+      let element = null;
+      
+      //event emmited when receiving message 
+      function update(data) {
+        const odometer = document.getElementById("odometer");
+        odometer.style.display="inline-block";
+        odometer.innerHTML = data.count;
+
+
+      }
+    

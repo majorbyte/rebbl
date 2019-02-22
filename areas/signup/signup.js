@@ -261,5 +261,16 @@ router.get('/signups', util.checkCache, async function(req,res){
   }
 });
 
+router.get('/counter', async function(req, res, next){
+  try{
+    res.render('signup/counter',null );
+  } catch(err){
+    console.log(err);
+  }
+});
+
+
+
+module.exports = router;
 
 module.exports = router;
