@@ -5,10 +5,9 @@ body{padding-top:82px !important;}
 .champion {float:left;display:block;width: 16%;-webkit-flex-direction:row;flex-direction:row;-webkit-align-self:center;align-self:center;margin: -153px 16px 0px 16px;text-align: center;} 
 .champion i {color: #ceb234; font-size: 85px;padding: 10px 0; }
 .round {display:block;float:left;display: -webkit-box;display: -moz-box;display: -ms-flexbox;display: -webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;width:25.0333%;}
-.split-two {}
 .split-one .round {margin: 0 4px 0 0;}
 .split-two .round {margin: 0 0 0 4px;}
-.matchup {margin:0;width: 100%;padding: 10px 0;height:60px;-webkit-transition: all 0.2s;transition: all 0.2s;}
+.matchup {margin:0;width: 100%;padding: 0px 0;height:60px;-webkit-transition: all 0.2s;transition: all 0.2s;}
 .split-one .score {font-size: 11px;text-transform: uppercase;;color: #2C7399;font-weight: bold;/*font-family: 'Roboto Condensed', sans-serif*/;position: absolute;right: 5px;display:inline-block}
 .split-two .score {font-size: 11px;text-transform: uppercase;color: #2C7399;font-weight: bold;/*font-family: 'Roboto Condensed', sans-serif*/;position: absolute;}
 .split-one img{position: absolute;left:5px;top:1px;}
@@ -16,12 +15,18 @@ body{padding-top:82px !important;}
 .split-two .teamname {width:calc(100% - 32px);display:inline-block;overflow:hidden;padding-left:10px}
 .split-one .teamname {width:calc(100% - 42px);display:inline-block;overflow:hidden;margin-left:29px}
 .team {padding: 0 5px;margin: 3px 0;height: 25px; line-height: 25px;white-space: nowrap; overflow: hidden;position: relative;}
-.round-one .matchup {margin:0; height: 60px;padding: 30px 0;}
-.round-two .matchup {margin:0; height: 60px;padding: 60px 0;}
-.round-three .matchup {margin:0; height: 60px; padding: 120px 0;}
+.round-one .matchup {margin:0; /*height: 60px;padding: 30px 0;*/}
+
+.round-two .matchup {margin:0; height: 120px;}
+.round-three .matchup {margin:0; height: 240px;}
 .round-four .matchup {margin:0; height: 120px; padding: 240px 0;}
 .round-five .matchup {margin:0; height: 60px; padding: 480px 0;}
 .round-six .matchup {margin:0; height: 60px; padding: 960px 0;}
+
+.round-one .matchup:first-child {margin-top:21px;}
+.round-two .matchup:first-child {margin-top:50px;}
+.round-three .matchup:first-child {margin-top:110px;}
+
 .round-details {/*font-family: 'Roboto Condensed', sans-serif*/ font-size: 13px; color: #2C7399;text-transform: uppercase;text-align: center;height: 40px;}
 .champion li, .round li {background-color: #fff;box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);opacity: 1}
 .champion li {height: 65px;font-size: 20px;}
@@ -101,3 +106,8 @@ li.highlight {background-color: #e67b00; color:#fff}
 .spoiler:not(:hover) .looser {opacity: 1;}
 .spoiler .score {transition: color 0.5s, opacity 0.5s;}
 .spoiler:not(:hover) .score {opacity: 0;}
+
+.played:after { content:url('https://cdn2.rebbl.net//images/played.png'); position:relative; z-index:100000;top:-60px;} 
+.split-one .played:after {text-align: right;float: right;}
+.split-two .played:after { text-align: left;float: left;left:-5px;}
+.spoiler:hover.played:after{opacity: 0;transition: color 0.5s, opacity 0.5s}

@@ -19,7 +19,6 @@ block vars
 block navigation
 
 block content
-  - console.dir(matches)
   - let roundCSS =["zero","one","two","three","four","five","six"]
   section(id="bracket")
     div(class="container-ko")
@@ -27,7 +26,6 @@ block content
         for week, x in matches
           - if(x >= 5) continue;
           div(class=`round round-${roundCSS[x]} `)
-            //div(class="round-details")= "Round " + x
             - let l = week.length/2
             for match,n in week.slice(0 ,l)
               include knockouttemplate.pug
