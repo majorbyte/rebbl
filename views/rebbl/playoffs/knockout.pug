@@ -278,8 +278,9 @@ block content
             div(data-bind="text: match.opponents[1].team.score")
             // /ko
         // /ko    
+      // ko if: match.round <= model.round  
       div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
-
+      // /ko
   script(type="text/html" id="knockoutTemplateRev")
     div(class="gameinfo" data-bind="{css: match.winner && match.winner.coach && match.round === model.round ? 'spoiler played': ''}")
       ul(class="matchup" )
@@ -309,4 +310,6 @@ block content
           img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`}}")
           // /ko
         // /ko
+      // ko if: match.round <= model.round  
       div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
+      // /ko
