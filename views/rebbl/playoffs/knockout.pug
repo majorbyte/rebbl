@@ -21,18 +21,23 @@ block append scripts
         if (data) {
             this.matches = data.matches;
             this.dates = data.dates;
+            this.round =  data.round;
+            this.spoiled = true;
         }
       };
       this.map(data);
       this.roundCSS = ["zero","one","two","three","four","five","six"];
       this.selected = null
-      
+
       this.select = function(d,e){
         this.selected = d;
       }.bind(this);
       this.getUrl = function(o,n){
         return "https://cdn2.rebbl.net/images/logo/256x256/logo_" + o.opponents[n].team.logo.toLowerCase() +".png";
       }
+      this.spoil = function(){
+        this.spoiled = !this.spoiled;
+      }.bind(this);
 
       ko.track(this);
     }
@@ -85,6 +90,12 @@ block navigation
 
 block content
   section(id="bracket")
+    div(class="row col-12")
+      div
+        label(class="switch")
+          input(type="checkbox" id="spoiled-switch" data-bind="checked: model.spoiled")
+          span(class="slider" data-bind="click: model.spoil")
+        | don't spoil me!
     div(class="container-ko")
       div(class="split split-one")
         div(class='round round-one' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['1'].slice(0,16), as: 'match' }}")
@@ -201,7 +212,8 @@ block content
             // ko if: model.selected
             div(class="modal-body col-12")
               div(class="col-12 row")
-                img(data-bind="attr:{src:model.getUrl(model.selected,0)}" class="col-4" )
+                div(class="col-4")
+                  img(data-bind="attr:{src:model.getUrl(model.selected,0)}" )
                 div(class="col-4 row" style="margin:auto 0")
                   // ko if: model.selected.status === 'played'
                   div(class="col-5")
@@ -211,7 +223,8 @@ block content
                   div(class="col-5")
                     h1(data-bind="text:model.selected.opponents[1].team.score, css: model.selected.winner.index === 1 ? 'winner' : ''")
                   // /ko
-                img(data-bind="attr:{src:model.getUrl(model.selected,1)}" class="col-4" )
+                div(class="col-4")
+                  img(data-bind="attr:{src:model.getUrl(model.selected,1)}")
               div(class="col-12 row")
                 // ko if: model.selected.status !== 'played' && model.dates.find(f => f.id === model.selected.contest_id)
                 // ko with: model.dates.find(f => f.id === model.selected.contest_id)
@@ -237,7 +250,7 @@ block content
 
 
   script(type="text/html" id="knockoutTemplate")
-    div(class="gameinfo spoiler" data-bind="{css: match.winner && match.winner.coach ? 'played': ''}")
+    div(class="gameinfo" data-bind="{css: model.spoiled && match.winner && match.winner.coach && match.round === model.round ? 'spoiler played': ''}")
       ul(class="matchup" )
         // ko if:  match.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && match.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
         li(class=`team team-top` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id == match.opponents[1].coach.id ? 'looser' :''  }")
@@ -268,7 +281,7 @@ block content
       div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
 
   script(type="text/html" id="knockoutTemplateRev")
-    div(class="gameinfo spoiler" data-bind="{css: match.winner && match.winner.coach ? 'played': ''}")
+    div(class="gameinfo" data-bind="{css: match.winner && match.winner.coach && match.round === model.round ? 'spoiler played': ''}")
       ul(class="matchup" )
         // ko if:  match.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && match.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
         li(class=`team team-top` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[1].coach.id ? 'looser' :''  }")
