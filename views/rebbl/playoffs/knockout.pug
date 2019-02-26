@@ -1,120 +1,299 @@
 extends ..\..\no-cache-sub-layout.pug
 
 
-block scripts
-  link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/knockout.css")
-  script.
-    $(document).ready(function(){
-      $('li').click(function(e){
+block append scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/knockout.css")
 
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+    link(rel="stylesheet" href="/styles/knockout.css")
+
+  script.
+
+    function PlayoffModel(data){
+      this.map = (data) => {
+        if (data) {
+            this.matches = data.matches;
+            this.dates = data.dates;
+        }
+      };
+      this.map(data);
+      this.roundCSS = ["zero","one","two","three","four","five","six"];
+      this.selected = null
+      
+      this.select = function(d,e){
+        this.selected = d;
+      }.bind(this);
+      this.getUrl = function(o,n){
+        return "https://cdn2.rebbl.net/images/logo/256x256/logo_" + o.opponents[n].team.logo.toLowerCase() +".png";
+      }
+
+      ko.track(this);
+    }
+
+    function MatchModel(data){
+      this.map = (data) => {
+        if (data) {
+          for(var p in data)
+            this[p] = data[p];
+        }
+      };
+      this.map(data);
+      ko.track(this);
+    }
+
+    let model;
+
+    $(document).ready(function(){
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", `/api/v1/playoffs/!{division}`,true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+        if(xhr.response && xhr.status === 200){   
+          model = new PlayoffModel(xhr.response); 
+        }
+        ko.applyBindings();
+      }
+      xhr.send('');
+
+      $('li').click(function(e){
+        
         let v = e.currentTarget.attributes['data-coachid'].nodeValue;
         let s = "li[data-coachid='" + v + "']" ;
         $(s).toggleClass("highlight");
 
       });
     });
+
+
+
+
+
 block vars
   - var options = {active: league, title: league}
 
 block navigation
 
 block content
-  - let roundCSS =["zero","one","two","three","four","five","six"]
   section(id="bracket")
     div(class="container-ko")
       div(class="split split-one")
-        for week, x in matches
-          - if(x >= 5) continue;
-          div(class=`round round-${roundCSS[x]} `)
-            - let l = week.length/2
-            for match,n in week.slice(0 ,l)
-              include knockouttemplate.pug
-              -if (l==2 && n == 0)
-                div(class="semis-l" style="width: 121%;margin-left: -40px;margin-top: -24px;")
-                  div(class="round-details" style="font-size: 20px;" ) semifinals
-                  ul(class ="matchup championship spoiler" style="padding:0px")
-                    - match = matches['5'][0]
-                    - let css = match.winner && match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
-                    li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
-                      -if (match.opponents[0].team.logo.length > 0) 
-                        img(class="" style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
-                      div(class="teamname" title=match.opponents[0].team.name)= match.opponents[0].coach.name
-                      div(class="score") 
-                        -if(match.winner && match.winner.coach.id === match.opponents[0].coach.id)
-                          strong= match.opponents[0].team.score
-                        -else
-                          div= match.opponents[0].team.score
-                    - css = match.winner && match.winner.coach.id === match.opponents[0].coach.id ? "looser" :""  
-                    li(class=`team team-bottom ${css}` data-coachid=match.opponents[1].coach.id) 
-                      -if (match.opponents[0].team.logo.length > 0) 
-                        img( style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)
-                      div(class="teamname" title=match.opponents[1].team.name)= match.opponents[1].coach.name
-                      div(class="score")
-                        -if(match.winner && match.winner.coach.id === match.opponents[1].coach.id)
-                          strong= match.opponents[1].team.score
-                        -else
-                          div= match.opponents[1].team.score
-
+        div(class='round round-one' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['1'].slice(0,16), as: 'match' }}")
+        div(class='round round-two' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['2'].slice(0,8), as: 'match' }}")
+        div(class='round round-three' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['3'].slice(0,4), as: 'match' }}")
+        div(class='round round-four')
+          // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(0,1), as: 'match' }
+          // /ko
+          // ko with: model.matches['5'][0]
+          div(class="gameinfo spoiler semis-l" style="width: 121%;margin-left: -40px;margin-top: -48px;" data-bind="{css: $data.winner && $data.winner.coach ? 'played': ''}")
+            div(class="round-details" style="font-size: 20px;" ) semifinals
+            ul(class ="matchup championship" style="padding:0px")
+              // ko if:  $data.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && $data.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
+              li(class=`team team-top` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id ? 'looser' :''  }")
+                //ko if: $data.opponents[0].team.logo.length > 0
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${$data.opponents[0].team.logo.toLowerCase()}.png`}}")
+                // /ko
+                div(class="teamname" data-bind="{attr: {title:opponents[0].team.name}, text: $data.opponents[0].coach.name}")
+                div(class="score") 
+                  // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
+                  strong(data-bind="text: $data.opponents[0].team.score")
+                  // /ko
+                  // ko notif: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
+                  div(data-bind="text: $data.opponents[0].team.score")
+                  // /ko
+              li(class=`team team-bottom ${css}` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id ? 'looser' :''  }")
+                // ko if: $data.opponents[1].team.logo.length > 0
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${$data.opponents[1].team.logo.toLowerCase()}.png`}}")
+                // /ko
+                div(class="teamname" data-bind="{attr: {title:$data.opponents[1].team.name}, text: $data.opponents[1].coach.name}")
+                div(class="score")
+                  // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id
+                  strong(data-bind="text: $data.opponents[1].team.score")
+                  // /ko
+                  // ko notif: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id
+                  div(data-bind="text: $data.opponents[1].team.score")
+                  // /ko
+              // /ko
+          // /ko        
+          // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(1,2), as: 'match' }
+          // /ko
       div(class="champion")
-        -let match 
         div(class="final")
           i(class="fa fa-trophy")
           div(class="round-details") Superbowl X 
           ul(class="matchup championship spoiler")
-            - match = matches['6'][0]
-            - css = match.winner && match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
-            li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
-              div(class="teamname" title=match.opponents[0].team.name)= match.opponents[0].coach.name
+            // ko with: model.matches['6'][0]
+            li(class=`team team-top` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id ? 'looser' :''  }")
+              div(class="teamname" data-bind="{attr: {title:$data.opponents[0].team.name}, text: $data.opponents[0].coach.name}")
                 div(class="score") 
-                  -if (match.opponents[0].team.logo.length > 0) 
-                    img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png` style="float:left")
-                  -if(match.winner &&  match.winner.coach.id === match.opponents[0].coach.id)
-                    strong= match.opponents[0].team.score
-                  -else
-                    div= match.opponents[0].team.score
-            - css = match.winner && match.winner.coach.id === match.opponents[0].coach.id ? "looser" :""  
-            li(class=`team team-bottom ${css}` data-coachid=match.opponents[1].coach.id) 
-              div(class="score")
-                -if (match.opponents[1].team.logo.length > 0) 
-                  img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png` style="float:right")
-                -if(match.winner && match.winner.coach.id === match.opponents[1].coach.id)
-                  strong= match.opponents[1].team.score
-                -else
-                  div= match.opponents[1].team.score
-                div(class="teamname" title=match.opponents[1].team.name)= match.opponents[1].coach.name
-      div(class="split split-two")
-        - let m = [];
-        - for(var t in matches) m.push(matches[t]);
-        - let x = m.length -2
-        while x > 0
-          div(class=`round round-${roundCSS[x]} `)
-            //div(class="round-details")= "Round " + x--
-            - x--
-            - let l = m[x].length/2
-            for match,n in m[x].slice(l ,2*l)
-              include knockouttemplaterev.pug
-              -if (l==2 && n == 0)
-                div(class="semis-r" style="width: 121%;margin-top: -24px;")
-                  div(class="round-details" style="font-size:20px") semifinals
-                  ul(class ="matchup championship spoiler" style="padding:0px")
-                    - match = matches['5'][1]
-                    - css =match.winner &&  match.winner.coach.id === match.opponents[1].coach.id ? "looser" :""
-                    li(class=`team team-top ${css}` data-coachid=match.opponents[0].coach.id)
-                      div(class="score") 
-                        -if(match.winner && match.winner.coach.id === match.opponents[0].coach.id)
-                          strong= match.opponents[0].team.score
-                        -else
-                          div= match.opponents[0].team.score
-                      div(class="teamname" title=match.opponents[0].team.name)= match.opponents[0].coach.name
-                      -if (match.opponents[0].team.logo.length > 0) 
-                        img(class="" style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
-                    - css =match.winner &&  match.winner.coach.id === match.opponents[0].coach.id ? "looser" :""  
-                    li(class=`team team-bottom ${css}` data-coachid=match.opponents[1].coach.id) 
-                      div(class="score")
-                        -if(match.winner && match.winner.coach.id === match.opponents[1].coach.id)
-                          strong= match.opponents[1].team.score
-                        -else
-                          div= match.opponents[1].team.score
-                      div(class="teamname" title=match.opponents[1].team.name)= match.opponents[1].coach.name
-                      -if (match.opponents[1].team.logo.length > 0) 
-                        img(class="" style="height:24px" src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)
+                  // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
+                  strong(data-bind="text: opponents[0].team.score")
+                  // /ko
+                  // ko notif: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
+                  div(data-bind="text: opponents[0].team.score")
+                  // /ko
+            li(class=`team team-bottom ${css}` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id ? 'looser' :''  }") 
+              div(class="score") 
+                // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id
+                strong(data-bind="text: $data.opponents[1].team.score")
+                // /ko
+                // ko notif: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id
+                div(data-bind="text: $data.opponents[1].team.score")
+                // /ko
+              div(class="teamname" data-bind="{attr: {title:$data.opponents[1].team.name}, text: $data.opponents[1].coach.name}")
+            // /ko
+
+      div(class="split split-two" )
+        div(class='round round-four')
+          // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(2,3), as: 'match' }
+          // /ko
+          // ko with: model.matches['5'][1]
+          div(class="gameinfo spoiler semis-r" style="width: 121%;margin-top: -48px;" data-bind="{css: $data.winner && $data.winner.coach ? 'played': ''}")
+            div(class="round-details" style="font-size: 20px;" ) semifinals
+            ul(class ="matchup championship" style="padding:0px")
+              // ko if:  $data.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && $data.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
+              li(class=`team team-top` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id ? 'looser' :''  }")
+                //ko if: $data.opponents[0].team.logo.length > 0
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logos/logo_${$data.opponents[0].team.logo.toLowerCase()}.png`}}")
+                // /ko
+                div(class="teamname" data-bind="{attr: {title:opponents[0].team.name}, text: $data.opponents[0].coach.name}")
+                div(class="score") 
+                  // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
+                  strong(data-bind="text: $data.opponents[0].team.score")
+                  // /ko
+                  // ko notif: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
+                  div(data-bind="text: $data.opponents[0].team.score")
+                  // /ko
+              li(class=`team team-bottom ${css}` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id ? 'looser' :''  }")
+                // ko if: $data.opponents[1].team.logo.length > 0
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logos/logo_${$data.opponents[1].team.logo.toLowerCase()}.png`}}")
+                // /ko
+                div(class="teamname" data-bind="{attr: {title:$data.opponents[1].team.name}, text: $data.opponents[1].coach.name}")
+                div(class="score")
+                  // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id
+                  strong(data-bind="text: $data.opponents[1].team.score")
+                  // /ko
+                  // ko notif: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id
+                  div(data-bind="text: $data.opponents[1].team.score")
+                  // /ko
+              // /ko
+          // /ko  
+
+          // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(3,4), as: 'match' }
+          // /ko
+        div(class='round round-three' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['3'].slice(4,8), as: 'match' }}")
+        div(class='round round-two' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['2'].slice(8,16), as: 'match' }}")
+        div(class='round round-one' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['1'].slice(16,32), as: 'match' }}")
+
+
+      div(class="modal" tabindex="-1" role="dialog" id=`trophy`)
+        div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+          div(class="modal-content" style="background-color: #32383e;")
+            // ko if: model.selected
+            div(class="modal-body col-12")
+              div(class="col-12 row")
+                img(data-bind="attr:{src:model.getUrl(model.selected,0)}" class="col-4" )
+                div(class="col-4 row" style="margin:auto 0")
+                  // ko if: model.selected.status === 'played'
+                  div(class="col-5")
+                    h1(class="pull-right" data-bind="text:model.selected.opponents[0].team.score, css: model.selected.winner.index === 0 ? 'winner' : ''"  )
+                  div(class="col-2")
+                    h1 -
+                  div(class="col-5")
+                    h1(data-bind="text:model.selected.opponents[1].team.score, css: model.selected.winner.index === 1 ? 'winner' : ''")
+                  // /ko
+                img(data-bind="attr:{src:model.getUrl(model.selected,1)}" class="col-4" )
+              div(class="col-12 row")
+                // ko if: model.selected.status !== 'played' && model.dates.find(f => f.id === model.selected.contest_id)
+                // ko with: model.dates.find(f => f.id === model.selected.contest_id)
+                div(class="col-6 offset-3 text-center")
+                  span(class="winner" data-bind="text:$data.date + ' UTC'"  style="font-size:2rem" )
+                // /ko
+                // /ko
+                // ko if: model.selected.status === 'played'
+                div(class="col-6 offset-3 text-center")
+                  a(data-bind="attr:{href: '/rebbl/match/' + model.selected.match_uuid }" target="_blank")
+                    span(class="winner") match summary
+                // /ko
+              div(class="col-12 row")
+                div(class="col-6")
+                  a(class="pull-left" data-bind="{text: model.selected.opponents[0].team.name, attr: {href: '/rebbl/team/'+model.selected.opponents[0].team.id}}" target="_blank")
+                  br(style="clear:both")
+                  a(class="pull-left" data-bind="{text: model.selected.opponents[0].coach.name, attr: {href: '/rebbl/coach/'+model.selected.opponents[0].coach.id}}" target="_blank")
+                div(class="col-6")
+                  a(class="pull-right" data-bind="{text: model.selected.opponents[1].team.name, attr: {href: '/rebbl/team/'+model.selected.opponents[1].team.id}}" target="_blank")
+                  br(style="clear:both")
+                  a(class="pull-right" data-bind="{text: model.selected.opponents[1].coach.name, attr: {href: '/rebbl/coach/'+model.selected.opponents[1].coach.id}}" target="_blank")
+            // /ko
+
+
+  script(type="text/html" id="knockoutTemplate")
+    div(class="gameinfo spoiler" data-bind="{css: match.winner && match.winner.coach ? 'played': ''}")
+      ul(class="matchup" )
+        // ko if:  match.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && match.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
+        li(class=`team team-top` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id == match.opponents[1].coach.id ? 'looser' :''  }")
+          //ko if: match.opponents[0].team.logo.length > 0
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`}}")
+          // /ko
+          div(class="teamname" data-bind="{attr: {title:match.opponents[0].team.name}, text: match.opponents[0].coach.name}")
+          div(class="score") 
+            // ko if: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[0].coach.id
+            strong(data-bind="text: match.opponents[0].team.score")
+            // /ko
+            // ko notif: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[0].coach.id
+            div(data-bind="text: match.opponents[0].team.score")
+            // /ko
+        li(class=`team team-bottom ` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id == match.opponents[0].coach.id ? 'looser' :'' }")
+          // ko if: match.opponents[1].team.logo.length > 0
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`}}")
+          // /ko
+          div(class="teamname" data-bind="{attr: {title:match.opponents[1].team.name}, text: match.opponents[1].coach.name}")
+          div(class="score")
+            // ko if: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[1].coach.id
+            strong(data-bind="text: match.opponents[1].team.score")
+            // /ko
+            // ko notif: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[1].coach.id
+            div(data-bind="text: match.opponents[1].team.score")
+            // /ko
+        // /ko    
+      div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
+
+  script(type="text/html" id="knockoutTemplateRev")
+    div(class="gameinfo spoiler" data-bind="{css: match.winner && match.winner.coach ? 'played': ''}")
+      ul(class="matchup" )
+        // ko if:  match.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && match.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
+        li(class=`team team-top` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[1].coach.id ? 'looser' :''  }")
+          div(class="score") 
+            // ko if: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[0].coach.id
+            strong(data-bind="text: match.opponents[0].team.score")
+            // /ko
+            // ko notif: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[0].coach.id
+            div(data-bind="text: match.opponents[0].team.score")
+            // /ko
+          div(class="teamname" data-bind="{attr: {title:match.opponents[0].team.name}, text: match.opponents[0].coach.name}")
+          //ko if: match.opponents[0].team.logo.length > 0
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`}}")
+          // /ko
+        li(class=`team team-bottom` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[0].coach.id ? 'looser' :''  }")
+          div(class="score")
+            // ko if: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[1].coach.id
+            strong(data-bind="text: match.opponents[1].team.score")
+            // /ko
+            // ko notif: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[1].coach.id
+            div(data-bind="text: match.opponents[1].team.score")
+            // /ko
+          div(class="teamname" data-bind="{attr: {title:match.opponents[1].team.name}, text: match.opponents[1].coach.name}")
+          // ko if: match.opponents[1].team.logo.length > 0
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`}}")
+          // /ko
+        // /ko
+      div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  

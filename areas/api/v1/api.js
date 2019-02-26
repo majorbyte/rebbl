@@ -17,4 +17,6 @@ router.use('/admin', require(`./admin/admin.js`));
 
 router.use('/cripple', require('./cripple.js'));
 
+router.use('/playoffs', require('./playoffs.js'));
+
 module.exports = router;
