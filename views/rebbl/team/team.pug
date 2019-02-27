@@ -67,9 +67,9 @@ block content
       div(class="col col-1")
         strong= team.team.popularity
       div(class="col col-3")
-        strong Total cash earned
+        strong Stadium name
       div(class="col col-2")
-        strong= (team.stats ? team.stats.cashearned/1000 :0) + "k"
+        strong= team.team.stadiumname
     div(class="row" style="margin-left:0px")
       div(class="col col-2")
         strong Next match TV
@@ -80,9 +80,9 @@ block content
       div(class="col col-1")
         strong= team.team.rerolls  
       div(class="col col-3")
-        strong Spiralling Expenses
+        strong Total cash earned
       div(class="col col-2")
-        strong=  (team.stats ? team.stats.spirallingexpenses/1000 :0) + "k"
+        strong= (team.stats ? team.stats.cashearned/1000 :0) + "k"
     div(class="row" style="margin-left:0px")
       div(class="col col-2")
         strong Actual TV
@@ -93,9 +93,9 @@ block content
       div(class="col col-1")
         strong= team.team.cheerleaders
       div(class="col col-3")
-        strong Audience
+        strong Spiralling Expenses
       div(class="col col-2")
-        strong= (team.stats ? team.stats.nbsupporters/1000 :0) + "k"
+        strong=  (team.stats ? team.stats.spirallingexpenses/1000 :0) + "k"
     div(class="row" style="margin-left:0px")
       div(class="col col-2")
         strong Cash
@@ -105,6 +105,10 @@ block content
         strong Assistant
       div(class="col col-1")
         strong= team.team.assistantcoaches 
+      div(class="col col-3")
+        strong Audience
+      div(class="col col-2")
+        strong= (team.stats ? team.stats.nbsupporters/1000 :0) + "k"
 
     table(class="table table-striped") 
       thead(class="headerText")

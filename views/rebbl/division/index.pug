@@ -18,8 +18,9 @@ block vars
   - let seasons = []
   - if (league !== "One Minute")  
     for div, x in divisions
-      - let season = div.substr(0,9)
-      - if(seasons.indexOf(season) === -1) seasons.push(season)  
+      - if(div !== null)
+        - let season = div.substr(0,9)
+        - if(seasons.indexOf(season) === -1) seasons.push(season)  
   - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 block navigation
