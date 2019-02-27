@@ -1,6 +1,7 @@
 'use strict';
 const league = require('../../lib/LeagueService.js')
   , cripple = require('../../lib/crippleService.js')
+  , maintenanceService = require('../../lib/MaintenanceService.js')
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , express = require('express')
@@ -25,28 +26,20 @@ router.get('/update/cripple/calculate', async function(req, res){
 
 router.get('/updateleague/init', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
-    league.initRebblData(req.query.league, req.query.comp);
+    maintenanceService.initRebblData(req.query.league, req.query.comp);
   }
   res.redirect('/');
 });
 
 router.get('/updateleague/admininit', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
-  if (req.query.league) league.initRebblData(req.query.league, req.query.comp);
+  if (req.query.league) league.maintenanceService(req.query.league, req.query.comp);
   res.redirect('/');
 });
-
-router.get('/updateleague/fix', async function(req, res){
-  if (req.query.verify === process.env['verifyToken']){
-    league.LinemanleagueFix();
-  }
-  res.redirect('/');
-});
-
 
 
 router.get('/updateleague', async function(req, res){
   if (req.query.verify === process.env['verifyToken']){
-    league.getRebblData(req.query.league);
+    maintenanceService.getRebblData(req.query.league);
     reddit.check();
   }
   res.redirect('/');

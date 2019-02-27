@@ -1,6 +1,6 @@
 "use strict";
 const 
-  leageuService = require("../lib/LeagueService.js")
+    dataService = require("../lib/DataService.js").rebbl
   , datingService = require("../lib/DatingService.js")
   , util = require("../lib/util.js")
   , express = require("express")
@@ -23,21 +23,13 @@ router.get("/", util.checkCache, async function(req, res, next){
   let c = new RegExp(`^(^Season 10)|(^REL Rampup)|(^GMAN Rampup)`, "i");
   let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
 
-  await new Promise(resolve =>
-    leageuService.originalFind({ "league":{"$regex":l}, "competition":{"$regex":c} }).sort({ match_uuid: -1 }).limit(20).exec(function(err,docs){
-      data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);;
-      resolve();
-    })
-  );
+  let docs = await dataService.getSchedulesChain({ "league":{"$regex":l}, "competition":{"$regex":c} }).sort({ match_uuid: -1 }).limit(20).toArray();
+
+  data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);;
 
   let s  = new RegExp("(The REBBL Rabble Mixer)|(XScessively Elfly League)|(Rebbl One Minute League)|(REBBLL )","i")
-  await new Promise(resolve =>
-    leageuService.originalFind({ "league":{"$regex":s} }).sort({ match_uuid: -1 }).limit(20).exec(function(err,docs){
-      data.sides = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
-      resolve();
-    })
-  );
-
+  docs = await dataService.getSchedulesChain({ "league":{"$regex":s} }).sort({ match_uuid: -1 }).limit(20).toArray();
+  data.sides = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
    
   let d = await datingService.all();
   const now = new Date(Date.now());
@@ -45,7 +37,7 @@ router.get("/", util.checkCache, async function(req, res, next){
 
   
 
-  data.upcoming = await leageuService.searchLeagues({"contest_id": {$in:[...new Set(d.map(x => x.id))]}})
+  data.upcoming = await dataService.getSchedules({"contest_id": {$in:[...new Set(d.map(x => x.id))]}})
 
   await Promise.all(data.upcoming.map(async function(match) {
     let date = d.find(s => s.id === match.contest_id);
