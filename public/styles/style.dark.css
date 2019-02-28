@@ -841,10 +841,6 @@ a:focus,a:hover {
   float:left;
 }*/
 
-.row.u-bottomPadding--small{
-  background-image: url(/images/rebbl-wcqheader.png);
-  height: 250px;
-}
 
 .u-bottomPadding--small-rebbl{
   height: 8em;

@@ -24,13 +24,19 @@ const express = require('express')
   , session = require('express-session')
   , methodOverride = require('method-override')
   , bodyParser = require("body-parser")
-  , NedbStore = require('nedb-session-store')(session)
+  , MongoDBStore = require('connect-mongodb-session')(session)
   , RedditStrategy = require('passport-reddit').Strategy;
 
 const REDDIT_CONSUMER_KEY = process.env['redditKey'];
 const REDDIT_CONSUMER_SECRET = process.env['redditSecret'];
 
 const app = module.exports = express();
+
+const dataService = require("./lib/DataService.js")
+    ,  configurationService = require("./lib/ConfigurationService.js");
+
+dataService.rebbl.init("rebbl").then(x=> configurationService.init(x)).then(x=>x);
+dataService.cripple.init("cripple").then(x=>x);
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -75,7 +81,14 @@ passport.use(new RedditStrategy({
 app.set('view engine', 'pug');
 
 // set views for error and 404 pages
-app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views', "league"), path.join(__dirname, 'views', "wcq")]);
+app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views', "league"), path.join(__dirname, 'views')]);
+
+
+const store = new MongoDBStore({
+  uri: dataService.rebbl.getURI(),
+  databaseName: "rebbl",
+  collection: 'sessions'
+});
 
 
 let sessionObject = {
@@ -83,7 +96,7 @@ let sessionObject = {
   , cookie: {maxAge:180*24*60*60*1000} // Let's start with half a year
   , resave: false
   , saveUninitialized: false
-  , store: new NedbStore({ filename: 'datastore/sessions.db', autoCompactInterval:60000 })
+  , store: store 
 };
 
 if (process.env.NODE_ENV === 'production'){
@@ -139,10 +152,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 
-let dataService = require("./lib/DataService.js");
 
-dataService.rebbl.init("rebbl").then(x=>x);
-dataService.cripple.init("cripple").then(x=>x);
 
 io.on('connection', async function (socket) {
 

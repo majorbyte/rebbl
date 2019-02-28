@@ -108,8 +108,16 @@ li.highlight {background-color: #e67b00; color:#fff}
 .spoiler:not(:hover) .score {opacity: 0;transition: opacity 0.5s;}
 
 .played:after { content:url('https://cdn2.rebbl.net/images/played.png'); position:relative; z-index:1;top:-60px;} 
-.split-one .played:after {text-align: right;float: right;top:-116px}
-.split-two .played:after { text-align: left;float: left;left:-5px;}
+.split-one .round-one .played:after {text-align: right;float: right;top:-116px}
+.split-one .round-two .played:after {text-align: right;float: right;top:-175px}
+.split-one .round-three .played:after {text-align: right;float: right;top:-240px}
+.split-one .round-four .played:after {text-align: right;float: right;top:-240px}
+
+.split-two .round-one .played:after { text-align: left;float: left;left:-5px;}
+.split-two .round-two .played:after { text-align: left;float: left;left:-5px;top:-120px}
+.split-two .round-three .played:after {text-align: left;float: left;left:-5px;top:-240px}
+.split-two .round-four .played:after {text-align: left;float: left;left:-5px;top:-240px}
+
 .spoiler:hover.played:after{opacity: 0;transition: color 0.5s, opacity 0.5s}
 
 .round-one .gameinfo{height:60px}
