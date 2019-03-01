@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "applicationinsights": "^1.0.2",
+    "async": "^2.6.2",
     "axios": "^0.18.0",
     "azure-storage": "^2.10.2",
     "connect-mongodb-session": "^2.1.1",
