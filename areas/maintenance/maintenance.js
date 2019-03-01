@@ -38,18 +38,18 @@ router.get('/updateleague/admininit', util.ensureAuthenticated, util.hasRole("ad
 
 
 router.get('/updateleague', async function(req, res){
-  if (req.query.verify === process.env['verifyToken']){
+  //if (req.query.verify === process.env['verifyToken']){
     maintenanceService.getRebblData(req.query.league);
     reddit.check();
-  }
+  //}
   res.redirect('/');
 });
 
 router.get('/updateteams', async function(req, res){
-  if (req.query.verify === process.env['verifyToken']){
+  //if (req.query.verify === process.env['verifyToken']){
     if (req.query.id) team.updateTeams(parseInt(req.query.id));
     else team.updateTeams(null,req.query.justteams);
-  }
+  //}
   res.redirect('/');
 });
 /*
