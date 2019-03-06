@@ -16,7 +16,10 @@ router.get('/', util.checkCache, async function(req, res){
   } else if (league === "playins - s10"){
     league = new RegExp(`^ReBBL Playoffs`,'i');
     comp = "Play-Ins Qualifier";
-  } else if (league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer" ){
+  } else if(league.toLowerCase() == "greenhorn cup") {
+    league = new RegExp(`^Greenhorn Cup`,'i');
+    comp ="Greenhorn Cup";
+  } else if (league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer" ){
     league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
   }  
   else {
