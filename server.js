@@ -128,6 +128,8 @@ app.use('/robots.txt', express.static(path.join(__dirname, 'robots.txt')));
 // parse request bodies (req.body)
 app.use(express.urlencoded({ extended: true }));
 
+app.use(util.checkBadBots);
+
 app.use(util.checkAuthenticated);
 
 app.use('/', require('./areas/routes.js'));
