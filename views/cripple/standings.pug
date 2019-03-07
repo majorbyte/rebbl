@@ -193,10 +193,6 @@ block navigation
 
 block content
   div(class=`container `)
-    div(class="row col-12")
-      h2
-        i(style="padding-top:180px;margin-top:-180px")
-        span REBBL Cripple Ladder
     div(style="background:url(https://cdn2.rebbl.net/images/counterbackground.png) no-repeat;background-size:cover")
       div(class="row col-12 justify-content-center")
         div(style="margin-left: auto;margin-right:auto")
@@ -212,6 +208,12 @@ block content
           div(id="agility" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")
           img(src="https://cdn2.rebbl.net//images/skills/NigglingInjury2.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px  ")
           div(id="niggling" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")        
+
+    // ko foreach: ["REBBL Cripple Ladder","REBBL Cripple Ladder - Season 1a"]
+    div(class="row col-12")
+      h2
+        i(style="padding-top:180px;margin-top:-180px")
+        span(data-bind="text: $data")
     div(class="season-table")  
       div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
         div(class="row col-6" style="font-size:1.25em")
@@ -224,7 +226,7 @@ block content
           div(class="col-3") W  
           div(class="col-3") D  
           div(class="col-3") L
-      // ko foreach: model.scores
+      // ko foreach: model.scores().filter(x => x.competition === $data)
       div(class="row col-12 season-table-row")
         div(class="row col-6")
           div(class="col-1" data-bind="text: ($index() + 1) ")
@@ -252,3 +254,4 @@ block content
           span(class="Standings-dividerText--correction")
       // /ko
       // /ko
+    // /ko
