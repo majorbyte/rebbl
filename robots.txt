@@ -3,3 +3,7 @@ Disallow: /
 
 User-agent: BLEXBot
 Disallow: /
+
+User-agent: BLEXBot
+
+Disallow: /
