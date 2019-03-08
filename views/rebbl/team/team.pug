@@ -1,114 +1,90 @@
 extends ..\..\no-cache-sub-layout.pug
 include ..\..\nav-link
 
-block vars
-  - let stadiumDescription = {"astrogranit":"+1 on Armour rolls when a player falls while going for it.", "bazar":"During the Inducements phase, both teams receive a Wizard at no cost", "elfturf":"-1 on Armour rolls when a player falls while going for it.", "foodarea":"The 'Throw a Rock' and 'Get the Ref' kick-off events are cancelled.","nuffle":"During the Inducements phase, Star Players cost 50k less","refereearea":"During the Inducements phase, both teams receive a Bribe at no cost.","refreshmentarea":"+1 on Injury rolls when a player is pushed off the pitch (crowdsurf)", "roof":"The weather always starts as 'Nice' and the 'Changing Weather' kick-off event is cancelled.","securityarea":"The 'Riot' and 'Pitch Invasion' Kick-off events are cancelled.","viparea":"Double all gains and losses of Fan Factor." }
-  - let sponsor = team.team.cards.find(function(a) { return a.type === "Sponsor" }) 
-  - var options = {active: "team", title: " "}
-
-block scripts
-  script.
-
-    $(document).ready(function(){
-
-      $(".td-prevent").click(function (event) {
-          if(event.target.nodeName !== "IMG") event.stopPropagation();
-      });
-
-    });
-
-block additionalMainNavigation
+block additionalMainNavigation  
   +nav-link("TEAM","#")
 
 block navigation
   nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
     button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
       span(class="navbar-toggler-icon")
-    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= team.team.name.toUpperCase()
-    a(class="navbar-brand d-xs-none " href="#")= team.coach.name
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#" data-bind="text: name.toUpperCase()")
+    a(class="navbar-brand d-xs-none " href="#" data-bind="text: coachname")
     div(class="collapse navbar-collapse" id="rebblSubNav")
       ul(class="navbar-nav mr-auto")
-        li(class="nav-item " + (activeSubMenu == "details" ? " active" : ""))
-          a(href=`/rebbl/coach/${team.coach.id}/details` class="nav-link " + (activeSubMenu == "details" ? " highlight" : "")) Details
-        li(class="nav-item " + (activeSubMenu == "teams" ? " active" : ""))
-          a(href=`/rebbl/coach/${team.coach.id}/teams` class="nav-link " + (activeSubMenu == "teams" ? " highlight" : "")) Teams
-        li(class="nav-item " + (activeSubMenu == "matches" ? " active" : ""))
-          a(href=`/rebbl/coach/${team.coach.id}/matches` class="nav-link " + (activeSubMenu == "matches" ? " highlight" : "")) Matches
-        -if (sponser)
-          li(class="nav-item ")
-            img(src=`https://cdn2.rebbl.net/images/sponsors/${sponsor.name.toLowerCase()}.png` style="height:3em;" title="sponsored by:")          
+        li(class="nav-item active")
+          a(data-bind="attr:{href:`/rebbl/coach/${idcoach}/details`}" class="nav-link highlight") Details
 
 block content
   div(class="container")
+    h1(data-bind="text: teamName(), style:{color: teamColor()}")
+    div(class="float-right")
+      // ko if: apothecary > 0
+      img(src=`https://cdn2.rebbl.net/images/apothecary.png` class="align-top" )
+      // /ko
 
-    - if (team.team.name.indexOf('[colour=') > -1)
-      h1(style=("color:#" + team.team.name.substr(11,6)) )= team.team.name.substr(19, team.team.name.length-17)
-    - else
-      h1= team.team.name
-      - let building = team.team.cards.find(function(a) { return a.type === "Building" }) 
-      div(class="float-right")
-        -if (team.team.apothecary > 0)
-          img(src=`https://cdn2.rebbl.net/images/apothecary.png` class="align-top" )
-        - let necro = team.team.cards.find(function(a) { return a.name  === "Necromancer" })
-        - if( necro)
-          img(src=`https://cdn2.rebbl.net/images/necromancer.png` class="align-top")
-        - if (building)
-          img(src=`https://cdn2.rebbl.net/images/stadium/${building.name.toLowerCase()}.png` title=`${stadiumDescription[building.name.toLowerCase()]}` class="align-top")
+      // ko if: isNecro()
+      img(src=`https://cdn2.rebbl.net/images/necromancer.png` class="align-top")
+      // /ko
+
+      // ko if: stadium()
+      img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/stadium/${stadium().name.toLowerCase()}.png`,title:`${stadiumDescription()}`}" class="align-top")
+      // /ko
     h3(style="margin-top: 0px;")
-      i= team.team.leitmotiv
+      i(data-bind="text: leitmotiv") 
     div(class="clearfix")
     div(class="row" style="margin-left:0px")
       div(class="col col-2")
         strong Current TV
       div(class="col col-2")
-        strong= team.team.value  
+        strong(data-bind="text:value")
       div(class="col col-2")
         strong Fan Factor
       div(class="col col-1")
-        strong= team.team.popularity
+        strong(data-bind="text:popularity")
       div(class="col col-3")
         strong Stadium name
       div(class="col col-2")
-        strong= team.team.stadiumname
+        strong(data-bind="text:stadiumname")
     div(class="row" style="margin-left:0px")
       div(class="col col-2")
         strong Next match TV
       div(class="col col-2")
-        strong= team.team.nextMatchTV  
+        strong(data-bind="text:nextMatchTV") 
       div(class="col col-2")
         strong Rerolls
       div(class="col col-1")
-        strong= team.team.rerolls  
+        strong(data-bind="text:rerolls") 
       div(class="col col-3")
         strong Total cash earned
       div(class="col col-2")
-        strong= (team.stats ? team.stats.cashearned/1000 :0) + "k"
+        strong(data-bind="text:stats.cashearned/1000 + 'k'")
     div(class="row" style="margin-left:0px")
       div(class="col col-2")
         strong Actual TV
       div(class="col col-2")
-        strong= team.team.actualTV  
+        strong(data-bind="text:actualTV")
       div(class="col col-2")
         strong Cheerleader
       div(class="col col-1")
-        strong= team.team.cheerleaders
+        strong(data-bind="text:cheerleaders")
       div(class="col col-3")
         strong Spiralling Expenses
       div(class="col col-2")
-        strong=  (team.stats ? team.stats.spirallingexpenses/1000 :0) + "k"
+        strong(data-bind="text:stats.spirallingexpenses/1000  + 'k'")
     div(class="row" style="margin-left:0px")
       div(class="col col-2")
         strong Cash
       div(class="col col-2")
-        strong= team.team.cash/1000 + "k"  
+        strong(data-bind="text:cash/1000 + 'k'")  
       div(class="col col-2")
         strong Assistant
       div(class="col col-1")
-        strong= team.team.assistantcoaches 
+        strong(data-bind="text:assistantcoaches")
       div(class="col col-3")
         strong Audience
       div(class="col col-2")
-        strong= (team.stats ? team.stats.nbsupporters/1000 :0) + "k"
+        strong(data-bind="text:stats.nbsupporters/1000 + 'k'")
 
     table(class="table table-striped") 
       thead(class="headerText")
@@ -129,109 +105,651 @@ block content
       tbody
         tr
           td inflicted
-          td= team.stats ? team.stats.inflictedtackles : 0
-          td= team.stats ? team.stats.inflictedinjuries : 0
-          td= team.stats ? team.stats.inflictedstuns : 0
-          td= team.stats ? team.stats.inflictedko : 0
-          td= team.stats ? team.stats.inflictedcasualties : 0
-          td= team.stats ? team.stats.inflicteddead : 0
-          td= team.stats ? team.stats.inflictedmetersrunning : 0
-          td= team.stats ? team.stats.inflictedmeterspassing : 0
-          td= team.stats ? team.stats.inflictedpasses : 0
-          td= team.stats ? team.stats.inflictedinterceptions : 0
-          td= team.stats ? team.stats.inflictedtouchdowns : 0
-          td= team.stats ? team.stats.inflictedpushouts : 0
+          td(data-bind="text:stats.inflictedtackles")
+          td(data-bind="text:stats.inflictedinjuries")
+          td(data-bind="text:stats.inflictedstuns")
+          td(data-bind="text:stats.inflictedko")
+          td(data-bind="text:stats.inflictedcasualties")
+          td(data-bind="text:stats.inflicteddead")
+          td(data-bind="text:stats.inflictedmetersrunning")
+          td(data-bind="text:stats.inflictedmeterspassing")
+          td(data-bind="text:stats.inflictedpasses")
+          td(data-bind="text:stats.inflictedinterceptions")
+          td(data-bind="text:stats.inflictedtouchdowns")
+          td(data-bind="text:stats.inflictedpushouts")
         tr  
           td sustained
-          td= team.stats ? team.stats.sustainedtackles:0
-          td= team.stats ? team.stats.sustainedinjuries:0
-          td= team.stats ? team.stats.sustainedstuns:0
-          td= team.stats ? team.stats.sustainedko:0
-          td= team.stats ? team.stats.sustainedcasualties:0
-          td= team.stats ? team.stats.sustaineddead:0
-          td= team.stats ? team.stats.sustainedmetersrunning : 0
-          td= team.stats ? team.stats.sustainedmeterspassing : 0
-          td= team.stats ? team.stats.sustainedpasses : 0
-          td= team.stats ? team.stats.sustainedinterceptions:0
-          td= team.stats ? team.stats.sustainedtouchdowns:0
-          td= team.stats ? team.stats.sustainedpushouts:0
+          td(data-bind="text:stats.sustainedtackles")
+          td(data-bind="text:stats.sustainedinjuries")
+          td(data-bind="text:stats.sustainedstuns")
+          td(data-bind="text:stats.sustainedko")
+          td(data-bind="text:stats.sustainedcasualties")
+          td(data-bind="text:stats.sustaineddead")
+          td(data-bind="text:stats.sustainedmetersrunning")
+          td(data-bind="text:stats.sustainedmeterspassing")
+          td(data-bind="text:stats.sustainedpasses")
+          td(data-bind="text:stats.sustainedinterceptions")
+          td(data-bind="text:stats.sustainedtouchdowns")
+          td(data-bind="text:stats.sustainedpushouts")
 
     br
     nav
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
-        a(class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Current
-        a(class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false") Previous
-        a(class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false") Star Players &amp; Loners
+        a(class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" data-bind="click:selectCurrent") Current &nbsp;
+          //ko if: loadingCurrent
+          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          // /ko
+        a(class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-profile" aria-selected="false" data-bind="click:selectPrevious") Previous &nbsp;
+          //ko if: loadingPrevious
+          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          // /ko
+        a(class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-contact" aria-selected="false" data-bind="click:selectJourneymen") Star Players &amp; Loners &nbsp;
+          //ko if: loadingJourneymen
+          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          // /ko
     div(class="tab-content" id="tabContent")
       div(class="tab-pane fade show active col col-12" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
-        table(class="table table-striped")
-          thead(class="headerText")
-            tr
-              th(scope="col") #
-              th(scope="col") name
-              th(scope="col") position
-              th(scope="col") MA
-              th(scope="col") ST
-              th(scope="col") AG
-              th(scope="col") AV
-              th(scope="col") GP
-              th(scope="col") MVP
-              th(scope="col") Skills
-              th(scope="col") CAS
-              th(scope="col") SPP
-              th(scope="col") Value
-          tbody
-            each player in roster.filter(function(a){return a.active})
-              include player.pug
+        // ko template: { name: 'playerList' }
+        // /ko
+     
 
-      div(class="tab-pane fade col col-12" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab")
-        table(class="table table-striped")
-          thead
-            tr
-              th(scope="col") #
-              th(scope="col") name
-              th(scope="col") position
-              th(scope="col") MA
-              th(scope="col") ST
-              th(scope="col") AG
-              th(scope="col") AV
-              th(scope="col") GP
-              th(scope="col") MVP
-              th(scope="col") Skills
-              th(scope="col") CAS
-              th(scope="col") SPP
-          tbody
-            each player in roster.filter(function(a){return !a.active && a.id})
-              include player.pug
 
-      div(class="tab-pane fade col col-12" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab")
-        table(class="table table-striped")
-          thead
-            tr
-              th(scope="col") #
-              th(scope="col") name
-              th(scope="col") position
-              th(scope="col") MA
-              th(scope="col") ST
-              th(scope="col") AG
-              th(scope="col") AV
-              th(scope="col") GP
-              th(scope="col") MVP
-              th(scope="col") Skills
-              th(scope="col") CAS
-              th(scope="col") SPP
-          tbody
-            each player in roster.filter(function(a){return !a.active && !a.id})
-              include player.pug          
 
-  each skill in skills
-    div(class="modal" tabindex="-1" role="dialog" id=`${skill.id}`)
-      div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
-        div(class="modal-content")
-          div(class="modal-header")
-            h5(class="modal-title")= skill.name
-          div(class="modal-body")
-            img(src="https://cdn2.rebbl.net/images/skills/" + skill.name.replace(/[ \-']/g,'') + ".png" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
-            p= skill.description
-          div(class="modal-footer")
-            button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+  script(type="text/html" id="playerList")
+    table(class="table table-striped")
+      thead(class="headerText")
+        tr
+          th(scope="col") #
+          th(scope="col") name
+          th(scope="col") position
+          th(scope="col") MA
+          th(scope="col") ST
+          th(scope="col") AG
+          th(scope="col") AV
+          th(scope="col") GP
+          th(scope="col") MVP
+          th(scope="col") Skills
+          th(scope="col") CAS
+          th(scope="col") SPP
+          th(scope="col") Value
+      tbody
+        // ko template: { name: 'playerTemplate', foreach: playerList }
+        // /ko
+
+
+  script(type="text/html" id="playerTemplate")
+    tr(data-bind="attr:{class: cssClass()}") 
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:number")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root)")
+        div
+          // ko if: number > 0
+          // ko if: skillUp()
+          img(src=`https://cdn2.rebbl.net/images/level.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+          // /ko
+          // ko ifnot: skillUp()
+          img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${level}.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+          // /ko
+          // /ko
+          // ko if: number === 0 
+          img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/starplayer.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+          // /ko
+          div(class="match-stats-TeamLabel-name" data-bind="text: playerName(), style:{color: playerColor()}")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ma,attr:{class:maColor}")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.st,attr:{class:stColor}")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ag,attr:{class:agColor}")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.av,attr:{class:avColor}")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:matchplayed")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:mvp")
+      td(class="td-prevent")
+        // ko foreach: skills
+        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
+        // /ko
+      td(data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
+        // ko foreach: casualties_state
+        //ko if: $data !== "BadlyHurt"
+        img(data-bind="attr:{src:$parent.getCASImage($data),title:$data.replace(/([A-Z])/g, ' $1').trim() }"  alt="" style="width:32px;height:32px;" )
+        // /ko
+        // /ko
+        // ko if: ((casualties_sustained && casualties_sustained[0] === "Dead") &&( casualties_state && casualties_state.indexOf("Dead") === -1) )    
+        img(src="https://cdn2.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
+        // /ko
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
+      td(data-bind="text:value")
+
+
+  div(class="modal" tabindex="-1" role="dialog" id="skill-dialog")
+    div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+      div(class="modal-content")
+        div(class="modal-header")
+          h5(class="modal-title" data-bind="text: activeSkill.name")
+        div(class="modal-body")
+          img( data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
+          p(data-bind="text:activeSkill.description")
+        div(class="modal-footer")
+          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+
+  div(class="modal" tabindex="-1" role="dialog" id="player-dialog")
+    // ko if: selectedPlayer !== null
+    //ko with:selectedPlayer
+    div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+      div(class="modal-content")
+        div(class="modal-header")
+          h5(class="modal-title" data-bind="text: name")
+        div(class="modal-body")
+         table(class="table-striped") 
+            thead(class="headerText")
+              tr 
+                th
+                th inflicted
+                th sustained
+            tbody
+              tr
+                td tackles
+                td(data-bind="text:stats.inflictedtackles")
+                td(data-bind="text:stats.sustainedtackles")
+              tr
+                td injuries
+                td(data-bind="text:stats.inflictedinjuries")
+                td(data-bind="text:stats.sustainedinjuries")
+              tr
+                td stuns
+                td(data-bind="text:stats.inflictedstuns")
+                td(data-bind="text:stats.sustainedstuns")
+              tr
+                td ko
+                td(data-bind="text:stats.inflictedko")
+                td(data-bind="text:stats.sustainedko")
+              tr
+                td CAS
+                td(data-bind="text:stats.inflictedcasualties")
+                td(data-bind="text:stats.sustainedcasualties")
+              tr
+                td dead
+                td(data-bind="text:stats.inflicteddead")
+                td(data-bind="text:stats.sustaineddead")
+              tr
+                td running (m)
+                td(data-bind="text:stats.inflictedmetersrunning")
+                td -
+              tr
+                td passing (m)
+                td(data-bind="text:stats.inflictedmeterspassing")
+                td -
+              tr
+                td passes
+                td(data-bind="text:stats.inflictedpasses")
+                td -
+              tr
+                td catch
+                td(data-bind="text:stats.inflictedcatches")
+                td -
+              tr
+                td interc.
+                td(data-bind="text:stats.inflictedinterceptions")
+                td(data-bind="text:stats.sustainedinterceptions")
+              tr
+                td touchdowns
+                td(data-bind="text:stats.inflictedtouchdowns")
+                td -
+              tr
+                td surfs
+                td(data-bind="text:stats.inflictedpushouts")      
+                td -
+        div(class="modal-footer")
+          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+    // /ko
+    // /ko
+
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+
+    class TeamModel{
+      constructor(data){
+        this.map(data);
+        ko.track(this);
+      }
+      map(data){
+        if(data){
+          this.actualTV = data.actualTV || 0;
+          this.apothecary = data.apothecary || 0;
+          this.assistantcoaches = data.assistantcoaches || 0;
+          this.balms = data.balms || 0;
+          this.cards = data.cards || [];
+          this.cash = data.cash || 0;
+          this.cheerleaders = data.cheerleaders || 0;
+          this.coachname = data.coachname || '';
+          this.created = data.created || '';
+          this.datelastmatch = data.datelastmatch || '';
+          this.id = data.id || 0;
+          this.idcoach = data.idcoach || 0;
+          this.idraces = data.idraces || 0;
+          this.leitmotiv = data.leitmotiv || '';
+          this.logo = data.logo || '';
+          this.name = data.name || '';
+          this.nbplayers = data.nbplayers || 0;
+          this.nextMatchTV = data.nextMatchTV || 0;
+          this.popularity = data.popularity || 0;
+          this.rerolls = data.rerolls || 0;
+          this.stadiumlevel = data.stadiumlevel || 0;
+          this.stadiumname = data.stadiumname || '';
+          this.stadiumtype = data.stadiumtype || '';
+          this.teamcolor = data.teamcolor || '';
+          this.value = data.value || 0;
+          this.currentPlayers =[];
+          this.pastPlayers =[];
+          this.journeymen =[];
+
+          this.roster = null;
+          this.retiredPlayers = null;
+          this.journeymen = null;
+
+          this.playerList = this.roster;
+          this.playertypes=null;
+          this.skills = null;
+          this.starplayers = null;
+          this.activeSkill={name:'Block',description:''};
+
+          this.selectedPlayer = null;
+
+          this.loadingCurrent = false;
+          this.loadingPrevious = false;
+          this.loadingJourneymen= false;
+
+          this.stats = new StatsModel(data.stats || {});
+        };
+      }
+
+      teamColor(){
+        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? "#"+ this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1]  : "inherit";
+      }
+
+      teamName(){
+        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? this.name.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'') : this.name;
+      }
+
+      isNecro(){
+        return this.cards.find(function(a) { return a.name  === "Necromancer" }) ? true:false;
+      }
+
+      stadium(){
+        return this.cards.find(function(a) { return a.type === "Building" }) ;
+      }
+
+      stadiumDescription(){
+        let stadiumDescription = {"astrogranit":"+1 on Armour rolls when a player falls while going for it.", "bazar":"During the Inducements phase, both teams receive a Wizard at no cost", "elfturf":"-1 on Armour rolls when a player falls while going for it.", "foodarea":"The 'Throw a Rock' and 'Get the Ref' kick-off events are cancelled.","nuffle":"During the Inducements phase, Star Players cost 50k less","refereearea":"During the Inducements phase, both teams receive a Bribe at no cost.","refreshmentarea":"+1 on Injury rolls when a player is pushed off the pitch (crowdsurf)", "roof":"The weather always starts as 'Nice' and the 'Changing Weather' kick-off event is cancelled.","securityarea":"The 'Riot' and 'Pitch Invasion' Kick-off events are cancelled.","viparea":"Double all gains and losses of Fan Factor." }
+        return stadiumDescription[this.stadium().name.toLowerCase()];
+      }
+
+      selectSkill(self,e){
+        self.activeSkill = self.skills.find(skill => skill.name.toLowerCase() === e.replace(/([A-Z])/g, ' $1').trim().toLowerCase());
+      };
+      selectPlayer(self,e){
+        self.selectedPlayer = e;
+      };
+
+      selectCurrent(){
+        this.playerList = this.roster
+      }
+      selectPrevious(){
+        if(this.retiredPlayers === null){
+          const cb = (data) => {
+            data = data || [];
+            model.retiredPlayers = data
+              .sort(function(a,b){
+                if (a.number > b.number) return 1;
+                if (a.number < b.number) return -1;
+                return a.id > b.id ? 1 : -1})
+              .map(x => new PlayerModel(x, model.playertypes.find(t => t.type === x.type) ));
+            model.playerList = this.retiredPlayers
+            model.loadingPrevious = false;
+          }
+          this.loadingPrevious = true;
+          _loadPlayers("/retiredplayers", cb)
+        } else {
+          this.playerList = this.retiredPlayers
+        }
+      } 
+      selectJourneymen(){
+        if(this.journeymen === null){
+          const cb = (data) => {
+            data = data || [];
+            model.journeymen = data
+              .sort(function(a,b){
+                if (a.number > b.number) return 1;
+                if (a.number < b.number) return -1;
+                return a.id > b.id ? 1 : -1})
+              .map(x => new PlayerModel(x, x.number == 0 ? model.starplayers.find(s => s.type === x.type)  :   model.playertypes.find(t => t.type === x.type) ));
+            model.playerList = this.journeymen
+            model.loadingJourneymen = false;
+          }
+          this.loadingJourneymen = true;
+          _loadPlayers("/hiredplayers", cb)
+        } else {
+          this.playerList = this.journeymen
+        }        
+      }
+
+    }
+
+    class StatsModel{
+      constructor(data){
+        this.map(data);
+        ko.track(this);
+      }
+
+      map(data) {
+        if(data){
+          this.cashearned = data.cashearned || 0;
+          this.inflictedcasualties = data.inflictedcasualties || 0;
+          this.inflictedcatches = data.inflictedcatches || 0;
+          this.inflicteddead = data.inflicteddead || 0;
+          this.inflictedexpulsions = data.inflictedexpulsions || 0;
+          this.inflictedinjuries = data.inflictedinjuries || 0;
+          this.inflictedinterceptions = data.inflictedinterceptions || 0;
+          this.inflictedko = data.inflictedko || 0;
+          this.inflictedmeterspassing = data.inflictedmeterspassing || 0;
+          this.inflictedmetersrunning = data.inflictedmetersrunning || 0;
+          this.inflictedpasses = data.inflictedpasses || 0;
+          this.inflictedpushouts = data.inflictedpushouts || 0;
+          this.inflictedstuns = data.inflictedstuns || 0;
+          this.inflictedtackles = data.inflictedtackles || 0;
+          this.inflictedtouchdowns = data.inflictedtouchdowns || 0;
+          this.nbsupporters = data.nbsupporters || 0;
+          this.spirallingexpenses = data.spirallingexpenses || 0;
+          this.sustainedcasualties = data.sustainedcasualties || 0;
+          this.sustainedcatches = data.sustainedcatches || 0;
+          this.sustaineddead = data.sustaineddead || 0;
+          this.sustainedexpulsions = data.sustainedexpulsions || 0;
+          this.sustainedinjuries = data.sustainedinjuries || 0;
+          this.sustainedinterceptions = data.sustainedinterceptions || 0;
+          this.sustainedko = data.sustainedko || 0;
+          this.sustainedmeterspassing = data.sustainedmeterspassing || 0;
+          this.sustainedmetersrunning = data.sustainedmetersrunning || 0;
+          this.sustainedpasses = data.sustainedpasses || 0;
+          this.sustainedpushouts = data.sustainedpushouts || 0;
+          this.sustainedstuns = data.sustainedstuns || 0;
+          this.sustainedtackles = data.sustainedtackles || 0;
+          this.sustainedtouchdowns = data.sustainedtouchdowns || 0;
+         } 
+      }
+    }
+
+    class PlayerModel{
+      constructor(data, playerType){
+        this.map(data);
+        this.playerType = playerType;
+        ko.track(this);
+        
+        ko.defineProperty(this, 'maColor', function () {
+          if (this.attributes.ma > this.playerType.ma) return "green";
+          if (this.attributes.ma < this.playerType.ma) return "red";
+          return "" ;
+        });
+        ko.defineProperty(this, 'stColor', function () {
+          if (this.attributes.st > this.playerType.st) return "green";
+          if (this.attributes.st < this.playerType.st) return "red";
+          return "" ;
+        });
+        ko.defineProperty(this, 'agColor', function () {
+          if (this.attributes.ag > this.playerType.ag) return "green";
+          if (this.attributes.ag < this.playerType.ag) return "red";
+          return "" ;
+        });
+        ko.defineProperty(this, 'avColor', function () {
+          if (this.attributes.av > this.playerType.av) return "green";
+          if (this.attributes.av < this.playerType.av) return "red";
+          return "" ;
+        });
+      }
+
+      map(data, playerType){
+        this.active = data.active || false;
+        this.attributes = data.attributes || [];
+        this.casualties_state = data.casualties_state || [];
+        this.casualties_sustained = data.casualties_sustained || [];
+        this.id = data.id || 0;
+        this.level = data.level || 0;
+        this.matchplayed = data.matchplayed || 0;
+        this.mvp = data.mvp || 0;
+        this.name = data.number === 0 ? data.type.split('_')[1].replace(/([A-Z])/g, ' $1') : data.name;
+        this.number = data.number || 0;
+        this.skills = data.skills || [];
+        this.stats = data.stats || [];
+        this.suspended_next_match = data.suspended_next_match || false;
+        this.type = data.type || '';
+        this.value = data.value || 0;
+        this.xp = data.xp || 0;
+      }
+
+      cssClass(){
+        return  (this.active && this.casualties_sustained && 
+               (this.casualties_sustained.length === 1 && this.casualties_sustained[0] !== "BadlyHurt" ))
+          ? "stats player-out" 
+          : "stats";
+      }
+
+      skillUp(){
+        let levels = [0,0,6,16,31,51,76,176,"*"];
+        return this.xp >= levels[this.level+1];
+      }
+
+      actualLevel(){
+        let levels = [0,0,6,16,31,51,76,176,"*"];
+        return `${this.xp}/${levels[this.level+1]}`
+      }
+
+      getCASImage(e){
+        let bust = "";  
+        switch(e){
+          case "DamagedBack":
+          case "SmashedKnee":
+            bust="NigglingInjury2";
+            break;
+          case"BrokenNeck":
+            bust="AgilityBust";
+            break;
+          case "SmashedCollarBone":
+           bust="StrengthBust";
+            break;
+          case "SeriousConcussion":
+          case "FracturedSkull":
+            bust="ArmourBust";
+            break;
+          case "SmashedHip":
+          case "SmashedAnkle":
+            bust= "MovementBust";
+            break;
+          default:
+            bust= e;
+            break;
+        }
+
+        return `https://cdn2.rebbl.net/images/skills/${bust}.png`
+      }
+
+      playerColor(){
+        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? "#"+ this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1]  : "inherit";
+      }
+      playerName(){
+        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? this.name.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'') : this.name;
+      }
+
+      position(){
+        let pos = "";
+        if(this.number >0){
+          let playerType = this.type.split('_')
+          pos  = playerType.length === 3 ? playerType[2].replace(/([A-Z])/g, ' $1') : playerType[1].replace(/([A-Z])/g, ' $1') 
+        }
+        return pos;
+      }
+
+      playerId(){
+        return this.position() === "" ? this.name.replace(/ /g,'') : (this.id ? this.id : this.name.replace(/ /g,''))
+      }
+    }
+
+    class SkillModel{
+      constructor(data){
+        this.map(data);
+        ko.track(this);
+      }
+
+      map(data){
+        if(data){
+          this.id =data.id;
+          this.name = data.name;
+        }
+      }
+
+    }
+
+    function _loadPlayers(type, cb){
+      let xhr = new XMLHttpRequest();
+      let path = window.location.pathname.split('/');
+
+      xhr.open("GET", "/api/v2/team/" + path[path.length-1] + type  ,true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+        cb(xhr.response)
+      }
+
+      xhr.send();
+    }
+
+    function loadCurrentPlayers(){
+
+        const cb = function(data){
+          model.roster = data
+            .sort(function(a,b){
+              if (a.number > b.number) return 1;
+              if (a.number < b.number) return -1;
+              return a.id > b.id ? 1 : -1}
+            )
+            .map(x => new PlayerModel(x, model.playertypes.find(t => t.type === x.type) ));
+          model.playerList = model.roster;
+          model.loadingCurrent = false;
+        }
+        model.loadingCurrent = true;
+        _loadPlayers("/players", cb);
+    }
+
+    function loadTeam(){
+      let xhr = new XMLHttpRequest();
+      let path = window.location.pathname.split('/');
+
+      xhr.open("GET", "/api/v2/team/" + path[path.length-1]  ,true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+        model.map(xhr.response.team);
+        model.stats.map(xhr.response.stats);
+        loadPlayertypes(model.idraces);
+        loadCurrentPlayers();
+        loadSkills();
+        loadStarPlayers();
+      }
+
+      xhr.send();
+    }
+
+  
+    function loadSkills(){
+      const storage = window.localStorage;
+      let skills = null;
+  
+      if (storage)    
+        skills = localStorage.getItem('skills');
+
+      if(!skills){
+        let xhr = new XMLHttpRequest();
+        let path = window.location.pathname.split('/');
+
+        xhr.open("GET", "/api/v2/bloodbowl/skills"  ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {//Call a function when the state changes.
+          model.skills =xhr.response;
+          const storage = window.localStorage;
+      
+          if (storage)
+            storage.setItem('skills', JSON.stringify(xhr.response));    
+        }
+
+        xhr.send();
+      } else {
+        model.skills = JSON.parse(skills);
+      }
+    }
+
+    function loadStarPlayers(){
+      const storage = window.localStorage;
+      let starplayers = null;
+  
+      if (storage)    
+        starplayers = localStorage.getItem('starplayers');
+
+      if(!starplayers){
+        let xhr = new XMLHttpRequest();
+        let path = window.location.pathname.split('/');
+
+        xhr.open("GET", "/api/v2/bloodbowl/starplayers"  ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {//Call a function when the state changes.
+          model.starplayers =xhr.response;
+          const storage = window.localStorage;
+      
+          if (storage)
+            storage.setItem('starplayers', JSON.stringify(xhr.response));    
+        }
+
+        xhr.send();
+      } else {
+        model.starplayers = JSON.parse(starplayers);
+      }
+    }
+
+
+    function loadPlayertypes(id){
+      let xhr = new XMLHttpRequest();
+      let path = window.location.pathname.split('/');
+
+      xhr.open("GET", "/api/v2/bloodbowl/playertypes/"+id  ,true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+        model.playertypes =xhr.response;
+      }
+
+      xhr.send();
+    }
+
+    let model = new TeamModel({});
+    ko.applyBindings(model);
+    $(document).ready(function(){
+
+      loadTeam();
+      
+      $(".td-prevent").click(function (event) {
+          if(event.target.nodeName !== "IMG") event.stopPropagation();
+      });
+    });
+
+
