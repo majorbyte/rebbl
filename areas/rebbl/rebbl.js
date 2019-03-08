@@ -18,6 +18,8 @@ router.use('/upcoming', require(`./upcoming.js`));
 
 router.use('/team', require(`./team.js`));
 
+router.use('/old_team', require(`./old_team.js`));
+
 router.use('/playoffs', require(`./playoffs.js`));
 
 router.use('/:league', require(`./league.js`));

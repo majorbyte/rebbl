@@ -57,17 +57,6 @@ block scripts
 
         showCount = Math.floor(windowWidth/332);
         var scrollDiff = showCount* 332;
-        console.log(showCount);
-      /*
-      if(windowWidth >= 0 && windowWidth <= 414){
-          showCount = 2;
-      }else if(windowWidth >= 414 &&  windowWidth <= 768){
-          showCount = 3;
-      }else if(windowWidth > 768 &&  windowWidth <= 1600){
-          showCount = 4;
-      } else{
-          showCount = 5;
-      }*/
         var videoWidth = 332 //((windowWidth - controlsWidth * 2) / showCount );
         var videoHeight = 253 //Math.round(videoWidth / (9/7));
         
@@ -128,8 +117,6 @@ block scripts
             let sliderCount = Math.ceil(videoCount / showCount);
 
             let currentSliderCount = Math.floor(Math.abs($(container).position().left) / frameWidth);
-            console.log(currentSliderCount);
-            console.log(sliderCount);
 
             $(container).animate({
                 left: delta
@@ -150,8 +137,6 @@ block scripts
             let sliderCount = Math.ceil(videoCount / showCount);
 
             let currentSliderCount = Math.abs($(container).position().left) / frameWidth;
-            console.log(currentSliderCount);
-
 
             $(container).animate({
                 left: + delta

@@ -539,7 +539,7 @@ a:focus,a:hover {
 }
 
 
-.TeamLabel--reverse .TeamLabel-info, {
+.TeamLabel--reverse .TeamLabel-info {
   text-align: right;
 }
 
@@ -1133,6 +1133,10 @@ label { display: block; }
 .playerStats{
   display:none;
 }
+
+.red{ color:#e03041}
+.green{ color:#26c55b}
+
 .col-12 table img {
   width: 32px;
   height: 32px;
@@ -1326,4 +1330,5 @@ body {
 
 .user-row:hover a {color: #e67b00;}
 .user-row:hover {border-left:3px solid #e67b00;}
+
 

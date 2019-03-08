@@ -1,0 +1,111 @@
+extends ..\..\no-cache-sub-layout.pug
+include ..\..\nav-link
+
+block vars
+  - let stadiumDescription = {"astrogranit":"+1 on Armour rolls when a player falls while going for it.", "bazar":"During the Inducements phase, both teams receive a Wizard at no cost", "elfturf":"-1 on Armour rolls when a player falls while going for it.", "foodarea":"The 'Throw a Rock' and 'Get the Ref' kick-off events are cancelled.","nuffle":"During the Inducements phase, Star Players cost 50k less","refereearea":"During the Inducements phase, both teams receive a Bribe at no cost.","refreshmentarea":"+1 on Injury rolls when a player is pushed off the pitch (crowdsurf)", "roof":"The weather always starts as 'Nice' and the 'Changing Weather' kick-off event is cancelled.","securityarea":"The 'Riot' and 'Pitch Invasion' Kick-off events are cancelled.","viparea":"Double all gains and losses of Fan Factor." }
+  - let sponsor = team.team.cards.find(function(a) { return a.type === "Sponsor" }) 
+  - var options = {active: "team", title: " "}
+
+block scripts
+  script.
+
+    $(document).ready(function(){
+
+      $(".td-prevent").click(function (event) {
+          if(event.target.nodeName !== "IMG") event.stopPropagation();
+      });
+
+    });
+
+block additionalMainNavigation
+  +nav-link("TEAM","#")
+
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= team.team.name.toUpperCase()
+    a(class="navbar-brand d-xs-none " href="#")= team.coach.name
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav mr-auto")
+        li(class="nav-item " + (activeSubMenu == "details" ? " active" : ""))
+          a(href=`/rebbl/coach/${team.coach.id}/details` class="nav-link " + (activeSubMenu == "details" ? " highlight" : "")) Details
+        li(class="nav-item " + (activeSubMenu == "teams" ? " active" : ""))
+          a(href=`/rebbl/coach/${team.coach.id}/teams` class="nav-link " + (activeSubMenu == "teams" ? " highlight" : "")) Teams
+        li(class="nav-item " + (activeSubMenu == "matches" ? " active" : ""))
+          a(href=`/rebbl/coach/${team.coach.id}/matches` class="nav-link " + (activeSubMenu == "matches" ? " highlight" : "")) Matches
+        -if (sponser)
+          li(class="nav-item ")
+            img(src=`https://cdn2.rebbl.net/images/sponsors/${sponsor.name.toLowerCase()}.png` style="height:3em;" title="sponsored by:")          
+
+block content
+  div(class="container")
+
+    - if (team.team.name.indexOf('[colour=') > -1)
+      h1(style=("color:#" + team.team.name.substr(11,6)) )= team.team.name.substr(19, team.team.name.length-17)
+    - else
+      h1= team.team.name
+      - let building = team.team.cards.find(function(a) { return a.type === "Building" }) 
+      div(class="float-right")
+        -if (team.team.apothecary > 0)
+          img(src=`https://cdn2.rebbl.net/images/apothecary.png` class="align-top" )
+        - let necro = team.team.cards.find(function(a) { return a.name  === "Necromancer" })
+        - if( necro)
+          img(src=`https://cdn2.rebbl.net/images/necromancer.png` class="align-top")
+        - if (building)
+          img(src=`https://cdn2.rebbl.net/images/stadium/${building.name.toLowerCase()}.png` title=`${stadiumDescription[building.name.toLowerCase()]}` class="align-top")
+    h3(style="margin-top: 0px;")
+      i= team.team.leitmotiv
+    div(class="clearfix")
+    div(class="row" style="margin-left:0px")
+      div(class="col col-2")
+        strong Current TV
+      div(class="col col-2")
+        strong= team.team.value  
+      div(class="col col-2")
+        strong Fan Factor
+      div(class="col col-1")
+        strong= team.team.popularity
+      div(class="col col-3")
+        strong Stadium name
+      div(class="col col-2")
+        strong= team.team.stadiumname
+    div(class="row" style="margin-left:0px")
+      div(class="col col-2")
+        strong Next match TV
+      div(class="col col-2")
+        strong= team.team.nextMatchTV  
+      div(class="col col-2")
+        strong Rerolls
+      div(class="col col-1")
+        strong= team.team.rerolls  
+      div(class="col col-3")
+        strong Total cash earned
+      div(class="col col-2")
+        strong= (team.stats ? team.stats.cashearned/1000 :0) + "k"
+    div(class="row" style="margin-left:0px")
+      div(class="col col-2")
+        strong Actual TV
+      div(class="col col-2")
+        strong= team.team.actualTV  
+      div(class="col col-2")
+        strong Cheerleader
+      div(class="col col-1")
+        strong= team.team.cheerleaders
+      div(class="col col-3")
+        strong Spiralling Expenses
+      div(class="col col-2")
+        strong=  (team.stats ? team.stats.spirallingexpenses/1000 :0) + "k"
+    div(class="row" style="margin-left:0px")
+      div(class="col col-2")
+        strong Cash
+      div(class="col col-2")
+        strong= team.team.cash/1000 + "k"  
+      div(class="col col-2")
+        strong Assistant
+      div(class="col col-1")
+        strong= team.team.assistantcoaches 
+      div(class="col col-3")
+        strong Audience
+      div(class="col col-2")
+        strong= (team.stats ? team.stats.nbsupporters/1000 :0) + "k"
