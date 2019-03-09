@@ -9,7 +9,7 @@ const dataService = require('../../../lib/DataService.js').rebbl
 router.get('/:teamId', util.cache(600), async function(req, res){
   try {
     let team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
-    team.team.coachname = team.coach.name;
+    team.team.coachname = team.coach ? team.coach.name : 'AI';
     delete team.roster;
     delete team.coach;
     res.status(200).send(team);
