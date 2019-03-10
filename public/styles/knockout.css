@@ -110,7 +110,7 @@ li.highlight {background-color: #e67b00; color:#fff}
 .played:after { content:url('https://cdn2.rebbl.net/images/played.png'); position:relative; z-index:1;top:-60px;} 
 .split-one .round-one .played:after {text-align: right;float: right;top:-116px}
 .split-one .round-two .played:after {text-align: right;float: right;top:-175px}
-.split-one .round-three .played:after {text-align: right;float: right;top:-240px}
+.split-one .round-three .played:after {text-align: right;float: right;top:-295pxpx}
 .split-one .round-four .played:after {text-align: right;float: right;top:-240px}
 
 .split-two .round-one .played:after { text-align: left;float: left;left:-5px;}
