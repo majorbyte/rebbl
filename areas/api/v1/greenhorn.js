@@ -7,9 +7,9 @@ const db = require('../../../lib/signupService.js')
 
 router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res,next){
 
-  const signups = await db.getSignUps({'greenHorn':true})
+  const signups = await db.getSignUps();
   
-  let data = signups.all;
+  let data = signups.all.filter(x => x.greenHorn);
 
   data = await Promise.all(data.map(async s => {
       let team = await teamService.getTeamById(s.teamId);
