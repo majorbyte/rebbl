@@ -6,9 +6,9 @@ const db = require('../../../lib/signupService.js')
 
 router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res,next){
 
-  const signups = await db.getSignUps({'OI':true});
+  const signups = await db.getSignUps();
 
-  let data = signups.all;
+  let data = signups.all.filter(x => x.OI);
 
   const csv = data.map(function(row){
     return `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.timezone)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.coach)},${JSON.stringify(row.steam)},${JSON.stringify(row.league)}`
