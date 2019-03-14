@@ -36,13 +36,17 @@ router.get('/:coach_id/trophies', util.checkCache, async function(req, res){
 router.get('/:coach_id/details', util.checkCache, async function(req, res){
   let data =  await db.getCoach(req.params.coach_id);
   if (data) {
-    data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name}`,"i")}});
+    data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name}$`,"i")}});
+    if (!data.coachDetails)
+      data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name}`,"i")}});
     data.renderExtra = true;
   }
   else {
     data = {};
-    let regex = new RegExp(req.params.coach_id, "i");
-    data.coachDetails = await accountService.searchAccount({"coach":{$regex:regex}});
+    data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${req.params.coach_id}$`,"i")}});
+    if (!data.coachDetails)
+      data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${req.params.coach_id}`,"i")}});
+
     data.renderExtra = false;
   }
 
