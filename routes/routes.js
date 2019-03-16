@@ -16,7 +16,7 @@ const
 
 
 class Routes{
-	constructor(Router){
+	constructor(){
 		this.router = express.Router();
 	}
 	

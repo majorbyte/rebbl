@@ -1,13 +1,27 @@
 'use strict';
 
-const express = require('express'),
-  router = express.Router();
+const express = require('express')
+  /* Endpoints */
+  , bloodbowlApi = require("./bloodbowl.js")
+  , standingsApi = require("./standings.js")
+  , teamApi = require("./team.js");
 
-router.use('/bloodbowl', require(`./bloodbowl.js`));
+class ApiV2{
+  constructor(){
+    this.router =express.Router()
+  }
 
-router.use('/standings', require(`./standings.js`));
+  routesConfig(){
 
-router.use('/team', require(`./team.js`));
+    this.router.use('/bloodbowl', new bloodbowlApi().routesConfig());
 
+    this.router.use('/standings', new standingsApi().routesConfig());
+    
+    this.router.use('/team', new teamApi().routesConfig());
+    
+    return this.router;
+  }
 
-module.exports = router;
+}  
+
+module.exports = ApiV2;

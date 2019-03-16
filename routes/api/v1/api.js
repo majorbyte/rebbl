@@ -1,22 +1,24 @@
 'use strict';
 
-const express = require('express'),
-  router = express.Router();
+const express = require('express');
 
-router.use('/standings', require(`./standings.js`));
+class ApiV1{
+  constructor(){
+    this.router = express.Router();
+  }
 
-router.use('/greenhorn', require(`./greenhorn.js`));
+  routesConfig(){
+    this.router.use('/standings', require(`./standings.js`));
+    this.router.use('/greenhorn', require(`./greenhorn.js`));
+    this.router.use('/oi', require(`./oi.js`));
+    this.router.use('/signups', require(`./signups.js`));
+    this.router.use('/upcoming', require(`./upcoming.js`));
+    this.router.use('/admin', require(`./admin/admin.js`));
+    this.router.use('/cripple', require('./cripple.js'));
+    this.router.use('/playoffs', require('./playoffs.js'));
+    
+    return this.router;
+  }
+}
 
-router.use('/oi', require(`./oi.js`));
-
-router.use('/signups', require(`./signups.js`));
-
-router.use('/upcoming', require(`./upcoming.js`));
-
-router.use('/admin', require(`./admin/admin.js`));
-
-router.use('/cripple', require('./cripple.js'));
-
-router.use('/playoffs', require('./playoffs.js'));
-
-module.exports = router;
+module.exports = ApiV1;
