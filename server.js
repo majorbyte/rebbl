@@ -31,6 +31,15 @@ class Server{
 
     this.port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
+
+
+    this.app = express();
+  }
+
+  async appConfig(){        
+    await dataService.rebbl.init("rebbl").then(x=> configurationService.init(x));
+    await dataService.cripple.init("cripple").then(x => x);
+
     this.sessionStore = new MongoDBStore({
       uri: dataService.rebbl.getURI(),
       databaseName: "rebbl",
@@ -46,12 +55,6 @@ class Server{
       , store: this.sessionStore 
     };
 
-    this.app = express();
-  }
-
-  appConfig(){        
-    dataService.rebbl.init("rebbl").then(x=> configurationService.init(x)).then(x=>x);
-    dataService.cripple.init("cripple").then(x=>x);
 
     // set our default template engine to "ejs"
     // which prevents the need for using file extensions
