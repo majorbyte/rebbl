@@ -37,11 +37,12 @@ class Server{
   }
 
   async appConfig(){        
-    await dataService.rebbl.init("rebbl").then(x=> configurationService.init(x));
-    await dataService.cripple.init("cripple").then(x => x);
+    await dataService.rebbl.init("rebbl");
+    configurationService.init();
+    await dataService.cripple.init("cripple");
 
     this.sessionStore = new MongoDBStore({
-      uri: dataService.rebbl.getURI(),
+      uri: process.env["mongoDBUri"],
       databaseName: "rebbl",
       collection: 'sessions'
     });
@@ -111,14 +112,10 @@ class Server{
     this.app.use(methodOverride());
     this.app.use(session(this.sessionObject));
 
-    
     // Initialize Passport!  Also use passport.session() middleware, to support
     // persistent login sessions (recommended).
     this.app.use(this.passport.initialize());
     this.app.use(this.passport.session());
-
-
-
   }
 
   includeRoutes(){
@@ -179,8 +176,8 @@ class Server{
     this.server.listen(this.port);
   }
 
-  appExecute(){
-    this.appConfig();
+  async appExecute(){
+    await this.appConfig();
     this.includeRoutes();
     this.startSocketIOAndServer();
   }
