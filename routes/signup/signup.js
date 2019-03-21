@@ -28,23 +28,23 @@ class Signup{
 
     this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
 
-    this.router.get('/signup-oi',util.ensureAuthenticated, this._signupOpenInvitational);
+    //this.router.get('/signup-oi',util.ensureAuthenticated, this._signupOpenInvitational);
 
-    this.router.get('/signup-greenhorn',util.ensureAuthenticated, this._signupGreenhornCup);
+    //this.router.get('/signup-greenhorn',util.ensureAuthenticated, this._signupGreenhornCup);
 
     this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll);
 
     this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew);
 
-    this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
+    //this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
 
-    this.router.post('/confirm-oi', util.ensureAuthenticated, this._confirmOpenInvitational);
+    //this.router.post('/confirm-oi', util.ensureAuthenticated, this._confirmOpenInvitational);
 
     this.router.post('/resign', util.ensureAuthenticated, this._resign);
 
-    this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
+    //this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
 
-    this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
+    //this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
 
     this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
 
@@ -169,7 +169,8 @@ class Signup{
       req.body.saveType = "existing";
       let user = await signupService.saveSignUp(req.user.name, req.body);
 
-      res.render('signup/signup-confirmed-oi', {user: user});
+      //res.render('signup/signup-confirmed-oi', {user: user});
+      res.redirect('/signup');
     } catch (err){
       console.log(err);
     }
@@ -186,8 +187,8 @@ class Signup{
       if (user.error){
         res.render('signup/signup-reroll', {user: user});
       } else {
-        res.render('signup/signup-confirmed-greenhorn', {user: user});
-        //res.redirect('/signup');
+        //res.render('signup/signup-confirmed-greenhorn', {user: user});
+        res.redirect('/signup');
       }
     } catch (err){
       console.log(err);
