@@ -47,25 +47,25 @@ block content
               br
               button(type="submit"  class="btn btn-primary") Resign
 
-          -if (user.greenHorn)
+          //-if (user.greenHorn)
             div
               h3 THE GREENHORN CUP
             form(action="/signup/resign-greenhorn" method="post" )
               br
               button(type="submit"  class="btn btn-primary") Resign
-          -else if(user.saveType !== "existing")
+          //-else if(user.saveType !== "existing")
             div
               h3 You can still sign up for THE GREENHORN CUP
               a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
 
 
-          -if (user.OI)
+          //-if (user.OI)
             div
               h3 THE OPEN INVITATIONAL
             form(action="/signup/resign-oi" method="post" )
               br
               button(type="submit"  class="btn btn-primary") Resign
-          -else if(user.saveType === "existing")
+          //-else if(user.saveType === "existing")
             div
               h3 You can still sign up for THE OPEN INVITATIONAL
               a(href="/signup/signup-oi") Sign me up for OI

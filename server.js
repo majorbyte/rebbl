@@ -1,178 +1,187 @@
-/**
- * Module dependencies.
- */
-let appInsights;
-if (process.env.NODE_ENV === 'production'){
-  appInsights = require("applicationinsights");
-  appInsights.setup(process.env["ApplicationInsights"])
-    .setAutoDependencyCorrelation(true)
-    .setAutoCollectRequests(true)
-    .setAutoCollectPerformance(true)
-    .setAutoCollectExceptions(true)
-    .setAutoCollectDependencies(true)
-    .setAutoCollectConsole(true)
-    .setUseDiskRetryCaching(false)
-    .start();
-}
-
+"use strict";
 const express = require('express')
   , path = require('path')
   , crippleService = require('./lib/crippleService.js')
   , signupService = require('./lib/signupService.js')
-  , passport = require('passport')
   , util = require("./lib/util.js")
   , session = require('express-session')
   , methodOverride = require('method-override')
   , bodyParser = require("body-parser")
   , MongoDBStore = require('connect-mongodb-session')(session)
-  , RedditStrategy = require('passport-reddit').Strategy;
+  , RedditStrategy = require('passport-reddit').Strategy
+  , dataService = require("./lib/DataService.js")
+  , configurationService = require("./lib/ConfigurationService.js");
 
-const REDDIT_CONSUMER_KEY = process.env['redditKey'];
-const REDDIT_CONSUMER_SECRET = process.env['redditSecret'];
 
-const app = module.exports = express();
+class Server{
+  constructor(){
+    if (process.env.NODE_ENV === 'production'){
+      this.appInsights = require("applicationinsights");
+      this.appInsights.setup(process.env["ApplicationInsights"])
+        .setAutoDependencyCorrelation(true)
+        .setAutoCollectRequests(true)
+        .setAutoCollectPerformance(true)
+        .setAutoCollectExceptions(true)
+        .setAutoCollectDependencies(true)
+        .setAutoCollectConsole(true)
+        .setUseDiskRetryCaching(false)
+        .start();
+    }
+    this.passport = require('passport');
 
-const dataService = require("./lib/DataService.js")
-    ,  configurationService = require("./lib/ConfigurationService.js");
+    this.port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
-dataService.rebbl.init("rebbl").then(x=> configurationService.init(x)).then(x=>x);
-dataService.cripple.init("cripple").then(x=>x);
-
-// Passport session setup.
-//   To support persistent login sessions, Passport needs to be able to
-//   serialize users into and deserialize users out of the session.  Typically,
-//   this will be as simple as storing the user ID when serializing, and finding
-//   the user by ID when deserializing.  However, since this example does not
-//   have a database of user records, the complete Reddit profile is
-//   serialized and deserialized.
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
-// Use the RedditStrategy within Passport.
-//   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Reddit
-//   profile), and invoke a callback with a user object.
-passport.use(new RedditStrategy({
-    clientID: REDDIT_CONSUMER_KEY,
-    clientSecret: REDDIT_CONSUMER_SECRET,
-    callbackURL: process.env['redditcallbackURL']
-  },
-  function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
-
-      // To keep the example simple, the user's Reddit profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the Reddit account with a user record in your database,
-      // and return that user instead.
-      return done(null, profile);
+    this.sessionStore = new MongoDBStore({
+      uri: dataService.rebbl.getURI(),
+      databaseName: "rebbl",
+      collection: 'sessions'
     });
+    
+    
+    this.sessionObject = {
+      secret: 'keyboard cat'
+      , cookie: {maxAge:180*24*60*60*1000} // Let's start with half a year
+      , resave: false
+      , saveUninitialized: false
+      , store: this.sessionStore 
+    };
+
+    this.app = express();
   }
-));
+
+  appConfig(){        
+    dataService.rebbl.init("rebbl").then(x=> configurationService.init(x)).then(x=>x);
+    dataService.cripple.init("cripple").then(x=>x);
+
+    // set our default template engine to "ejs"
+    // which prevents the need for using file extensions
+    this.app.set('view engine', 'pug');
+
+    // set views for error and 404 pages
+    this.app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views', "league"), path.join(__dirname, 'views')]);
+
+    // Passport session setup.
+    //   To support persistent login sessions, Passport needs to be able to
+    //   serialize users into and deserialize users out of the session.  Typically,
+    //   this will be as simple as storing the user ID when serializing, and finding
+    //   the user by ID when deserializing.  However, since this example does not
+    //   have a database of user records, the complete Reddit profile is
+    //   serialized and deserialized.
+    this.passport.serializeUser(function(user, done) {
+      done(null, user);
+    });
+
+    this.passport.deserializeUser(function(obj, done) {
+      done(null, obj);
+    });
+
+    // Use the RedditStrategy within Passport.
+    //   Strategies in Passport require a `verify` function, which accept
+    //   credentials (in this case, an accessToken, refreshToken, and Reddit
+    //   profile), and invoke a callback with a user object.
+    this.passport.use(new RedditStrategy({
+        clientID: process.env['redditKey'],
+        clientSecret: process.env['redditSecret'],
+        callbackURL: process.env['redditcallbackURL']
+      },
+      function(accessToken, refreshToken, profile, done) {
+        // asynchronous verification, for effect...
+        process.nextTick(function () {
+
+          // To keep the example simple, the user's Reddit profile is returned to
+          // represent the logged-in user.  In a typical application, you would want
+          // to associate the Reddit account with a user record in your database,
+          // and return that user instead.
+          return done(null, profile);
+        });
+      }
+    ));
+
+    if (process.env.NODE_ENV === 'production'){
+      this.app.set('trust proxy', 1) // trust first proxy
+      this.sessionObject.cookie.secure = true; // serve secure cookies
+      this.sessionObject.secret =  process.env['sessionSecret'];
+    }
+    
+    this.app.use(bodyParser.urlencoded({  extended: true}));
+    this.app.use(bodyParser.json());
+    this.app.use(methodOverride());
+    this.app.use(session(this.sessionObject));
+
+    
+    // Initialize Passport!  Also use passport.session() middleware, to support
+    // persistent login sessions (recommended).
+    this.app.use(this.passport.initialize());
+    this.app.use(this.passport.session());
 
 
-// set our default template engine to "ejs"
-// which prevents the need for using file extensions
-app.set('view engine', 'pug');
 
-// set views for error and 404 pages
-app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views', "league"), path.join(__dirname, 'views')]);
+  }
+
+  includeRoutes(){
+    //new routes(this.app).routesConfig();
+    // serve static files
+    this.app.use(express.static(path.join(__dirname, 'public-images'), {maxAge: 7*24*60*60*1000, etag: false }));
+    this.app.use(express.static(path.join(__dirname, 'public')));
+
+    //let's encrypt
+    this.app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
+
+    this.app.use('/robots.txt', express.static(path.join(__dirname, 'robots.txt')));
 
 
-const store = new MongoDBStore({
-  uri: dataService.rebbl.getURI(),
-  databaseName: "rebbl",
-  collection: 'sessions'
-});
+    // parse request bodies (req.body)
+    this.app.use(express.urlencoded({ extended: true }));
+
+    this.app.use(util.checkBadBots);
+
+    this.app.use(util.checkAuthenticated);
+
+    const routes = require("./routes/routes.js");
+    this.app.use('/', new routes().routesConfig());
+
+    this.app.use(function(err, req, res, next){
+      // log it
+        if (!module.parent) console.error(err.stack);
 
 
-let sessionObject = {
-  secret: 'keyboard cat'
-  , cookie: {maxAge:180*24*60*60*1000} // Let's start with half a year
-  , resave: false
-  , saveUninitialized: false
-  , store: store 
-};
+      // error page
+      res.status(500).render('5xx');
+    });
 
-if (process.env.NODE_ENV === 'production'){
-  app.set('trust proxy', 1) // trust first proxy
-  sessionObject.cookie.secure = true; // serve secure cookies
-  sessionObject.secret =  process.env['sessionSecret'];
+    // assume 404 since no middleware responded
+    this.app.use(function(req, res,next){
+      res.status(404).render('404', { url: req.originalUrl });
+    });    
+  }
+
+  startSocketIOAndServer(){
+    this.server = require('http').Server(this.app);
+    this.io = require('socket.io')(this.server);
+
+    this.io.on('connection', async function (socket) {
+
+      let data = await crippleService.getCasualties();
+          
+      socket.emit('cripple', data);
+    
+      data = await signupService.getSignUps();
+    
+      socket.emit('signup', {count:data.all.length});
+    });
+    
+    crippleService.init(this.io);
+    signupService.init(this.io);  
+    
+    this.server.listen(this.port);
+  }
+
+  appExecute(){
+    this.appConfig();
+    this.includeRoutes();
+    this.startSocketIOAndServer();
+  }
 }
 
-app.use(bodyParser.urlencoded({  extended: true}));
-app.use(bodyParser.json());
-app.use(methodOverride());
-app.use(session(sessionObject));
-
-// Initialize Passport!  Also use passport.session() middleware, to support
-// persistent login sessions (recommended).
-app.use(passport.initialize());
-app.use(passport.session());
-
-// serve static files
-app.use(express.static(path.join(__dirname, 'public-images'), {maxAge: 7*24*60*60*1000, etag: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-
-//let's encrypt
-app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
-
-app.use('/robots.txt', express.static(path.join(__dirname, 'robots.txt')));
-
-
-// parse request bodies (req.body)
-app.use(express.urlencoded({ extended: true }));
-
-app.use(util.checkBadBots);
-
-app.use(util.checkAuthenticated);
-
-app.use('/', require('./areas/routes.js'));
-
-app.use(function(err, req, res, next){
-  // log it
-    if (!module.parent) console.error(err.stack);
-
-
-  // error page
-  res.status(500).render('5xx');
-});
-
-// assume 404 since no middleware responded
-app.use(function(req, res,next){
-  res.status(404).render('404', { url: req.originalUrl });
-});
-
-const port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
-
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-
-
-
-
-io.on('connection', async function (socket) {
-
-  let data = await crippleService.getCasualties();
-      
-  socket.emit('cripple', data);
-
-  data = await signupService.getSignUps();
-
-  socket.emit('signup', {count:data.all.length});
-});
-
-crippleService.init(io);
-signupService.init(io);
-
-
-
-
-
-server.listen(port);
-console.log(`Express started on port ${port}`);
+const app = new Server();
+app.appExecute();
