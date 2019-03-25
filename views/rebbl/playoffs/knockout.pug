@@ -134,6 +134,9 @@ block content
                   div(data-bind="text: $data.opponents[1].team.score")
                   // /ko
               // /ko
+            // ko if: $data.round <= model.round  
+            div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
+            // /ko
           // /ko        
           // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(1,2), as: 'match' }
           // /ko
@@ -174,7 +177,7 @@ block content
               // ko if:  $data.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && $data.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
               li(class=`team team-top` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id ? 'looser' :''  }")
                 //ko if: $data.opponents[0].team.logo.length > 0
-                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logos/logo_${$data.opponents[0].team.logo.toLowerCase()}.png`}}")
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${$data.opponents[0].team.logo.toLowerCase()}.png`}}")
                 // /ko
                 div(class="teamname" data-bind="{attr: {title:opponents[0].team.name}, text: $data.opponents[0].coach.name}")
                 div(class="score") 
@@ -186,7 +189,7 @@ block content
                   // /ko
               li(class=`team team-bottom ${css}` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id ? 'looser' :''  }")
                 // ko if: $data.opponents[1].team.logo.length > 0
-                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logos/logo_${$data.opponents[1].team.logo.toLowerCase()}.png`}}")
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${$data.opponents[1].team.logo.toLowerCase()}.png`}}")
                 // /ko
                 div(class="teamname" data-bind="{attr: {title:$data.opponents[1].team.name}, text: $data.opponents[1].coach.name}")
                 div(class="score")
@@ -197,6 +200,9 @@ block content
                   div(data-bind="text: $data.opponents[1].team.score")
                   // /ko
               // /ko
+            // ko if: $data.round <= model.round  
+            div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
+            // /ko              
           // /ko  
 
           // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(3,4), as: 'match' }

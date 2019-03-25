@@ -111,12 +111,12 @@ li.highlight {background-color: #e67b00; color:#fff}
 .split-one .round-one .played:after {text-align: right;float: right;top:-116px}
 .split-one .round-two .played:after {text-align: right;float: right;top:-175px}
 .split-one .round-three .played:after {text-align: right;float: right;top:-295px}
-.split-one .round-four .played:after {text-align: right;float: right;top:-240px}
+.split-one .round-four .played:after {text-align: right;float: right;top:-122px}
 
 .split-two .round-one .played:after { text-align: left;float: left;left:-5px;}
 .split-two .round-two .played:after { text-align: left;float: left;left:-5px;top:-120px}
 .split-two .round-three .played:after {text-align: left;float: left;left:-5px;top:-240px}
-.split-two .round-four .played:after {text-align: left;float: left;left:-5px;top:-240px}
+.split-two .round-four .played:after {text-align: left;float: left;left:-5px;top:-122px}
 
 .spoiler:hover.played:after{opacity: 0;transition: color 0.5s, opacity 0.5s}
 
@@ -129,7 +129,7 @@ li.highlight {background-color: #e67b00; color:#fff}
 .round-one .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-60px;z-index:1;position: relative;}
 .round-two .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-120px;z-index:1;position: relative;}
 .round-three .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-240px;z-index:1;position: relative;}
-.round-four .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-237px;z-index:1;position: relative;}
+.round-four .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-120px;z-index:1;position: relative;}
 
 .modal-content:before {content:"";background-image:url("https://cdn2.rebbl.net//images/modal-coach.png");background-size:cover;opacity: 0.5;position: absolute;top:0;right:0;bottom:0;left:0;}
 .modal-header {border-bottom: none !important}
