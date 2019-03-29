@@ -81,6 +81,7 @@ block append scripts
       self.error = ko.observable("");
 
       self.reddit = ko.observable();
+      self.newReddit = ko.observable();
       self.coach = ko.observable();
       self.discord = ko.observable();
       self.race = ko.observable();
@@ -150,6 +151,16 @@ block append scripts
       self.edit = function(data,event){
         data.editable=true;
       }
+      self.saveBan = function(data,event){
+        data.editable=false;
+        data.commit();
+        self.post("/api/v1/admin/user/updateBan", {reddit:self.reddit(), ban:data});
+      }
+
+      self.cancelBan = function(data,event){
+        data.editable=false;
+        data.rollback();
+      }
 
       self.saveStrike = function(data,event){
         data.editable=false;
@@ -178,6 +189,12 @@ block append scripts
         data.active = false;
         self.post("/api/v1/admin/user/updateWarning", {reddit:self.reddit(), warning:data});
       }
+
+      self.changeReddit = function(data,event){
+        self.post("/api/v1/admin/user/changeRedditAccount", {reddit:self.reddit(), newReddit:self.newReddit()});
+        self.reddit(self.newReddit());
+      }
+
 
       self.post = function(url, data){
         var xhr = new XMLHttpRequest();
@@ -283,6 +300,7 @@ block append scripts
 
         if(xhr.response && xhr.status === 200){   
           model = ko.mapping.fromJS(xhr.response,mapping,model);
+          model.newReddit(model.reddit());
           model.loadAvailableTrophies();
         } else if(!xhr.response) {
           model.isEmpty(true);
@@ -365,7 +383,12 @@ block content
         form(action="/admin/user/update" method="post" class="container signup")
           div
             label(for="reddit") reddit name
-            input(type="text" id="reddit" name="reddit" data-bind="value: reddit")
+            input(type="text" id="reddit" name="reddit" data-bind="value: newReddit")
+            // ko if: reddit() != newReddit()
+            button(class="btn btn-success " data-bind="click: $root.changeReddit,clickBubble: false" title="Change Reddit Account" style="margin:0px 10px") 
+              i(class="fa fa-save")
+            label(style="display:inline-block") Update reddit account  
+            // /ko
           div
             label(for="coach") Blood Bowl 2 coach name
             input(type="text" id="coach" name="coach" data-bind="value: coach")
@@ -544,11 +567,26 @@ block content
         // ko foreach: bans
         // ko if: active
         div(class="row col-12 no-gutter" style="margin-bottom: 5px;")
-          div(class="row col-12 no-gutter")
+          div(class="row col-12 no-gutter" data-bind="click: $root.edit" )
+            // ko if: editable
+            div(class="col-7")
+              input(type="text" class="col-11" data-bind="value:reason " )
+            div(class="col-2")
+              input(type="text" data-bind="value: start")
+            div(class="col-2")
+              input(type="text" data-bind="value: end")
+            div(class="col-1 no-gutter" style="padding:unset")   
+              button(class="btn btn-success " data-bind="click: $root.saveBan,clickBubble: false") 
+                i(class="fa fa-save")
+              button(class="btn btn-danger float-right" data-bind="click: $root.cancelBan,clickBubble: false") 
+                i(class="fa fa-ban")
+            // /ko
+            // ko ifnot: editable
             div(class="col-7" data-bind="text:reason " )
             div(class="col-2" data-bind="text: start")
             div(class="col-2" data-bind="text: end")
             button(class="col-1 btn btn-warning" data-bind="click: $root.toggleBan,clickBubble: false") deactivate 
+            // /ko            
         // /ko
         // /ko
         br

@@ -64,6 +64,18 @@ router.post('/update', util.ensureAuthenticated, util.hasRole("admin"), async fu
   }
 });
 
+
+router.post('/changeRedditAccount', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  try{
+    await accountService.changeRedditAccount(req.body);
+
+    res.status(200).send();
+  } catch(err){
+    console.log(err);
+  }
+});
+
+
 router.post('/addStrike', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
   try{
     let strike = { 
@@ -252,6 +264,24 @@ router.post('/toggleBan', util.ensureAuthenticated, util.hasRole("admin"), async
     };
 
     await accountService.setBan(req.body.reddit,ban.id, ban);
+
+    res.status(200).send();
+  } catch(err){
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
+router.post('/updateBan', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  try{
+    let ban = { 
+      id: Number(req.body.strike.id)
+      , reason: req.body.strike.reason
+      , start: req.body.strike.start
+      , end: req.body.strike.end
+      , active: req.body.strike.active
+    };
+    await accountService.updateBan(req.body.reddit, strike);
 
     res.status(200).send();
   } catch(err){
