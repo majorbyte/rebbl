@@ -111,7 +111,7 @@ li.highlight {background-color: #e67b00; color:#fff}
 .split-one .round-one .played:after {text-align: right;float: right;top:-116px}
 .split-one .round-two .played:after {text-align: right;float: right;top:-175px}
 .split-one .round-three .played:after {text-align: right;float: right;top:-295px}
-.split-one .round-four .played:after {text-align: right;float: right;top:-122px}
+.split-one .round-four .played:after {text-align: right;float: right;top:-174px}
 
 .split-two .round-one .played:after { text-align: left;float: left;left:-5px;}
 .split-two .round-two .played:after { text-align: left;float: left;left:-5px;top:-120px}
@@ -129,13 +129,15 @@ li.highlight {background-color: #e67b00; color:#fff}
 .round-one .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-60px;z-index:1;position: relative;}
 .round-two .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-120px;z-index:1;position: relative;}
 .round-three .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-240px;z-index:1;position: relative;}
-.round-four .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-120px;z-index:1;position: relative;}
+.round-four .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-237px;z-index:1;position: relative;}
+.round-four .semis-l .info, .round-four .semis-r .info {top:-120px;}
 
 .modal-content:before {content:"";background-image:url("https://cdn2.rebbl.net//images/modal-coach.png");background-size:cover;opacity: 0.5;position: absolute;top:0;right:0;bottom:0;left:0;}
 .modal-header {border-bottom: none !important}
 .modal-footer {border-top: none !important}
 
-.round-four .gameinfo:nth-child(3n) .matchup {padding-top: 120px;}
+.split-one .round-four .gameinfo:nth-child(3n) .matchup {padding-top: 0px;margin-top: -64px;}
+.split-two .round-four .gameinfo:nth-child(3n) .matchup {padding-top: 0px;margin-top: -10px;}
 
 .modal-content a{color: rgb(230, 123, 0);box-sizing: border-box;border-radius: 4px;padding:15px}
 .modal-header a{background-color: rgba(62, 62, 62, 0.45)}
