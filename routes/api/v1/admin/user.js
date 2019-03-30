@@ -275,13 +275,13 @@ router.post('/toggleBan', util.ensureAuthenticated, util.hasRole("admin"), async
 router.post('/updateBan', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
   try{
     let ban = { 
-      id: Number(req.body.strike.id)
-      , reason: req.body.strike.reason
-      , start: req.body.strike.start
-      , end: req.body.strike.end
-      , active: req.body.strike.active
+      id: Number(req.body.ban.id)
+      , reason: req.body.ban.reason
+      , start: req.body.ban.start
+      , end: req.body.ban.end
+      , active: req.body.ban.active
     };
-    await accountService.updateBan(req.body.reddit, strike);
+    await accountService.updateBan(req.body.reddit, ban);
 
     res.status(200).send();
   } catch(err){
