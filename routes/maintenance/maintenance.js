@@ -33,7 +33,7 @@ class Maintenance{
     });
 
     this.router.get('/updateleague/admininit', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
-      if (req.query.league) league.maintenanceService(req.query.league, req.query.comp);
+      if (req.query.league) maintenanceService.getRebblData(req.query.league, req.query.comp);
       res.redirect('/');
     });
 
