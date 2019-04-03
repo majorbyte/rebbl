@@ -72,7 +72,7 @@ block content
     - if (config && seasonName !== config.name)
       - seasonName = config.name
       - i = 0
-    - if (["Alpha","Bravo","Charlie","Delta","Echo","Foxtrot"].indexOf(div[0].competition) > -1 ) config = cutoffs.find((c) => c.name === "season 5"  )
+    - if (["Alpha","Beta","Charlie","Delta","Echo","Foxtrot","Gamma"].indexOf(div[0].competition) > -1 ) config = cutoffs.find((c) => c.name === "season 6"  )
     -let cutoff = config ? (config.cutoff[i] === -1 ? 2 : config.cutoff[i]) : -1
     -let cutin = config ? config.cutoff[i] === -1 : false
     -let hide = seasons.length != 0 && (seasonName.toLowerCase().trim() != (seasons[0] || "").toLowerCase().trim())
