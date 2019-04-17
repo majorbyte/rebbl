@@ -13,19 +13,50 @@ block scripts
 
         self.filteredLeagues = ko.observableArray([]);
         self.filteredDivisions = ko.observableArray([]);
+        self.filteredRounds = ko.observableArray([]);
 
         self.divisions = ko.computed(function(){
           let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
           return [...new Set(self.games().map(x => x.competition.replace(/Season 11 - Division /i,'Div ').replace(/Season 11 - Divsion /i,'Div ')))].sort(collator.compare); 
         });
 
+        self.rounds = ko.computed(function(){
+          let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+          return [...new Set(self.games().map(x => x.round || 2))].sort(collator.compare); 
+        });
+
         self.filteredGames = ko.computed(function(){
+
+          if (self.filteredDivisions().length > 0  && self.filteredLeagues().length > 0 && self.filteredRounds().length  > 0){
+
+            return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1
+              && self.filteredDivisions.indexOf(x.competition.replace(/Season 11 - Division /i,'Div ').replace(/Season 11 - Divsion /i,'Div ')) > -1
+              && self.filteredRounds.indexOf(x.round || 2) > -1       
+            );
+          }
+
+          if (self.filteredLeagues().length > 0 && self.filteredRounds().length  > 0){
+
+            return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1
+              && self.filteredRounds.indexOf(x.round || 2) > -1       
+            );
+          }
+
+          if (self.filteredDivisions().length > 0  && self.filteredRounds().length  > 0){
+
+            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition.replace(/Season 11 - Division /i,'Div ').replace(/Season 11 - Divsion /i,'Div ')) > -1
+              && self.filteredRounds.indexOf(x.round || 2) > -1       
+            );
+          }
 
           if (self.filteredDivisions().length > 0  && self.filteredLeagues().length > 0){
 
-            return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1 &&
-                     self.filteredDivisions.indexOf(x.competition.replace(/Season 11 - Division /i,'Div ').replace(/Season 11 - Divsion /i,'Div ')) > -1);
+            return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1
+              && self.filteredDivisions.indexOf(x.competition.replace(/Season 11 - Division /i,'Div ').replace(/Season 11 - Divsion /i,'Div ')) > -1
+            );
           }
+
+
 
           if (self.filteredDivisions().length > 0 ){
             return self.games().filter(x => self.filteredDivisions.indexOf(x.competition.replace(/Season 11 - Division /i,'Div ').replace(/Season 11 - Divsion /i,'Div ')) > -1);
@@ -33,6 +64,10 @@ block scripts
 
           if ( self.filteredLeagues().length > 0){
             return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1);
+          }
+
+          if ( self.filteredRounds().length > 0){
+            return self.games().filter(x => self.filteredRounds.indexOf(x.round || 2) > -1);
           }
 
           return self.games();
@@ -55,6 +90,14 @@ block scripts
             self.filteredDivisions.push(d);
           } else {
             self.filteredDivisions.splice(i,1);  
+          }
+        }
+        self.toggleRound= function(r){
+          let i = self.filteredRounds.indexOf(r);
+          if( i === -1){
+            self.filteredRounds.push(r);
+          } else {
+            self.filteredRounds.splice(i,1);  
           }
         }
 
@@ -97,6 +140,7 @@ block content
         label(class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - REL')" style="margin-right: 15px")
           input(type="checkbox" checked autocomplete="off")       
           span REL
+    br  
     div(class="row col-12")
       div(class="btn-group-toggle" data-toggle="buttons")
         // ko foreach: divisions
@@ -104,6 +148,14 @@ block content
           input(type="checkbox" checked autocomplete="off")       
           span(data-bind="text: $data") 
         // /ko
+    br
+    div(class="row col-12")
+      div(class="btn-group-toggle" data-toggle="buttons")
+        // ko foreach: rounds
+        label(class="btn btn-outline-primary" data-bind="click: $root.toggleRound")
+          input(type="checkbox" checked autocomplete="off")       
+          span(data-bind="text: $data") 
+        // /ko        
     br
     div(class="row col-12")
       div(class="col-2") League
