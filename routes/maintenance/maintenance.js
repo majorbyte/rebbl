@@ -1,10 +1,13 @@
 'use strict';
-const league = require('../../lib/LeagueService.js')
+const 
+  cache = require("memory-cache")
+  , configurationService = require("../../lib/ConfigurationService.js")
   , cripple = require('../../lib/crippleService.js')
   , express = require('express')
   , maintenanceService = require('../../lib/MaintenanceService.js')
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
+  , standingsService = require("../../lib/StandingsService.js")
   , util = require('../../lib/util.js')
   , reddit = require("../../lib/RedditService.js");
 
@@ -54,6 +57,23 @@ class Maintenance{
     this.router.get('/checksignups',util.verifyMaintenanceToken, async function(req, res){
       signUp.checkTeams({'teamExist':false});
       signUp.checkTeams({'teamExist':{ $exists: false }});
+      res.redirect('/');
+    });
+
+    this.router.get('/calculate', util.verifyMaintenanceToken, async function(req,res){
+
+      let season = configurationService.getActiveSeason();
+
+      season.leagues.map(league =>{
+      
+        league.divisions.map(division => standingsService.updateStandings(league.name,division))
+
+        cache.keys().map(key => {
+          if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
+            cache.del(key);
+          }
+        })
+      });
       res.redirect('/');
     });
 
