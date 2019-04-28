@@ -1,0 +1,226 @@
+extends ..\..\no-cache-sub-layout.pug
+include ..\..\nav-link
+
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#" data-bind="text: 'STANDINGS' + league" )
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav mr-auto")
+          li( class="nav-item active")
+            div(class="nav-link") DISPLAY 
+          li( class="nav-item dropdown")
+            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
+            div(class="dropdown-menu" aria-labelledby="dropdownSeason")
+              //ko foreach: seasons
+              a(class="dropdown-item " data-bind="text:$data,click:$root.loadSeason.bind($root)")
+              // /ko
+
+block content
+  div(class=`container`)
+    // ko foreach: {data: Object.keys(standings).sort($root.collator.compare)}
+    // ko with: $root.standings[$data] 
+    div(class="row col-12" )
+      h2
+        i(data-bind="id:$data[0].competition"  style="padding-top:180px;margin-top:-180px")
+        a( data-bind="text:$data[0].competition,attr:{href:$root.competitionUrl($data)}" class="highlight")
+    div(class="season-table")  
+      div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
+        div(class="row col-6" style="font-size:1.25em")
+          div(class="col-1" ) #
+          div(class="col-4" ) Coach
+          div(class="col-7" ) Team
+        div(class="col-2" style="font-size:1.25em") Race
+        div(class="row col-4" style="font-size:1.25em")
+          div(class="col-2" ) Pts.
+          div(class="col-2") W  
+          div(class="col-2") D  
+          div(class="col-2") L
+          div(class="col-2") P
+          div(class="col-2 text-right") ΔTD
+      //ko foreach: $data
+      div(class="row col-12 season-table-row")
+        div(class="row col-6")
+          div(class="col-1" data-bind="text:position")
+          div(class="col-4" style=";overflow:hidden") 
+            a(data-bind="text: name, attr:{href:`/rebbl/coach/${id}`}")
+            // ko if: showDonation
+            | &nbsp; &nbsp; 
+            img(src="/images/gold.png" style="height:25px;float:right;margin-top: 2px;" title="donator")
+            // /ko
+            // ko if: $data.trophy 
+            | &nbsp; &nbsp; 
+            img(data-bind="attr:{src:`https://cdn2.rebbl.net/${trophy}`}"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" title="fix" class="trophy-toggle" data-target="#trophy" data-date="fix")
+            // /ko
+          div(class="col-7" style=";overflow:hidden") 
+            a(data-bind="text: teamName(),attr:{href:`/rebbl/team/${teamId}`}")
+        div(class="col-2" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
+        div(class="row col-4" )
+          div(class="col-2" data-bind="text:points")
+          div(class="col-2" data-bind="text:win")
+          div(class="col-2" data-bind="text:draw")
+          div(class="col-2" data-bind="text:loss")
+          div(class="col-2" data-bind="text:games")
+          div(class="col-2 text-right" data-bind="text:tddiff")
+        // ko if: $index()+1 === $root.tickets[$parentContext.$index()]
+        div(class="row col-12 season-table-row")
+          div(class="col-1 Standings-divider--flex")
+            span(class="Standings-dividerText--correction")
+          div(class="col-6 Standings-divider--flex" )
+            span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
+          div(class="col-5 Standings-divider--flex")
+            span(class="Standings-dividerText--correction")
+        // /ko
+      // /ko
+    // /ko
+    // /ko
+  div(class="modal" tabindex="-1" role="dialog" id=`trophy`)
+    div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+      div(class="modal-content")
+        div(class="modal-header")
+          h5(class="modal-title" id="modal-title")
+        div(class="modal-body")
+          img(src="" alt="" style="display:block;margin-left:auto;margin-right:auto" id="modal-image")
+        div(class="modal-footer")
+          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close  
+
+
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+
+    // this allows if to iterate of object properties.
+    ko.bindingHandlers.foreachprop = {
+        transformObject: function (obj) {
+            var properties = [];
+            ko.utils.objectForEach(obj, function (key, value) {
+                properties.push({ key: key, value: value });
+            });
+            properties = properties.sort(function(a,b){return a.key > b.key ? 1 : -1;})
+            return properties;
+        },
+        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            var properties = ko.pureComputed(function () {
+            var obj = ko.utils.unwrapObservable(valueAccessor());
+            return ko.bindingHandlers.foreachprop.transformObject(obj);
+            });
+            ko.applyBindingsToNode(element, { foreach: properties }, bindingContext);
+            return { controlsDescendantBindings: true };
+        }
+    };
+
+    class StandingsModel{
+      constructor(data){
+        this.map(data);
+        ko.track(this);
+      }
+      map(data){
+        if(data){
+          delete data._id;
+          Object.assign(this, data);
+        }
+      }
+
+      teamColor(){
+        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.team) ? "#"+ this.team.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1]  : "inherit";
+      }
+
+      teamName(){
+        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.team) ? this.team.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'') : this.team;
+      }
+    }
+
+
+    class ViewModel{
+      constructor(data){
+        this.league = "";
+        this.standings = {};
+        this.tickets = [];
+        this.seasons = [];
+        this.season = "";
+        this.collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+        ko.track(this);
+      }
+
+      competitionUrl(comp){
+        return `/rebbl/${this.league}/${comp[0].competition}`;
+      };
+      loadSeason(season){
+        if (season) model.season = season;
+        this.standings={};
+        this.loadTickets();
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", `/api/v2/standings/${this.league}/${this.season}`  ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {
+          let data = xhr.response.map(x => new StandingsModel(x));
+          data = this._groupBy(data,"competition")
+
+          this.standings=data;
+        }.bind(this);
+        xhr.send();
+      }
+
+      loadTickets(){
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", `/api/v2/standings/${this.league}/${this.season}/tickets`,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {
+          if (xhr.response) this.tickets = xhr.response.cutoff;
+          else this.tickets = [];
+        }.bind(this);
+
+        xhr.send();
+      }
+
+      loadSeasons(){
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", `/api/v2/league/${this.league}/seasons`  ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {
+          let seasons = xhr.response.sort(this.collator.compare);
+
+          this.seasons = seasons
+          this.season = seasons[seasons.length-1];
+          this.loadSeason();
+        }.bind(this);
+        xhr.send();
+      }
+      
+      _groupBy(xs, key) {
+        return xs.reduce(function(rv, x) {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      };
+    }
+
+    let model = new ViewModel({});
+
+    $(document).ready(function(){
+      let path = window.location.pathname.split('/');
+      model.league = path[path.length-1];
+      ko.applyBindings(model);
+      model.loadSeasons();
+    });
+    

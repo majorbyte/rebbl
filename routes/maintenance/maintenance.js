@@ -40,6 +40,7 @@ class Maintenance{
 
     this.router.get('/updateleague', util.verifyMaintenanceToken, async function(req, res){
       maintenanceService.getRebblData(req.query.league);
+      maintenanceService.getNewRebblData(req.query.league);
       reddit.check();
       res.redirect('/');
     });

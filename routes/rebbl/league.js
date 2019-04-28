@@ -17,6 +17,18 @@ class League{
       let data = {standings:null, rounds:null, league:req.params.league };
       let comp = false;
       let league = req.params.league.toLowerCase();
+
+      switch(league){
+        case "big o":
+          res.redirect(`/rebbl/standings/REBBL - Big O`);
+          return;
+        case "gman":
+          res.redirect(`/rebbl/standings/REBBL - GMan`);
+          return;
+        case "rel":
+          res.redirect(`/rebbl/standings/REBBL - REL`);
+          return;
+      }
     
       if(league == "open invitational"){
         league = new RegExp(`^ReBBL Open Invitational`, 'i');
