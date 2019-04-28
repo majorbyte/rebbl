@@ -2,6 +2,7 @@
 
 const express = require('express')
   , redditService = require("../../../../lib/RedditService.js")
+  , maintenanceService = require("../../../../lib/MaintenanceService.js")
   , util = require('../../../../lib/util.js')
   , router = express.Router();
 
@@ -18,5 +19,17 @@ const express = require('express')
     }
   });
   
+  router.post('/:contest_id', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+    try{
+  
+      await maintenanceService.fixAdminGames(req.params.contest_id);
+
+      res.status(200).send("ok");
+    } catch(err){
+      console.log(err);
+    }
+  });
+
+
 
 module.exports = router;

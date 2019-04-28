@@ -101,6 +101,13 @@ block scripts
           }
         }
 
+        self.refresh=function(g){
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/v1/admin/unplayed/"+g.contest_id,true)
+            xhr.send("");
+
+        }
+
     }
 
     const model = new DateModel();
@@ -166,7 +173,10 @@ block content
     hr
     div(data-bind="foreach: filteredGames" )
       div(class="row col-12")
-        div(class="col-2" data-bind="text: league.replace(/rebbl - /i, '') + ' ' + competition.replace(/Season 11 - Division /i,'Div ').replace(/Season 11 - Divsion /i,'Div ')")
+        div(class="col-2")
+          button(data-bind="click:$root.refresh" class="btn btn-small btn-success" style="margin:0px 10px")
+            i(class="fa fa-refresh")
+          span( data-bind="text: league.replace(/rebbl - /i, '') + ' ' + competition.replace(/Season 11 - Division /i,'Div ').replace(/Season 11 - Divsion /i,'Div ')")
         div(class="col-2" )
           a(data-bind="text: coach1, attr:{href:'/rebbl/coach/'+ coach1 + '/details' }"  target="_blank" style="color:#03a9f4")
         div(class="col-3")
