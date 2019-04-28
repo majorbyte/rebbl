@@ -380,7 +380,8 @@ block content
         -if (user && admin.roles && admin.roles.indexOf("superadmin")>-1 )
           h3
           button(class="btn" data-bind="click: toggleAdmin, css: roles.indexOf('admin') > -1 ? 'btn-success' : 'btn-secondary'  " ) admin
-        form(action="/admin/user/update" method="post" class="container signup")
+        - let userAction = user ? "/admin/user/update" : "/admin/user/new"
+        form(action=userAction method="post" class="container signup")
           div
             label(for="reddit") reddit name
             input(type="text" id="reddit" name="reddit" data-bind="value: newReddit")

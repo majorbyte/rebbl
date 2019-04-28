@@ -59,5 +59,25 @@ router.post('/update', async function(req, res){
   }
 });
 
+router.post('/new', async function(req, res){
+  try{
+    let account = { reddit: req.body.reddit
+      , coach: req.body.coach      
+      , discord:  req.body.discord
+      , steam: req.body.steam
+      , timezone: req.body.timezone
+      , twitch: req.body.twitch
+      , team: req.body.team
+      , race: req.body.race
+    };
+
+    await accountService.saveAccount(account);
+
+    res.render('admin/user/user', { user: req.body.reddit, admin:res.locals.user  });
+  } catch(err){
+    console.log(err);
+  }
+});
+
 
 module.exports = router;
