@@ -2,7 +2,8 @@
 const  coach = require(`./coach.js`)
   , division = require(`./division.js`)
   , express = require('express')
-  , league =require(`./league.js`)  ;
+  , league =require(`./league.js`)
+  , standings = require("./standings.js")  ;
 
 
 
@@ -21,6 +22,7 @@ class Rebbl{
     this.router.use('/coach', new coach().routesConfig());
     this.router.use('/stunty', require(`./stunty.js`));
     this.router.use('/upcoming', require(`./upcoming.js`));
+    this.router.use('/standings', new standings().routesConfig());
     this.router.use('/team', require(`./team.js`));
     this.router.use('/old_team', require(`./old_team.js`));
     this.router.use('/playoffs', require(`./playoffs.js`));

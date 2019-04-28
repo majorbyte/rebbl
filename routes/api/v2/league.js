@@ -1,6 +1,7 @@
 
 'use strict';
 const dataService = require('../../../lib/DataService.js').rebbl
+, configurationService = require("../../../lib/ConfigurationService.js")
 , express = require('express')
 , util = require('../../../lib/util.js');
 
@@ -9,20 +10,34 @@ class LeagueApi{
     this.router = express.Router({mergeParams: true})
   }
   routesConfig(){
+    
     this.router.get("/",util.checkCache, async function(req,res,next){
       try {
-        let leagues = await dataService.getLeague({});
-        res.status(200).send(leagues);
+        let data = configurationService.getLeagues();
+        res.status(200).send(data);
       }
       catch (ex){
         console.error(ex);
         res.status(500).send('Something something error');
       }
     });
-    
+
+    this.router.get("/:league/seasons",util.checkCache, async function(req,res){
+      try {
+        res.status(200).send(configurationService.getAvailableSeasons(req.params.league));
+      }
+      catch (ex){
+        console.error(ex);
+        res.status(500).send('Something something error');
+      }
+    });
+
+
+
+
     this.router.get('/:leagueId', util.checkCache, async function(req, res){
       try {
-        let league = await dataService.getTeam({"id":Number(req.params.leagueId)});
+        let league = await dataService.getLeagues({"id":Number(req.params.leagueId)});
         res.status(200).send(league);
       }
       catch (ex){

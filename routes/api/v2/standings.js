@@ -1,22 +1,45 @@
 
 'use strict';
 const dataService = require('../../../lib/DataService.js').rebbl
+  , configurationService = require("../../../lib/ConfigurationService.js")
   , express = require('express')
   , leagueService = require('../../../lib/LeagueService.js') 
-  , util = require('../../../lib/util.js')
-  , router = express.Router({mergeParams: true});
+  , util = require('../../../lib/util.js');
 
 class StandingsApi{
   constructor(){
     this.router = express.Router({mergeParams: true})
   }
   routesConfig(){
-    this.router.get('/:league/:division', util.checkCache, async function(req, res){
-      let standings = await dataService.getStandings({"league":new RegExp(`^${req.params.league}`,"i"), "competition":new RegExp(`^${req.params.division}`,"i")});
+    this.router.get('/:league/:season/', util.checkCache, async function(req, res){
+      let standings = await dataService.getStandings({
+        "league":new RegExp(`^${req.params.league}$`,"i"), 
+        "season":new RegExp(`^${req.params.season}$`,"i")
+      });
     
       res.status(200).send(standings);
     });
+
+    this.router.get('/:league/:season/tickets', util.checkCache, async function(req, res){
+      let tickets = configurationService.getPlayoffTickets(req.params.league);
+
+      
     
+      res.status(200).send(tickets.find(t => t.name === req.params.season));
+    });
+
+
+    this.router.get('/:league/:season/:division', util.checkCache, async function(req, res){
+      let standings = await dataService.getStandings({
+        "league":new RegExp(`^${req.params.league}`,"i"), 
+        "season":new RegExp(`^${req.params.season}`,"i"), 
+        "competition":new RegExp(`^${req.params.division}`,"i")
+      });
+    
+      res.status(200).send(standings);
+    });
+
+
     this.router.get('/csv/:league/:filter', util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
       let league = req.params.league;
       let filter = req.params.filter.replace('*','');
