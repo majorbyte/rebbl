@@ -4,7 +4,7 @@
 
 You need NodeJS and MongoDB to run this locally
 
-1. [Download rebbl.net dump](https://cd2n.rebbl.net/rebbl.net/rebbl.tar.gz) and unpack it (just the .tar.gz) to `<path>`, so you end up with `<path>/rebbl`
+1. [Download rebbl.net dump](https://cdn2.rebbl.net/rebbl.net/rebbl.tar.gz) and unpack it (just the .tar.gz) to `<path>`, so you end up with `<path>/rebbl`
 2. Run the following command: `mongorestore --gzip --dir <path>`
 3. Make sure you have the following environment variables availables:
     ```javascript
