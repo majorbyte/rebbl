@@ -16,7 +16,7 @@ block content
                 h5(class="card-text text-center" style="color: rgb(24, 119, 162)" )= team.team.name.substr(19, team.team.name.length-17)
               - else
                 h5(class="card-text text-center" style="color: rgb(24, 119, 162)")= team.team.name
-              img(src=`https:cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png` class="card-img-top" alt="...")
+              img(src=`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png` class="card-img-top" alt="...")
               div(class="card-body")
                 div
                   p(style="margin:0")= `TV${team.team.value}`  
