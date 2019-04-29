@@ -147,10 +147,36 @@ block content
           //ko if: loadingJourneymen
           i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
+        a(class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#nav-history" role="tab" aria-controls="nav-history" aria-selected="false" data-bind="click:selectHistory") History &nbsp;
+          //ko if: loadingHistory
+          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          // /ko
     div(class="tab-content" id="tabContent")
       div(class="tab-pane fade show active col col-12" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
         // ko template: { name: 'playerList' }
         // /ko
+      div(class="tab-pane fade show col col-12" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab")
+        table(class="table table-striped")
+          thead(class="headerText")
+            tr
+              th(scope="col") Position
+              th(scope="col") League
+              th(scope="col") Competition
+              th(scope="col") W
+              th(scope="col") D
+              th(scope="col") L
+              th(scope="col") ΔTD
+          tbody
+            // ko foreach: standings
+            tr
+              td(data-bind="text:position")
+              td(data-bind="text:league")
+              td(data-bind="text:competition")
+              td(data-bind="text:win")
+              td(data-bind="text:draw")
+              td(data-bind="text:loss")
+              td(data-bind="text:tddiff")
+            // /ko
      
 
 
@@ -354,6 +380,7 @@ block scripts
           this.retiredPlayers = null;
           this.journeymen = null;
 
+          this.standings = [];
           this.playerList = this.roster;
           this.playertypes=null;
           this.skills = null;
@@ -365,6 +392,7 @@ block scripts
           this.loadingCurrent = false;
           this.loadingPrevious = false;
           this.loadingJourneymen= false;
+          this.loadingHistory= false;
 
           this.stats = new StatsModel(data.stats || {});
         };
@@ -438,6 +466,9 @@ block scripts
         } else {
           this.playerList = this.journeymen
         }        
+      }
+      selectHistory(){
+        loadHistory(this.id); 
       }
 
     }
@@ -736,6 +767,21 @@ block scripts
 
       xhr.onload  = function() {//Call a function when the state changes.
         model.playertypes =xhr.response;
+      }
+
+      xhr.send();
+    }
+
+    function loadHistory(id){
+      let xhr = new XMLHttpRequest();
+
+      xhr.open("GET", "/api/v2/standings/"+id  ,true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+        let data = xhr.response.filter(x => x.season);
+        model.standings =data.sort((a,b) => Number(a.season.replace(/season /i,'')) > Number(b.season.replace(/season /i,'')) ? 1 : -1);
       }
 
       xhr.send();

@@ -39,6 +39,12 @@ class StandingsApi{
       res.status(200).send(standings);
     });
 
+    this.router.get('/:team', util.cache(600), async function(req, res){
+      let standings = await dataService.getStandings({teamId:Number(req.params.team)});
+    
+      res.status(200).send(standings);
+    });
+
 
     this.router.get('/csv/:league/:filter', util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
       let league = req.params.league;

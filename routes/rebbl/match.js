@@ -17,7 +17,7 @@ router.get('/unplayed/:match_id',util.checkCache, async function(req, res, next)
   }
 });
 
-router.get('/:match_id', util.checkCache, async function(req, res, next){
+router.get('/:match_id', util.cache(600), async function(req, res, next){
   let data = await leagueService.getMatchDetails(req.params.match_id);
   data.lonersValue = [await bloodBowlService.getLonerCost(data.match.teams[0].idraces), await bloodBowlService.getLonerCost(data.match.teams[1].idraces)]
   if (!data) return next('route');
