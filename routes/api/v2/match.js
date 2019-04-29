@@ -10,7 +10,7 @@ class MatchApi{
   }
   routesConfig(){
     
-    this.router.get("/:uuid",util.checkCache, async function(req,res){
+    this.router.get("/:uuid",util.cache(600), async function(req,res){
       try {
 
         res.status(200).send(await dataService.getMatch({uuid: req.params.uuid}));

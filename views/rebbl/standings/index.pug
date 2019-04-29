@@ -63,15 +63,15 @@ block content
           div(class="col-2" data-bind="text:loss")
           div(class="col-2" data-bind="text:games")
           div(class="col-2 text-right" data-bind="text:tddiff")
-        // ko if: $index()+1 === $root.tickets[$parentContext.$index()]
-        div(class="row col-12 season-table-row")
-          div(class="col-1 Standings-divider--flex")
-            span(class="Standings-dividerText--correction")
-          div(class="col-6 Standings-divider--flex" )
-            span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
-          div(class="col-5 Standings-divider--flex")
-            span(class="Standings-dividerText--correction")
-        // /ko
+      // ko if: $index()+1 === $root.tickets[$parentContext.$index()]
+      div(class="row col-12 season-table-row")
+        div(class="col-1 Standings-divider--flex")
+          span(class="Standings-dividerText--correction")
+        div(class="col-6 Standings-divider--flex" )
+          span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
+        div(class="col-5 Standings-divider--flex")
+          span(class="Standings-dividerText--correction")
+      // /ko
       // /ko
     // /ko
     // /ko
