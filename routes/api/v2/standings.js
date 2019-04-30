@@ -11,7 +11,7 @@ class StandingsApi{
     this.router = express.Router({mergeParams: true})
   }
   routesConfig(){
-    this.router.get('/:league/:season/', util.checkCache, async function(req, res){
+    this.router.get('/:league/:season/', util.cache(300), async function(req, res){
       let standings = await dataService.getStandings({
         "league":new RegExp(`^${req.params.league}$`,"i"), 
         "season":new RegExp(`^${req.params.season}$`,"i")
@@ -20,7 +20,7 @@ class StandingsApi{
       res.status(200).send(standings);
     });
 
-    this.router.get('/:league/:season/tickets', util.checkCache, async function(req, res){
+    this.router.get('/:league/:season/tickets', util.cache(300), async function(req, res){
       let tickets = configurationService.getPlayoffTickets(req.params.league);
 
       
@@ -29,7 +29,7 @@ class StandingsApi{
     });
 
 
-    this.router.get('/:league/:season/:division', util.checkCache, async function(req, res){
+    this.router.get('/:league/:season/:division', util.cache(300), async function(req, res){
       let standings = await dataService.getStandings({
         "league":new RegExp(`^${req.params.league}`,"i"), 
         "season":new RegExp(`^${req.params.season}`,"i"), 
