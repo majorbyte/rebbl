@@ -1165,6 +1165,11 @@ label { display: block; }
   background-color: #4a4a4a;
 }
 
+.calendar-add {
+  display:none;
+  font-size:14px;
+}
+
 html, body {
   height: 100%;
   margin: 0;
