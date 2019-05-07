@@ -689,9 +689,9 @@ block scripts
         model.map(xhr.response.team);
         model.stats.map(xhr.response.stats);
         loadPlayertypes(model.idraces);
-        loadCurrentPlayers();
         loadSkills();
         loadStarPlayers();
+        loadCurrentPlayers();
       }
 
       xhr.send();
@@ -758,6 +758,21 @@ block scripts
 
 
     function loadPlayertypes(id){
+      const storage = window.localStorage;
+      let playerTypes = [];
+  
+      if (storage){
+        playerTypes = JSON.parse(localStorage.getItem('playertypes') || "[]");      
+      }    
+        
+
+      let found = playerTypes.filter(x => x.race === id);
+
+      if (found.length > 0){
+        model.playertypes =found;
+        return;
+      }
+
       let xhr = new XMLHttpRequest();
       let path = window.location.pathname.split('/');
 
@@ -767,8 +782,15 @@ block scripts
 
       xhr.onload  = function() {//Call a function when the state changes.
         model.playertypes =xhr.response;
-      }
 
+        const storage = window.localStorage;
+    
+        if (storage){
+          let  playerTypes = JSON.parse(localStorage.getItem('playertypes') || "[]");      
+          playerTypes = playerTypes.concat(xhr.response)
+          storage.setItem('playertypes', JSON.stringify(playerTypes));    
+        } 
+      }
       xhr.send();
     }
 
