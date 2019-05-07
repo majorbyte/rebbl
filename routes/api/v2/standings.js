@@ -17,7 +17,7 @@ class StandingsApi{
         "season":new RegExp(`^${req.params.season}$`,"i")
       });
     
-      res.status(200).send(standings);
+      res.json(standings);
     });
 
     this.router.get('/:league/:season/tickets', util.cache(300), async function(req, res){
@@ -25,7 +25,7 @@ class StandingsApi{
 
       
     
-      res.status(200).send(tickets.find(t => t.name === req.params.season));
+      res.json(tickets.find(t => t.name === req.params.season));
     });
 
 
@@ -36,13 +36,13 @@ class StandingsApi{
         "competition":new RegExp(`^${req.params.division}`,"i")
       });
     
-      res.status(200).send(standings);
+      res.json(standings);
     });
 
     this.router.get('/:team', util.cache(600), async function(req, res){
       let standings = await dataService.getStandings({teamId:Number(req.params.team)});
     
-      res.status(200).send(standings);
+      res.json(standings);
     });
 
 
@@ -90,7 +90,7 @@ class StandingsApi{
       res.setHeader("content-type", "text/csv");
       res.set('Content-Type', 'application/octet-stream');
       res.attachment(`${req.params.league}.csv`);
-      res.status(200).send(csv.join('\r\n'));
+      res.json(csv.join('\r\n'));
     
     
     });
