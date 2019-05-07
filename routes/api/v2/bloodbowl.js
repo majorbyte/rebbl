@@ -11,17 +11,17 @@ class BloodBowlApi{
 
   routesConfig(){
     this.router.get('/skills', util.checkCache, async function(req, res){
-      res.status(200).send(skills.skillDescriptions);
+      res.json(skills.skillDescriptions);
     });
     
     this.router.get('/playertypes/:race', util.checkCache, async function(req, res){
       let data = await dataService.getPlayerTypes({race:Number(req.params.race)});
-      res.status(200).send(data);
+      res.json(data);
     });
     
     this.router.get('/starplayers', util.checkCache, async function(req, res){
       let data = await dataService.getStarPlayers({});
-      res.status(200).send(data);
+      res.json(data);
     });
     
     return this.router;

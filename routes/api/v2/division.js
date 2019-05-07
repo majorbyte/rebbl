@@ -16,7 +16,7 @@ class DivisionApi{
         let {league, season} = req.params;
 
         let data = await dataService.getSeason({league:league, season:season});
-        res.status(200).send(data.divisions);
+        res.json(data.divisions);
       }
       catch (ex){
         console.error(ex);
@@ -29,7 +29,7 @@ class DivisionApi{
         let {league,season, division} = req.params;
 
         let data = await dataService.getSchedules({league:league,season:season,competition:division});
-        res.status(200).send(data);
+        res.json(data);
       }
       catch (ex){
         console.error(ex);
@@ -42,7 +42,7 @@ class DivisionApi{
         let {league,season, division, round} = req.params;
 
         let data = await dataService.getSchedules({league:league,season:season,competition:division, round:Number(round)});
-        res.status(200).send(data);
+        res.json(data);
       }
       catch (ex){
         console.error(ex);

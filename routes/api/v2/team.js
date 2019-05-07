@@ -16,7 +16,7 @@ class TeamApi{
         team.team.coachname = team.coach ? team.coach.name : 'AI';
         delete team.roster;
         delete team.coach;
-        res.status(200).send(team);
+        res.json(team);
       }
       catch (ex){
         console.error(ex);
@@ -28,7 +28,7 @@ class TeamApi{
     this.router.get('/:teamId/players', util.cache(600), async function(req, res){
       try {
         let players = await dataService.getPlayers({"teamId":Number(req.params.teamId),"active":true});
-        res.status(200).send(players);
+        res.json(players);
       }
       catch (ex){
         console.error(ex);
@@ -39,7 +39,7 @@ class TeamApi{
     this.router.get('/:teamId/retiredplayers', util.cache(600), async function(req, res){
       try {
         let players = await dataService.getPlayers({"teamId":Number(req.params.teamId),"active":false, "id":{$ne:null}});
-        res.status(200).send(players);
+        res.json(players);
       }
       catch (ex){
         console.error(ex);
@@ -50,7 +50,7 @@ class TeamApi{
     this.router.get('/:teamId/hiredplayers', util.cache(600), async function(req, res){
       try {
         let players = await dataService.getPlayers({"teamId":Number(req.params.teamId),"active":false, "id":null});
-        res.status(200).send(players);
+        res.json(players);
       }
       catch (ex){
         console.error(ex);

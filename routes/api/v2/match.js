@@ -13,7 +13,7 @@ class MatchApi{
     this.router.get("/:uuid",util.cache(600), async function(req,res){
       try {
 
-        res.status(200).send(await dataService.getMatch({uuid: req.params.uuid}));
+        res.json(await dataService.getMatch({uuid: req.params.uuid}));
       }
       catch (ex){
         console.error(ex);
