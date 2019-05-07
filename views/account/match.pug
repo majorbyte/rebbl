@@ -18,6 +18,40 @@ block scripts
   - if(user)
     script.
       $(document).ready(function(){
+
+        function formatDate(date) {
+          const dateFormat = "YYYYMMDDTHHmmss[Z]";
+          if(moment.isMoment(date)) {
+            return date.format(dateFormat);
+          } else {
+            return moment(date, "YYYY-MM-DD HH:mm").format(dateFormat);
+          }
+        }
+
+        function calculateEndDatetime(startDatetime) {
+          return formatDate(moment(startDatetime, "YYYY-MM-DD HH:mm").add(2, "h"));
+        }
+
+        function setCalendarDatetime(date) {
+          const anchor = $(".calendar-add").eq(0)
+          let matchDate = anchor.data("date")
+          if(date) {
+            matchDate = date
+          }
+
+          if(matchDate) {
+            anchor.show();
+          }
+          if(date === '') {
+            anchor.hide();
+          }
+
+          //give times in UTC and let google handle the tz magic
+          anchor.attr("href", `http://www.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent(`REBBL ${anchor.data('team-home')} - ${anchor.data('team-away')}`)}&dates=${formatDate(matchDate)}/${calculateEndDatetime(matchDate)}`);
+        }
+
+        setCalendarDatetime();
+
         let timezones = $(".timezone");
 
         timezones.each(function(zone){
@@ -51,8 +85,15 @@ block scripts
               }
           }
 
+          let date = $(target).val();
 
-          xhr.send(JSON.stringify({date:moment.tz($(target).val(),timezone).tz("UTC").format('YYYY-MM-DD HH:mm')}));
+          if(date) {
+            date = moment.tz(date,timezone).tz("UTC").format("YYYY-MM-DD HH:mm");
+          }
+
+          setCalendarDatetime(date);
+           
+          xhr.send(JSON.stringify({date: date}));
 
         });
         
@@ -97,7 +138,9 @@ block content
               div(class="row col-12 justify-content-center") 
                 div(class="col-3 col-sm-6 col-md-4 col-xl-3")
                   input(type="text" class="form-control datetimepicker-input" id=`datetimepicker-${match.contest_id}` data-target=`#datetimepicker-${match.contest_id}` data-toggle="datetimepicker" value=(match.date ? match.date.date : null) data-btn=`#btn-${match.contest_id}`  )
-                button(class="col-md-3 col-6 col-xl-3 pull-right btn btn-secondary" disabled data-contestid= match.contest_id data-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}` ) Set match date
+                div(class="col-3 col-sm-6 col-md-4 col-xl-3" style="padding:0;")
+                  button(class="btn btn-secondary btn-block" disabled data-contestid= match.contest_id data-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
+                  a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.opponents[0].team.name data-team-away=match.opponents[1].team.name class="calendar-add") Add to Google Calendar
             - if(!user && match.date)
               p planned match start:&nbsp;
                 span(id="matchTime")= match.date.date
