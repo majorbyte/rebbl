@@ -51,7 +51,7 @@ block content
             // /ko
             // ko if: $data.trophy 
             | &nbsp; &nbsp; 
-            img(data-bind="attr:{src:`https://cdn2.rebbl.net/${trophy}`}"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" title="fix" class="trophy-toggle" data-target="#trophy" data-date="fix")
+            img(data-bind="attr:{src:`https://cdn2.rebbl.net/${trophy.filename}`, title:trophy.title, 'data-date':trophy.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
             // /ko
           div(class="col-7" style=";overflow:hidden") 
             a(data-bind="text: teamName(),attr:{href:`/rebbl/team/${teamId}`}")
@@ -206,6 +206,13 @@ block scripts
         }.bind(this);
         xhr.send();
       }
+
+      showTrophy(e){
+        $('#modal-title').text(e.trophy.title + (e.trophy.date.length > 0 ? " - " + e.trophy.date : "") );
+        $('#modal-image').attr('src',`https://cdn2.rebbl.net/${e.trophy.filename}`);
+        $('#trophy').modal();
+      };
+
       
       _groupBy(xs, key) {
         return xs.reduce(function(rv, x) {
@@ -222,5 +229,7 @@ block scripts
       model.league = path[path.length-1];
       ko.applyBindings(model);
       model.loadSeasons();
+
+
     });
     
