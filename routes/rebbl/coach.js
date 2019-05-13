@@ -33,7 +33,7 @@ class Coach{
     this.router.get('/:coach_id/trophies', util.checkCache, async function(req, res){
       let data =  await db.getCoach(req.params.coach_id);
       if (data){
-        data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name}$`,"i")}});
+        data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i")}});
         data.renderExtra = true;
       }
       res.render('rebbl/coach/trophies', data);
@@ -42,9 +42,9 @@ class Coach{
     this.router.get('/:coach_id/details', util.checkCache, async function(req, res){
       let data =  await db.getCoach(req.params.coach_id);
       if (data) {
-        data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name}$`,"i")}});
+        data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i")}});
         if (!data.coachDetails)
-          data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name}`,"i")}});
+          data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`,"i")}});
         data.renderExtra = true;
       }
       else {
