@@ -30,7 +30,7 @@ class Routes{
 
     data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);;
 
-    let s  = new RegExp("(The REBBL Rabble Mixer)|(XScessively Elfly League)|(Rebbl One Minute League)|(REBBLL )","i")
+    let s  = new RegExp("^(REBBRL)","i")
     docs = await dataService.getSchedulesChain({ "league":{"$regex":s} }).sort({ match_uuid: -1 }).limit(20).toArray();
     data.sides = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
     
@@ -59,12 +59,13 @@ class Routes{
 	routesConfig(){
 		this.router.use("/api", new api().routesConfig() );
     this.router.use("/maintenance", new maintenance().routesConfig());
-    this.router.use("/rebbl", new rebbl().routesConfig());
     this.router.use("/cripple", new cripple().routesConfig());
     this.router.use("/account", new account().routesConfig());
     this.router.use("/signup", new signup().routesConfig());
     this.router.use("/auth", new auth().routesConfig());
     this.router.use("/admin", util.ensureAuthenticated, util.hasRole("admin"), new admin().routesConfig());
+
+    this.router.use("/:company", new rebbl().routesConfig());
 
     this.router.get("/", util.checkCache, this._root);
   

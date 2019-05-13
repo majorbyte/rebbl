@@ -13,13 +13,14 @@ class Coach{
 
   routesConfig(){
     this.router.get('/:coach_id', util.checkCache, async function(req, res){
-      res.redirect(`/rebbl/coach/${req.params.coach_id}/details`);
+      res.redirect(`/${req.params.company}/coach/${req.params.coach_id}/details`);
     });
     
     this.router.get('/:coach_id/teams', util.checkCache, async function(req, res){
       let data =  await db.getCoach(req.params.coach_id);
       if (data)
         data.teams = await teamService.getTeams(data.id);
+      data.company = req.params.company;   
       res.render('rebbl/coach/teams', data);
     });
     
@@ -27,6 +28,7 @@ class Coach{
       let data =  await db.getCoach(req.params.coach_id);
       if (data)
         data.matches = await db.getMatchesForCoach(data.id);
+      data.company = req.params.company;   
       res.render('rebbl/coach/matches', data);
     });
     
@@ -36,6 +38,7 @@ class Coach{
         data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i")}});
         data.renderExtra = true;
       }
+      data.company = req.params.company;   
       res.render('rebbl/coach/trophies', data);
     });
     
@@ -56,6 +59,7 @@ class Coach{
         data.renderExtra = false;
       }
     
+      data.company = req.params.company;   
       res.render('rebbl/coach/details', data);
     });
     

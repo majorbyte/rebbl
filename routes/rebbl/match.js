@@ -4,14 +4,14 @@ const
   , bloodBowlService = require("../../lib/bloodbowlService.js")
   , util = require('../../lib/util.js')
   , express = require('express')
-  , router = express.Router()
+  , router = express.Router({mergeParams:true})
   , skills = require("../../datastore/skillDescriptions.js");
 
 router.get('/unplayed/:match_id',util.checkCache, async function(req, res, next){
   try{
     let match = await leagueService.getUnplayedMatch(req.params.match_id);
 
-    res.render('rebbl/match/unplayed',{matches: match} );
+    res.render('rebbl/match/unplayed',{matches: match,company:req.params.company} );
   } catch(err){
     console.log(err);
   }
@@ -49,7 +49,7 @@ router.get('/:match_id', util.cache(600), async function(req, res, next){
       });
     });
   }
-
+  data.company=req.params.company;
   res.render('rebbl/match/match', data);
 });
 

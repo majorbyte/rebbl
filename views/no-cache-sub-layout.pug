@@ -3,25 +3,41 @@ include nav-link
 block vars
 
 - if (!active) { var active =  (options && options.active) ? options.active : "" }
+- let renderCompany = (options && options.company) ? options.company : ""
+- if (!className) { var className = (options && options.company) ? options.company : "rebbl"}
 
 block body
-  a(href="/")
-    div(class="u-bottomPadding--small-rebbl")
+  - if (renderCompany != "")
+    a(href="/")
+      div(class=`u-bottomPadding--small-${className}`)
   nav(class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="min-height:80px;z-index:2000;justify-content:unset")
     button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblMainNav" aria-controls="rebblMainNav" aria-expanded="false" aria-label="Toggle navigation")
       span(class="navbar-toggler-icon")
     a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= active.toUpperCase()          
     div(class="collapse navbar-collapse" id="rebblMainNav")
       ul(class="navbar-nav mr-auto")
-        +nav-link("Big O")
-        +nav-link("Gman")
-        +nav-link("REL")
-        +nav-link("RAMPUP", "/rebbl/rampup")
-        +nav-link("Stunty")
-        +nav-link("One Minute")
-        +nav-link("Lineman League", "/rebbl/rebbll")
-        +nav-link("Elfly", "/rebbl/XScessively Elfly League")
-        +nav-link("Account", "/account")
+        -if(renderCompany == "")
+          li 
+            a(href="/rebbl")
+              div(style="height: 8em;width: 12em;background: rgba(255, 255, 255, 0) url(https://cdn2.rebbl.net/images/rebbl.png) no-repeat 99%;background-size: 12em;left: 5px;position: fixed;top: 0px;z-index: 9999;")
+          li
+            a(href="/rebbrl")
+              div(style="height: 8em;width: 8em;background: rgba(255, 255, 255, 0) url(https://cdn2.rebbl.net/images/rebbrl.png) no-repeat 99%;background-size: 7em;right: 5px;position: fixed;top: 0px;z-index: 9999;")
+
+        -if(renderCompany == "rebbl")
+          +nav-link("Big O")
+          +nav-link("Gman")
+          +nav-link("REL")
+          +nav-link("RAMPUP", "/rebbl/rampup")
+          +nav-link("Stunty")
+          +nav-link("One Minute")
+          +nav-link("Lineman League", "/rebbl/rebbll")
+          +nav-link("Elfly", "/rebbl/XScessively Elfly League")
+          +nav-link("Account", "/account")
+        -if(renderCompany == "rebbrl")
+          +nav-link("College", "/rebbrl/ReBBRL College League")
+          +nav-link("Minors", "/rebbrl/ReBBRL Minors League")
+          +nav-link("Account", "/account")
         block additionalMainNavigation
 
   block navigation
@@ -41,13 +57,20 @@ block body
           h1(class="display-3") REBBL
 
   footer(class="footer")
+    div( style="float:left;")
+      p(style="padding:10px") &nbsp; © majorbyte 2018 &nbsp; &nbsp; &nbsp;
     div( style="float:right;")
       span(class="margin-right:7px") Donate:
       a(href="https://www.paypal.me/rebblnet" target="_blank")
         img(src="https://cdn2.rebbl.net/images/donate.png" title="Donate")  
       | &nbsp; &nbsp; &nbsp; 
       a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
-    p(style="padding:10px") &nbsp; © majorbyte 2018 &nbsp; &nbsp; &nbsp;
+    div( style="margin:0 auto;width:200px")
+      span(class="margin-right:7px") 
+      a(href="/rebbl" target="_blank")
+        img(src="https://cdn2.rebbl.net/images/rebbl.png" )  
+      a(href="/rebbrl" ) 
+        img(src="https://cdn2.rebbl.net/images/rebbrl.png" )  
   - if (process.env.NODE_ENV === 'production')
     - if ( fullJquery)
       script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.full.min.js")

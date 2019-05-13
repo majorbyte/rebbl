@@ -18,7 +18,7 @@ class Division{
   }
 
   async _division(req,res) {
-    let data = {matches: null, divisions: null, league: req.params.league, competition: req.params.division};
+    let data = {matches: null, divisions: null, league: req.params.league, competition: req.params.division,company:req.params.company};
     
     let leagueRegex;
     let league = req.params.league;
@@ -28,7 +28,7 @@ class Division{
     } else if(league.toLowerCase() == "greenhorn cup") {
       leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
       divRegex =new RegExp(`^${req.params.division}$`, 'i');
-    } else if (league.toLowerCase().indexOf("rebbl -") == -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
+    } else if (league.toLowerCase().indexOf("rebbrl") == -1 && league.toLowerCase().indexOf("rebbl -") == -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
       leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
     } else {
       if (league === "rabble"){
@@ -70,12 +70,12 @@ class Division{
     let week = parseInt(req.params.week);
   
     if (week > 0){
-      let data = {matches:null, divisions:null, league:req.params.league, competition: req.params.division, week: week };
+      let data = {matches:null, divisions:null, league:req.params.league, competition: req.params.division, week: week,company:req.params.company };
       let leagueRegex;
       let league = req.params.league;
       if(league.toLowerCase() == "open invitational"){
         leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
-      } else if (league.toLowerCase().indexOf("rebbl -") == -1 && league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
+      } else if (league.toLowerCase().indexOf("rebbrl") == -1 && league.toLowerCase().indexOf("rebbl -") == -1 && league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
         leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
       } else {
         if (league === "rabble"){

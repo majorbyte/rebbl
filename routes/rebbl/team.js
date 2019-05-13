@@ -2,10 +2,10 @@
 const 
   util = require('../../lib/util.js')
   , express = require('express')
-  , router = express.Router();
+  , router = express.Router({mergeParams:true});
 
 router.get('/:team_id', util.checkCache, async function(req, res, next){
-    res.render('rebbl/team/team');
+    res.render('rebbl/team/team',{company:req.params.company});
 });
 
 module.exports = router;

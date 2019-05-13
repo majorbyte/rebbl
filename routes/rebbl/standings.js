@@ -11,7 +11,8 @@ class Standings{
 
   routesConfig(){
     this.router.get('/:league', util.checkCache, async function(req, res){
-      res.render('rebbl/standings/index');
+      let data  = {company:req.params.company};
+      res.render('rebbl/standings/index', data);
     });
     return this.router;
   }
