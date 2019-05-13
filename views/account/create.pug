@@ -1,0 +1,89 @@
+extends sublayout.pug
+
+block append vars
+  - var activeSubMenu = "account"
+
+block append scripts
+  script.
+    $(document).ready(function(){
+      $("#timezone").on('change', function(e){
+        $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
+      });
+
+      let select = document.getElementById("timezone");
+      let guessed = moment.tz.guess();
+
+      guessed = "#{account ? account.timezone : ''}" || guessed;
+      let names = moment.tz.names();
+      let l = names.length;
+
+      for(let i = 0; i < l; i++){
+        let tz = names[i];
+        let option = document.createElement("option");
+        option.setAttribute("value", tz);
+        option.text = tz;
+        if (tz === guessed){
+          option.setAttribute("selected", "selected")
+        }
+        select.appendChild(option);
+      }
+      $("#tz_info").text(moment().tz(guessed).format('YYYY-MM-DD HH:mm ZZ'));
+
+    });
+
+block content
+  div(class="container")
+    form(action="/account/create" method="post" class="container signup")
+      h2
+        span(class="highlight")= user || account.reddit
+
+      h3 Your data
+
+      -if (account)
+        -if(account.err)
+          div
+            span(class="warning")=account.err.message
+
+        div
+          label(for="coach") Blood Bowl 2 coach name
+          input(type="text" id="coach" name="coach" value=account.coach  required)
+        div
+          label(for="timezone") Timezone
+          select(id="timezone" name="timezone" required title="timezone" value=account.timezone)
+          label(id="tz_info")
+        div
+          label(for="discord") Discord
+          input(type="text" id="discord" name="discord" value=account.discord )
+        div
+          label(for="steam") Steam
+          input(type="text" id="steam" name="steam" value=account.steam )
+        div
+          label(for="twitch") Twitch
+          input(type="text" id="twitch" name="twitch" value=account.twitch )
+        div
+          input(type="checkbox" id="useDark" name="useDark" checked=account.useDark style="height:25px;width:25px") 
+          label(for="useDark" style="display:inline;verticle-align:middle;margin-left:6px") Use rebbl dark mode
+      -if (!account)
+        div
+          label(for="coach") Blood Bowl 2 coach name
+          input(type="text" id="coach" required name="coach")
+        div
+          label(for="timezone") Timezone
+          select(id="timezone" name="timezone" required title="timezone")
+          label(id="tz_info")
+        div
+          label(for="discord") Discord
+          input(type="text" id="discord" name="discord")
+        div
+          label(for="steam") Steam
+          input(type="text" id="steam" name="steam")
+        div
+          label(for="twitch") Twitch
+          input(type="text" id="twitch" name="twitch")
+        div
+          input(type="checkbox" id="useDark" name="useDark" checked=false style="height:25px;width:25px") 
+          label(for="useDark" style="display:inline;verticle-align:middle;margin-left:6px") Use rebbl dark mode
+      div(style="clear:both")
+        <button type="submit">Save</button>
+        br
+        br                

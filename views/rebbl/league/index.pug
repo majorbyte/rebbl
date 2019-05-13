@@ -1,7 +1,8 @@
 extends ../../no-cache-sub-layout.pug
 
+
 block vars
-  - let options = {active: league, title: "REBBL SEASON 11"}
+  - let options = {active: league, title: "REBBL SEASON 11", company:company}
   - let seasons = []
   - let ignoreLeagues = ["xscessively elfly league", "open invitational", "greenhorn cup", "rabble", "eurogamer", "playins - s10"]
   - if (ignoreLeagues.indexOf(league.toLowerCase()) === -1)
@@ -62,7 +63,7 @@ block navigation
             each round in rounds.sort(collator.compare)
               - let season = round.substr(0,9).replace(' ', '')
               - let hideSeason = season.toLowerCase().trim() != (seasons[0] || "").replace(' ', '').toLowerCase().trim()
-              a(class=`dropdown-item Season ${season}` style=`${hideSeason ? "display:none": ""}` href=`/rebbl/${league}/${round}`)=  round.toUpperCase()
+              a(class=`dropdown-item Season ${season}` style=`${hideSeason ? "display:none": ""}` href=`/${company}/${league}/${round}`)=  round.toUpperCase()
 block content
   -let seasonName = ""
   -let i = -1
@@ -80,7 +81,7 @@ block content
       div(class="row col-12")
         h2
          i(id=div[0].competition  style="padding-top:180px;margin-top:-180px")
-         a( href=`/rebbl/${league}/${div[0].competition}`  class="highlight")= div[0].competition
+         a( href=`/${company}/${league}/${div[0].competition}`  class="highlight")= div[0].competition
       div(class="season-table")  
         div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
           div(class="row col-6" style="font-size:1.25em")
@@ -104,7 +105,7 @@ block content
             div(class="row col-6")
               div(class="col-1" )= y+1
               div(class="col-4" style=";overflow:hidden") 
-                a(href=`/rebbl/coach/${coach.id}` )= coach.name
+                a(href=`/${company}/coach/${coach.id}` )= coach.name
                 - if(coach.account && coach.account.donations && coach.account.showDonation)
                   | &nbsp; &nbsp; 
                   img(src="/images/gold.png" style="height:25px;float:right;margin-top: 2px;" title="donator")
@@ -115,9 +116,9 @@ block content
                     img(src="https://cdn2.rebbl.net/" + trophy.filename style="height:25px;float:right;margin-top: 2px;cursor:pointer" title=trophy.title class="trophy-toggle" data-target="#trophy" data-date=trophy.date)
               div(class="col-7" style=";overflow:hidden") 
                 -if (coach.team.indexOf("[colour") === 0)
-                  a(href=`/rebbl/team/${coach.teamId}`)= coach.team.substr(19, coach.team.length-17)
+                  a(href=`/${company}/team/${coach.teamId}`)= coach.team.substr(19, coach.team.length-17)
                 - else
-                  a(href=`/rebbl/team/${coach.teamId}` )= coach.team
+                  a(href=`/${company}/team/${coach.teamId}` )= coach.team
             div(class="col-2" style=";overflow:hidden")= coach.race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
             div(class="row col-4" )
               div(class="col-2" )= coach.points

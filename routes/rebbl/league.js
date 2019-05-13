@@ -14,7 +14,7 @@ class League{
 
   routesConfig(){
     this.router.get('/', util.checkCache, async function(req, res){
-      let data = {standings:null, rounds:null, league:req.params.league };
+      let data = {standings:null, rounds:null, league:req.params.league,company:req.params.company };
       let comp = false;
       let league = req.params.league.toLowerCase();
 
@@ -38,7 +38,7 @@ class League{
       } else if(league.toLowerCase() == "greenhorn cup") {
         league = new RegExp(`^Greenhorn Cup`,'i');
         comp ="Greenhorn Cup";
-      } else if (league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer" ){
+      } else if (league.toLowerCase().indexOf("rebbrl") == -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer" ){
         league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
       }  
       else {

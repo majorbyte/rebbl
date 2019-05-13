@@ -14,7 +14,7 @@ block scripts
       $("#dropdowWeek").text("!{week}");
     });
 block vars
-  - var options = {active: league, title: "REBBL SEASON 8"}
+  - var options = {active: league, title: "REBBL SEASON 8",company:company}
   - let seasons = []
   for div, x in divisions
     - let season = div.substr(0,9)

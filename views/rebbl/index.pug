@@ -2,10 +2,11 @@ extends ../no-cache-sub-layout.pug
 include ../nav-link
 
 block vars
-
-  - let options = {active: league, title: "REBBL SEASON 8"}
+  
+  - let options = {active: league, title: "REBBL SEASON 8", company:data.company}
   - let fullJquery = true
   - if (!active) { var active =  (options && options.active) ? options.active : "" }
+  - let company = data.company || "";
 
 
 
@@ -157,14 +158,21 @@ block navigation
       span(class="navbar-toggler-icon")
     a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
     div(class="collapse navbar-collapse" id="rebblSubNav")
-      ul(class="navbar-nav mr-auto")
-        +nav-link("Upcoming games", "/rebbl/upcoming")
-        +nav-link("Play-ins", "rebbl/playins%20-%20s10/Play-Ins%20Qualifier")
-        +nav-link("Playoffs", "rebbl/playoffs/ReBBL Playoffs X")
-        +nav-link("OI", "/rebbl/Open Invitational")
-        +nav-link("GREENHORN", "/rebbl/Greenhorn Cup")
-        +nav-link("EUROGAMER", "/rebbl/eurogamer")
-        +nav-link("CRIPPLE", "/cripple/standings")
+      -let style = company === "" ? "margin:0 auto" : ""
+      ul(class="navbar-nav" style=style)
+        - if (company === "")
+          +nav-link("Upcoming games", "/rebbl/upcoming")
+          +nav-link("Account", "/account")
+        - if (company === "rebbrl")
+          +nav-link("Upcoming games", "/rebbrl/upcoming")
+        - if (company === "rebbl")
+          +nav-link("Upcoming games", "/rebbl/upcoming")
+          +nav-link("Play-ins", "rebbl/playins%20-%20s10/Play-Ins%20Qualifier")
+          +nav-link("Playoffs", "rebbl/playoffs/ReBBL Playoffs X")
+          +nav-link("OI", "/rebbl/Open Invitational")
+          +nav-link("GREENHORN", "/rebbl/Greenhorn Cup")
+          +nav-link("EUROGAMER", "/rebbl/eurogamer")
+          +nav-link("CRIPPLE", "/cripple/standings")
 
 
 
@@ -173,7 +181,9 @@ block content
   div(class="container-flex no-gutters")
     div(class="row col-12 no-gutters")
       div(class="slider-frame")
-        h2(style="margin-left:50px;margin-top:10px") LATEST REBBL GAMES
+        -let titleMain = company === "" ? "LATEST REBBL GAMES" : `LATEST ${company} GAMES`
+        -let urlMain = company === "" ? "rebbrl" : company
+        h2(style="margin-left:50px;margin-top:10px")= titleMain
         div(class="btn prev")
           i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
         div(class="btn next")
@@ -201,11 +211,11 @@ block content
                       -league="rampup"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_orc_17.png" )
                   div(class="col-10 no-gutters")
-                    a(href=`/rebbl/${league}`)= match.league.replace(/rebbl - /i,'')
+                    a(href=`/${urlMain}/${league}`)= match.league.replace(/rebbl - /i,'')
                     br
-                    a(href=href=`/rebbl/${league}/${match.competition}` style="font-size:0.9rem")= match.competition.replace(/10 - /i,'')
+                    a(href=href=`/${urlMain}/${league}/${match.competition}` style="font-size:0.9rem")= match.competition.replace(/10 - /i,'')
                   div(class="col-12" style="margin-bottom:10px")    
-                    -let url=`/rebbl/match/${match.match_uuid}`
+                    -let url=`/${urlMain}/match/${match.match_uuid}`
                     a(href=url class="MatchRow-contentWrapper")
                       div(class="row col-12 no-gutters" style="margin: 0 auto;")
                         div(class="col-10 no-gutters")
@@ -249,7 +259,10 @@ block content
     br
     div(class="row col-12 no-gutters")
       div(class="slider-frame")
-        h2(style="margin-left:50px;margin-top:10px") LATEST SIDE LEAGUE GAMES
+        - let titleSide = company === "" ? "LATEST REBBRL GAMES" : "LATEST SIDE LEAGUE GAMES"
+        - titleSide = company === "rebbrl" ? "LATEST MINORS GAMES" : titleSide
+        - let urlFix = company === "" ? "rebbrl" : company
+        h2(style="margin-left:50px;margin-top:10px")= titleSide
         div(class="btn prev")
           i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
         div(class="btn next")
@@ -273,11 +286,11 @@ block content
                       -league = "rebbll"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_14.png" )
                   div(class="col-10 no-gutters")
-                    a(href=`/rebbl/${league}`)= match.league.replace(/rebbl - /i,'')
+                    a(href=`/${urlFix}/${league}`)= match.league.replace(/rebbl - /i,'')
                     br
-                    a(href=href=`/rebbl/${league}/${match.competition}` style="font-size:0.9rem")= match.competition.replace(/season 11 - /i,'')
+                    a(href=href=`/${urlFix}/${league}/${match.competition}` style="font-size:0.9rem")= match.competition.replace(/season 11 - /i,'')
                   div(class="col-12" style="margin-bottom:10px")    
-                    -let url=`/rebbl/match/${match.match_uuid}`
+                    -let url=`/${urlFix}/match/${match.match_uuid}`
                     a(href=url class="MatchRow-contentWrapper")
                       div(class="row col-12 no-gutters" style="margin: 0 auto;")
                         div(class="col-10 no-gutters")

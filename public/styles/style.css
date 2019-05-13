@@ -858,6 +858,17 @@ a:focus,a:hover {
   z-index: 9999;
 }
 
+.u-bottomPadding--small-rebbrl{
+  height: 8em;
+  width: 12em;
+  background: #ffffff00 url(/images/rebbrl.png) no-repeat 99%;
+  background-size: 7em;
+  right: 5px;
+  position: fixed;
+  top:0px;
+  z-index: 9999;
+}
+
 
 .col-sm-8 {
   color: #d22424;

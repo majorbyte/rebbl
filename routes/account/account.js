@@ -15,15 +15,18 @@ class Account{
   routesConfig(){
     this.router.get('/login', function(req, res){res.render('account/login');});
 
-    this.router.get('/', util.ensureAuthenticated, this._getAccount);
-    this.router.get('/match',util.ensureAuthenticated, this._getMatch);
-    this.router.get('/trophies',util.ensureAuthenticated, this._getTrophies);
+    this.router.get('/create', util.ensureLoggedIn, this._getCreateAccount);
+    this.router.post('/create', util.ensureLoggedIn, this._createAccount);
 
-    this.router.post('/trophies/hide',util.ensureAuthenticated, this._hideTrophy);
-    this.router.post('/trophies/show',util.ensureAuthenticated, this._showTrophy);
-    this.router.post('/update', util.ensureAuthenticated, this._updateAccount);
+    this.router.get('/', util.checkAuthenticated, util.ensureAuthenticated, this._getAccount);
+    this.router.get('/match',util.checkAuthenticated, util.ensureAuthenticated, this._getMatch);
+    this.router.get('/trophies',util.checkAuthenticated, util.ensureAuthenticated, this._getTrophies);
 
-    this.router.put('/unplayed/:match_id', util.ensureAuthenticated, this._scheduleMatch);
+    this.router.post('/trophies/hide',util.checkAuthenticated, util.ensureAuthenticated, this._hideTrophy);
+    this.router.post('/trophies/show',util.checkAuthenticated, util.ensureAuthenticated, this._showTrophy);
+    this.router.post('/update', util.checkAuthenticated, util.ensureAuthenticated, this._updateAccount);
+
+    this.router.put('/unplayed/:match_id', util.checkAuthenticated, util.ensureAuthenticated, this._scheduleMatch);
 
     return this.router;
   }
@@ -40,6 +43,19 @@ class Account{
       console.log(err);
     }
   }
+
+  async _getCreateAccount(req, res){
+    try{
+      if (!req.user.name){
+        res.redirect('/signup');
+      } else {
+        res.render('account/create', { user: req.user.name});
+      }
+    } catch(err){
+      console.log(err);
+    }
+  }
+
 
   async _getMatch(req, res){
     try{
@@ -115,7 +131,30 @@ class Account{
       console.log(err);
     }
   }
+
+  async _createAccount(req, res){
+    try{
+      let {coach,discord,steam, timezone,twitch,useDark} = req.body;
+      let account ={coach,discord,steam, timezone,twitch,useDark};
+       
+      account.reddit = req.user.name;
+
+      try{
+        await accountService.createAccount(account);
+        res.redirect('/account');
+      } catch(err){
+        account.err = err;
+        res.render('account/create', { account:account});
+      }
+  
+    } catch(err){
+      console.log(err);
+    }
+  }
+
 }
+
+
 
 
 
