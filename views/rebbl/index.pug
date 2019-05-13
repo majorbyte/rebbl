@@ -182,8 +182,9 @@ block content
     div(class="row col-12 no-gutters")
       div(class="slider-frame")
         -let titleMain = company === "" ? "LATEST REBBL GAMES" : `LATEST ${company} GAMES`
-        -let urlMain = company === "" ? "rebbrl" : company
-        h2(style="margin-left:50px;margin-top:10px")= titleMain
+        -let urlMain = company === "" ? "rebbl" : company
+        a(href=`/${urlMain}`)
+          h2(style="margin-left:50px;margin-top:10px")= titleMain
         div(class="btn prev")
           i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
         div(class="btn next")
@@ -262,7 +263,8 @@ block content
         - let titleSide = company === "" ? "LATEST REBBRL GAMES" : "LATEST SIDE LEAGUE GAMES"
         - titleSide = company === "rebbrl" ? "LATEST MINORS GAMES" : titleSide
         - let urlFix = company === "" ? "rebbrl" : company
-        h2(style="margin-left:50px;margin-top:10px")= titleSide
+        a(href=`/${urlFix}`)
+          h2(style="margin-left:50px;margin-top:10px")= titleSide
         div(class="btn prev")
           i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
         div(class="btn next")
