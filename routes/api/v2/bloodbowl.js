@@ -1,7 +1,7 @@
 'use strict';
 const   dataService = require("../../../lib/DataService.js").rebbl
   , express = require('express')
-  , skills = require("../../../datastore/skillDescriptions.js")
+  , bloodbowlService = require("../../../lib/bloodbowlService.js")
   , util = require('../../../lib/util.js');
 
 class BloodBowlApi{
@@ -11,7 +11,7 @@ class BloodBowlApi{
 
   routesConfig(){
     this.router.get('/skills', util.checkCache, async function(req, res){
-      res.json(skills.skillDescriptions);
+      res.json(bloodbowlService.getSkillDescriptions());
     });
     
     this.router.get('/playertypes/:race', util.checkCache, async function(req, res){
