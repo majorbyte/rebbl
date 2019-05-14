@@ -10,7 +10,6 @@ const express = require('express')
   , MongoDBStore = require('connect-mongodb-session')(session)
   , RedditStrategy = require('passport-reddit').Strategy
   , dataService = require("./lib/DataService.js")
-  , compression = require('compression')
   , configurationService = require("./lib/ConfigurationService.js");
 
 
@@ -58,7 +57,6 @@ class Server{
     };
 
     
-    //this.app.use(compression({ filter: this.shouldCompress }))
     // set our default template engine to "ejs"
     // which prevents the need for using file extensions
     this.app.set('view engine', 'pug');
@@ -156,16 +154,6 @@ class Server{
       res.status(404).render('404', { url: req.originalUrl });
     });    
   }
-
-  shouldCompress (req, res) {
-    if (req.headers['x-no-compression']) {
-      // don't compress responses with this request header
-      return false
-    }
-    // fallback to standard filter function
-    return compression.filter(req, res)
-  }
-
 
   startSocketIOAndServer(){
     this.server = require('http').Server(this.app);

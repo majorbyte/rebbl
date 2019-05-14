@@ -8,7 +8,6 @@
     "async": "^2.6.2",
     "axios": "^0.18.0",
     "azure-storage": "^2.10.2",
-    "compression": "^1.7.4",
     "connect-mongodb-session": "^2.1.1",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
