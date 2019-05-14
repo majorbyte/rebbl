@@ -24,10 +24,12 @@ router.get('/:match_id', util.cache(600), async function(req, res, next){
 
   data.skills =[];
 
+  let skillDescriptions = await bloodbowlService.getSkillDescriptions();
+
   if (data.match.teams[0].roster) {
     await data.match.teams[0].roster.map(async player => {
       player.skills.map(async skill => {
-        let description = await bloodbowlService.getSkillDescriptions().find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() )
+        let description = skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() )
         if (description) {
           description.id = description.name.toLowerCase().replace(/[ \-']/g,'');
           if (data.skills.indexOf(description) === -1) data.skills.push(description);
@@ -40,7 +42,7 @@ router.get('/:match_id', util.cache(600), async function(req, res, next){
   if (data.match.teams[1].roster) {
     await data.match.teams[1].roster.map(async player => {
       player.skills.map(async skill => {
-        let description = await bloodbowlService.getSkillDescriptions().find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() )
+        let description = skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() )
         if (description) {
           description.id = description.name.toLowerCase().replace(/[ \-']/g,'');
           if (data.skills.indexOf(description) === -1) data.skills.push(description);
