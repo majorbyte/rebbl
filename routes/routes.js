@@ -10,6 +10,7 @@ const
   , rebbl = require("./rebbl/rebbl.js")
   , cripple = require("./cripple/cripple.js")
   , account = require("./account/account.js")
+  , bloodbowl = require("./bloodbowl/bloodbowl.js")
   , signup = require("./signup/signup.js")
   , auth = require("./account/auth.js")
   , admin = require("./admin/admin.js");
@@ -61,6 +62,7 @@ class Routes{
     this.router.use("/maintenance", new maintenance().routesConfig());
     this.router.use("/cripple", new cripple().routesConfig());
     this.router.use("/account", new account().routesConfig());
+    this.router.use("/bloodbowl", new bloodbowl().routesConfig());
     this.router.use("/signup", new signup().routesConfig());
     this.router.use("/auth", new auth().routesConfig());
     this.router.use("/admin", util.ensureAuthenticated, util.hasRole("admin"), new admin().routesConfig());
