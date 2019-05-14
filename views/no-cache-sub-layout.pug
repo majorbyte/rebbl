@@ -8,7 +8,7 @@ block vars
 
 block body
   - if (renderCompany != "")
-    a(href="/")
+    a(href="/" title="to the frontpage!")
       div(class=`u-bottomPadding--small-${className}`)
   nav(class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="min-height:80px;z-index:2000;justify-content:unset")
     button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblMainNav" aria-controls="rebblMainNav" aria-expanded="false" aria-label="Toggle navigation")
@@ -25,6 +25,7 @@ block body
               div(style="height: 8em;width: 8em;background: rgba(255, 255, 255, 0) url(https://cdn2.rebbl.net/images/rebbrl.png) no-repeat 99%;background-size: 7em;right: 5px;position: fixed;top: 0px;z-index: 9999;")
 
         -if(renderCompany == "rebbl")
+          +nav-link("Home", "/rebbl")
           +nav-link("Big O")
           +nav-link("Gman")
           +nav-link("REL")
@@ -35,6 +36,7 @@ block body
           +nav-link("Elfly", "/rebbl/XScessively Elfly League")
           +nav-link("Account", "/account")
         -if(renderCompany == "rebbrl")
+          +nav-link("Home", "/rebbrl")
           +nav-link("College", "/rebbrl/ReBBRL College League")
           +nav-link("Minors", "/rebbrl/ReBBRL Minors League")
           +nav-link("Account", "/account")
