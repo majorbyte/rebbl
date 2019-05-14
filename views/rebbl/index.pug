@@ -81,29 +81,6 @@ block scripts
         slide.height(videoHeight);
         slide.width(videoWidth);
         
-        /* FOR WHEN WE HAVE THE NEW BACKEND */
-        /*
-        //hover effect
-        $(".slide").mouseover(function() {
-            $(this).css("width", videoWidth * scaling);
-            $(this).css("height", videoHeight * scaling);
-            $(this).css("top", -(videoHeightDiff / 2));
-            if($(".slide").index($(this)) == 0 || ($(".slide").index($(this))) % 4 == 0){
-              // do nothing
-            }
-            else if(($(".slide").index($(this)) + 1) % 4 == 0 && $(".slide").index($(this)) != 0){
-                $(this).parent().css("margin-left", -(videoWidthDiff - controlsWidth));
-            }
-            else{
-                $(this).parent().css("margin-left", - (videoWidthDiff / 2));
-            }
-        }).mouseout(function() {
-            $(this).css("width", videoWidth * 1);
-            $(this).css("height", videoHeight * 1);
-            $(this).css("top", 0);
-            $(this).parent().css("margin-left", controlsWidth);
-        });
-        */
         // controls
         controls(container, scrollDiff, scollWidth);
     }
@@ -162,6 +139,7 @@ block navigation
       ul(class="navbar-nav" style=style)
         - if (company === "")
           +nav-link("Upcoming games", "/rebbl/upcoming")
+          +nav-link("Starplayers", "/bloodbowl/starplayers")
           +nav-link("Account", "/account")
         - if (company === "rebbrl")
           +nav-link("Upcoming games", "/rebbrl/upcoming")

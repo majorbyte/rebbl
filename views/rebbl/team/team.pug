@@ -706,13 +706,13 @@ block scripts
       let skills = null;
   
       if (storage)    
-        skills = localStorage.getItem('skills');
+        skills = localStorage.getItem('skillDescriptions');
 
       if(!skills){
         let xhr = new XMLHttpRequest();
         let path = window.location.pathname.split('/');
 
-        xhr.open("GET", "/api/v2/bloodbowl/skills"  ,true)
+        xhr.open("GET", "/api/v2/bloodbowl/skillDescriptions"  ,true)
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.responseType = 'json';
 
@@ -721,7 +721,7 @@ block scripts
           const storage = window.localStorage;
       
           if (storage)
-            storage.setItem('skills', JSON.stringify(xhr.response));    
+            storage.setItem('skillDescriptions', JSON.stringify(xhr.response));    
         }
 
         xhr.send();
