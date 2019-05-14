@@ -58,7 +58,7 @@ class Server{
     };
 
     
-    this.app.use(compression({ filter: this.shouldCompress }))
+    //this.app.use(compression({ filter: this.shouldCompress }))
     // set our default template engine to "ejs"
     // which prevents the need for using file extensions
     this.app.set('view engine', 'pug');
