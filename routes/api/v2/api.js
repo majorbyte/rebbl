@@ -7,7 +7,8 @@ const express = require('express')
   , leagueApi = require("./league.js")
   , matchApi = require("./match.js")
   , standingsApi = require("./standings.js")
-  , teamApi = require("./team.js");
+  , teamApi = require("./team.js")
+  , trophiesApi = require("./trophies.js");
 
 class ApiV2{
   constructor(){
@@ -27,7 +28,9 @@ class ApiV2{
     this.router.use('/standings', new standingsApi().routesConfig());
     
     this.router.use('/team', new teamApi().routesConfig());
-    
+
+    this.router.use('/trophies', new trophiesApi().routesConfig());
+
     return this.router;
   }
 
