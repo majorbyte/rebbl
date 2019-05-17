@@ -50,13 +50,15 @@ block content
           div(class="col-1" data-bind="text:position")
           div(class="col-4" style=";overflow:hidden") 
             a(data-bind="text: name, attr:{href:`/rebbl/coach/${id}`}")
-            // ko if: showDonation
+            // ko if: $root.isDonator($data.name)
             | &nbsp; &nbsp; 
             img(src="/images/gold.png" style="height:25px;float:right;margin-top: 2px;" title="donator")
             // /ko
-            // ko if: $data.trophy 
+            // ko with: $root.getTrophy($data.name)
+            // ko if:$data
             | &nbsp; &nbsp; 
-            img(data-bind="attr:{src:`https://cdn2.rebbl.net/${trophy.filename}`, title:trophy.title, 'data-date':trophy.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
+            img(data-bind="attr:{src:`https://cdn2.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
+            // /ko
             // /ko
           div(class="col-7" style=";overflow:hidden") 
             a(data-bind="text: teamName(),attr:{href:`/rebbl/team/${teamId}`}")
@@ -148,13 +150,26 @@ block scripts
 
     class ViewModel{
       constructor(data){
+        this.donators = [];
         this.league = "";
+        this.season = "";
+        this.seasons = [];
         this.standings = {};
         this.tickets = [];
-        this.seasons = [];
-        this.season = "";
+        this.trophies =[];
+
         this.collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
         ko.track(this);
+      }
+
+      getTrophy(coach){
+        let t = this.trophies.find(x => x.coach == coach);
+        if(t && t.trophies)return t.trophies.find(t => t.display);
+        return undefined;
+      }
+
+      isDonator(coach){
+        return this.donators.indexOf(coach)>-1;
       }
 
       competitionUrl(comp){
@@ -208,13 +223,45 @@ block scripts
           this.seasons = seasons
           this.season = seasons[seasons.length-1];
           this.loadSeason();
+          this.loadTrophies();
+          this.loadDonators();
         }.bind(this);
         xhr.send();
       }
 
+      loadTrophies(){
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", `/api/v2/trophies/${this.league}/${this.season}`,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {
+          if (xhr.response) this.trophies = xhr.response;
+          else this.trophies = [];
+        }.bind(this);
+
+        xhr.send();
+      }
+
+      loadDonators(){
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", `/api/v2/trophies/${this.league}/${this.season}/donations`,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {
+          if (xhr.response) this.donators = xhr.response;
+          else this.donators = [];
+        }.bind(this);
+
+        xhr.send();
+      }
+
       showTrophy(e){
-        $('#modal-title').text(e.trophy.title + (e.trophy.date.length > 0 ? " - " + e.trophy.date : "") );
-        $('#modal-image').attr('src',`https://cdn2.rebbl.net/${e.trophy.filename}`);
+        $('#modal-title').text(e.title + (e.date.length > 0 ? " - " + e.date : "") );
+        $('#modal-image').attr('src',`https://cdn2.rebbl.net/${e.filename}`);
         $('#trophy').modal();
       };
 
@@ -234,7 +281,5 @@ block scripts
       model.league = path[path.length-1];
       ko.applyBindings(model);
       model.loadSeasons();
-
-
     });
     
