@@ -44,7 +44,7 @@ class Rebbl{
           match.stream=date.stream;
         }));
     
-        data.upcoming = data.upcoming.filter(a => a.competition.toLowerCase().indexOf("rebbrl") === -1).sort((a,b) => a.date < b.date ? -1 : 1)
+        data.upcoming = data.upcoming.filter(a => a.league.toLowerCase().indexOf("rebbrl") === -1).sort((a,b) => a.date < b.date ? -1 : 1)
   
         break;
       case "rebbrl":
@@ -69,7 +69,7 @@ class Rebbl{
           match.stream=date.stream;
         }));
     
-        data.upcoming = data.upcoming.filter(a => a.competition.toLowerCase().indexOf("rebbrl") > -1) .sort((a,b) => a.date < b.date ? -1 : 1)
+        data.upcoming = data.upcoming.filter(a => a.league.toLowerCase().indexOf("rebbrl") > -1) .sort((a,b) => a.date < b.date ? -1 : 1)
       break;
 
 
