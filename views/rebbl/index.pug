@@ -189,6 +189,8 @@ block content
                     -if (match.league.toLowerCase() === 'rel rampup')
                       -league="rampup"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_orc_17.png" )
+                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl minors league')
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
                   div(class="col-10 no-gutters")
                     a(href=`/${urlMain}/${league}`)= match.league.replace(/rebbl - /i,'')
                     br
@@ -265,6 +267,8 @@ block content
                     -if (match.league.toLowerCase() === 'rebbll ')
                       -league = "rebbll"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_14.png" )
+                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl minors league')
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
                   div(class="col-10 no-gutters")
                     a(href=`/${urlFix}/${league}`)= match.league.replace(/rebbl - /i,'')
                     br
@@ -324,6 +328,7 @@ block content
               div(class="col-12 no-gutters slide-gutter" style="padding:0 15px;")
                 div(class="row col-12 no-gutters slide-overflow" style="border:1px dashed  rgb(154, 90, 10);")
                   -let league = match.league
+                  -let company = "rebbl"
                   div(class="col-2 no-gutters")
                     -if (match.league.toLowerCase() === 'rebbl one minute league')
                       -league= "One Minute"
@@ -345,6 +350,9 @@ block content
                     -if (match.league.toLowerCase() === 'rebbl - rel')
                       -league="REL"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
+                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl minors league')
+                      -company="rebbrl"
+                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
                     -if (match.league.toLowerCase() === 'gman rampup')
                       -league="rampup"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_human_15.png" )
@@ -355,12 +363,12 @@ block content
                       a(target="_blank" href=match.stream.url title=match.stream.name)
                         img(src="/images/glitch.png" style="width:32px;height:32px;margin-left: 7px;")
                   div(class="col-10 no-gutters")
-                    a(href=`/rebbl/${league}`)= match.league.replace(/rebbl - /i,'')
+                    a(href=`/${company}/${league}`)= match.league.replace(/rebbl - /i,'')
                     br
-                    a(href=href=`/rebbl/${league}/${match.competition}` style="font-size:0.9rem")= match.competition.replace(/season 11 - /i,'')
+                    a(href=href=`/${company}/${league}/${match.competition}` style="font-size:0.9rem")= match.competition.replace(/season 11 - /i,'')
 
                   div(class="col-12" style="margin-bottom:10px")    
-                    -let url=`/rebbl/match/unplayed/${match.contest_id}`
+                    -let url=`/${company}/match/unplayed/${match.contest_id}`
                     a(href=url class="MatchRow-contentWrapper")
                       div(class="row col-12 no-gutters" style="margin: 0 auto;")
                         div(class="col-10 no-gutters")
