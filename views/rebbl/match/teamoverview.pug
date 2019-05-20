@@ -23,5 +23,5 @@ tr
   td= team.sustainedcasualties
   td= team.inflicteddead
   td= team.sustaineddead
-  td= team.inflictedpushouts
+  td= team.roster.reduce((p,c) => p + c.stats.inflictedpushouts  ,0) 
   td= team.sustainedexpulsions
