@@ -154,6 +154,10 @@ block content
           //ko if: loadingHistory
           i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
+        a(class="nav-item nav-link" id="nav-matches-tab" data-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches &nbsp;
+          //ko if: loadingMatches
+          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          // /ko          
     div(class="tab-content" id="tabContent")
       div(class="tab-pane fade show active col col-12" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
         // ko template: { name: 'playerList' }
@@ -180,10 +184,48 @@ block content
               td(data-bind="text:loss")
               td(data-bind="text:tddiff")
             // /ko
+      div(class="tab-pane fade show col col-12" id="nav-matches" role="tabpanel" aria-labelledby="nav-matches-tab")
+        //ko foreach: matches.sort(function(a,b){return a.match.id < b.match.id ? 1 : -1;})
+        //ko with: $data.match
+        br
+        div(class="MatchRow MatchRow-match MatchRow-header" data-bind="text: `${competitionname} - ${hasOwnProperty('round') ? round || 0 : 0}`")
+        div(class="MatchRow MatchRow-match" )
+          a(data-bind="attr:{href: `/rebbl/match/${$parent.uuid}` }" class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" target="_blank")
+            div(class="MatchRow-team")
+              div(class="TeamLabel TeamLabel--reverse")
+                div(class="TeamLabel-block"): img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/logo_${teams[0].teamlogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
+                div(class="TeamLabel-info TeamLabel-info--noScore")
+                  div(class="TeamLabel-name " data-bind="text:teams[0].teamname")
+                  div(class="TeamLabel-coach " data-bind="text: coaches[0].coachname")
+            div(class="MatchRow-status")
+              span(class="MatchStatus MatchStatus--transparent")
+                span
+                  // ko if: teams[0].score > teams[1].score
+                  span(class="MatchStatus-score is-winner" data-bind="text: teams[0].score")
+                  span(class="MatchStatus-score") -
+                  span(class="MatchStatus-score"  data-bind="text: teams[1].score")
+                  // /ko
+                  // ko if: teams[1].score > teams[0].score
+                  span(class="MatchStatus-score" data-bind="text: teams[0].score")
+                  span(class="MatchStatus-score") -
+                  span(class="MatchStatus-score is-winner"  data-bind="text: teams[1].score")
+                  // /ko
+                  // ko if: teams[1].score == teams[0].score
+                  span(class="MatchStatus-score" data-bind="text: teams[0].score")
+                  span(class="MatchStatus-score") -
+                  span(class="MatchStatus-score"  data-bind="text: teams[1].score")
+                  // /ko
+            div(class="MatchRow-team")
+              div(class="TeamLabel")
+                div(class="TeamLabel-block"): img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/logo_${teams[1].teamlogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
+                div(class="TeamLabel-info TeamLabel-info--noScore")
+                  div(class="TeamLabel-name " data-bind="text:teams[1].teamname")
+                  div(class="TeamLabel-coach " data-bind="text: coaches[1].coachname")
+        // /ko
+        // /ko
+
      
-
-
-
+ 
   script(type="text/html" id="playerList")
     table(class="table table-striped")
       thead(class="headerText")
@@ -204,7 +246,6 @@ block content
       tbody
         // ko template: { name: 'playerTemplate', foreach: playerList }
         // /ko
-
 
   script(type="text/html" id="playerTemplate")
     tr(data-bind="attr:{class: cssClass()}") 
@@ -245,7 +286,6 @@ block content
         // /ko
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
       td(data-bind="text:value")
-
 
   div(class="modal" tabindex="-1" role="dialog" id="skill-dialog")
     div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
@@ -330,7 +370,6 @@ block content
     // /ko
     // /ko
 
-
 block scripts
   - if (process.env.NODE_ENV === 'production')
     script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
@@ -383,6 +422,7 @@ block scripts
           this.retiredPlayers = null;
           this.journeymen = null;
 
+          this.matches = [];
           this.standings = [];
           this.playerList = this.roster;
           this.playertypes=null;
@@ -396,6 +436,7 @@ block scripts
           this.loadingPrevious = false;
           this.loadingJourneymen= false;
           this.loadingHistory= false;
+          this.loadingMatches = false;
 
           this.stats = new StatsModel(data.stats || {});
         };
@@ -473,7 +514,9 @@ block scripts
       selectHistory(){
         loadHistory(this.id); 
       }
-
+      selectMatches(){
+        loadMatches(this.id); 
+      }
     }
 
     class StatsModel{
@@ -701,6 +744,20 @@ block scripts
     }
 
   
+    function loadMatches(id){
+      let xhr = new XMLHttpRequest();
+
+      xhr.open("GET", `/api/v2/team/${id}/matches`  ,true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+        model.matches =xhr.response;
+      }
+
+      xhr.send();
+    }
+
     function loadSkills(){
       const storage = window.localStorage;
       let skills = null;
