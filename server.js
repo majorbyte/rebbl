@@ -137,6 +137,11 @@ class Server{
 
     this.app.use(util.checkAuthenticated);
 
+    var swaggerUi = require('swagger-ui-express'),
+    swaggerDocument = require('./apidoc.json');
+
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
     const routes = require("./routes/routes.js");
     this.app.use('/', new routes().routesConfig());
 
