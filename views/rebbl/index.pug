@@ -189,7 +189,7 @@ block content
                     -if (match.league.toLowerCase() === 'rel rampup')
                       -league="rampup"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_orc_17.png" )
-                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl minors league')
+                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl upstarts' || match.league.toLowerCase() === 'rebbrl minors league')
                       img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
                   div(class="col-10 no-gutters")
                     a(href=`/${urlMain}/${league}`)= match.league.replace(/rebbl - /i,'')
@@ -267,7 +267,7 @@ block content
                     -if (match.league.toLowerCase() === 'rebbll ')
                       -league = "rebbll"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_14.png" )
-                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl minors league')
+                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl upstarts' || match.league.toLowerCase() === 'rebbrl minors league')
                       img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
                   div(class="col-10 no-gutters")
                     a(href=`/${urlFix}/${league}`)= match.league.replace(/rebbl - /i,'')
@@ -350,7 +350,7 @@ block content
                     -if (match.league.toLowerCase() === 'rebbl - rel')
                       -league="REL"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
-                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl minors league')
+                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl upstarts' || match.league.toLowerCase() === 'rebbrl minors league')
                       -company="rebbrl"
                       img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
                     -if (match.league.toLowerCase() === 'gman rampup')
