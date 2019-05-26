@@ -52,7 +52,7 @@ block content
             a(data-bind="text: name, attr:{href:`/rebbl/coach/${id}`}")
             // ko if: $root.isDonator($data.name)
             | &nbsp; &nbsp; 
-            img(src="/images/gold.png" style="height:25px;float:right;margin-top: 2px;" title="donator")
+            img(src="/images/gold.png" style="width:25px;float:right;margin-top: 2px;" title="donator")
             // /ko
             // ko with: $root.getTrophy($data.name)
             // ko if:$data
@@ -71,11 +71,20 @@ block content
           div(class="col-2" data-bind="text:games")
           div(class="col-2 text-right" data-bind="text:tddiff")
       // ko if: $index()+1 === $root.tickets[$parentContext.$index()]
-      div(class="row col-12 season-table-row")
+      div(class="row col-12 season-table-row" style="padding:0.5em 0")
         div(class="col-1 Standings-divider--flex")
           span(class="Standings-dividerText--correction")
         div(class="col-6 Standings-divider--flex" )
-          span(class="Standings-dividerText" style="font-size:1.5em")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
+          span(class="Standings-dividerText" style="font-size:1em")  &nbsp; &nbsp;Playoffs Cutoff &nbsp; &nbsp;
+        div(class="col-5 Standings-divider--flex")
+          span(class="Standings-dividerText--correction")
+      // /ko
+      // ko if: $index()+1 === $root.challenger[$parentContext.$index()]
+      div(class="row col-12 season-table-row" style="padding:0.5em 0")
+        div(class="col-1 Standings-divider--flex")
+          span(class="Standings-dividerText--correction")
+        div(class="col-6 Standings-divider--flex" )
+          span(class="Standings-dividerText" style="font-size:1em")  &nbsp; &nbsp;Challenger Cup Cutoff &nbsp; &nbsp;
         div(class="col-5 Standings-divider--flex")
           span(class="Standings-dividerText--correction")
       // /ko
@@ -156,6 +165,7 @@ block scripts
         this.seasons = [];
         this.standings = {};
         this.tickets = [];
+        this.challenger =[];
         this.trophies =[];
 
         this.collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
@@ -203,8 +213,13 @@ block scripts
         xhr.responseType = 'json';
 
         xhr.onload  = function() {
-          if (xhr.response) this.tickets = xhr.response.cutoff;
-          else this.tickets = [];
+          if (xhr.response){
+            this.challenger = xhr.response.challenger || [];
+            this.tickets = xhr.response.cutoff;
+          } else {
+            this.tickets = [];
+            this.challenger = [];
+          }
         }.bind(this);
 
         xhr.send();
