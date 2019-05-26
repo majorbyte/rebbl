@@ -14,7 +14,7 @@ block content
     div(class="row col-12")
       div(class="ScheduleMatchList")
         div(class="MatchSchedule")
-          div(class="MatchRow MatchRow-match MatchRow-header" )= match.started
+          div(class="MatchRow MatchRow-match MatchRow-header" )= `${match.leaguename} - ${match.competitionname} : ${match.started}`
           div(class="MatchRow MatchRow-match" )
             div(class="MatchRow-team")
               div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
