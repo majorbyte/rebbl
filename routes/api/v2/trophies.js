@@ -20,7 +20,7 @@ class Trophies{
 
         let coaches = [...new Set(standings.map(s => s.name))];
 
-        let trophies = await dataService.getAccounts({coach:{$in:coaches},"trophies.display":true},{fields:{coach:1, trophies:1}});
+        let trophies = await dataService.getAccounts({coach:{$in:coaches},"trophies.display":true},{projection:{coach:1, trophies:1}});
 
 
         res.json(trophies);
@@ -41,7 +41,7 @@ class Trophies{
 
         let coaches = [...new Set(standings.map(s => s.name))];
 
-        let trophies = await dataService.getAccounts({coach:{$in:coaches},"showDonation":true},{fields:{coach:1}});
+        let trophies = await dataService.getAccounts({coach:{$in:coaches},"showDonation":true},{projection:{coach:1}});
 
         res.json(trophies.map(x => x.coach));
       }
