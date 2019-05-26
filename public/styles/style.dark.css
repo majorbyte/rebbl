@@ -864,6 +864,17 @@ a:focus,a:hover {
   z-index: 9999;
 }
 
+.u-bottomPadding--small-hjmc{
+  height: 256px;
+  width: 256px;
+  background: #ffffff00 url(https://cdn2.rebbl.net/images/logo/256x256/logo_human_07.png) no-repeat 99%;
+  /*background-size: 7em;*/
+  right: 5px;
+  position: fixed;
+  top:0px;
+  z-index: 9999;
+}
+
 
 .col-sm-8 {
   color: #d22424;

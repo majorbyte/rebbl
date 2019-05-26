@@ -12,7 +12,10 @@ class Standings{
   routesConfig(){
     this.router.get('/:league', util.checkCache, async function(req, res){
       let data  = {company:req.params.company};
-      res.render('rebbl/standings/index', data);
+      if(data.company ==="hjmc")
+        res.render('rebbl/standings/hjmc', data);
+      else
+        res.render('rebbl/standings/index', data);
     });
     return this.router;
   }
