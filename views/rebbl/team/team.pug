@@ -237,11 +237,11 @@ block content
           th(scope="col") ST
           th(scope="col") AG
           th(scope="col") AV
-          th(scope="col") GP
+          th(scope="col" data-bind="click:$root.sortGamesPlayed" style="color:#ff8900;cursor:pointer") GP
           th(scope="col") MVP
           th(scope="col") Skills
           th(scope="col") CAS
-          th(scope="col") SPP
+          th(scope="col" data-bind="click:$root.sortXp" style="color:#ff8900;cursor:pointer" ) SPP
           th(scope="col") Value
       tbody
         // ko template: { name: 'playerTemplate', foreach: playerList }
@@ -516,6 +516,13 @@ block scripts
       }
       selectMatches(){
         loadMatches(this.id); 
+      }
+
+      sortGamesPlayed(){
+        this.playerList = this.playerList.sort((a,b) => a.matchplayed > b.matchplayed ? -1 : 1)
+      }
+      sortXp(){
+        this.playerList = this.playerList.sort((a,b) => a.xp > b.xp ? -1 : 1)
       }
     }
 
