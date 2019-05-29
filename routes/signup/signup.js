@@ -12,17 +12,17 @@ class Signup{
   }
 
   routesConfig(){
-    /*this.router.get('/', util.ensureLoggedIn, async function(req, res){
+    this.router.get('/', async function(req, res){
       res.render('signup/closed');
-    });*/
+    });
 
     
-    this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup);
+    //this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup);
     
 
-    this.router.get('/', util.ensureLoggedIn, this._getStatus);
+    //this.router.get('/', util.ensureLoggedIn, this._getStatus);
 
-    this.router.get('/change', util.ensureLoggedIn, this._changeSignup);
+    //this.router.get('/change', util.ensureLoggedIn, this._changeSignup);
 
     //this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
 
