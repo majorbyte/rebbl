@@ -33,7 +33,7 @@ block content
               div(class="warning")
                 p Your team is either misspelled or not yet existing
               br
-            - if(user.saveType ==="rampup")
+            //- if(user.saveType ==="rampup")
               form(action="/signup/change" method="get" style="float:left;margin-right:116px;")
                 button(type="submit"  class="btn btn-primary") Change
 
@@ -43,7 +43,7 @@ block content
               -else
                 button(type="submit") Confirm
 
-            form(action="/signup/resign" method="post" )
+            //form(action="/signup/resign" method="post" )
               br
               button(type="submit"  class="btn btn-primary") Resign
 
