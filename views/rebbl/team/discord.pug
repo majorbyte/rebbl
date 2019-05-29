@@ -1,0 +1,12 @@
+doctype html
+html(lang="en")
+  head
+      meta(name="og:image" content=`https://cdn2.rebbl.net/images/logo/${team.team.logo.toLowerCase()}.png`) 
+      meta(name="og:type" content="object") 
+      meta(name="og:title" content=team.team.name) 
+      meta(name="og:url" content=`https://rebbl.net/${company}/team/${team.team.id}`)
+      -if(standing) 
+        meta(name="og:description" content=`${standing.competition}: #${standing.position} ${standing.win}-${standing.draw}-${standing.loss} Δ${standing.tddiff}`) 
+      -else
+        meta(name="og:description" content=team.team.leitmotiv) 
+  body
