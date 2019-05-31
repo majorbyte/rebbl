@@ -4,6 +4,7 @@ const
   , configurationService = require("../../lib/ConfigurationService.js")
   , cripple = require('../../lib/crippleService.js')
   , express = require('express')
+  , hjmc = require("../../lib/TourneyService")
   , maintenanceService = require('../../lib/MaintenanceService.js')
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
@@ -57,6 +58,12 @@ class Maintenance{
     this.router.get('/checksignups',util.verifyMaintenanceToken, async function(req, res){
       signUp.checkTeams({'teamExist':false});
       signUp.checkTeams({'teamExist':{ $exists: false }});
+      res.redirect('/');
+    });
+
+    
+    this.router.get('/updateHJMC',util.verifyMaintenanceToken, async function(req, res){
+      hjmc.getContests();
       res.redirect('/');
     });
 
