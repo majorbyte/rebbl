@@ -21,36 +21,34 @@ block scripts
 
         function formatDate(date) {
           const dateFormat = "YYYYMMDDTHHmmss[Z]";
-          if(moment.isMoment(date)) {
-            return date.format(dateFormat);
-          } else {
-            return moment(date, "YYYY-MM-DD HH:mm").format(dateFormat);
-          }
+          return date.format(dateFormat);
         }
 
         function calculateEndDatetime(startDatetime) {
-          return formatDate(moment(startDatetime, "YYYY-MM-DD HH:mm").add(2, "h"));
+          return formatDate(startDatetime.add(2, "h"));
         }
 
-        function setCalendarDatetime(date) {
-          const anchor = $(".calendar-add").eq(0)
-          let matchDate = anchor.data("date")
-          if(date) {
-            matchDate = date
-          }
+        function setCalendarDatetime() {
+          $.each($('.calendar-add'), (idx, anchor) => {
+            const $anchor = $(anchor);
+            const picker = $anchor.parent().siblings().find('.datetimepicker-input')[0];
 
-          if(matchDate) {
-            anchor.show();
-          }
-          if(date === '') {
-            anchor.hide();
-          }
+            let timezone = "#{user.timezone}" || moment.tz.guess();
+            const date =  $(picker).val()
+            let matchDate = moment.tz(date, timezone).tz("UTC");
 
-          //give times in UTC and let google handle the tz magic
-          anchor.attr("href", `http://www.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent(`REBBL ${anchor.data('team-home')} - ${anchor.data('team-away')}`)}&dates=${formatDate(matchDate)}/${calculateEndDatetime(matchDate)}`);
+            if(date) {
+              $anchor.show();
+            } else {
+              $anchor.hide();
+            }
+
+
+            //give times in UTC and let google handle the tz magic
+            $anchor.attr("href", `http://www.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent(`REBBL ${$anchor.data('team-home')} - ${$anchor.data('team-away')}`)}&dates=${formatDate(matchDate)}/${calculateEndDatetime(matchDate)}`);
+          })
         }
 
-        setCalendarDatetime();
 
         let timezones = $(".timezone");
 
@@ -88,10 +86,10 @@ block scripts
           let date = $(target).val();
 
           if(date) {
-            date = moment.tz(date,timezone).tz("UTC").format("YYYY-MM-DD HH:mm");
+            date = moment.tz(date, timezone).tz("UTC").format("YYYY-MM-DD HH:mm");
           }
 
-          setCalendarDatetime(date);
+          setCalendarDatetime();
            
           xhr.send(JSON.stringify({date: date}));
 
@@ -113,6 +111,7 @@ block scripts
           })  
         });
 
+        setCalendarDatetime();
       });  
   - if (!user)
     script.
