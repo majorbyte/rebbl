@@ -290,5 +290,39 @@ router.post('/updateBan', util.ensureAuthenticated, util.hasRole("admin"), async
   }
 });
 
+router.post('/addNote', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  try{
+    let note = { 
+      text: req.body.note.text
+      , date: new Date(Date.now())
+      , writtenBy: res.locals.user.reddit
+    };
+
+    let notes = await accountService.addNote(req.body.reddit, note);
+
+    res.status(200).send(notes);
+  } catch(err){
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
+router.post('/updateNote', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  try{
+    let note = { 
+      id: Number(req.body.note.id)
+      , text: req.body.note.text
+      , modifiedOn: new Date(Date.now())
+      , modifiedBy: res.locals.user.reddit
+    };
+    await accountService.updateNote(req.body.reddit, note);
+
+    res.status(200).send();
+  } catch(err){
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
 
 module.exports = router;

@@ -62,13 +62,23 @@ block append scripts
       ko.track(this);      
     }
     function TrophyModel(data){
-            this.map = (data) => {
-          if (data) {
-              this.name = data.name;
-              this.title = data.title;
-              this.filename = data.filename;
-              this.date = data.date;
-          }
+      this.map = (data) => {
+        if (data) {
+            this.name = data.name;
+            this.title = data.title;
+            this.filename = data.filename;
+            this.date = data.date;
+        }
+      };
+      this.map(data);
+      ko.track(this); 
+    }
+    function NoteModel(data){
+      this.map = (data) => {
+        if (data) {
+            this.text = data.text;
+            this.date = data.date;
+        }
       };
       this.map(data);
       ko.track(this); 
@@ -91,6 +101,7 @@ block append scripts
       self.twitch = ko.observable();
       
       self.roles = ko.observableArray([]);
+      self.notes = ko.observableArray([]);
       self.bans = ko.observableArray([]);
       self.strikes = ko.observableArray([]);
       self.warnings = ko.observableArray([]);
@@ -103,6 +114,7 @@ block append scripts
       self.newWarning = ko.observable(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       self.newDonation = ko.observable(new DonationModel({"date":"","currency":"","value":0}));
       self.newTrophy = ko.observable(new TrophyModel({"date":"","filename":"","title":"","name":""}));
+      self.newNote = ko.observable(new NoteModel({"date":"","text":""}));
 
       self.toggleBan = function(data,event){
         data.active = !data.active;
@@ -146,6 +158,23 @@ block append scripts
 
         self.post("/api/v1/admin/user/deleteTrophy", {reddit:self.reddit(), trophy:data});
         self.trophies.splice(self.trophies().indexOf(data),1);
+      }
+      
+      self.addNote = function(data,event){
+        self.notes.push(self.newNote());
+        self.post("/api/v1/admin/user/addNote", {reddit:self.reddit(), note:self.newNote()});
+        self.newNote(new NoteModel({"date":"","text":""}));
+      }
+
+      self.saveNote = function(data,event){
+        data.editable=false;
+        data.commit();
+        self.post("/api/v1/admin/user/updateNote", {reddit:self.reddit(), note:data});
+      }
+
+      self.cancelNote = function(data,event){
+        data.editable=false;
+        data.rollback();
       }
 
       self.edit = function(data,event){
@@ -260,6 +289,11 @@ block append scripts
           create: function(options) {
               return new TrophyModel(options.data);
           }
+      },
+      'notes':{
+          create: function(options) {
+              return new NoteModel(options.data);
+          }
       }
     }
 
@@ -370,6 +404,7 @@ block content
         a(class="nav-item nav-link active" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="true") Info
         - if(user)
           a(class="nav-item nav-link" id="nav-trophies-tab" data-toggle="tab" href="#nav-trophies" role="tab" aria-controls="nav-trophies" aria-selected="false") Trophies
+          a(class="nav-item nav-link" id="nav-notes-tab" data-toggle="tab" href="#nav-notes" role="tab" aria-controls="nav-notes" aria-selected="false") Notes
           a(class="nav-item nav-link" id="nav-warnings-tab" data-toggle="tab" href="#nav-warnings" role="tab" aria-controls="nav-warnings" aria-selected="false") Warnings
           a(class="nav-item nav-link" id="nav-strikes-tab" data-toggle="tab" href="#nav-strikes" role="tab" aria-controls="nav-strikes" aria-selected="false") Strikes
           a(class="nav-item nav-link" id="nav-bans-tab" data-toggle="tab" href="#nav-bans" role="tab" aria-controls="nav-bans" aria-selected="false") Bans
@@ -494,6 +529,27 @@ block content
                 input(type="text" data-bind="value: start")
               div(class="col-2")
                 input(type="text" data-bind="value: end")
+              button(class="col-1 btn btn-success" type="submit") add 
+          // /ko        
+      div(class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab") 
+        div(class="row col-12")
+          h2 Notes
+        div(class="row col-12")
+          div(class="col-9") Text
+          div(class="col-2") Date
+        // ko foreach: notes
+        div(class="row col-12 no-gutter" style="margin-bottom: 5px;")
+          div(class="row col-12 no-gutter" data-bind="click: $root.edit" )
+            div(class="col-9" data-bind="text:text " )
+            div(class="col-2" data-bind="text:date")
+        // /ko
+        br
+        form(data-bind="submit: addNote")
+          //ko with: newNote        
+          div(class="row col-12 no-gutter")
+            div(class="row col-12 no-gutter")
+              div(class="col-9")
+                input(type="text" class="col-11" data-bind="value:text " )
               button(class="col-1 btn btn-success" type="submit") add 
           // /ko        
       div(class="tab-pane fade" id="nav-strikes" role="tabpanel" aria-labelledby="nav-strikes-tab") 
