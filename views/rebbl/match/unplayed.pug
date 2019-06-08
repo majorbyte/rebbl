@@ -16,7 +16,7 @@ block scripts
     $(document).ready(function(){
     let timezones = $(".timezone");
     timezones.each(function(zone){
-        $(timezones[zone]).find(".time").text(moment().tz($(timezones[zone]).text()).format('YYYY-MM-DD HH:mm ZZ'));
+        if(zone) $(timezones[zone]).find(".time").text(moment().tz($(timezones[zone]).text()).format('YYYY-MM-DD HH:mm ZZ'));
     });
 
     let time = $("#matchTime").text();
@@ -55,15 +55,27 @@ block content
           strong race
         div(class="col-4")= match.opponents[1].team.race
       div(class="row justify-content-center")
-        div(class="col-4 text-right")= match.opponents[0].team.team.nextMatchTV
+        -if (match.opponents[0].team.team)
+          div(class="col-4 text-right")= match.opponents[0].team.team.nextMatchTV
+        -else
+          div(class="col-4 text-right")= match.opponents[0].team.value
         div(class="col-2 text-center") 
           strong team value
-        div(class="col-4")= match.opponents[1].team.team.nextMatchTV
+        -if (match.opponents[1].team.team)
+          div(class="col-4")= match.opponents[1].team.team.nextMatchTV
+        -else
+          div(class="col-4")= match.opponents[1].team.value
       div(class="row justify-content-center")
-        div(class="col-4 text-right")= Math.floor(match.opponents[0].team.team.cash/1000) + "k"
+        -if (match.opponents[0].team.team)
+          div(class="col-4 text-right")= Math.floor(match.opponents[0].team.team.cash/1000) + "k"
+        -else
+          div(class="col-4 text-right") -
         div(class="col-2 text-center") 
           strong cash
-        div(class="col-4")= Math.floor(match.opponents[1].team.team.cash/1000) + "k"
+        -if (match.opponents[1].team.team)
+          div(class="col-4")= Math.floor(match.opponents[1].team.team.cash/1000) + "k"
+        -else
+          div(class="col-4") -
       div(class="row justify-content-center")
         div(class="col-4 text-right")= match.opponents[0].coach.name
         div(class="col-2 text-center")
