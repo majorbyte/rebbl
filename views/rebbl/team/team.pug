@@ -770,7 +770,7 @@ block scripts
       let skills = null;
   
       if (storage)    
-        skills = localStorage.getItem('skillDescriptions');
+        skills = localStorage.getItem('skillDescriptions.v1');
 
       if(!skills){
         let xhr = new XMLHttpRequest();
@@ -785,7 +785,7 @@ block scripts
           const storage = window.localStorage;
       
           if (storage)
-            storage.setItem('skillDescriptions', JSON.stringify(xhr.response));    
+            storage.setItem('skillDescriptions.v1', JSON.stringify(xhr.response));    
         }
 
         xhr.send();
