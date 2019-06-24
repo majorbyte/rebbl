@@ -7,7 +7,7 @@ block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")
     div(class="/*TexturedBackground TexturedBackground--light-primary*/")
       div(class="container navcontainer" data-index="0")
-        h1(class="u-no-text-transform u-verticalMargin--xx-small") Current Signups
+        h1(class="u-no-text-transform u-verticalMargin--xx-small") Current Signups - Season 12
 
         div(style="float:left")
           span Currently&nbsp;
@@ -16,7 +16,6 @@ block content
         br
         br
         div
-          div(class="btn btn-outline-primary" id="oi" data-bind="click: toggleOI, css: OI() ? 'active':''") OI
           div(class="btn btn-outline-primary" id="greenhorn" data-bind="click: toggleGreenhorn, css: greenhorn() ? 'active':''") Greenhorn
 
         - let races = ["Amazon","Bretonnia","Chaos","Chaos Dwarf","Dark Elf","Dwarf","Goblin","Halfling","High Elf","Human","Khemri","Kislev","Lizardman","Necromantic","Norse","Nurgle","Ogre","Orc","Pro Elf","Skaven","Undead","Underworld","Vampire","Wood Elf"]
@@ -49,7 +48,6 @@ block content
             // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
             div(style="display: table-cell;width: 10px;;" class="Standings-header" data-bind="text:d")
             // /ko
-            div(style="display: table-cell;width: 50px;;" class="Standings-header" ) OI
             div(style="display: table-cell;width: 10px;;" class="Standings-header" ) GHC
           // ko foreach: {data: leagues, as: 'league'}
           div(class="TableRow" )
@@ -57,7 +55,6 @@ block content
             // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
             div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0)")
             // /ko
-            div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text:$root.filteredUsers().reduce(function(p, c){ return c.league === league && c.OI ? p+1 : p; }, 0)")
             div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text:$root.filteredUsers().reduce(function(p, c){ return c.league === league && c.greenHorn ? p+1 : p; }, 0)")
           // /ko
           div(class="TableRow")
@@ -65,7 +62,6 @@ block content
             // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
             div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.users().reduce(function(p, c){ return c.saveType === d ? p+1 : p; }, 0)")
             // /ko
-            div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.OI ? p+1 : p; }, 0)")
             div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
         br
         br

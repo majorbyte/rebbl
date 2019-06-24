@@ -99,12 +99,6 @@ block content
             - if (user.error && user.error.race)
               p(class="error")= user.error.race
           div
-            label(for="league") League
-            select(name="league" id="league")
-              option(value="BIG O" selected=user.league==="BIG O") BIG O - the Oceanic region
-              option(value="GMAN" selected=user.league==="GMAN") GMAN - the European region
-              option(value="REL" selected=user.league==="REL") REL  - the Americas region (North America &amp; South America)
-          div
             label(for="timezone") Timezone
             select(id="timezone" name="timezone" required title="timezone")
             label(id="tz_info")
