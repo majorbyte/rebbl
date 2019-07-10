@@ -24,7 +24,7 @@ router.get('/:division', util.checkCache, async function(req,res) {
     }
   ]};
 
-  data.round = await db.getRound("ReBBL Playoffs", "REBBL Playoffs X");
+  data.round = await db.getRound("ReBBL Playoffs", req.params.division);
 
   missing.map(m=>{
 
