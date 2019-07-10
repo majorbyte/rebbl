@@ -136,8 +136,8 @@ li.highlight {background-color: #e67b00; color:#fff}
 .modal-header {border-bottom: none !important}
 .modal-footer {border-top: none !important}
 
-.split-one .round-four .gameinfo:nth-child(3n) .matchup {padding-top: 0px;margin-top: -64px;}
-.split-two .round-four .gameinfo:nth-child(3n) .matchup {padding-top: 0px;margin-top: -10px;}
+.split-one .round-four .gameinfo:nth-child(3n) .matchup {padding-top: 0px;margin-top: 48px/*-64px;*/}
+.split-two .round-four .gameinfo:nth-child(3n) .matchup {padding-top: 0px;margin-top: 48px/*-10px;*/}
 
 .modal-content a{color: rgb(230, 123, 0);box-sizing: border-box;border-radius: 4px;padding:15px}
 .modal-header a{background-color: rgba(62, 62, 62, 0.45)}

@@ -39,6 +39,12 @@ block append scripts
         this.spoiled = !this.spoiled;
       }.bind(this);
 
+
+      this.getTitle = function(){
+        if (window.location.href.indexOf("Challenger") > -1) return "Challenger's Cup " + window.location.href.split("%20").pop(); 
+        return "Superbowl " + window.location.href.split("%20").pop(); 
+      }
+
       ko.track(this);
     }
 
@@ -105,7 +111,7 @@ block content
           // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(0,1), as: 'match' }
           // /ko
           // ko with: model.matches['5'][0]
-          div(class="gameinfo spoiler semis-l" style="width: 121%;margin-left: -40px;margin-top: -48px;" data-bind="{css: $data.winner && $data.winner.coach ? 'played': ''}")
+          div(class="gameinfo semis-l" style="width: 121%;margin-left: -40px;margin-top: -86px;" data-bind="{css: $data.winner && $data.winner.coach && $data.round === model.round ? 'spoiler played': ''}")
             div(class="round-details" style="font-size: 20px;" ) semifinals
             ul(class ="matchup championship" style="padding:0px")
               // ko if:  $data.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && $data.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
@@ -143,35 +149,35 @@ block content
       div(class="champion")
         div(class="final")
           i(class="fa fa-trophy")
-          div(class="round-details") Superbowl X 
-          ul(class="matchup championship spoiler")
-            // ko with: model.matches['6'][0]
+          div(class="round-details" data-bind="text: model.getTitle()" ) 
+          // ko with: model.matches['6'][0]
+          ul(class="matchup championship" data-bind="{css: model.spoiled && $data.winner && $data.winner.coach && $data.round === model.round ? 'spoiler played': ''}")
             li(class=`team team-top` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id ? 'looser' :''  }")
               div(class="teamname" data-bind="{attr: {title:$data.opponents[0].team.name}, text: $data.opponents[0].coach.name}")
-                div(class="score") 
-                  // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
-                  strong(data-bind="text: opponents[0].team.score")
-                  // /ko
-                  // ko notif: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
-                  div(data-bind="text: opponents[0].team.score")
-                  // /ko
+              div(class="score") 
+                // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
+                strong(data-bind="text: opponents[0].team.score")
+                // /ko
+                // ko if: ($data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id)
+                div(data-bind="text: opponents[0].team.score")
+                // /ko
             li(class=`team team-bottom ${css}` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id ? 'looser' :''  }") 
               div(class="score") 
                 // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id
                 strong(data-bind="text: $data.opponents[1].team.score")
                 // /ko
-                // ko notif: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id
+                // ko if: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[0].coach.id
                 div(data-bind="text: $data.opponents[1].team.score")
                 // /ko
               div(class="teamname" data-bind="{attr: {title:$data.opponents[1].team.name}, text: $data.opponents[1].coach.name}")
-            // /ko
+          // /ko
 
       div(class="split split-two" )
         div(class='round round-four')
           // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(2,3), as: 'match' }
           // /ko
           // ko with: model.matches['5'][1]
-          div(class="gameinfo spoiler semis-r" style="width: 121%;margin-top: -48px;" data-bind="{css: $data.winner && $data.winner.coach ? 'played': ''}")
+          div(class="gameinfo semis-r" style="width: 121%;margin-top: -86px;" data-bind="{css: $data.winner && $data.winner.coach &&  $data.round === model.round  ? 'spoiler played': ''}")
             div(class="round-details" style="font-size: 20px;" ) semifinals
             ul(class ="matchup championship" style="padding:0px")
               // ko if:  $data.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && $data.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
