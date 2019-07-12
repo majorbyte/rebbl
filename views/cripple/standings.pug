@@ -209,7 +209,7 @@ block content
           img(src="https://cdn2.rebbl.net//images/skills/NigglingInjury2.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px  ")
           div(id="niggling" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")        
 
-    // ko foreach: ["REBBL Cripple Ladder","REBBL Cripple Ladder - Season 1a"]
+    // ko foreach: ["REBBL Cripple Ladder","REBBL Cripple Ladder - Season 1b","REBBL Cripple Ladder - Season 1a"]
     div(class="row col-12")
       h2
         i(style="padding-top:180px;margin-top:-180px")
@@ -244,7 +244,7 @@ block content
           div(class="col-3" data-bind="text: $data.wins")
           div(class="col-3" data-bind="text: $data.draws")
           div(class="col-3" data-bind="text: $data.gp - $data.wins - $data.draws")
-      // ko if: ($index() === 3)
+      // ko if: (($index() === 3 && $data !== "REBBL Cripple Ladder") ||($index() === 6 && $data === "REBBL Cripple Ladder") )
       div(class="row col-12 season-table-row")
         div(class="col-1 Standings-divider--flex")
           span(class="Standings-dividerText--correction")
