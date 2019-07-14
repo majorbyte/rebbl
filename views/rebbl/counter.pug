@@ -1,0 +1,77 @@
+html
+  head
+
+
+    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/odometer-theme-car.css")
+    script(src="https://cdn2.rebbl.net/scripts/odometer.js")
+    script(src="/scripts/socket.io.js")
+
+    style.
+      .odometer {
+          font-size: 100px;
+      }
+
+  body
+    div(id="full")
+      div(style="background: url(https://cdn2.rebbl.net/images/counterbackground.png) no-repeat ;background-size:cover")
+        img(src="https://cdn2.rebbl.net/images/skills/Dead.png" style="vertical-align:middle")
+        div(id="odometer" class="odometer" style="font-size:30px !important;border-radius:unset;padding:0px")
+        img(src="https://cdn2.rebbl.net/images/skills/MovementBust.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px")
+        div(id="movement" class="odometer" style="font-size:30px !important;border-radius:unset;padding:0px")
+        img(src="https://cdn2.rebbl.net/images/skills/ArmourBust.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px")
+        div(id="armour" class="odometer" style="font-size:30px !important;border-radius:unset;padding:0px")
+        img(src="https://cdn2.rebbl.net/images/skills/StrengthBust.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px")
+        div(id="strength" class="odometer" style="font-size:30px !important;border-radius:unset;padding:0px")
+        img(src="https://cdn2.rebbl.net/images/skills/AgilityBust.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px")
+        div(id="agility" class="odometer" style="font-size:30px !important;border-radius:unset;padding:0px")
+        img(src="https://cdn2.rebbl.net//images/skills/NigglingInjury2.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px  ")
+        div(id="niggling" class="odometer" style="font-size:30px !important;border-radius:unset;padding:0px")
+    div(id="compact")
+      div(style="background: url(https://cdn2.rebbl.net/images/counterbackground_small.png) no-repeat")
+        img(src="https://cdn2.rebbl.net/images/skills/Dead.png" style="vertical-align:middle")
+        div(id="odometer" class="odometer" style="font-size:30px !important;border-radius:unset;padding:0px")
+        img(src="https://cdn2.rebbl.net//images/skills/PinchedNerve.png" style="vertical-align:middle;height:44px;margin-left:15px")
+        div(id="allmeter" class="odometer" style="font-size:30px !important;border-radius:unset;padding:0px")
+
+    script.
+
+      var socket = io.connect('/');
+      socket.on('greenhorn', function(data) {update(data)});
+
+      const compact = window.location.search.indexOf("compact") > -1;
+
+      let element = null;
+
+      if (!compact) element =document.getElementById("compact");
+      else element = document.getElementById("full");
+
+      element.parentNode.removeChild(element);
+      
+      //event emmited when receiving message 
+      function update(data) {
+        const odometer = document.getElementById("odometer");
+        odometer.innerHTML = data.Dead;
+
+        if (compact){
+          const allmeter = document.getElementById("allmeter");
+          allmeter.innerHTML = data.SmashedAnkle + data.BrokenNeck + data.FracturedSkull + data.SeriousConcussion +  data.SmashedCollarBone + data.SmashedHip + data.DamagedBack + data.SmashedKnee;
+        } else {
+          const movement = document.getElementById("movement");
+          movement.innerHTML = data.SmashedAnkle + data.SmashedHip;
+
+          const armour = document.getElementById("armour");
+          armour.innerHTML = data.SeriousConcussion + data.FracturedSkull ;
+
+          const strength = document.getElementById("strength");
+          strength.innerHTML = data.SmashedCollarBone;
+
+          const agility = document.getElementById("agility");
+          agility.innerHTML = data.BrokenNeck;
+
+          const niggling = document.getElementById("niggling");
+          niggling.innerHTML = data.DamagedBack + data.SmashedKnee;
+
+        }
+
+      }
+    

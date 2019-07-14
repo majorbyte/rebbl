@@ -2,6 +2,7 @@
 const express = require('express')
   , path = require('path')
   , crippleService = require('./lib/crippleService.js')
+  , maintenanceService = require('./lib/MaintenanceService.js')
   , signupService = require('./lib/signupService.js')
   , util = require("./lib/util.js")
   , session = require('express-session')
@@ -173,10 +174,16 @@ class Server{
       data = await signupService.getSignUps();
     
       socket.emit('signup', {count:data.all.length});
+
+      data = await maintenanceService.getCasualties();
+    
+      socket.emit('greenhorn', data);
+
     });
     
     crippleService.init(this.io);
     signupService.init(this.io);  
+    maintenanceService.init(this.io);
     
     this.server.listen(this.port);
   }
