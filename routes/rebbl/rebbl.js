@@ -82,8 +82,9 @@ class Rebbl{
 
   routesConfig(){
    
-    this.router.use('/match', require(`./match.js`));
     this.router.use('/coach', new coach().routesConfig());
+    this.router.use('/counter', require(`./counter.js`));
+    this.router.use('/match', require(`./match.js`));
     this.router.use('/stunty', require(`./stunty.js`));
     this.router.use('/upcoming', require(`./upcoming.js`));
     this.router.use('/standings', new standings().routesConfig());
