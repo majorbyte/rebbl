@@ -1,0 +1,9 @@
+extends ../account/sublayout.pug
+
+block content
+  div(class="container")
+    h2= "Thanks for signing up " + user.coach + "!"
+
+    p You can always change your signup information at a later stage
+      a(href="/signup/rebbrl" class="highlighted-rules")= " here"
+      span .

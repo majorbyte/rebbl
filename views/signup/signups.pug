@@ -109,7 +109,7 @@ block append scripts
       const self = this;
       self.users = ko.observableArray([]);
       self.loading = ko.observable(true);
-      self.leagues = ko.observableArray(["BIG O","GMAN","REL"]);
+      self.leagues = ko.observableArray(["BIG O","GMAN","REL","College","Minors"]);
       self.races = ko.observableArray(["Amazon","Bretonnia","Chaos","Chaos Dwarf","Dark Elf","Dwarf","Goblin","Halfling","High Elf","Human","Khemri","Kislev","Lizardman","Necromantic","Norse","Nurgle","Ogre","Orc","Pro Elf","Skaven","Undead","Underworld","Vampire","Wood Elf"]);
 
       self.OI = ko.observable(false);
@@ -179,7 +179,7 @@ block append scripts
     $(document).ready(function(){
       
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", "/api/v1/signups/page",true)
+      xhr.open("GET", "/api/v1/signups/page "  ,true)
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.responseType = 'json';
 
