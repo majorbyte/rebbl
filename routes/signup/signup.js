@@ -48,9 +48,16 @@ class Signup{
 
     this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
 
-    this.router.get('/signups', util.checkCache, function(req,res){res.render('signup/signups');});
+    this.router.get('/signups', util.checkCache, function(req,res){res.render('signup/signups', {url: ""});});
+
+    this.router.get('/signups/rebbrl', util.checkCache, function(req,res){res.render('signup/signups');});
 
     this.router.get('/counter', async function(req, res, next){res.render('signup/counter');});
+
+
+    this.router.get('/rebbrl', util.ensureLoggedIn, this._rebbrl);
+    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl);
+    this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
 
     return this.router;
   }
@@ -58,14 +65,28 @@ class Signup{
   async _getStatus(req, res){
     try{
       let user = await signupService.getExistingTeam(req.user.name);
-      let signup = await signupService.getSignUp(req.user.name);
+      let signups = [];
+
+      let signup = await signupService.getSignUp(req.user.name,"rebbl");
+
 
       if (signup){
         signup.signedUp = true;
-      } else if (user) {
+        signups.push(signup);
+      }
+
+      signup = await signupService.getSignUp(req.user.name,"rebbrl");
+
+      if (signup){
+        signup.signedUp = true;
+        signups.push(signup);
+      }
+
+      
+      if (signups.length === 0 && user) {
         user.signedUp = false;
       }
-      res.render('signup/overview', { user: signup || user || {reddit: req.user.name, isNew :true} });
+      res.render('signup/overview', {signups:signups,  user: signups.length > 0 ? signups[0] : user || {reddit: req.user.name, isNew :true} });
     } catch (err){
       console.log(err);
     }
@@ -74,7 +95,7 @@ class Signup{
   async _changeSignup(req, res){
     try {
       let user = await signupService.getExistingTeam(req.user.name);
-      let signup = await signupService.getSignUp(req.user.name);
+      let signup = await signupService.getSignUp(req.user.name,"rebbl");
       let account = await accountService.getAccount(req.user.name);
 
       // Disabled while during season
@@ -136,7 +157,7 @@ class Signup{
   async _reroll(req, res){
     try {
       let user = await signupService.getExistingTeam(req.user.name);
-      let signup = await signupService.getSignUp(req.user.name);
+      let signup = await signupService.getSignUp(req.user.name,"rebbl");
       let account = await accountService.getAccount(req.user.name);
 
       if (user) {
@@ -167,6 +188,7 @@ class Signup{
       delete req.body.team;
 
       req.body.saveType = "existing";
+      req.body.type="rebbl";
       let user = await signupService.saveSignUp(req.user.name, req.body);
 
       //res.render('signup/signup-confirmed-oi', {user: user});
@@ -182,6 +204,7 @@ class Signup{
       delete req.body.coach;
 
       req.body.saveType = "reroll";
+      req.body.type="rebbl";
       let user = await signupService.saveSignUp(req.user.name, req.body);
 
       if (user.error){
@@ -198,6 +221,7 @@ class Signup{
   async _confirmNew(req, res){
     try {
       req.body.saveType = "new";
+      req.body.type="rebbl";
       let user = await signupService.saveSignUp(req.user.name, req.body);
 
       if (user.error){
@@ -213,7 +237,7 @@ class Signup{
 
   async _resign(req,res){
     try{
-      await signupService.resign(req.user.name);
+      await signupService.resign(req.user.name,"rebbl");
       res.redirect('/signup');
     } catch (err){
       console.log(err);
@@ -224,7 +248,7 @@ class Signup{
   async _signupGreenhornCup(req, res){
     try{
 
-      let user = await signupService.getSignUp(req.user.name);
+      let user = await signupService.getSignUp(req.user.name,"rebbl");
 
       res.render('signup/signup-confirmed-greenhorn', {user: user});
     } catch (err){
@@ -255,7 +279,7 @@ class Signup{
   async _signupOpenInvitational(req, res){
     try{
 
-      let user = await signupService.getSignUp(req.user.name);
+      let user = await signupService.getSignUp(req.user.name,"rebbl");
 
       res.render('signup/signup-confirmed-oi', {user: user});
     } catch (err){
@@ -298,6 +322,61 @@ class Signup{
       console.log(err);
     }
   }
+
+  /* REBBRL */
+  async _rebbrl(req, res){
+    try {
+      let user = await signupService.getExistingTeam(req.user.name);
+      let signup = await signupService.getSignUp(req.user.name,"rebbrl");
+      let account = await accountService.getAccount(req.user.name);
+
+      if (!signup){
+        if(account){
+          res.render('signup/signup-new-coach-rebbrl', {user: {account: account}});
+          //res.render('signup/signup-rampup', {user: {account: account}});
+        } else {
+          res.render('signup/signup-new-coach-rebbrl', {user: req.user.name});
+          //res.render('signup/signup-rampup', {user: req.user.name});
+        }
+        return;
+      }
+
+      let data = Object.assign(signup, account);
+      if(account){
+        signup.account = account;
+      }
+      res.render('signup/signup-new-coach-rebbrl', {user: signup});
+
+    } catch (err){
+      console.log(err);
+    }
+  }
+
+  async _confirmRebbrl(req, res){
+    try {
+      req.body.saveType = "new";
+      req.body.type ="rebbrl";
+      let user = await signupService.saveSignUp(req.user.name, req.body);
+
+      if (user.error){
+        res.render('signup/signup-new-coach-rebbrl', {user: user});
+      } else {
+        res.render('signup/signup-confirmed-rebbrl', {user: user});
+      }
+    } catch (err){
+      console.log(err);
+    }
+  }
+
+  async _resignRebbrl(req, res){
+    try{
+      await signupService.resign(req.user.name,"rebbrl");
+      res.redirect('/signup');
+    } catch (err){
+      console.log(err);
+    }    
+  }
+
 }
 
 module.exports = Signup;

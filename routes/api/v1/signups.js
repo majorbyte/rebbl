@@ -23,7 +23,7 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
 
 
 router.get('/page', util.checkCache, async function(req, res, next){
-  const data = await db.getSignUps({});
+  const data = await db.getSignUps({type:"rebbl"});
 
   const ret = data.all.map(function(row){
 
