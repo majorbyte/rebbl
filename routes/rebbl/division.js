@@ -89,12 +89,6 @@ class Division{
         let divRegex = new RegExp(`^${req.params.division}$`, 'i');
       data.matches = await db.getLeagues({round: week, league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
   
-      if(league.toLowerCase() === "xscessively elfly league"){
-        data.matches["1"] = await data.matches["1"].sort(function(a,b){
-          return a.match_id > b.match_id ? -1 : 1 ;
-        })
-      }
-  
       let ids = []
       data.matches.map(m => ids.push(m.contest_id));
     

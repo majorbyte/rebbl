@@ -7,11 +7,15 @@ block content
         span(class="highlight")= user.reddit
         span !
 
-      h3 It looks like we don't have you on file yet, please continue with your sign up for the REBBL Main season
-          a(href="/signup/change" class="highlighted-rules")= " here"          
+      h3 It looks like we don't have you on file yet, please continue with your sign up for the REBBL Season 12
+        a(href="/signup/change" class="highlighted-rules")= " here"
+      p 
+        a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 12
 
-      h3 If you rather want to play in our rookie's College or Minors league, continue with your sign up
+      h3 If you rather want to play in our rookie's College or Minors league Season 8, continue with your sign up
         a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
+      p 
+        a(href="https://www.reddit.com/r/ReBBRL/comments/cdkw79/rebbrl_minor_league_season_8_sign_ups/" class="highlighted-rules") more information on REBBRL Season 12         
     - else 
       each signup in signups
         - if(signup.hasOwnProperty('signedUp'))
@@ -72,8 +76,12 @@ block content
           span(class="highlight")= user.coach
           span !
 
-        h3 You haven't signed up yet, so continue with your sign up for the REBBL Main season
+        h3 You haven't signed up yet, so continue with your sign up for the REBBL Season 12
           a(href="/signup/change" class="highlighted-rules")= " here"          
+        p 
+          a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 12
 
-        h3 If you rather want to play in our rookie's College or Minors league, continue with your sign up
+        h3 If you rather want to play in our rookie's College or Minors league Season 8, continue with your sign up
           a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
+        p 
+          a(href="https://www.reddit.com/r/ReBBRL/comments/cdkw79/rebbrl_minor_league_season_8_sign_ups/" class="highlighted-rules") more information on REBBRL Season 12         
