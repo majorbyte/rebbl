@@ -1,0 +1,510 @@
+
+extends ../layout.pug
+include ../nav-link
+
+
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav" style="margin:0 auto")
+          +nav-link("Upcoming games", "/rebbl/upcoming")
+          +nav-link("Account", "/account")
+
+
+block content
+  div(class="container")
+    table(class="table table-striped")
+      thead(class="")
+        tr
+          th(scope="col") #
+          th(scope="col") name
+          th(scope="col") position
+          th(scope="col") team
+          th(scope="col" class=" d-none d-lg-table-cell") Skills
+          th(scope="col" class=" d-none d-lg-table-cell") CAS
+          th(scope="col") SPP
+      tbody
+        // ko template: { name: 'playerTemplate', foreach: players }
+        // /ko
+
+  script(type="text/html" id="playerTemplate")
+    tr
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:number" style="cursor:pointer")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root)" style="cursor:pointer")
+        div
+          img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${level}.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+          div(class="" data-bind="text: playerName()" class="highlight" )
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()" style="cursor:pointer")
+      td
+        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/logo_${teamLogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
+        a(data-bind="attr:{href:`/rebbl/team/${teamId}`}, text:teamName" target="_blank")
+
+      td(class="td-prevent d-none d-lg-table-cell")
+        // ko foreach: skills
+        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
+        // /ko
+      td(class=" d-none d-lg-table-cell" data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
+        // ko foreach: casualties_state
+        //ko if: $data !== "BadlyHurt"
+        img(data-bind="attr:{src:$parent.getCASImage($data),title:$data.replace(/([A-Z])/g, ' $1').trim() }"  alt="" style="width:32px;height:32px" )
+        // /ko
+        // /ko
+        // ko if: ((casualties_sustained && casualties_sustained[0] === "Dead") &&( casualties_state && casualties_state.indexOf("Dead") === -1) )    
+        img(src="https://cdn2.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
+        // /ko
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
+
+  div(class="modal" tabindex="-1" role="dialog" id="player-dialog")
+    // ko if: selectedPlayer !== null
+    //ko with:selectedPlayer
+
+    div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+      div(class="modal-content")
+        div(class="modal-header")
+          h3(class="modal-title" data-bind="text: name")
+        div(class="modal-body")
+          table(class="table-striped") 
+            tr
+              th(scope="col") MA
+              th(scope="col") ST
+              th(scope="col") AG
+              th(scope="col") AV
+              th(scope="col") GP
+              th(scope="col") MVP            
+            tr
+              td(data-bind="text:attributes.ma,attr:{class:maColor}")
+              td(data-bind="text:attributes.st,attr:{class:stColor}")
+              td(data-bind="text:attributes.ag,attr:{class:agColor}")
+              td(data-bind="text:attributes.av,attr:{class:avColor}")
+              td(data-bind="text:matchplayed")
+              td(data-bind="text:mvp")
+          table(class="table-striped") 
+            tr              
+              td skills
+            tr              
+              td(class="td-prevent")
+                // ko foreach: skills
+                img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
+                // /ko
+          table(class="table-striped") 
+            tr              
+              td injuries
+            tr
+              td
+                // ko foreach: casualties_state
+                //ko if: $data !== "BadlyHurt"
+                img(data-bind="attr:{src:$parent.getCASImage($data),title:$data.replace(/([A-Z])/g, ' $1').trim() }"  alt="" style="width:32px;height:32px;" )
+                // /ko
+                // /ko
+                // ko if: ((casualties_sustained && casualties_sustained[0] === "Dead") &&( casualties_state && casualties_state.indexOf("Dead") === -1) )    
+                img(src="https://cdn2.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
+                // /ko
+
+          table(class="table-striped") 
+            thead(class="headerText")
+              tr 
+                th
+                th inflicted
+                th sustained
+            tbody
+              tr
+                td tackles
+                td(data-bind="text:stats.inflictedtackles")
+                td(data-bind="text:stats.sustainedtackles")
+              tr
+                td injuries
+                td(data-bind="text:stats.inflictedinjuries")
+                td(data-bind="text:stats.sustainedinjuries")
+              tr
+                td stuns
+                td(data-bind="text:stats.inflictedstuns")
+                td(data-bind="text:stats.sustainedstuns")
+              tr
+                td ko
+                td(data-bind="text:stats.inflictedko")
+                td(data-bind="text:stats.sustainedko")
+              tr
+                td CAS
+                td(data-bind="text:stats.inflictedcasualties")
+                td(data-bind="text:stats.sustainedcasualties")
+              tr
+                td dead
+                td(data-bind="text:stats.inflicteddead")
+                td(data-bind="text:stats.sustaineddead")
+              tr
+                td running (m)
+                td(data-bind="text:stats.inflictedmetersrunning")
+                td -
+              tr
+                td passing (m)
+                td(data-bind="text:stats.inflictedmeterspassing")
+                td -
+              tr
+                td passes
+                td(data-bind="text:stats.inflictedpasses")
+                td -
+              tr
+                td catch
+                td(data-bind="text:stats.inflictedcatches")
+                td -
+              tr
+                td interc.
+                td(data-bind="text:stats.inflictedinterceptions")
+                td(data-bind="text:stats.sustainedinterceptions")
+              tr
+                td touchdowns
+                td(data-bind="text:stats.inflictedtouchdowns")
+                td -
+              tr
+                td surfs
+                td(data-bind="text:stats.inflictedpushouts")      
+                td -
+        div(class="modal-footer")
+          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+    // /ko
+    // /ko
+
+  div(class="modal" tabindex="-1" role="dialog" id="skill-dialog" style="z-index:2050")
+    // ko if: activeSkill
+    div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+      div(class="modal-content")
+        div(class="modal-header")
+          h5(class="modal-title" data-bind="text: activeSkill.name")
+        div(class="modal-body")
+          img( data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
+          p(data-bind="text:activeSkill.description")
+        div(class="modal-footer")
+          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+    // /ko
+
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+
+    function loadSkillDescriptions(){
+      const storage = window.localStorage;
+      let skills = null;
+  
+      if (storage)    
+        skills = localStorage.getItem('skillDescriptions.v1');
+
+      if(!skills){
+        let xhr = new XMLHttpRequest();
+        let path = window.location.pathname.split('/');
+
+        xhr.open("GET", "/api/v2/bloodbowl/skillDescriptions"  ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {//Call a function when the state changes.
+          model.skillDescriptions =xhr.response;
+          const storage = window.localStorage;
+      
+          if (storage)
+            storage.setItem('skillDescriptions.v1', JSON.stringify(xhr.response));    
+          loadSkills();
+        }
+
+        xhr.send();
+      } else {
+        model.skillDescriptions = JSON.parse(skills);
+        loadSkills();
+      }
+    }
+
+    function loadSkills(){
+      const storage = window.localStorage;
+      let skills = null;
+  
+      if (storage)    
+        skills = localStorage.getItem('skills.v1');
+
+      if(!skills){
+        let xhr = new XMLHttpRequest();
+        let path = window.location.pathname.split('/');
+
+        xhr.open("GET", "/api/v2/bloodbowl/skills"  ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {//Call a function when the state changes.
+          model.skills =xhr.response;
+          const storage = window.localStorage;
+      
+          if (storage)
+            storage.setItem('skills.v1', JSON.stringify(xhr.response));    
+          
+          loadRaces();
+        }
+
+        xhr.send();
+      } else {
+        model.skills = JSON.parse(skills);
+        loadRaces();
+      }
+    }
+
+    function loadRaces(){
+      const storage = window.localStorage;
+      let races = null;
+  
+      if (storage)    
+        races = localStorage.getItem('races');
+
+      if(!races){
+        let xhr = new XMLHttpRequest();
+        let path = window.location.pathname.split('/');
+
+        xhr.open("GET", "/api/v2/bloodbowl/races"  ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {//Call a function when the state changes.
+          model.races =xhr.response;
+          const storage = window.localStorage;
+      
+          if (storage)
+            storage.setItem('races', JSON.stringify(xhr.response));    
+          
+          loadPlayertypes();
+        }
+
+        xhr.send();
+      } else {
+        model.races = JSON.parse(races);
+        loadPlayertypes();
+      }
+    }
+
+    class PlayerModel{
+      constructor(data, playerType){
+        this.map(data);
+        this.playerType = playerType;
+        ko.track(this);
+        
+        ko.defineProperty(this, 'maColor', function () {
+          if (this.attributes.ma > this.playerType.ma) return "green";
+          if (this.attributes.ma < this.playerType.ma) return "red";
+          return "" ;
+        });
+        ko.defineProperty(this, 'stColor', function () {
+          if (this.attributes.st > this.playerType.st) return "green";
+          if (this.attributes.st < this.playerType.st) return "red";
+          return "" ;
+        });
+        ko.defineProperty(this, 'agColor', function () {
+          if (this.attributes.ag > this.playerType.ag) return "green";
+          if (this.attributes.ag < this.playerType.ag) return "red";
+          return "" ;
+        });
+        ko.defineProperty(this, 'avColor', function () {
+          if (this.attributes.av > this.playerType.av) return "green";
+          if (this.attributes.av < this.playerType.av) return "red";
+          return "" ;
+        });
+      }
+
+      map(data, playerType){
+        this.active = data.active || false;
+        this.attributes = data.attributes || [];
+        this.casualties_state = data.casualties_state || [];
+        this.casualties_sustained = data.casualties_sustained || [];
+        this.id = data.id || 0;
+        this.level = data.level || 0;
+        this.matchplayed = data.matchplayed || 0;
+        this.mvp = data.mvp || 0;
+        this.name = data.number === 0 ? data.type.split('_')[1].replace(/([A-Z])/g, ' $1') : data.name;
+        this.number = data.number || 0;
+        this.skills = data.skills || [];
+        this.stats = data.stats || [];
+        this.suspended_next_match = data.suspended_next_match || false;
+        this.type = data.type || '';
+        this.value = data.value || 0;
+        this.xp = data.xp || 0;
+        this.teamName = data.teamName || '';
+        this.teamId = data.teamId || '';
+        this.teamLogo = data.teamLogo || '';
+      }
+
+      cssClass(){
+        return  (this.active && this.casualties_sustained && 
+               (this.casualties_sustained.length === 1 && this.casualties_sustained[0] !== "BadlyHurt" ))
+          ? "stats player-out" 
+          : "stats";
+      }
+
+      skillUp(){
+        let levels = [0,0,6,16,31,51,76,176,"*"];
+        return this.xp >= levels[this.level+1];
+      }
+
+      actualLevel(){
+        let levels = [0,0,6,16,31,51,76,176,"*"];
+        return `${this.xp}/${levels[this.level+1]}`
+      }
+
+      getCASImage(e){
+        let bust = "";  
+        switch(e){
+          case "DamagedBack":
+          case "SmashedKnee":
+            bust="NigglingInjury2";
+            break;
+          case"BrokenNeck":
+            bust="AgilityBust";
+            break;
+          case "SmashedCollarBone":
+           bust="StrengthBust";
+            break;
+          case "SeriousConcussion":
+          case "FracturedSkull":
+            bust="ArmourBust";
+            break;
+          case "SmashedHip":
+          case "SmashedAnkle":
+            bust= "MovementBust";
+            break;
+          default:
+            bust= e;
+            break;
+        }
+
+        return `https://cdn2.rebbl.net/images/skills/${bust}.png`
+      }
+
+      playerColor(){
+        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? "#"+ this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1]  : "inherit";
+      }
+      playerName(){
+        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? this.name.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'') : this.name;
+      }
+
+      position(){
+        let pos = "";
+        if(this.number >0){
+          let playerType = this.type.split('_')
+          pos  = playerType.length === 3 ? playerType[2].replace(/([A-Z])/g, ' $1') : playerType[1].replace(/([A-Z])/g, ' $1') 
+        }
+        return pos;
+      }
+
+      playerId(){
+        return this.position() === "" ? this.name.replace(/ /g,'') : (this.id ? this.id : this.name.replace(/ /g,''))
+      }
+    }
+
+    class SkillModel{
+      constructor(data){
+        this.map(data);
+        ko.track(this);
+      }
+
+      map(data){
+        if(data){
+          this.id =data.id;
+          this.name = data.name;
+        }
+      }
+
+    }
+
+
+    class ViewModel{
+      constructor(){
+        this.skills = [];
+        this.skillDescriptions = [];
+        this.players = [];
+        this.races = [];
+        this.selectedRace = false;
+        this.playertypes = [];
+        this.activeSkill={name:'Block',description:''};
+        this.selectedPlayer = null;
+        ko.track(this);
+      }
+
+      selectSkill(self,e){
+        self.activeSkill = self.skillDescriptions.find(skill => skill.name.toLowerCase() === e.replace(/([A-Z])/g, ' $1').trim().toLowerCase());
+      };
+
+      getSkills(player) {return this.skills[player.type]};
+
+      selectPlayer(self,e){
+        self.selectedPlayer = e;
+      };
+    }
+
+
+    function loadPlayers(type, cb){
+      let xhr = new XMLHttpRequest();
+      let path = window.location.pathname.split('/');
+
+      xhr.open("GET", "/api/v2/bloodbowl/legendaryplayers"  ,true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+          model.players = xhr.response
+            .sort(function(a,b){
+              if (a.xp > b.xp) return -1;
+              if (a.xp < b.xp) return 1;
+              return a.number > b.number ? 1 : -1}
+            )
+            .map(x => new PlayerModel(x, model.playertypes.find(t => t.type === x.type) ));
+      }
+
+      xhr.send();
+    }
+
+    function loadPlayertypes(){
+      const storage = window.localStorage;
+      let playerTypes = [];
+  
+      if (storage){
+        playerTypes = JSON.parse(localStorage.getItem('playertypes') || "[]");      
+      }    
+        
+
+      if (playerTypes.length >= 101){
+        model.playertypes = playerTypes;
+        loadPlayers();
+        return;
+      }
+
+      let xhr = new XMLHttpRequest();
+      let path = window.location.pathname.split('/');
+
+      xhr.open("GET", "/api/v2/bloodbowl/playertypes/"  ,true)
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.responseType = 'json';
+
+      xhr.onload  = function() {//Call a function when the state changes.
+        model.playertypes =xhr.response;
+
+        const storage = window.localStorage;
+    
+        if (storage){
+          storage.setItem('playertypes', JSON.stringify(xhr.response));    
+        } 
+        loadPlayers();
+      }
+      xhr.send();
+    }
+
+    let model = new ViewModel({});
+    ko.applyBindings(model);
+    $(document).ready(function(){
+
+      loadSkillDescriptions();
+    });

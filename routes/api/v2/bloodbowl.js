@@ -18,6 +18,10 @@ class BloodBowlApi{
       res.json(await bloodbowlService.getSkillDescriptions());
     });
 
+    this.router.get('/playertypes', util.checkCache, async function(req, res){
+      let data = await dataService.getPlayerTypes({});
+      res.json(data);
+    });
 
     this.router.get('/playertypes/:race', util.checkCache, async function(req, res){
       let data = await dataService.getPlayerTypes({race:Number(req.params.race)});
@@ -34,7 +38,21 @@ class BloodBowlApi{
       let data = await dataService.getStarPlayers({});
       res.json(data);
     });
-    
+        
+    this.router.get('/legendaryplayers', util.checkCache, async function(req, res){
+      let data = await dataService.getPlayers({xp:{$gt:175}, xp_gain:{$gt:0}});
+
+      for(var x = 0; x < data.length; x++){
+        let player = data[x];
+        let team = await dataService.getTeam({"team.id":player.teamId});
+        if (team){
+          player.teamName = team.team.name;
+          player.teamLogo = team.team.logo;
+        }
+      }
+
+      res.json(data);
+    });
     return this.router;
   }
 }
