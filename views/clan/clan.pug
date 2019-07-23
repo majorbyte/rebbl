@@ -1,0 +1,132 @@
+extends ../no-cache-sub-layout.pug
+include ../nav-link
+
+block content
+  div(class=`container` id="app")
+    div(v-if="clan == null")
+      div(v-if="clanLeader")
+        h2 Create a new clan
+        input(v-model="name" type="text" placeholder="new clan name")
+        br
+        button(@click="create" class="btn btn-primary" ) Create Clan
+      d(v-else)
+        h2 Put me on the public list
+    div(v-else)
+      img(v-if="clan.logo != null" :src="'https://cdn2.rebbl.net/' + clan.logo" style="float:right;width:128px")
+      h2(style="text-transform:none") {{clan.name}}
+      h2(style="text-transform:none") Leader: {{clan.leader}}
+      div(v-if="clan.logo == null")
+        input( @change="onFileSelectedEvent" type="file" accept="image/*" class="fileChooser")
+        button(@click="uploadLogo" class="btn btn-primary" ) upload logo
+      div(v-if="clan.teams == null")
+        h3 Please add enter your clan teams here.
+        div(v-for="(team,index) in newTeams" v-bind:key="`${index}`")
+          input(v-model="team" type="text" @change="Vue.set(newTeams, index, team)")
+          btn(style="margin-left:10px" class="btn btn-sm btn-primary" @click="newTeams.splice(newTeams.indexOf(team),1)") Remove
+          div(v-if="!nameTest.test(team)")
+            br
+            label(class="error") Teamname does not start with {{clan.name}}
+        input(v-if="newTeams.length < 5" v-model="newTeam" type="text")
+        btn(style="margin-left:10px" v-if="newTeams.length < 5" class="btn btn-sm btn-primary" @click="newTeams.push(newTeam);newTeam=''") Add
+        div(v-if="newTeams.length >= 5" )
+          btn(class="btn btn-sm btn-primary" @click="saveTeams") Save Teams
+
+
+      div(v-else)
+
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
+  - else
+    script(src="/scripts/vue-2.6.10.min.js")
+
+  script.
+
+        // app Vue instance
+    var app = new Vue({
+      // app initial state
+      data: {
+        clan: {logo:null,name:""},
+        name: "",
+        newLogo: null,
+        newTeams: [],
+        newTeam: "",
+        nameTest: null,
+        clanLeader: false
+      },
+
+      // methods that implement data logic.
+      // note there's no DOM manipulation here at all.
+      methods: {
+        load: async function () {
+          let response = await fetch("/api/v2/clan");
+          const data = await response.json();
+          this.clan = Object.assign({},this.clan,data.clan);
+          this.clanLeader = data.leader;
+        },
+        create: async function (){
+          const self = this;
+          let response = await fetch("/api/v2/clan/create", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({name:self.name})
+          });
+        },
+        onFileSelectedEvent : function(event){
+          this.newLogo = event.target.files[0];
+        },
+        uploadLogo: async function(url, data, cb){
+          var image = new FormData();
+          image.append("image", this.newLogo);
+          let response = await fetch(`/api/v2/clan/${this.clan.name}/upload`, {
+            method: "POST",
+            body: image
+          });
+        
+          if (response.ok){
+            this.newLogo = null;
+            this.clan.logo = await response.text();
+          } else{
+            console.dir(await response.text())
+          }
+        },
+        saveTeams: async function(){
+          const regex = new RegExp(`^\\${this.clan.name}`)
+          this.newTeams.map(team => {
+            if (!regex.test(team)){
+              alert(`${team} does not start with ${this.clan.name}`)
+            }
+          });
+        } 
+      },
+      watch:{
+        clan: {
+          handler:function(newValue){
+            this.nameTest = new RegExp(`^\\${newValue.name}`);
+          },
+          deep:true
+        }
+      },
+      created: async function () { await this.load(); }
+    })
+
+    // mount
+    app.$mount('#app')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
