@@ -147,11 +147,20 @@ block scripts
       }
 
       teamColor(){
-        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.team) ? "#"+ this.team.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1]  : "inherit";
-      }
+        if (/\[colour=/i.test(this.team)){
+          if (/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.team)) {
+            return "#"+this.team.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1];
+          }
+          return "#000000";
+        }
+
+        return "inherit";      }
 
       teamName(){
-        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.team) ? this.team.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'') : this.team;
+        if (/\[colour=/i.test(this.team)){
+            return this.team.replace(/\[colour=.*]/i,'')
+        }
+        return this.team;
       }
     }
 

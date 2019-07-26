@@ -10,6 +10,13 @@ block append scripts
   script(src="/scripts/socket.io.js")
   style.
     .odometer {font-size: 100px;}
+    .switch input {display:none;}
+    .switch {display:inline-block;width:60px;height:30px;margin:8px;transform:translateY(50%);position:relative;}
+    .slider {position:absolute;top:0;bottom:0;left:0;right:0;border-radius:30px;box-shadow:0 0 0 2px #777, 0 0 4px #777;cursor:pointer;border:4px solid transparent;overflow:hidden;transition:.4s;}
+    .slider:before {position:absolute;content:"";width:100%;height:100%;background:#777;border-radius:30px;transform:translateX(-30px);transition:.4s;}
+    input:checked + .slider:before {transform:translateX(30px);background:limeGreen;}
+    input:checked + .slider {box-shadow:0 0 0 2px limeGreen,0 0 2px limeGreen;}
+    .unqualified{opacity:0.55}
 
   - if (process.env.NODE_ENV === 'production')
     script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
@@ -93,11 +100,21 @@ block append scripts
       }
 
       this.teamColor = function(){
-         return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? "#"+this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1]  : "inherit";
+        if (/\[colour=/i.test(this.name)){
+          if (/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name)) {
+            return "#"+this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1];
+          }
+          return "#000000";
+        }
+
+        return "inherit";
       }
 
       this.teamName = function(){
-        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? this.name.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'') : this.name;
+        if (/\[colour=/i.test(this.name)){
+            return this.name.replace(/\[colour=.*]/i,'')
+        }
+        return this.name;
       }
 
       this.map(data);
@@ -123,9 +140,43 @@ block append scripts
     }
 
     function StandingsModel(data){
+      var self = this;
+      this.scores = ko.observableArray();
+      this.all = ko.observableArray();
+      this.filtered =ko.observableArray();
+      this.complete = ko.observable(false);
+      
+      this.load = async() => {
+        if (this.complete() && this.all().length > 0){
+          this.scores(this.all());
+          return;
+        } 
+        if (!this.complete() && this.filtered().length > 0){
+          this.scores(this.filtered());
+          return;
+        } 
 
-      this.scores = ko.observableArray()
+        const response = await fetch(`/api/v1/cripple/standings${this.complete() ? '/complete':''}`);
 
+        if (response.ok){
+          if (this.complete()){
+            ko.mapping.fromJS(await response.json(),mapping,model.all);
+            model.scores(model.all());
+          } else {
+            ko.mapping.fromJS(await response.json(),mapping,model.filtered);
+            model.scores(model.filtered());
+          }
+        } else {
+            model.isError(true);
+            model.error(await response.text());
+        }
+      }
+
+      this.toggle = () => {
+        this.complete(!this.complete());
+        model.scores([]);
+        this.load();
+      }
     }
 
     var mapping = {
@@ -139,21 +190,8 @@ block append scripts
     let model = new StandingsModel(); 
     ko.applyBindings(model);
     $(document).ready(function(){
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", "/api/v1/cripple/standings",true)
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.responseType = 'json';
 
-      xhr.onload  = function() {//Call a function when the state changes.
-
-        if(xhr.response && xhr.status === 200){   
-          model = ko.mapping.fromJS(xhr.response,mapping,model.scores);
-        } else {
-          model.isError(true);
-          model.error(xhr.response);
-        }
-      }
-      xhr.send('');
+      model.load();
 
       var socket = io.connect('/');
       socket.on('cripple', function(data) {update(data)});
@@ -209,6 +247,12 @@ block content
           img(src="https://cdn2.rebbl.net//images/skills/NigglingInjury2.png" style="vertical-align:middle;height:44px;margin-left:15px;margin-right:10px  ")
           div(id="niggling" class="odometer" style="font-size:25px !important;border-radius:unset;padding:0px")        
 
+    div
+      label(class="switch")
+        input(type="checkbox" id="spoiled-switch" data-bind="checked: model.complete")
+        span(class="slider" data-bind="click: model.toggle")
+      | show all
+
     // ko foreach: ["REBBL Cripple Ladder","REBBL Cripple Ladder - Season 1b","REBBL Cripple Ladder - Season 1a"]
     div(class="row col-12")
       h2
@@ -227,24 +271,20 @@ block content
           div(class="col-3") D  
           div(class="col-3") L
       // ko foreach: model.scores().filter(x => x.competition === $data)
-      div(class="row col-12 season-table-row")
+      div(class="row col-12 season-table-row" data-bind="css: $data.gp < 10 ? 'unqualified' : ''")
         div(class="row col-6")
           div(class="col-1" data-bind="text: ($index() + 1) ")
           div(class="col-4" style=";overflow:hidden") 
             span(data-bind="text: $data.coach ? $data.coach.name : '-'" )
           div(class="col-7" style=";overflow:hidden") 
-            //- if (score.team && /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(score.team.name))
-            // span(style="color:#"+score.team.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1])= score.team.name.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'')
-            // - else
             span(data-bind="text: $data.team ? $data.team.teamName() : '-', style:{color: $data.team ? $data.team.teamColor() : 'inherit'}")
-        
         div(class="col-3" style=";overflow:hidden" data-bind="text: $data.team ? $data.team.teamRace() : '-' ")
         div(class="row col-3" )
           div(class="col-3" data-bind="text: Math.round($data.score*100)/100")
           div(class="col-3" data-bind="text: $data.wins")
           div(class="col-3" data-bind="text: $data.draws")
           div(class="col-3" data-bind="text: $data.gp - $data.wins - $data.draws")
-      // ko if: (($index() === 3 && $data !== "REBBL Cripple Ladder") ||($index() === 6 && $data === "REBBL Cripple Ladder") )
+      // ko if: (($index() === 3 && $parent !== "REBBL Cripple Ladder") || ($index() === 7 && $parent === "REBBL Cripple Ladder") )
       div(class="row col-12 season-table-row")
         div(class="col-1 Standings-divider--flex")
           span(class="Standings-dividerText--correction")
