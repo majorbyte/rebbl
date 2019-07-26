@@ -443,11 +443,21 @@ block scripts
       }
 
       teamColor(){
-        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? "#"+ this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1]  : "inherit";
+        if (/\[colour=/i.test(this.name)){
+          if (/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name)) {
+            return "#"+this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1];
+          }
+          return "#000000";
+        }
+
+        return "inherit";
       }
 
       teamName(){
-        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? this.name.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'') : this.name;
+        if (/\[colour=/i.test(this.name)){
+            return this.name.replace(/\[colour=.*]/i,'')
+        }
+        return this.name;
       }
 
       isNecro(){
@@ -663,10 +673,20 @@ block scripts
       }
 
       playerColor(){
-        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? "#"+ this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1]  : "inherit";
+        if (/\[colour=/i.test(this.name)){
+          if (/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name)) {
+            return "#"+this.name.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1];
+          }
+          return "#000000";
+        }
+
+        return "inherit";
       }
       playerName(){
-        return /\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.name) ? this.name.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'') : this.name;
+        if (/\[colour=/i.test(this.name)){
+            return this.name.replace(/\[colour=.*]/i,'')
+        }
+        return this.name;
       }
 
       position(){

@@ -4,12 +4,18 @@ const crippleService = require('../../../lib/crippleService.js')
   , express = require('express')
   , router = express.Router({mergeParams: true});
 
-router.get('/standings', util.checkCache, async function(req, res){
+const load = async(filter) => {
   let data = await crippleService.getStandings();
-  data = data.filter(x => x.gp > 9);
-  data = data.sort((a,b) => a.score > b.score ? -1 : 1);
-  
-  res.status(200).send(data);
+  if (filter) data = data.filter(x => x.gp > 9);
+  return data.sort((a,b) => a.score > b.score ? -1 : 1);
+}
+
+router.get('/standings/complete', util.checkCache, async function(req, res){
+  res.status(200).send(await load(false));
+});
+
+router.get('/standings', util.checkCache, async function(req, res){
+  res.status(200).send(await load(true));
 });
 
 module.exports = router;
