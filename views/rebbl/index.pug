@@ -17,7 +17,7 @@ block scripts
     link(rel="stylesheet" href="styles/slider.css")
     
   script.
-    var scaling = 1.50;
+    var scaling = 1.1;
     //count
     var showCount = 4;
     let scrollDiff = 0;
@@ -27,6 +27,8 @@ block scripts
     $(document).ready(function(){
         $(".slider-container").each(init)
         controls();
+
+
     });
     $( window ).resize(function() {
         setTimeout(init,100);
@@ -123,6 +125,11 @@ block scripts
         var next = $(".next");
         next.on("click", onNext);
         prev.on("click", onPrev);
+
+        const callTrigger = function(){
+          $(".next").trigger("click");
+        }
+        setInterval(callTrigger,30000);
     };
 
 block navigation
@@ -155,12 +162,121 @@ block content
   
   div(class="container-flex no-gutters")
     div(class="row" style="justify-content: center")
-      div(class="col-md-5 col-sm-12 no-gutters")
+      div(class="col-lg-5 col-md-12 no-gutters")
+        h2(style="margin-left:50px;margin-top:10px") ANNOUNCEMENTS
         div(class="slider-frame")
-          -let titleMain = company === "" ? "LATEST REBBL GAMES" : `LATEST ${company} GAMES`
-          -let urlMain = company === "" ? "rebbl" : company
-          a(href=`/${urlMain}`)
-            h2(style="margin-left:50px;margin-top:10px")= titleMain
+          div(class="btn prev")
+            i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
+          div(class="btn next")
+            i(class="fa fa-chevron-right" style="position: absolute;top: 47%;")
+          div(class="slider-container")
+            for announcement in data.announcements.sort((a,b) => a.date > b.date ? -1 : 1).splice(0,5)
+              div(class="slide")
+                div(class="col-12 no-gutters slide-gutter" style="padding:0 15px;")
+                  div(class="row col-12 no-gutters slide-overflow" style="border:1px dashed  rgb(154, 90, 10);")
+                    div(class="col-2 no-gutters")
+                        a(target="_blank" href=announcement.url title=announcement.title)
+                          img(src="https://cdn2.rebbl.net/images/small-fist.png" style="width:40px;margin-left: 7px;margin-top:3px")
+                    div(class="col-10 no-gutters")
+                      a(href=announcement.url target="_blank")= announcement.title
+                      - let date = new Date(announcement.date *1000)
+                    span(class="TeamLabel-coach pull-left")= date.toISOString().substring(0,10) 
+                    div(class="col-12" style="margin-bottom:10px")    
+                      div(class="MatchRow-contentWrapper")
+                        p= announcement.text.substring(0,100).replace(/\*\*/g,'').replace(/\#/g,'')+ "..."
+      div(class="col-lg-1 d-lg-block d-md-none no-gutters")
+      div(class="col-lg-5 col-md-12 no-gutters")
+        h2(style="margin-left:50px;margin-top:10px") UPCOMING GAMES
+        div(class="slider-frame")
+          div(class="btn prev")
+            i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
+          div(class="btn next")
+            i(class="fa fa-chevron-right" style="position: absolute;top: 47%;")
+          div(class="slider-container")
+            for match in data.upcoming
+              div(class="slide")
+                div(class="col-12 no-gutters slide-gutter" style="padding:0 15px;")
+                  div(class="row col-12 no-gutters slide-overflow" style="border:1px dashed  rgb(154, 90, 10);")
+                    -let league = match.league
+                    -let company = "rebbl"
+                    div(class="col-2 no-gutters")
+                      -if (match.league.toLowerCase() === 'rebbl one minute league')
+                        -league= "One Minute"
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_human_01.png" )
+                      -if (match.league.toLowerCase() === 'the rebbl rabble mixer')
+                        -league="rabble"
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_highelf_20.png" )
+                      -if (match.league.toLowerCase() === 'xscessively elfly league')
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_highelf_08.png" )
+                      -if (match.league.toLowerCase() === 'rebbll ')
+                        -league = "rebbll"
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_14.png" )
+                      -if (match.league.toLowerCase() === 'rebbl - big o')
+                        -league="Big O"
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_amazon_14.png" )
+                      -if (match.league.toLowerCase() === 'rebbl - gman')
+                        -league="Gman"
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_23.png" )
+                      -if (match.league.toLowerCase() === 'rebbl - rel')
+                        -league="REL"
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
+                      -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl upstarts' || match.league.toLowerCase() === 'rebbrl minors league')
+                        -company="rebbrl"
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
+                      -if (match.league.toLowerCase() === 'gman rampup')
+                        -league="rampup"
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_human_15.png" )
+                      -if (match.league.toLowerCase() === 'rel rampup')
+                        -league="rampup"
+                        img(src="https://cdn2.rebbl.net/images/logo/logo_orc_17.png" )                      
+                      -if (match.stream)
+                        a(target="_blank" href=match.stream.url title=match.stream.name)
+                          img(src="/images/glitch.png" style="width:32px;height:32px;margin-left: 7px;")
+                    div(class="col-10 no-gutters")
+                      a(href=`/${company}/${league}`)= match.league.replace(/rebbl - /i,'')
+                      br
+                      a(href=href=`/${company}/${league}/${match.competition}` style="font-size:0.9rem")= match.competition.replace(/season 11 - /i,'')
+
+                    div(class="col-12" style="margin-bottom:10px")    
+                      -let url=`/${company}/match/unplayed/${match.contest_id}`
+                      a(href=url class="MatchRow-contentWrapper")
+                        div(class="row col-12 no-gutters" style="margin: 0 auto;")
+                          div(class="col-10 no-gutters")
+                            div(class="col-12 no-gutters" style="font-size:0.8rem")
+                              span(class="pull-left")= match.opponents[0].team.name
+                              br
+                              span(class="TeamLabel-coach pull-left")= match.opponents[0].coach.name
+                          div(class="col-2 no-gutters" style="font-size:2rem;text-align:center") 
+                            img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
+                          div(class="row col-12 no-gutters")
+                            div(class="col-12 row no-gutters"  style="margin:0 auto;text-align:center")
+                              span(style="display:block;margin-left:auto;margin-right:auto")= match.date + "UTC"
+                          div(class="col-2 no-gutters" style="font-size:1.5rem;text-align:center")
+                            img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)
+                          div(class="col-10 no-gutters")
+                            div(class="col-12 no-gutters" style="font-size:0.8rem")
+                              span(class="pull-right" style="font-size:0.8rem")= match.opponents[1].team.name
+                              br
+                              span(class="TeamLabel-coach pull-right")= match.opponents[1].coach.name  
+                          //div(class="col-12 no-gutters row" style="margin-top:25px")
+                            div(class="col-4 align-center")
+                              img(src="https://cdn2.rebbl.net/images/skills/Dead.png" style="height:32px;") 
+                              span 2
+                            div(class="col-4 align-center")
+                              img(src="https://cdn2.rebbl.net/images/skills/SmashedHand.png" style="height:32px;")
+                              span 3
+                            div(class="col-4 align-center")
+                              img(class="pull-right" src="https://cdn2.rebbl.net/images/stadium/foodarea.png" style="height:40px;")
+    div(class="row")
+      div(class="col-lg-12 d-lg-block d-md-none")
+        br
+    div(class="row" style="justify-content: center")
+      div(class="col-lg-5 col-md-12 no-gutters")
+        -let titleMain = company === "" ? "LATEST REBBL GAMES" : `LATEST ${company} GAMES`
+        -let urlMain = company === "" ? "rebbl" : company
+        a(href=`/${urlMain}`)
+          h2(style="margin-left:50px;margin-top:10px")= titleMain
+        div(class="slider-frame")
           div(class="btn prev")
             i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
           div(class="btn next")
@@ -234,16 +350,14 @@ block content
                               span 3
                             div(class="col-4 align-center")
                               img(class="pull-right" src="https://cdn2.rebbl.net/images/stadium/foodarea.png" style="height:40px;")          
-      br
-      br
-      div(class="col-md-1 col-sm-hidden no-gutters")
-      div(class="col-md-5 col-sm-12 no-gutters")
+      div(class="col-lg-1 d-lg-block d-md-none no-gutters")
+      div(class="col-lg-5 col-md-12 no-gutters")
+        - let titleSide = company === "" ? "LATEST REBBRL GAMES" : "LATEST SIDE LEAGUE GAMES"
+        - titleSide = company === "rebbrl" ? "LATEST MINORS GAMES" : titleSide
+        - let urlFix = company === "" ? "rebbrl" : company
+        a(href=`/${urlFix}`)
+          h2(style="margin-left:50px;margin-top:10px")= titleSide
         div(class="slider-frame")
-          - let titleSide = company === "" ? "LATEST REBBRL GAMES" : "LATEST SIDE LEAGUE GAMES"
-          - titleSide = company === "rebbrl" ? "LATEST MINORS GAMES" : titleSide
-          - let urlFix = company === "" ? "rebbrl" : company
-          a(href=`/${urlFix}`)
-            h2(style="margin-left:50px;margin-top:10px")= titleSide
           div(class="btn prev")
             i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
           div(class="btn next")
@@ -312,87 +426,4 @@ block content
                               span 3
                             div(class="col-4 align-center")
                               img(class="pull-right" src="https://cdn2.rebbl.net/images/stadium/foodarea.png" style="height:40px;")     
-    br
-    br
-    div(class="row col-12 no-gutters")
-      div(class="slider-frame")
-        h2(style="margin-left:50px;margin-top:10px") UPCOMING GAMES
-        div(class="btn prev")
-          i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
-        div(class="btn next")
-          i(class="fa fa-chevron-right" style="position: absolute;top: 47%;")
-        div(class="slider-container")
-          for match in data.upcoming
-            div(class="slide")
-              div(class="col-12 no-gutters slide-gutter" style="padding:0 15px;")
-                div(class="row col-12 no-gutters slide-overflow" style="border:1px dashed  rgb(154, 90, 10);")
-                  -let league = match.league
-                  -let company = "rebbl"
-                  div(class="col-2 no-gutters")
-                    -if (match.league.toLowerCase() === 'rebbl one minute league')
-                      -league= "One Minute"
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_human_01.png" )
-                    -if (match.league.toLowerCase() === 'the rebbl rabble mixer')
-                      -league="rabble"
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_highelf_20.png" )
-                    -if (match.league.toLowerCase() === 'xscessively elfly league')
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_highelf_08.png" )
-                    -if (match.league.toLowerCase() === 'rebbll ')
-                      -league = "rebbll"
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_14.png" )
-                    -if (match.league.toLowerCase() === 'rebbl - big o')
-                      -league="Big O"
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_amazon_14.png" )
-                    -if (match.league.toLowerCase() === 'rebbl - gman')
-                      -league="Gman"
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_23.png" )
-                    -if (match.league.toLowerCase() === 'rebbl - rel')
-                      -league="REL"
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
-                    -if (match.league.toLowerCase() === 'rebbrl college league' || match.league.toLowerCase() === 'rebbrl upstarts' || match.league.toLowerCase() === 'rebbrl minors league')
-                      -company="rebbrl"
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_27.png" )
-                    -if (match.league.toLowerCase() === 'gman rampup')
-                      -league="rampup"
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_human_15.png" )
-                    -if (match.league.toLowerCase() === 'rel rampup')
-                      -league="rampup"
-                      img(src="https://cdn2.rebbl.net/images/logo/logo_orc_17.png" )                      
-                    -if (match.stream)
-                      a(target="_blank" href=match.stream.url title=match.stream.name)
-                        img(src="/images/glitch.png" style="width:32px;height:32px;margin-left: 7px;")
-                  div(class="col-10 no-gutters")
-                    a(href=`/${company}/${league}`)= match.league.replace(/rebbl - /i,'')
-                    br
-                    a(href=href=`/${company}/${league}/${match.competition}` style="font-size:0.9rem")= match.competition.replace(/season 11 - /i,'')
 
-                  div(class="col-12" style="margin-bottom:10px")    
-                    -let url=`/${company}/match/unplayed/${match.contest_id}`
-                    a(href=url class="MatchRow-contentWrapper")
-                      div(class="row col-12 no-gutters" style="margin: 0 auto;")
-                        div(class="col-10 no-gutters")
-                          div(class="col-12 no-gutters" style="font-size:0.8rem")
-                            span(class="pull-left")= match.opponents[0].team.name
-                            br
-                            span(class="TeamLabel-coach pull-left")= match.opponents[0].coach.name
-                        div(class="col-2 no-gutters" style="font-size:2rem;text-align:center") 
-                          img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
-                        div(class="row col-12 no-gutters")
-                          div(class="col-12 row no-gutters"  style="margin:0 auto;text-align:center")
-                            span(style="display:block;margin-left:auto;margin-right:auto")= match.date + "UTC"
-                        div(class="col-2 no-gutters" style="font-size:1.5rem;text-align:center")
-                          img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)
-                        div(class="col-10 no-gutters")
-                          div(class="col-12 no-gutters" style="font-size:0.8rem")
-                            span(class="pull-right" style="font-size:0.8rem")= match.opponents[1].team.name
-                            br
-                            span(class="TeamLabel-coach pull-right")= match.opponents[1].coach.name  
-                        //div(class="col-12 no-gutters row" style="margin-top:25px")
-                          div(class="col-4 align-center")
-                            img(src="https://cdn2.rebbl.net/images/skills/Dead.png" style="height:32px;") 
-                            span 2
-                          div(class="col-4 align-center")
-                            img(src="https://cdn2.rebbl.net/images/skills/SmashedHand.png" style="height:32px;")
-                            span 3
-                          div(class="col-4 align-center")
-                            img(class="pull-right" src="https://cdn2.rebbl.net/images/stadium/foodarea.png" style="height:40px;")
