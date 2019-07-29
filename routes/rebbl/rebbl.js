@@ -22,6 +22,7 @@ class Rebbl{
     let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
     let s  = new RegExp("(The REBBL Rabble Mixer)|(XScessively Elfly League)|(Rebbl One Minute League)|(REBBLL )","i")
     let d = await datingService.all();
+
     let docs = {};
     const now = new Date(Date.now());
     switch (data.company){

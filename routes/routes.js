@@ -23,7 +23,7 @@ class Routes{
 	
   async _root(req, res, next) {
     let data = {}
-
+    data.announcements = await dataService.getAnnouncements({});
     let c = new RegExp(`^(^Season 11)|(^REL Rampup)|(^GMAN Rampup)`, "i");
     let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
 

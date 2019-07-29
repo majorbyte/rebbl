@@ -46,6 +46,7 @@ class Maintenance{
       maintenanceService.getRebblData(req.query.league);
       maintenanceService.getNewRebblData(req.query.league);
       reddit.check();
+      reddit.getAccouncements();
       res.redirect('/');
     });
 
