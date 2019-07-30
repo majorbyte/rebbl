@@ -17,7 +17,7 @@ class Rebbl{
 
   async _root(req, res, next) {
     let data = {company:req.params.company}
-
+    data.announcements = await dataService.getAnnouncements({});
     let c = new RegExp(`^(^Season 11)|(^REL Rampup)|(^GMAN Rampup)`, "i");
     let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
     let s  = new RegExp("(The REBBL Rabble Mixer)|(XScessively Elfly League)|(Rebbl One Minute League)|(REBBLL )","i")
