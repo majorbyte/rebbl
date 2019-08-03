@@ -51,7 +51,7 @@ router.get('/:match_id', util.cache(600), async function(req, res, next){
       });
     });
   }
-  data.company=req.params.company;
+  data.company= data.match.leaguename.indexOf("mperium") > -1 ? "imperium" : req.params.company;
   res.render('rebbl/match/match', data);
 });
 

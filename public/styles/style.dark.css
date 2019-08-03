@@ -852,6 +852,16 @@ a:focus,a:hover {
   top:0px;
   z-index: 9999;
 }
+.u-bottomPadding--small-imperium{
+  height: 12em;
+  width: 12em;
+  background: #ffffff00 url(/images/imperium.png) no-repeat 99%;
+  background-size: 8em;
+  right: 5px;
+  position: fixed;
+  top:0px;
+  z-index: 9999;
+}
 
 .u-bottomPadding--small-rebbrl{
   height: 8em;
