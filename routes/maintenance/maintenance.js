@@ -47,6 +47,7 @@ class Maintenance{
       maintenanceService.getNewRebblData(req.query.league);
       reddit.check();
       reddit.getAccouncements();
+      maintenanceService.getImperiumMatches();
       res.redirect('/');
     });
 

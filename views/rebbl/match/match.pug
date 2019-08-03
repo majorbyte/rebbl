@@ -26,10 +26,13 @@ block content
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let tn = match.teams[0].teamname
-                      - if (tn.indexOf('[colour=') > -1)
-                        a(href=`/${company}/team/${match.teams[0].idteamlisting}` style=("color:#" + tn.substr(11,6) )  )= tn.substr(19, tn.length-17)
+                      -if (company === "imperium")
+                        span=tn
                       -else
-                        a(href=`/${company}/team/${match.teams[0].idteamlisting}` )= tn
+                        - if (tn.indexOf('[colour=') > -1)
+                          a(href=`/${company}/team/${match.teams[0].idteamlisting}` style=("color:#" + tn.substr(11,6) )  )= tn.substr(19, tn.length-17)
+                        -else
+                          a(href=`/${company}/team/${match.teams[0].idteamlisting}` )= tn
                     div(class="TeamLabel-coach ")
                       a(href=`/${company}/coach/${match.coaches[0].idcoach}`)= match.coaches[0].coachname
                     div(class="TeamLabel-coach" title="cash earned: " + match.teams[0].cashearned + "; spiraling expenses: " +match.teams[0].spirallingexpenses)= "winnings: " + (match.teams[0].cashearned - match.teams[0].spirallingexpenses)
@@ -56,10 +59,13 @@ block content
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let on = match.teams[1].teamname
-                      - if (on.indexOf('[colour=') > -1)
-                        a(href=`/${company}/team/${match.teams[1].idteamlisting}` style=("color:#" + on.substr(11,6))  )= on.substr(19, on.length-17)
+                      -if (company === "imperium")
+                        span=on
                       -else
-                        a(href=`/${company}/team/${match.teams[1].idteamlisting}` )= on
+                        - if (on.indexOf('[colour=') > -1)
+                          a(href=`/${company}/team/${match.teams[1].idteamlisting}` style=("color:#" + on.substr(11,6))  )= on.substr(19, on.length-17)
+                        -else
+                          a(href=`/${company}/team/${match.teams[1].idteamlisting}` )= on
 
                     div(class="TeamLabel-coach ")
                       a(href=`/${company}/coach/${match.coaches[1].idcoach}`)= match.coaches[1].coachname
