@@ -90,6 +90,52 @@
         }
       }
     },
+    "/league/{leagueName}/{season}/slim/{round}": {
+      "get": {
+        "tags": [
+          "league"
+        ],
+        "summary": "Get match results from entire league per season and round",
+        "description": "Returns a single league",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "leagueName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "season",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "round",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LeagueSlim"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          }
+        }
+      }
+    },
     "/division/{leagueName}/{seasonName}": {
       "get": {
         "tags": [
@@ -714,6 +760,32 @@
               "$ref": "#/definitions/Team"
             }
           }
+        }
+      }
+    },
+    "LeagueSlim": {
+      "type": "object",
+      "properties": {
+        "division":{
+          "type":"string"
+        },
+        "round": {
+          "type": "integer"
+        },
+        "match_uuid": {
+          "type": "string"
+        },
+        "homeTeam": {
+          "type": "string"
+        },
+        "homeScore": {
+          "type": "integer"
+        },
+        "awayScore": {
+          "type": "integer"
+        },
+        "awayTeam": {
+          "type": "string"
         }
       }
     },
