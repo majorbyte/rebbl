@@ -33,7 +33,31 @@ class LeagueApi{
     });
 
 
+    this.router.get('/:league/:season/slim/:round', util.checkCache, async function(req, res){
+      try {
+        let {league,season, round} = req.params;
 
+        let data = await dataService.getSchedules({league:league,season:season,round:Number(round)});
+
+        let ret = data.map(m => {
+          let division = m.competition;
+          let match_uuid = m.match_uuid;
+          let homeTeam = m.opponents[0].team.name;
+          let homeScore = m.opponents[0].team.score;
+          let awayTeam = m.opponents[1].team.name;
+          let awayScore = m.opponents[1].team.score;
+          let round = m.round;
+
+          return {division, round, match_uuid,homeTeam,homeScore,awayScore,awayTeam};
+        })
+
+        res.json(ret.sort((a,b)=> a.division > b.division ? 1 : -1));
+      }
+      catch (ex){
+        console.error(ex);
+        res.status(500).send('Something something error');
+      }
+    });  
 
     this.router.get('/:leagueId', util.checkCache, async function(req, res){
       try {
