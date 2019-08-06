@@ -1,13 +1,18 @@
 
 'use strict';
-const dataService = require('../../../lib/DataService.js').rebbl
+const 
+  cyanideService = require("../../../lib/CyanideService.js")
+  , dataService = require('../../../lib/DataService.js').rebbl
   , express = require('express')
+  , rateLimit = require("express-rate-limit")
   , util = require('../../../lib/util.js');
 
 class TeamApi{
   constructor(){
     this.router = express.Router({mergeParams: true});
   }
+
+
 
   routesConfig(){
     this.router.get('/:teamId', util.cache(600), async function(req, res){
@@ -19,11 +24,34 @@ class TeamApi{
         res.json(team);
       }
       catch (ex){
-        console.error(ex);
-        res.status(500).send('Something something error');
+        res.status(500).send({error:ex.message});
       }
     
     });
+
+    const apiRateLimiter = rateLimit({
+      windowMs: 30 * 1000, // 1 hour window
+      max: 2, // start blocking after 5 requests
+      message:
+        "Too many requests, please wait 30 seconds",
+      keyGenerator: function(req){
+        return req.user.name
+      }
+
+    });
+
+    this.router.get('/:teamId/cyanide', util.ensureAuthenticated, util.hasRole("admin"),apiRateLimiter, async function(req, res){
+      try {
+        let team = await cyanideService.team({team:Number(req.params.teamId)});
+        res.json(team);
+      }
+      catch (ex){
+        console.error(ex);
+        res.status(500).send({error:'Something something error'});
+      }
+    
+    });
+    
     
     this.router.get('/:teamId/players', util.cache(600), async function(req, res){
       try {
