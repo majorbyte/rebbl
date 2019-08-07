@@ -33,7 +33,7 @@ class LeagueApi{
     });
 
 
-    this.router.get('/:league/:season/slim/:round', util.checkCache, async function(req, res){
+    this.router.get('/:league/:season/slim/:round', util.cache(600), async function(req, res){
       try {
         let {league,season, round} = req.params;
 

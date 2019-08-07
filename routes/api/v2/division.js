@@ -37,7 +37,7 @@ class DivisionApi{
       }
     });  
 
-    this.router.get('/:league/:season/:division/slim', util.checkCache, async function(req, res){
+    this.router.get('/:league/:season/:division/slim', util.cache(600), async function(req, res){
       try {
         let {league,season, division} = req.params;
 
