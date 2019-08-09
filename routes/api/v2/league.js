@@ -33,7 +33,7 @@ class LeagueApi{
     });
 
 
-    this.router.get('/:league/:season/slim/:round', util.checkCache, async function(req, res){
+    this.router.get('/:league/:season/slim/:round', util.cache(600), async function(req, res){
       try {
         let {league,season, round} = req.params;
 
@@ -42,13 +42,23 @@ class LeagueApi{
         let ret = data.map(m => {
           let division = m.competition;
           let match_uuid = m.match_uuid;
-          let homeTeam = m.opponents[0].team.name;
+          let homeCoachId = m.opponents[0].coach.id;
+          let homeCoachName = m.opponents[0].coach.name;
+          let homeTeamId = m.opponents[0].team.id;
+          let homeTeamName = m.opponents[0].team.name;
+          let homeTeamRace = m.opponents[0].team.race;
           let homeScore = m.opponents[0].team.score;
-          let awayTeam = m.opponents[1].team.name;
+          let awayCoachId = m.opponents[1].coach.id;
+          let awayCoachName = m.opponents[1].coach.name;
+          let awayTeamId = m.opponents[1].team.id;
+          let awayTeamName = m.opponents[1].team.name;
+          let awayTeamRace = m.opponents[1].team.race;
           let awayScore = m.opponents[1].team.score;
           let round = m.round;
 
-          return {division, round, match_uuid,homeTeam,homeScore,awayScore,awayTeam};
+          return {division, round, match_uuid, 
+            homeCoachId, homeCoachName, homeTeamId, homeTeamName, homeTeamRace, homeScore, 
+            awayCoachId, awayCoachName, awayTeamId, awayTeamName, awayTeamRace, awayScore };
         })
 
         res.json(ret.sort((a,b)=> a.division > b.division ? 1 : -1));
