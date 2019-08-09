@@ -36,7 +36,6 @@
         ],
         "summary": "Find all leagues",
         "description": "Retrieve a list of all configures leagues in ReBBL",
-        "operationId": "findPetsByStatus",
         "produces": [
           "application/json"
         ],
@@ -666,18 +665,19 @@
         "round": {
           "type": "integer"
         },
-        "homeTeam": {
-          "type": "string"
-        },
-        "homeScore": {
-          "type": "integer"
-        },
-        "awayScore": {
-          "type": "integer"
-        },
-        "awayTeam": {
-          "type": "string"
-        }
+        "match_uuid" : {"type":"string"},
+        "homeCoachId" : {"type":"integer"},
+        "homeCoachName" : {"type":"string"},
+        "homeTeamId" : {"type":"integer"},
+        "homeTeamName" : {"type":"string"},
+        "homeTeamRace" : {"type":"string"},
+        "homeScore" : {"type":"integer"},
+        "awayCoachId" : {"type":"integer"},
+        "awayCoachName" : {"type":"string"},
+        "awayTeamId" : {"type":"integer"},
+        "awayTeamName" : {"type":"string"},
+        "awayTeamRace" : {"type":"string"},
+        "awayScore" : {"type":"integer"}
       }
     },
     "Contest": {
@@ -775,18 +775,18 @@
         "match_uuid": {
           "type": "string"
         },
-        "homeTeam": {
-          "type": "string"
-        },
-        "homeScore": {
-          "type": "integer"
-        },
-        "awayScore": {
-          "type": "integer"
-        },
-        "awayTeam": {
-          "type": "string"
-        }
+        "homeCoachId" : {"type":"integer"},
+        "homeCoachName" : {"type":"string"},
+        "homeTeamId" : {"type":"integer"},
+        "homeTeamName" : {"type":"string"},
+        "homeTeamRace" : {"type":"string"},
+        "homeScore" : {"type":"integer"},
+        "awayCoachId" : {"type":"integer"},
+        "awayCoachName" : {"type":"string"},
+        "awayTeamId" : {"type":"integer"},
+        "awayTeamName" : {"type":"string"},
+        "awayTeamRace" : {"type":"string"},
+        "awayScore" : {"type":"integer"}
       }
     },
     "Standing": {
