@@ -12,9 +12,9 @@ block content
       p 
         a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 12
 
-      h3 If you rather want to play in our rookie's College or Minors league Season 8, continue with your sign up
+      //h3 If you rather want to play in our rookie's College or Minors league Season 8, continue with your sign up
         a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
-      p 
+      //p 
         a(href="https://www.reddit.com/r/ReBBRL/comments/cdkw79/rebbrl_minor_league_season_8_sign_ups/" class="highlighted-rules") more information on REBBRL Season 12         
     - else 
       each signup in signups
@@ -38,7 +38,7 @@ block content
                 div(class="warning")
                   p Your team is either misspelled or not yet existing
                 br
-              //- if(signup.saveType ==="rampup")
+              - if(signup.saveType ==="rampup")
                 form(action="/signup/change" method="get" style="float:left;margin-right:116px;")
                   button(type="submit"  class="btn btn-primary") Change
 
@@ -47,24 +47,24 @@ block content
                   span Thank you for confirming!
                 -else
                   button(type="submit") Confirm
-              - if (signup.type==="rebbl")
+              //- if (signup.type==="rebbl")
                 h3= "REBBL SEASON 12 - " + signup.league
                 form(action="/signup/resign" method="post" )
                   br
                   button(type="submit"  class="btn btn-primary") Resign
-              - else
+              //- else
                 h3= "REBBRL " + signup.league
                 form(action="/signup/resign-rebbrl" method="post")
                   br
                   button(type="submit"  class="btn btn-primary") Resign
 
-            -if (signup.greenHorn)
+            //-if (signup.greenHorn)
               div
                 h3 THE GREENHORN CUP
               form(action="/signup/resign-greenhorn" method="post" )
                 br
                 button(type="submit"  class="btn btn-primary") Resign
-            -else if(signup.type === "rebbl" && signup.saveType !== "existing")
+            //-else if(signup.type === "rebbl" && signup.saveType !== "existing")
               div
                 h3 You can still sign up for THE GREENHORN CUP
                 a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
@@ -81,7 +81,7 @@ block content
         p 
           a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 12
 
-        h3 If you rather want to play in our rookie's College or Minors league Season 8, continue with your sign up
+        //h3 If you rather want to play in our rookie's College or Minors league Season 8, continue with your sign up
           a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
-        p 
+        //p 
           a(href="https://www.reddit.com/r/ReBBRL/comments/cdkw79/rebbrl_minor_league_season_8_sign_ups/" class="highlighted-rules") more information on REBBRL Season 12         
