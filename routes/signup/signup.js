@@ -54,10 +54,9 @@ class Signup{
 
     this.router.get('/counter', async function(req, res, next){res.render('signup/counter');});
 
-
-    ////this.router.get('/rebbrl', util.ensureLoggedIn, this._rebbrl);
-    ////this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl);
-    ////this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
+    this.router.get('/rebbrl', util.ensureLoggedIn, this._rebbrl);
+    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl);
+    this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
 
     return this.router;
   }
