@@ -12,10 +12,10 @@ block content
       p 
         a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 12
 
-      //h3 If you rather want to play in our rookie's College or Minors league Season 8, continue with your sign up
+      h3 If you rather want to play in our rookie's College league Season 9, continue with your sign up
         a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
-      //p 
-        a(href="https://www.reddit.com/r/ReBBRL/comments/cdkw79/rebbrl_minor_league_season_8_sign_ups/" class="highlighted-rules") more information on REBBRL Season 12         
+      p 
+        a(href="https://www.reddit.com/r/ReBBRL/comments/cgeg6c/rebbrl_college_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Season 9         
     - else 
       each signup in signups
         - if(signup.hasOwnProperty('signedUp'))
@@ -52,11 +52,11 @@ block content
                 form(action="/signup/resign" method="post" )
                   br
                   button(type="submit"  class="btn btn-primary") Resign
-              //- else
-                h3= "REBBRL " + signup.league
-                form(action="/signup/resign-rebbrl" method="post")
-                  br
-                  button(type="submit"  class="btn btn-primary") Resign
+                //- else
+              h3= "REBBRL " + signup.league
+              form(action="/signup/resign-rebbrl" method="post")
+                br
+                button(type="submit"  class="btn btn-primary") Resign
 
             //-if (signup.greenHorn)
               div
@@ -81,7 +81,7 @@ block content
         p 
           a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 12
 
-        //h3 If you rather want to play in our rookie's College or Minors league Season 8, continue with your sign up
+        h3 If you rather want to play in our rookie's College league Season 9, continue with your sign up
           a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
-        //p 
-          a(href="https://www.reddit.com/r/ReBBRL/comments/cdkw79/rebbrl_minor_league_season_8_sign_ups/" class="highlighted-rules") more information on REBBRL Season 12         
+        p 
+          a(href="https://www.reddit.com/r/ReBBRL/comments/cgeg6c/rebbrl_college_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Season 9         
