@@ -18,7 +18,7 @@ class Admin{
     this.router.use('/contest', require(`./contest.js`));
     this.router.use('/unplayed', require(`./unplayed.js`));
     this.router.use('/trophies', require(`./trophies.js`));
-    
+    this.router.use('/divisions', require(`./divisions.js`));
 
     return this.router;
 
