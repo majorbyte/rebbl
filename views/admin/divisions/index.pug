@@ -1,0 +1,106 @@
+extends ../layout.pug
+
+
+
+block scripts
+  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+  script.
+    function DateModel() {
+        const self = this;
+        self.data = ko.observableArray([]);
+        self.teams = ko.observableArray([]);
+        self.loading = ko.observable(true);
+        self.selectedDivision = ko.observable({});
+
+
+        self.filteredLeagues = ko.observableArray([]);
+
+        self.filteredData = ko.computed(function(){
+          if ( self.filteredLeagues().length > 0){
+            return self.data().filter(x => self.filteredLeagues.indexOf(x.league) > -1);
+          }
+
+          return [];
+        });
+
+
+        self.toggleLeague= function(l){
+          let i = self.filteredLeagues.indexOf(l);
+          if( i === -1){
+            self.filteredLeagues.push(l);
+          } else {
+            self.filteredLeagues.splice(i,1);  
+          }
+        }
+        self.toggleDivision=async function(d){
+          self.selectedDivision(d);
+          let result =await fetch(`/api/v1/admin/divisions/${d.competition_id}`);
+          if (result.ok)
+            model.teams(await result.json());
+        }
+        self.expel= async function(d){
+          let result =await fetch(`/api/v1/admin/divisions/${self.selectedDivision().competition_id}/${d.id}`,{method:"DELETE"});
+          
+          if (result.ok){
+            let data = await result.json();
+            if (data.Messsage === "") {
+              result =await fetch(`/api/v1/admin/divisions/${self.selectedDivision().competition_id}`);
+              if (result.ok)
+                model.teams(await result.json());
+            } else {
+              alert(data.Message);
+            }
+          }
+        }
+    }
+
+    const model = new DateModel();
+
+    $(document).ready(async function(){
+        ko.applyBindings(model);
+
+        let result = await fetch("/api/v1/admin/divisions");
+
+        if (result.ok)
+          model.data(await result.json());
+    });
+
+
+block content
+  div(class="container")
+    div(class="row col-12")
+      div(class="btn-group-toggle" data-toggle="buttons")
+        label(class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - Big O')" style="margin-right: 15px")
+          input(type="checkbox" checked autocomplete="off")       
+          span Big O
+        label(class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - GMan')" style="margin-right: 15px")
+          input(type="checkbox" checked autocomplete="off")       
+          span GMan
+        label(class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - REL')" style="margin-right: 15px")
+          input(type="checkbox" checked autocomplete="off")       
+          span REL
+    br  
+    div(class="row col-12")
+      // ko foreach: filteredData
+      label(class="btn " data-bind="click: $root.toggleDivision, css:($data.competition == $root.selectedDivision.competition ? 'btn-primary':'btn-outline-primary')")
+        span(data-bind="text: $data.competition") 
+      // /ko
+    br
+    div(class="row col-12")
+      div(class="col-3") Team
+      div(class="col-3") 
+    hr
+    div(data-bind="foreach: teams" )
+      div(class="row col-12")
+        div(class="col-3")
+          span(data-bind="text: team")
+        div(class="col-3")
+          button(data-bind="click:$root.expel" class="btn btn-small btn-success" style="margin:0px 10px")
+            i(class="fa fa-gavel")
+          span expel
+
+
+
+
+
+

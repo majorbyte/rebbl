@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express')
+  , configurationService = require("../../../../lib/ConfigurationService.js")
   , leagueService = require("../../../../lib/LeagueService.js")
   , util = require('../../../../lib/util.js')
   , router = express.Router();
@@ -54,6 +55,17 @@ router.post("/",  util.ensureAuthenticated, util.hasRole("superadmin"), async fu
     } catch(err){
         console.log(err);
         res.status(500).send(err);
+    }
+});
+
+router.get('/reload', util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
+    try{
+
+        await configurationService.init();
+
+        res.status(200).send();
+    } catch(err){
+        console.log(err);
     }
 });
 

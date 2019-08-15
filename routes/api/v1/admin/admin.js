@@ -15,6 +15,8 @@ router.use('/unplayed', require(`./unplayed.js`));
 
 router.use('/trophies', require(`./trophies.js`));
 
+router.use('/divisions', require(`./divisions.js`));
+
 router.post("/clearcache",  util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
   try{
 

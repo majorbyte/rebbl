@@ -68,6 +68,9 @@ block scripts
 
             xhr.send(JSON.stringify({key:self.cacheKey()}));
         }
+        self.reloadConfig =async function(){
+          await fetch("/api/v1/admin/contest/reload");
+        }
     }
 
     ko.bindingHandlers.json = {
@@ -117,6 +120,8 @@ block scripts
 block content
   div(class="container")
     div(class="row col-12")
+      button(data-bind="click:reloadConfig" class="btn btn-small btn-success" style="margin:0px 10px")
+        i(class="fa fa-gavel")
       div(class="input-group mb-3")
         input(type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" data-bind="value:cacheKey")
         div(class="input-group-append")
