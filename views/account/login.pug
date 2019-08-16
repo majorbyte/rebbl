@@ -7,4 +7,13 @@ block content
   div(class="container")
     h2 You need to login.
     form(action="/auth/reddit" method="get")
+      span There is an issue with logging in on rebbl.net from mobile, once rebbl.net redirects you to reddit and you are not logged in, 
+      | you get reddit's login screen.
+      br
+      span Once you loggin successfully, reddit will tell it'll redirect you back shortly, but it never does. If you are experiencing 
+      | this issue, try the folling:
+      br
+      span First surf to reddit.com and login there instead, then come back here and his the login button below. That should take you 
+      | straight to the consent page instead.
+      br
       button(type="submit") Login with Reddit
