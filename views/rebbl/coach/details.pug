@@ -5,11 +5,52 @@ block append vars
   - var options = {company:company}
 
 block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
   script.
+    async function loadHistory(){
+      let result = await fetch("/api/v2/standings/coach/!{id}");
+      
+      if (result.ok){
+        let data = await result.json();
+        model.standings = data.sort((a,b) => {
+          if (!a.season) return 1;
+          if (!b.season) return -1;
 
-    $(document).ready(function(){
+          if (Number(a.season.replace(/season /i,'')) > Number(b.season.replace(/season /i,''))) return 1; 
+          if (Number(a.season.replace(/season /i,'')) < Number(b.season.replace(/season /i,''))) return -1;
 
+          if (a.league > b.league) return -1;
+          if (a.league < b.league) return 1;         
+          
+          return 0;
 
+          });
+      }
+    }
+
+    class Model{
+      constructor(data){
+        this.map(data);
+        ko.track(this);
+      }
+      map(data){
+        if(data){
+          this.standings = [];
+        };
+      }
+    }
+
+    let model = new Model({});
+    ko.applyBindings(model);
+    $(document).ready(async function(){
 
       $("#copy").click(function(){
         var copyText = document.getElementById("reddit");
@@ -23,37 +64,56 @@ block scripts
 
       });
 
-      let input = document.getElementById("timezone");
-      $("#tz_info").text(moment().tz(input.value).format('YYYY-MM-DD HH:mm Z'));
-
+      await loadHistory();
     });
 
 block content
   div(class="container")
-    - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("admin")>-1)
-      h1(class="highlight") &nbsp;
-        img(style="float:left" src="https://cdn2.rebbl.net/images/skills/StaffMember.png")
-        = coachDetails.coach
-    - else
-      h1(class="highlight")= coachDetails  ? coachDetails.coach : name
-    h3 Contact Data
-    div
-      label(for="coach") Blood Bowl 2 coach name
-      input(type="text" id="coach" name="coach" value=(coachDetails ? coachDetails.coach : name)  disabled)
-    - if(coachDetails)  
-      div
-        label(for="coach") Reddit
-        input(type="text" id="reddit" name="coach" value="/u/" + coachDetails.reddit.toLowerCase()  disabled)
-        span(id="copy" title="copy to clipboard" style="cursor:pointer")= '📋'
-      div
-        label(for="timezone") Timezone
-        input(id="timezone" name="timezone" disabled title="timezone" value=coachDetails.timezone)
-        label(id="tz_info")
-      div
-        label(for="discord") Discord
-        input(type="text" id="discord" name="discord" value=coachDetails.discord  disabled)
-      div
-        label(for="steam") Steam
-        input(type="text" id="steam" name="steam" value=coachDetails.steam disabled)
-      br
-      br
+    div(class="row")
+      div(class="col-12 col-lg-3")
+        - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("admin")>-1)
+          h1(class="highlight") &nbsp;
+            img(style="float:left" src="https://cdn2.rebbl.net/images/skills/StaffMember.png")
+            = coachDetails.coach
+        - else
+          h1(class="highlight")= coachDetails  ? coachDetails.coach : name
+        h3 Contact Data
+        div
+          label(for="coach") Blood Bowl 2 coach name
+          input(type="text" id="coach" name="coach" value=(coachDetails ? coachDetails.coach : name)  disabled)
+        - if(coachDetails)  
+          div
+            label(for="coach") Reddit
+            input(type="text" id="reddit" name="coach" value="/u/" + coachDetails.reddit.toLowerCase()  disabled)
+            span(id="copy" title="copy to clipboard" style="cursor:pointer")= '📋'
+          div
+            label(for="timezone") Timezone
+            input(id="timezone" name="timezone" disabled title="timezone" value=coachDetails.timezone)
+            label(id="tz_info")
+          div
+            label(for="discord") Discord
+            input(type="text" id="discord" name="discord" value=coachDetails.discord  disabled)
+          div
+            label(for="steam") Steam
+            input(type="text" id="steam" name="steam" value=coachDetails.steam disabled)
+          br
+          br
+      div(class="col-12 col-lg-9")
+        div(class="col col-12")
+          h1(class="highlight") History
+          table(class="table table-striped")
+            thead(class="headerText")
+              tr
+                th(scope="col") #
+                th(scope="col") League
+                th(scope="col") Competition
+                th(scope="col") Team
+            tbody
+              // ko foreach: standings
+              tr
+                td(data-bind="text:position")
+                td(data-bind="text:league")
+                td(data-bind="text:competition, title:season")
+                td
+                  a(data-bind="text:team,attr:{href:`/rebbl/team/${teamId}`}")
+              // /ko    
