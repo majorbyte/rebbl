@@ -11,7 +11,7 @@ class LeagueApi{
   }
   routesConfig(){
     
-    this.router.get("/",util.checkCache, async function(req,res,next){
+    this.router.get("/",util.cache(600), async function(req,res,next){
       try {
         let data = configurationService.getLeagues();
         res.json(data);
@@ -22,7 +22,7 @@ class LeagueApi{
       }
     });
 
-    this.router.get("/:league/seasons",util.checkCache, async function(req,res){
+    this.router.get("/:league/seasons",util.cache(600), async function(req,res){
       try {
         res.json(configurationService.getAvailableSeasons(req.params.league));
       }
@@ -69,7 +69,7 @@ class LeagueApi{
       }
     });  
 
-    this.router.get('/:leagueId', util.checkCache, async function(req, res){
+    this.router.get('/:leagueId', util.cache(600), async function(req, res){
       try {
         let league = await dataService.getLeagues({"id":Number(req.params.leagueId)});
         res.json(league);
