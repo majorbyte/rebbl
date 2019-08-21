@@ -43,7 +43,7 @@ block scripts
           
           if (result.ok){
             let data = await result.json();
-            if (data.Messsage === "") {
+            if (data.Message === "") {
               $(".alert-success").html("Expelled successfully!");
               $(".alert-success").show();
             } else {

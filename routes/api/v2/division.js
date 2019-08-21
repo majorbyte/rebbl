@@ -10,7 +10,7 @@ class DivisionApi{
   }
   routesConfig(){
     
-    this.router.get("/:league/:season",util.checkCache, async function(req,res){
+    this.router.get("/:league/:season",util.cache(600), async function(req,res){
       try {
 
         let {league, season} = req.params;
@@ -24,7 +24,7 @@ class DivisionApi{
       }
     });
 
-    this.router.get('/:league/:season/:division', util.checkCache, async function(req, res){
+    this.router.get('/:league/:season/:division', util.cache(600), async function(req, res){
       try {
         let {league,season, division} = req.params;
 
@@ -73,7 +73,7 @@ class DivisionApi{
     }); 
 
 
-    this.router.get('/:league/:season/:division/:round', util.checkCache, async function(req, res){
+    this.router.get('/:league/:season/:division/:round', util.cache(600), async function(req, res){
       try {
         let {league,season, division, round} = req.params;
 
