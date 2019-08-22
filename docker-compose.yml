@@ -1,0 +1,21 @@
+version: '3'
+services:
+  node:
+    command: bash -c "npx wait-port mongodb:27017 && npm start"
+    env_file: ./.env
+    working_dir: /usr/src/app
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile-node
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+  mongodb:
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile-mongodb
+    ports:
+      - 27017:27017
