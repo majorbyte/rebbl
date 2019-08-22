@@ -84,23 +84,25 @@ class Server{
     //   Strategies in Passport require a `verify` function, which accept
     //   credentials (in this case, an accessToken, refreshToken, and Reddit
     //   profile), and invoke a callback with a user object.
-    this.passport.use(new RedditStrategy({
-        clientID: process.env['redditKey'],
-        clientSecret: process.env['redditSecret'],
-        callbackURL: process.env['redditcallbackURL']
-      },
-      function(accessToken, refreshToken, profile, done) {
-        // asynchronous verification, for effect...
-        process.nextTick(function () {
+    if (process.env['redditKey']) {
+      this.passport.use(new RedditStrategy({
+          clientID: process.env['redditKey'],
+          clientSecret: process.env['redditSecret'],
+          callbackURL: process.env['redditcallbackURL']
+        },
+        function(accessToken, refreshToken, profile, done) {
+          // asynchronous verification, for effect...
+          process.nextTick(function () {
 
-          // To keep the example simple, the user's Reddit profile is returned to
-          // represent the logged-in user.  In a typical application, you would want
-          // to associate the Reddit account with a user record in your database,
-          // and return that user instead.
-          return done(null, profile);
-        });
-      }
-    ));
+            // To keep the example simple, the user's Reddit profile is returned to
+            // represent the logged-in user.  In a typical application, you would want
+            // to associate the Reddit account with a user record in your database,
+            // and return that user instead.
+            return done(null, profile);
+          });
+        }
+      ));
+    }
 
     if (process.env.NODE_ENV === 'production'){
       this.app.set('trust proxy', 1) // trust first proxy
