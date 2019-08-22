@@ -1,6 +1,5 @@
 FROM mongo:latest
 WORKDIR /usr/src/
-ADD ./rebbl.tar.gz /usr/src/rebbl
-RUN mongod --fork --logpath /var/log/mongodb.log; \
-    mongorestore --gzip --dir /usr/src/rebbl; \
-    mongod --shutdown;
+ADD rebbl.tar.gz /usr/src/rebbl
+ADD docker/mongodb.init.sh mongodb.init.sh
+RUN chmod +x mongodb.init.sh

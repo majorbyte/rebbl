@@ -14,8 +14,13 @@ services:
       - /usr/src/app/node_modules
   mongodb:
     restart: always
+    command: ./mongodb.init.sh
     build:
       context: ./
       dockerfile: ./docker/Dockerfile-mongodb
+    environment:
+      - shouldPerformInitdb=0
     ports:
       - 27017:27017
+    volumes:
+      - ./docker/db-volume:/data/db
