@@ -72,6 +72,8 @@ class Maintenance{
     this.router.get('/calculate', util.verifyMaintenanceToken, async function(req,res){
 
       let season = configurationService.getActiveSeason();
+      season = season.concat(configurationService.getActiveUpstartSeason());          
+      season = season.concat(configurationService.getActiveMinorsSeason());          
 
       season.leagues.map(league =>{
       

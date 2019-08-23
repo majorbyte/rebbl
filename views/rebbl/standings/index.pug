@@ -192,7 +192,7 @@ block scripts
       }
 
       competitionUrl(comp){
-        return `/rebbl/${this.league}/${comp[0].competition}`;
+        return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competition)}`;
       };
       loadSeason(season){
         if (season) model.season = season;
