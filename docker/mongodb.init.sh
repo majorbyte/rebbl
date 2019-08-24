@@ -1,11 +1,12 @@
-# Init DB when the /data/db does not exist:
-MONGO_FILE="/data/db/storage.bson"
-if test -f "$MONGO_FILE"; then
-  echo "started Mongo"
+INIT_CHECK_FILE="/data/db/db-has-been-initialized"
+
+if test -f "$INIT_CHECK_FILE"; then
+  echo "Skipping init db"
 else
   mongod --fork --logpath /var/log/mongodb.log
   mongorestore --gzip --dir /usr/src/rebbl
-  mongod --shutdown;
+  mongod --shutdown
+  touch "$INIT_CHECK_FILE"
 fi
 
 # Init Mongod

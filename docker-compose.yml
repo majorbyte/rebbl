@@ -18,9 +18,5 @@ services:
     build:
       context: ./
       dockerfile: ./docker/Dockerfile-mongodb
-    environment:
-      - shouldPerformInitdb=0
     ports:
       - 27017:27017
-    volumes:
-      - ./docker/db-volume:/data/db

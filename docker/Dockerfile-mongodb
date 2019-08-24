@@ -1,4 +1,6 @@
-FROM mongo:latest
+FROM mongo:latest AS defaults
+
+FROM mongo:latest AS imports
 WORKDIR /usr/src/
 ADD rebbl.tar.gz /usr/src/rebbl
 ADD docker/mongodb.init.sh mongodb.init.sh
