@@ -37,7 +37,7 @@ class Server{
     this.app = express();
   }
 
-  async appConfig(){        
+  async appConfig(){
     await dataService.rebbl.init("rebbl");
     configurationService.init();
     await dataService.cripple.init("cripple");
@@ -47,17 +47,17 @@ class Server{
       databaseName: "rebbl",
       collection: 'sessions'
     });
-    
-    
+
+
     this.sessionObject = {
       secret: 'keyboard cat'
       , cookie: {maxAge:180*24*60*60*1000} // Let's start with half a year
       , resave: false
       , saveUninitialized: false
-      , store: this.sessionStore 
+      , store: this.sessionStore
     };
 
-    
+
     // set our default template engine to "ejs"
     // which prevents the need for using file extensions
     this.app.set('view engine', 'pug');
@@ -84,30 +84,32 @@ class Server{
     //   Strategies in Passport require a `verify` function, which accept
     //   credentials (in this case, an accessToken, refreshToken, and Reddit
     //   profile), and invoke a callback with a user object.
-    this.passport.use(new RedditStrategy({
-        clientID: process.env['redditKey'],
-        clientSecret: process.env['redditSecret'],
-        callbackURL: process.env['redditcallbackURL']
-      },
-      function(accessToken, refreshToken, profile, done) {
-        // asynchronous verification, for effect...
-        process.nextTick(function () {
+    if (process.env['redditKey']) {
+      this.passport.use(new RedditStrategy({
+          clientID: process.env['redditKey'],
+          clientSecret: process.env['redditSecret'],
+          callbackURL: process.env['redditcallbackURL']
+        },
+        function(accessToken, refreshToken, profile, done) {
+          // asynchronous verification, for effect...
+          process.nextTick(function () {
 
-          // To keep the example simple, the user's Reddit profile is returned to
-          // represent the logged-in user.  In a typical application, you would want
-          // to associate the Reddit account with a user record in your database,
-          // and return that user instead.
-          return done(null, profile);
-        });
-      }
-    ));
+            // To keep the example simple, the user's Reddit profile is returned to
+            // represent the logged-in user.  In a typical application, you would want
+            // to associate the Reddit account with a user record in your database,
+            // and return that user instead.
+            return done(null, profile);
+          });
+        }
+      ));
+    }
 
     if (process.env.NODE_ENV === 'production'){
       this.app.set('trust proxy', 1) // trust first proxy
       this.sessionObject.cookie.secure = true; // serve secure cookies
       this.sessionObject.secret =  process.env['sessionSecret'];
     }
-    
+
     this.app.use(bodyParser.urlencoded({  extended: true}));
     this.app.use(bodyParser.json());
     this.app.use(methodOverride());
@@ -158,7 +160,7 @@ class Server{
     // assume 404 since no middleware responded
     this.app.use(function(req, res,next){
       res.status(404).render('404', { url: req.originalUrl });
-    });    
+    });
   }
 
   startSocketIOAndServer(){
@@ -168,23 +170,23 @@ class Server{
     this.io.on('connection', async function (socket) {
 
       let data = await crippleService.getCasualties();
-          
+
       socket.emit('cripple', data);
-    
+
       data = await signupService.getSignUps();
-    
+
       socket.emit('signup', {count:data.all.length});
 
       data = await maintenanceService.getCasualties();
-    
+
       socket.emit('greenhorn', data);
 
     });
-    
+
     crippleService.init(this.io);
-    signupService.init(this.io);  
+    signupService.init(this.io);
     maintenanceService.init(this.io);
-    
+
     this.server.listen(this.port);
   }
 
