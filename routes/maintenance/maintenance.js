@@ -71,18 +71,19 @@ class Maintenance{
 
     this.router.get('/calculate', util.verifyMaintenanceToken, async function(req,res){
 
-      let season = configurationService.getActiveSeason();
-      season = season.concat(configurationService.getActiveUpstartSeason());          
-      season = season.concat(configurationService.getActiveMinorsSeason());          
+      let seasons = [configurationService.getActiveSeason()];
+      seasons = seasons.concat(configurationService.getActiveUpstartSeason());          
+      seasons = seasons.concat(configurationService.getActiveMinorsSeason());          
 
-      season.leagues.map(league =>{
-      
-        league.divisions.map(division => standingsService.updateStandings(league.name,division))
+      seasons.map(season => {
+        season.leagues.map(league =>{
+          league.divisions.map(division => standingsService.updateStandings(league.name,division))
 
-        cache.keys().map(key => {
-          if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
-            cache.del(key);
-          }
+          cache.keys().map(key => {
+            if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
+              cache.del(key);
+            }
+          })
         })
       });
       res.redirect('/');
