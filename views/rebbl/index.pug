@@ -48,6 +48,49 @@ block scripts
       right:0px;
     }  
 
+    .switch input { 
+      display:none;
+    }
+    .switch {
+      display:inline-block;
+      width:60px;
+      height:30px;
+      margin:8px;
+      transform:translateY(50%);
+      position:relative;
+    }
+
+    .btn-slider {
+      position:absolute;
+      top:0;
+      bottom:0;
+      left:0;
+      right:0;
+      border-radius:30px;
+      box-shadow:0 0 0 2px #777, 0 0 4px #777;
+      cursor:pointer;
+      border:4px solid transparent;
+      overflow:hidden;
+      transition:.4s;
+    }
+    .btn-slider:before {
+      position:absolute;
+      content:"";
+      width:100%;
+      height:100%;
+      background:#777;
+      border-radius:30px;
+      transform:translateX(-30px);
+      transition:.4s;
+    }
+
+    input:checked + .btn-slider:before {
+      transform:translateX(30px);
+      background:limeGreen;
+    }
+    input:checked + .btn-slider {
+      box-shadow:0 0 0 2px limeGreen,0 0 2px limeGreen;
+    }
   script.
     var scaling = 1.1;
     //count
@@ -55,12 +98,25 @@ block scripts
     let scrollDiff = 0;
     let scrollWidth = 0;
     let currentSliderCount = 0;
+    const storage = window.localStorage;
+
+    storage.removeItem("starplayers");
+    storage.removeItem("skillDescriptions");
+    storage.removeItem("skillDescriptions.v1");
+
+    let autoScroll = !(storage.getItem("autoscroll") === "false");
 
     $(document).ready(function(){
+        $("#scroll-switch").on("click", toggleScroll);
         $(".slider-container").each(init)
         controls();
 
-
+        if (!autoScroll){
+          $('.carousel').carousel({interval:false});
+        } else{
+          $('.carousel').carousel({interval:10000});
+        }
+        $("#scroll-switch").prop("checked",autoScroll);
     });
     $( window ).resize(function() {
         setTimeout(init,100);
@@ -163,6 +219,16 @@ block scripts
         }
         setInterval(callTrigger,30000);
     };
+    function toggleScroll(e){
+      autoScroll = !autoScroll;
+      storage.setItem("autoscroll",autoScroll);
+      $('.carousel').carousel('dispose');
+      if(autoScroll){
+        $('.carousel').carousel({interval:10000});
+      } else{
+        $('.carousel').carousel({interval:false});
+      }
+    }
 
 block navigation
   nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
@@ -215,6 +281,11 @@ block content
     div(class="row")
       div(class="col-lg-12 d-lg-block d-md-none")
         br
+      div
+        label(class="switch")
+          input(type="checkbox" id="scroll-switch")
+          span(class="btn-slider")
+        | autoscroll matchresults
     div(class="row" style="justify-content: center")
       div(class="col-lg-6 col-md-12 no-gutters")
         -let titleMain = company === "" ? "LATEST REBBL GAMES" : `LATEST ${company} GAMES`
@@ -231,7 +302,7 @@ block content
           div(class="carousel-inner")
 
             - for(var x=0; x<4;x++)
-              div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" data-interval="10000")
+              div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" )
                 for match,index in data.rebbl.slice(x*5,5*x + 5)
                   div(class="col-12 matchDiv")    
                     -let url=`/${urlMain}/match/${match.match_uuid}`
@@ -305,7 +376,7 @@ block content
           div(class="carousel-inner")
 
             - for(var x=0; x<4;x++)
-              div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" data-interval="10000")
+              div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" )
                 for match,index in data.sides.slice(x*5,5*x + 5)
                   div(class="col-12 matchDiv")    
                     -let url=`/${urlMain}/match/${match.match_uuid}`
@@ -386,7 +457,7 @@ block content
             br(style="line-height:15px")
             div(class="carousel-inner")
               - for(var x=0; x<l;x++)
-                div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" data-interval="10000")
+                div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" )
                   for match,index in data.upcoming.slice(x*5,5*x + 5)      
                     div(class="col-12")    
                       -let url=`/${company}/match/unplayed/${match.contest_id}`
