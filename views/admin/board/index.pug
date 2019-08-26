@@ -61,6 +61,8 @@ block scripts
         if (response.ok){
           let coaches = await response.json();
           
+          if(!Array.isArray(coaches)) coaches = [coaches];
+
           self.coaches = coaches.map(coach => new Coach(coach));
         }
       }
@@ -169,7 +171,7 @@ block content
             div(class="col-5")
               i(class="fa" data-bind="text: ' ' + user")
               | &nbsp;  &nbsp;  
-              div(class="btn btn-success btn-sm" data-bind="click: $parent.addAdministrator" title="add commisioner") 
+              div(class="btn btn-success btn-sm" data-bind="click: $parent.addAdministrator" title="add administrator") 
                 i(class="fa fa-user-plus")
               | &nbsp;  
               div(class="btn btn-success btn-sm" data-bind="click: $parent.addCommisioner" title="add commisioner") 
