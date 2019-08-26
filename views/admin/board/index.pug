@@ -57,7 +57,7 @@ block scripts
       }
 
       this.searchCoach = async function(){
-        let response = await fetch(`/api/v1/admin/board/search/${self.coachName}`);
+        let response = await fetch(`/api/v1/admin/board/search/${encodeURIComponent(self.coachName)}`);
         if (response.ok){
           let coaches = await response.json();
           
