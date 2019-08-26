@@ -1,0 +1,202 @@
+extends ../layout.pug
+
+block scripts
+  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  script.
+    function Coach(data){
+      let self = this;
+      this.map = (data) => {
+          if (data) {
+              this.user = data.User;
+              this.id = data.IdUser;
+              this.alert = "";
+          }
+      };
+      this.map(data);
+
+      ko.track(this);
+    }
+
+    function Model(data){
+      let self = this;
+      self.leagues = data;
+      self.coachName = "";
+      self.coaches = [];
+      self.filter = "";
+      self.league = [];
+      self.selectedLeague = null;
+
+
+      this.filteredLeague = function(){
+        return self.filter === "" ? self.league : self.league.filter(l => l.coachName.indexOf(self.filter) > -1);
+      }
+
+      this.loadBoardInfo = async function(id){
+        let response = await fetch(`/api/v1/admin/board/${id}`);
+        if (response.ok){
+          let leagues =  await response.json(); 
+          this.league = leagues.sort((a,b)=>{
+            if(a.type > b.type) return 1;
+            if(a.type < b.type) return -1;
+            
+            if(a.coachName.toLowerCase() > b.coachName.toLowerCase()) return 1;
+            if(a.coachName.toLowerCase() < b.coachName.toLowerCase()) return -1;
+
+            return 0
+          });
+        }
+      }
+
+      this.getBoardInfo = async function(data,event){
+        self.selectedLeague = data;
+        self.coaches.map(coach => coach.alert = "");
+        self.league = [];
+        await self.loadBoardInfo(data.id);
+      }
+
+      this.searchCoach = async function(){
+        let response = await fetch(`/api/v1/admin/board/search/${self.coachName}`);
+        if (response.ok){
+          let coaches = await response.json();
+          
+          self.coaches = coaches.map(coach => new Coach(coach));
+        }
+      }
+
+      this.addAdministrator = async function(data,event){
+
+        if(!self.selectedLeague) return;
+
+        let response = await fetch(`/api/v1/admin/board/${self.selectedLeague.id}`, 
+          {
+            method:"POST",
+            headers:{
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({coachName: data.user, coachId: data.id, type:1})
+        });
+        if(response.ok){
+          await self.loadBoardInfo(self.selectedLeague.id);
+        } else {
+          debugger;
+          let message = await response.json();
+          data.alert = message.Message;
+        }
+
+      }
+      this.addCommisioner = async function(data,event){
+
+        if(!self.selectedLeague) return;
+
+        let response = await fetch(`/api/v1/admin/board/${self.selectedLeague.id}`, 
+          {
+            method:"POST",
+            headers:{
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({coachName: data.user, coachId: data.id, type:2})
+        });
+        if(response.ok){
+          await self.loadBoardInfo(self.selectedLeague.id);
+        } else {
+          let message = await response.json();
+          data.alert = message.Message;
+        }
+
+      }
+      this.remove = async function(data,event){
+        let response = await fetch(`/api/v1/admin/board/${data.boardId}`, 
+          {
+            method:"DELETE"
+        });
+        if(response.ok){
+          self.league.splice(self.league.indexOf(data),1);
+        }
+      }
+
+      this.getIcon = function(data){
+        switch(Number(data.type)){
+          case 0:
+            return 'fa fa-user-circle-o'; 
+          case 1:
+            return 'fa fa-user-plus';
+          case 2:
+            return 'fa fa-user-o';
+        }
+      }
+
+      ko.track(this);      
+    }  
+
+    let model;
+    $(document).ready(async function(){
+        let response = await fetch(`/api/v1/admin/board`);
+
+        if(response.ok){
+          model = new Model(await response.json());  
+          ko.applyBindings(model);
+        }
+    });
+
+block content
+  div(class="container")
+    div(class="row col-12 justify-content-end")
+      div(class="col-10 btn-group-toggle" data-toggle="buttons")
+        //ko foreach: leagues
+        label(class="btn btn-outline-primary" data-bind="click: $parent.getBoardInfo" style="margin-right: 15px")
+          input(type="radio" checked autocomplete="off")       
+          span(data-bind="text:name")
+        // /ko
+      div(class="col-2 pull-right")
+        i(class="fa fa-user-circle-o") President
+        br
+        i(class="fa fa-user-plus") Administrator
+        br
+        i(class="fa fa-user-o") Commisioner
+    div(class="row col-12")
+      div(class="col-6")
+        h1 Add user
+        input(type="text" data-bind="value: coachName")
+        div(class="btn btn-default btn-sm" data-bind="click: searchCoach") 
+          i(class="fa fa-search")
+        br
+        ul(class="list-group")
+        //ko foreach: coaches
+        li(class="list-group-item")
+          div(class="row no-gutters")
+            div(class="col-5")
+              i(class="fa" data-bind="text: ' ' + user")
+              | &nbsp;  &nbsp;  
+              div(class="btn btn-success btn-sm" data-bind="click: $parent.addAdministrator" title="add commisioner") 
+                i(class="fa fa-user-plus")
+              | &nbsp;  
+              div(class="btn btn-success btn-sm" data-bind="click: $parent.addCommisioner" title="add commisioner") 
+                i(class="fa fa-user-o")
+            div(class="col-7")
+              //ko if: $data.alert !== ""
+              div(class="alert alert-danger alert-dismissible fade show" role="alert")
+                span(data-bind="text:$data.alert")
+                button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+                  span(aria-hidden="true") &times;
+              // /ko
+    
+        // /ko
+      div(class="col-6")
+        //ko if: selectedLeague !== null
+        h1(data-bind="text:selectedLeague.name") 
+        input(type="text" data-bind="value: filter,valueUpdate:'keyup'")
+        | Filter
+        br
+        ul(class="list-group")
+        //ko foreach: $root.filteredLeague()
+        li(class="list-group-item")
+          i(data-bind="css: $parent.getIcon($data), text: ' ' + coachName")
+          //ko if: type !== "0"
+          div(class="btn btn-danger btn-sm" data-bind="click: $parent.remove") 
+            i(class="fa fa-gavel")
+          // /ko
+        // /ko
+        // /ko
+
