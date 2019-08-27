@@ -8,127 +8,6 @@ block vars
   - if (!active) { var active =  (options && options.active) ? options.active : "" }
   - let company = "clan";
 
-
-
-block scripts
-  - if (process.env.NODE_ENV === 'production')
-      link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/slider.css")
-  - else
-    link(rel="stylesheet" href="styles/slider.css")
-    
-  script.
-    var scaling = 1.50;
-    //count
-    var showCount = 4;
-        
-
-    $(document).ready(function(){
-        //$('.slider-container .slide:nth-last-child(-n+4)').prependTo('.slider-container');
-        //init();
-        
-         $(".slider-container").each(init)
-
-    });
-    $( window ).resize(function() {
-        init();
-    });
-    function init(index, container){
-        var currentSliderCount = 0;
-
-        var videoCount = $(".slider-container").children().length;
-        
-        var sliderCount = videoCount / showCount;
-        var controlsWidth = 40;
-
-        var scollWidth = 0;
-        // elements
-        var win = $(window);
-        var sliderFrame = $(".slider-frame");
-        var sliderContainer = $(".slider-container");
-        var slide = $(".slide");
-        
-        //counts
-        var scollWidth = 0;
-    
-        
-        //sizes
-        var windowWidth = win.width();
-        var frameWidth = win.width() - 80;
-        
-
-        showCount = Math.floor(windowWidth/332);
-        var scrollDiff = showCount* 332;
-        var videoWidth = 332 //((windowWidth - controlsWidth * 2) / showCount );
-        var videoHeight = 253 //Math.round(videoWidth / (9/7));
-        
-        var videoWidthDiff = (videoWidth * scaling) - videoWidth;
-        var videoHeightDiff = (videoHeight * scaling) - videoHeight;
-        
-      
-        
-        //set sizes
-        sliderFrame.width(windowWidth);
-        sliderFrame.height(videoHeight * scaling);
-        
-        
-        //sliderFrame.css("top", (videoHeightDiff / 2));
-        
-        sliderContainer.height(videoHeight * scaling);
-        sliderContainer.width((videoWidth * videoCount) + videoWidthDiff);
-        sliderContainer.css("top", (videoHeightDiff / 2));
-        sliderContainer.css("margin-left", (controlsWidth));
-        
-        slide.height(videoHeight);
-        slide.width(videoWidth);
-        
-        // controls
-        controls(container, scrollDiff, scollWidth);
-    }
-    function controls(container,frameWidth, scollWidth){
-        var prev = $(container).parent().find(".prev");
-        var next = $(container).parent().find(".next");
-
-        next.on("click", function(){
-            //let container =  $(this).parent().find('.slider-container');
-            let delta = $(container).position().left - frameWidth;
-            let videoCount = $(container).children().length;
-            let sliderCount = Math.ceil(videoCount / showCount);
-
-            let currentSliderCount = Math.floor(Math.abs($(container).position().left) / frameWidth);
-
-            $(container).animate({
-                left: delta
-            }, 300, function(){ 
-                if(currentSliderCount >= sliderCount-1){
-                    $(container).css("left", 0);
-                    currentSliderCount = 0;
-                    scollWidth = 0;
-                }else{
-                    currentSliderCount++;
-                }
-            });        
-        });
-        prev.on("click", function(){
-            //let container =  $(this).parent().find('.slider-container');
-            let delta = $(container).position().left + frameWidth;
-            let videoCount = $(container).children().length;
-            let sliderCount = Math.ceil(videoCount / showCount);
-
-            let currentSliderCount = Math.abs($(container).position().left) / frameWidth;
-
-            $(container).animate({
-                left: + delta
-            }, 300, function(){ 
-              if(currentSliderCount <= 0){
-                  currentSliderCount = sliderCount-1;
-                  $(container).css("left", -frameWidth * currentSliderCount );
-              }else{
-                currentSliderCount--;
-              }
-            });
-        });
-    };
-
 block navigation
   nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
     button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
@@ -138,17 +17,43 @@ block navigation
       -let style = company === "" ? "margin:0 auto" : ""
       ul(class="navbar-nav" style=style)
         +nav-link("Upcoming games", "/clan/upcoming")
-        +nav-link("Starplayers", "/bloodbowl/starplayers")
 
 block content
-  
-  div(class="container-flex no-gutters")
-    div(class="row col-12 no-gutters")
-      div(class="slider-frame")
-        a(href=`/clan`)
-          h2(style="margin-left:50px;margin-top:10px")= Clan
-        div(class="btn prev")
-          i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
-        div(class="btn next")
-          i(class="fa fa-chevron-right" style="position: absolute;top: 47%;")
-        div(class="slider-container")
+  div(class="container-flex no-gutters" id="app")
+    template(v-for="row in numberOfRows")
+      h3 Division {{row}}
+      div(class="row col-12")
+        template(v-for="col in 10")
+          div(class="p-1")
+            a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/clan/' + clans[(row - 1) * 10 + (col - 1)].name" target="_blank" )
+              | {{ clans[(row - 1) * 10 + (col - 1)].name }} &nbsp;
+              img(v-bind:src="'https://cdn2.rebbl.net/' + clans[(row - 1) * 10 + (col - 1)].logo" style="width:48px;height:48px")
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
+  - else
+    script(src="/scripts/vue-2.6.10.min.js")
+
+  script.
+        // app Vue instance
+    var app = new Vue({
+      // app initial state
+      data: {
+        clans: []
+      },
+      computed: {
+        numberOfRows() {
+          return Math.ceil(this.clans.length / 10);
+        }
+      },
+      // methods that implement data logic.
+      // note there's no DOM manipulation here at all.
+      async mounted() {
+          let response = await fetch(`/api/v2/clan/clans`);
+          this.clans = await response.json();
+      }
+    })
+
+    // mount
+    app.$mount('#app')

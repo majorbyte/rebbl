@@ -19,9 +19,10 @@ class Clan{
 
   routesConfig(){
 
-    this.router.get("/clan",util.checkCache, this.clan)
+    this.router.get("/clan",util.cache(2), this.clan)
+    this.router.get("/clan/:clan",util.cache(2), this.clan)
     
-    this.router.get("/", util.checkCache, this._root);
+    this.router.get("/", util.cache(2), this._root);
 
     return this.router;
 

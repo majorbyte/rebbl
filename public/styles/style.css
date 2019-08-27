@@ -1380,4 +1380,4 @@ body {
 .user-row:hover a {color: #e67b00;}
 .user-row:hover {border-left:3px solid #e67b00;}
 
-
+.popover-header h3{margin-top:unset;margin-bottom:unset;}

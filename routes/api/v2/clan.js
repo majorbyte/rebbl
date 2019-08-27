@@ -23,33 +23,32 @@ class ClanApi{
 
   routesConfig(){
     this.router.get("/", util.ensureAuthenticated, async function(req, res){
-      const clan = await clanService.getClanByUser(req.user.name); 
+      const account = await accountService.getAccount(req.user.name);
+      const clan = await clanService.getClanByUser(account.coach); 
       const leader = await accountService.hasRole(req.user.name, "clanleader");
-      res.json({ clan:clan, leader:leader } );
+      res.json({ clan:clan, leader:leader && account.coach.toLowerCase() == clan.leader.toLowerCase() } );
     });
 
-    this.router.post("/create", util.ensureAuthenticated, util.hasRole("clanleader"), async function(req, res){
-      let clan = await clanService.getClanByUser(req.user.name); 
-      if (clan && clan.active) {
-        res.status(500).send("You already own a clan");
-        return
-      }
+    this.router.get("/clans", util.ensureAuthenticated, async function(req, res){
+      res.json(await clanService.getClans());
+    });
 
-      let name = req.body.name;
-      clan = await clanService.getClanByName(name);
+    this.router.get("/:clan", util.ensureAuthenticated, async function(req, res){
+      const clan = await clanService.getClanByName(req.params.clan); 
+      res.json({ clan:clan, leader:false} );
+    });
 
-      if (clan && clan.active) {
-        res.status(500).send("Clan already exisits");
+
+
+    this.router.post('/:clan/upload', util.ensureAuthenticated, util.hasRole("clanleader"), uploadStrategy, async (req, res) => {
+
+      let clan = await clanService.getClanByName(req.params.clan);
+      let account = await accountService.getAccount(req.user.name);
+      if (!clan || clan.leader.setLowerCase() !== account.coach.toLowerCase()){
+        res.status(403).send("you're not the leader of this clan");
         return;
       }
 
-      clanService.createClan(name, req.user.name);
-
-      res.status(200).send();
-
-    });  
-
-    this.router.post('/:clan/upload', util.ensureAuthenticated, util.hasRole("clanleader"), uploadStrategy, (req, res) => {
       const
           blobName = this.getBlobName(`${req.params.clan}-${req.file.originalname}`)
         , stream = getStream(req.file.buffer)
@@ -58,6 +57,7 @@ class ClanApi{
       blobService.createBlockBlobFromStream(containerName, blobName, stream, streamLength, {contentSettings:{contentType:req.file.mimetype}} , err => {
         if(err) {
           res.status(500).send(err);
+          return;
         }
         
         clanService.setLogo(req.params.clan, blobName);
