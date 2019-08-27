@@ -1,0 +1,59 @@
+extends ../no-cache-sub-layout.pug
+include ../nav-link
+
+block vars
+  
+  - let options = {active: league, title: "REBBL SEASON 8", company:"clan"}
+  - let fullJquery = true
+  - if (!active) { var active =  (options && options.active) ? options.active : "" }
+  - let company = "clan";
+
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      -let style = company === "" ? "margin:0 auto" : ""
+      ul(class="navbar-nav" style=style)
+        +nav-link("Upcoming games", "/clan/upcoming")
+
+block content
+  div(class="container-flex no-gutters" id="app")
+    template(v-for="row in numberOfRows")
+      h3 Division {{row}}
+      div(class="row col-12")
+        template(v-for="col in 10")
+          div(class="p-1")
+            a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/clan/' + clans[(row - 1) * 10 + (col - 1)].name" target="_blank" )
+              | {{ clans[(row - 1) * 10 + (col - 1)].name }} &nbsp;
+              img(v-bind:src="'https://cdn2.rebbl.net/' + clans[(row - 1) * 10 + (col - 1)].logo" style="width:48px;height:48px")
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
+  - else
+    script(src="/scripts/vue-2.6.10.min.js")
+
+  script.
+        // app Vue instance
+    var app = new Vue({
+      // app initial state
+      data: {
+        clans: []
+      },
+      computed: {
+        numberOfRows() {
+          return Math.ceil(this.clans.length / 10);
+        }
+      },
+      // methods that implement data logic.
+      // note there's no DOM manipulation here at all.
+      async mounted() {
+          let response = await fetch(`/api/v2/clan/clans`);
+          this.clans = await response.json();
+      }
+    })
+
+    // mount
+    app.$mount('#app')
