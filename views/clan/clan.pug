@@ -29,8 +29,8 @@ block content
       template(v-for="power in Object.keys(clan.powers)")
         template(v-if="clan.powers[power] > 0")
           div(class="p-1")
-            button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(x=>x.key == power).name" v-bind:data-content="powers.find(x=>x.key == power).description")
-              | {{powers.find(x => x.key == power).name}} 
+            button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+              | {{powers.find(function(x){return x.key == power}).name}} 
               span(class="badge badge-secondary") {{clan.powers[power]}}
     h3 Teams
     div(class="row")
