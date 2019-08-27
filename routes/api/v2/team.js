@@ -56,6 +56,12 @@ class TeamApi{
     this.router.get('/:teamId/players', util.cache(600), async function(req, res){
       try {
         let players = await dataService.getPlayers({"teamId":Number(req.params.teamId),"active":true});
+        if (players.length === 0){
+          let team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
+          if (team){
+            players = team.roster
+          }
+        }
         res.json(players);
       }
       catch (ex){

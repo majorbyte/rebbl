@@ -3,6 +3,7 @@
 const express = require('express')
   /* Endpoints */
   , bloodbowlApi = require("./bloodbowl.js")
+  , clanApi = require("./clan.js")
   , divisionApi = require("./division.js") 
   , leagueApi = require("./league.js")
   , matchApi = require("./match.js")
@@ -18,6 +19,8 @@ class ApiV2{
   routesConfig(){
 
     this.router.use('/bloodbowl', new bloodbowlApi().routesConfig());
+    
+    this.router.use('/clan', new clanApi().routesConfig());
 
     this.router.use('/division', new divisionApi().routesConfig());
 

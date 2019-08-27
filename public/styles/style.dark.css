@@ -874,6 +874,17 @@ a:focus,a:hover {
   z-index: 9999;
 }
 
+.u-bottomPadding--small-clan{
+  height: 8em;
+  width: 12em;
+  background: #ffffff00 url(/images/clan.png) no-repeat 99%;
+  background-size: 7em;
+  right: 5px;
+  position: fixed;
+  top:0px;
+  z-index: 9999;
+}
+
 .u-bottomPadding--small-hjmc{
   height: 256px;
   width: 256px;
@@ -1361,4 +1372,3 @@ body {
 
 .user-row:hover a {color: #e67b00;}
 .user-row:hover {border-left:3px solid #e67b00;}
-

@@ -272,7 +272,7 @@ block content
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:matchplayed")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:mvp")
       td(class="td-prevent")
-        // ko foreach: skills
+        // ko foreach: $data.playerSkills
         img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
         // /ko
       td(data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
@@ -426,7 +426,8 @@ block scripts
           this.standings = [];
           this.playerList = this.roster;
           this.playertypes=null;
-          this.skills = null;
+          this.skillDescriptions = null;
+          this.skills = [];
           this.starplayers = null;
           this.activeSkill={name:'Block',description:''};
 
@@ -474,7 +475,7 @@ block scripts
       }
 
       selectSkill(self,e){
-        self.activeSkill = self.skills.find(skill => skill.name.toLowerCase() === e.replace(/([A-Z])/g, ' $1').trim().toLowerCase());
+        self.activeSkill = self.skillDescriptions.find(skill => skill.name.toLowerCase() === e.replace(/([A-Z])/g, ' $1').trim().toLowerCase());
       };
       selectPlayer(self,e){
         self.selectedPlayer = e;
@@ -583,7 +584,6 @@ block scripts
       constructor(data, playerType){
         this.map(data);
         this.playerType = playerType;
-        ko.track(this);
         
         ko.defineProperty(this, 'maColor', function () {
           if (this.attributes.ma > this.playerType.ma) return "green";
@@ -605,6 +605,17 @@ block scripts
           if (this.attributes.av < this.playerType.av) return "red";
           return "" ;
         });
+        ko.defineProperty(this, 'playerSkills', function () {
+          let sk = [...model.skills[this.type]|| []] ;
+          for(let x = 0; x < this.skills.length;x++){
+            if(sk.indexOf(this.skills[x]) === -1)
+              sk.push(this.skills[x]);
+          }
+          return sk;
+        });
+
+
+        ko.track(this);
       }
 
       map(data, playerType){
@@ -785,30 +796,35 @@ block scripts
       xhr.send();
     }
 
-    function loadSkills(){
+    async function loadSkills(){
       const storage = window.localStorage;
-      let skills = null;
+      let descriptions = null;
   
       if (storage)    
-        skills = localStorage.getItem('skillDescriptions.v2');
+        descriptions = localStorage.getItem('skillDescriptions.v2');
 
-      if(!skills){
-        let xhr = new XMLHttpRequest();
-        let path = window.location.pathname.split('/');
-
-        xhr.open("GET", "/api/v2/bloodbowl/skillDescriptions"  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {//Call a function when the state changes.
-          model.skills =xhr.response;
-          const storage = window.localStorage;
+      if(!descriptions){
+        let response = await fetch("/api/v2/bloodbowl/skillDescriptions");
+        if(response.ok){
+          model.skillDescriptions = await reponse.json();
       
           if (storage)
-            storage.setItem('skillDescriptions.v2', JSON.stringify(xhr.response));    
+            storage.setItem('skillDescriptions.v2', JSON.stringify(model.skillDescriptions));    
         }
+      } else {
+        model.skillDescriptions = JSON.parse(descriptions);
+      }
+      if (storage)    
+        skills = localStorage.getItem('skills.v1');
 
-        xhr.send();
+      if(!skills){
+        let response = await fetch("/api/v2/bloodbowl/skills");
+        if(response.ok){
+          model.skills = await reponse.json();
+      
+          if (storage)
+            storage.setItem('skillDescriptions.v2', JSON.stringify(model.skillDescriptions));    
+        }
       } else {
         model.skills = JSON.parse(skills);
       }

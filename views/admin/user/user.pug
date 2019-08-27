@@ -312,6 +312,17 @@ block append scripts
             this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"admin", action:"add"});
           }
       }
+      UserModel.prototype.toggleClan = function(data,event){
+          $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+          $(event.currentTarget || event.target ).toggleClass("btn-success");
+          if(this.roles.indexOf("clanleader") > -1 ){
+            this.roles.splice(this.roles.indexOf("clanleader"),1);
+            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"clanleader", action:"remove"});
+          } else {
+            this.roles.push("clanleader")
+            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"clanleader", action:"add"});
+          }
+      }
 
       UserModel.prototype.addDonation = function(data,event){
         this.donations.push(this.newDonation());
@@ -413,8 +424,8 @@ block content
     div(class="tab-content" id="nav-tabContent")
       div(class="tab-pane fade show active" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab")
         -if (user && admin.roles && admin.roles.indexOf("superadmin")>-1 )
-          h3
           button(class="btn" data-bind="click: toggleAdmin, css: roles.indexOf('admin') > -1 ? 'btn-success' : 'btn-secondary'  " ) admin
+        button(class="btn" data-bind="click: toggleClan, css: roles.indexOf('clanleader') > -1 ? 'btn-success' : 'btn-secondary'  " ) clan leader
         - let userAction = user ? "/admin/user/update" : "/admin/user/new"
         form(action=userAction method="post" class="container signup")
           div
