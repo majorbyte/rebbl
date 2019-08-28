@@ -20,7 +20,6 @@ class ClanApi{
 
   }
 
-
   routesConfig(){
     this.router.get("/", util.ensureAuthenticated, async function(req, res){
       const account = await accountService.getAccount(req.user.name);
@@ -44,8 +43,8 @@ class ClanApi{
 
       let clan = await clanService.getClanByName(req.params.clan);
       let account = await accountService.getAccount(req.user.name);
-      if (!clan || clan.leader.setLowerCase() !== account.coach.toLowerCase()){
-        res.status(403).send("you're not the leader of this clan");
+      if (!clan || clan.leader.toLowerCase() !== account.coach.toLowerCase()){
+        res.status(403).send(`you're not the leader of this clan, ${clan.leader} is.`);
         return;
       }
 
