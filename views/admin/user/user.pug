@@ -312,17 +312,7 @@ block append scripts
             this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"admin", action:"add"});
           }
       }
-      UserModel.prototype.toggleClan = function(data,event){
-          $(event.currentTarget || event.target ).toggleClass("btn-secondary");
-          $(event.currentTarget || event.target ).toggleClass("btn-success");
-          if(this.roles.indexOf("clanleader") > -1 ){
-            this.roles.splice(this.roles.indexOf("clanleader"),1);
-            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"clanleader", action:"remove"});
-          } else {
-            this.roles.push("clanleader")
-            this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"clanleader", action:"add"});
-          }
-      }
+
 
       UserModel.prototype.addDonation = function(data,event){
         this.donations.push(this.newDonation());
@@ -331,7 +321,17 @@ block append scripts
       }
 
   script.
-    
+    UserModel.prototype.toggleClan = function(data,event){
+      $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+      $(event.currentTarget || event.target ).toggleClass("btn-success");
+      if(this.roles.indexOf("clanleader") > -1 ){
+        this.roles.splice(this.roles.indexOf("clanleader"),1);
+        this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"clanleader", action:"remove"});
+      } else {
+        this.roles.push("clanleader")
+        this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"clanleader", action:"add"});
+      }
+    }
     let model = new UserModel(); 
       ko.applyBindings(model);
     $(document).ready(function(){
