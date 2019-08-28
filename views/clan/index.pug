@@ -27,7 +27,7 @@ block content
           div(class="p-1")
             a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/clan/' + clans[(row - 1) * 10 + (col - 1)].name" target="_blank" )
               | {{ clans[(row - 1) * 10 + (col - 1)].name }} &nbsp;
-              img(v-bind:src="'https://cdn2.rebbl.net/' + clans[(row - 1) * 10 + (col - 1)].logo" style="width:48px;height:48px")
+              img(v-bind:src="'https://cdn2.rebbl.net/' + clans[(row - 1) * 10 + (col - 1)].logo" style="height:48px")
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
