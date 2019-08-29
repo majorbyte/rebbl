@@ -49,7 +49,7 @@ block content
                   span(class="text-info")  {{team.team.name}}
                   img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                   br
-                  span(class="badge badge-success") /u/{{schedule.home.clan.members.find(function(x){return x.coach.toLowerCase() === team.coach.name.toLowerCase()}).reddit}}
+                  span(class="badge badge-success") /u/{{reddit(schedule.home.clan,team.coach.name)}}
                   span(class="badge badge-warning") {{team.coach.name}}
                   span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
 
@@ -80,7 +80,7 @@ block content
                   span(class="text-info")  {{team.team.name}}
                   img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                   br
-                  span(class="badge badge-success") /u/{{schedule.away.clan.members.find(function(x){return x.coach.toLowerCase() === team.coach.name.toLowerCase()}).reddit}}
+                  span(class="badge badge-success") /u/{{reddit(schedule.away.clan,team.coach.name)}}
                   span(class="badge badge-warning") {{team.coach.name}}
                   span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
 
@@ -194,8 +194,12 @@ block scripts
           description: "Use this power at the beginning of a draft to leave the choice of a power up to the fickle god that is Nuffle. Roll 1D14 using the discord dice bot and use the power associated with that number (counting down the power list) during this draft, you may not play any other powers during this draft phase, this power is unaffected by Miscommunication! If you roll this ability (a 14) you are truly blessed by Nuffle and may roll 2D13 and receive both associated powers! As noted in New Blood you DO NOT have to use that power if it is rolled, but you are not allowed to re-roll it if you select not to use it. Furthermore, you may use Emergency Intensive Care in the same round as this power is used (and can use ALL EIC’s if you roll extra via this power) but any EIC gained by this power may not be stockpiled for future rounds."
         }]
       },
-      // methods that implement data logic.
-      // note there's no DOM manipulation here at all.
+      methods:{
+        reddit: function(clan, coach){
+          let account = clan.members.find(function(x){return x.coach.toLowerCase() === coach.toLowerCase()});
+          return account ? account.reddit : '??';
+        }
+      },      
       async mounted() {
           let path = window.location.pathname.split("/");
           let response = await fetch(`/api/v2/clan/${path[path.length-4]}/${path[path.length-3]}/${path[path.length-2]}/${path[path.length-1]}`);
