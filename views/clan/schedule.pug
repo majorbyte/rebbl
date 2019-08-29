@@ -1,0 +1,88 @@
+extends ../no-cache-sub-layout.pug
+include ../nav-link
+
+block vars
+  - let options = {active: league, title: "REBBL SEASON 8", company:"clan"}
+  - let fullJquery = true
+  - if (!active) { var active =  (options && options.active) ? options.active : "" }
+  - let company = "clan";
+
+block head
+  style.
+    .MatchRow-contentWrapper--hover:hover .text-info{color:#e67b00 !important}
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      -let style = company === "" ? "margin:0 auto" : ""
+      ul(class="navbar-nav" style=style)
+        +nav-link("Upcoming games", "/clan/upcoming")
+
+block content
+  div(class="Background u-bottomPadding--large u-topPadding--medium")
+    div(class="container navcontainer" data-index="0" id="app")
+      h1(class="u-no-text-transform u-verticalMargin--xx-small") {{schedules[0] ? schedules[0].competition : ''}}
+      div(class="container-flex no-gutters" )
+        template(v-for="row in numberOfRows")
+          br
+          div(class="table-striped TeamLabel-info")
+            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
+              div(title="" class="Standings-details Standings-header highlight" ) Round {{row}}
+            template(v-for="col in 5")
+              a(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" v-bind:href="'/clan/'+ schedules[(row - 1) * 9 + (col - 1)].season + '/' + schedules[(row - 1) * 9 + (col - 1)].competition + '/' + schedules[(row - 1) * 9 + (col - 1)].round + '/' + schedules[(row - 1) * 9 + (col - 1)].house" )
+                div(class="MatchRow-team")
+                  div(class="TeamLabel TeamLabel--reverse")
+                    div(class="TeamLabel-block"): img(v-bind:src="'https://cdn2.rebbl.net/' + schedules[(row - 1) * 9 + (col - 1)].home.logo" alt="" class="TeamLabel-logo")
+                    div(class="TeamLabel-info TeamLabel-info--noScore")
+                      div(class="text-info") {{ schedules[(row - 1) * 9 + (col - 1)].home.clan }}
+                div(class="MatchRow-status")
+                  span(class="MatchStatus MatchStatus--transparent")
+                    span
+                      template(v-if="schedules[(row - 1) * 9 + (col - 1)].home.score > schedules[(row - 1) * 9 + (col - 1)].away.score")
+                        span(class="MatchStatus-score is-winner") {{schedules[(row - 1) * 9 + (col - 1)].home.score}}
+                        span(class="MatchStatus-score") -
+                        span(class="MatchStatus-score") {{schedules[(row - 1) * 9 + (col - 1)].away.score}}
+                      template(v-else-if="schedules[(row - 1) * 9 + (col - 1)].home.score < schedules[(row - 1) * 9 + (col - 1)].away.score")
+                        span(class="MatchStatus-score") {{schedules[(row - 1) * 9 + (col - 1)].home.score}}
+                        span(class="MatchStatus-score") -
+                        span(class="MatchStatus-score is-winner") {{schedules[(row - 1) * 9 + (col - 1)].away.score}}
+                      template(v-else)
+                        span(class="MatchStatus-score") {{schedules[(row - 1) * 9 + (col - 1)].home.score}}
+                        span(class="MatchStatus-score") -
+                        span(class="MatchStatus-score") {{schedules[(row - 1) * 9 + (col - 1)].away.score}}
+                div(class="MatchRow-team")
+                  div(class="TeamLabel")
+                    div(class="TeamLabel-block"): img(v-bind:src="'https://cdn2.rebbl.net/' + schedules[(row - 1) * 9 + (col - 1)].away.logo" alt="" class="TeamLabel-logo")
+                    div(class="TeamLabel-info TeamLabel-info--noScore")
+                      div(class="text-info ") {{ schedules[(row - 1) * 9 + (col - 1)].away.clan }}
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
+  - else
+    script(src="/scripts/vue-2.6.10.min.js")
+
+  script.
+        // app Vue instance
+    var app = new Vue({
+      // app initial state
+      data: {
+        schedules: []
+      },
+      computed: {
+        numberOfRows() {
+          return Math.ceil(this.schedules.length / 9);
+        }
+      },
+      // methods that implement data logic.
+      // note there's no DOM manipulation here at all.
+      async mounted() {
+          let path = window.location.pathname.split("/");
+          let response = await fetch(`/api/v2/clan/schedule/${path[path.length-2]}/${path[path.length-1]}`);
+          this.schedules = await response.json();
+      }
+    })
+
+    // mount
+    app.$mount('#app')
