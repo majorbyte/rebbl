@@ -34,6 +34,9 @@ class League{
         case "rebbrl minors league":
             res.redirect(`/rebbrl/standings/ReBBRL Minors League`);
             return;
+        case "rebbrl college league":
+          res.redirect(`/rebbrl/standings/ReBBRL College League`);
+          return;
       }
     
       if(league == "open invitational"){
