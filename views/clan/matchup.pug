@@ -1,0 +1,207 @@
+extends ../no-cache-sub-layout.pug
+include ../nav-link
+
+block vars
+  - let options = {active: league, company:"clan"}
+  - let fullJquery = true
+  - if (!active) { var active =  (options && options.active) ? options.active : "" }
+  - let company = "clan";
+
+block head
+  style.
+    .MatchRow-contentWrapper--hover:hover .text-info{color:#e67b00 !important}
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      -let style = company === "" ? "margin:0 auto" : ""
+      ul(class="navbar-nav" style=style)
+        +nav-link("Upcoming games", "/clan/upcoming")
+
+block content
+  div(class="container navcontainer" data-index="0" id="app")
+    h1(class="u-no-text-transform u-verticalMargin--xx-small") Round {{schedule.round || ''}} - house {{schedule.house || ''}}
+    div(class="row col-12 no-gutters")
+      div(class="col-5")
+        div(class="row col-12 border-bottom border-info pb-1")
+          div(class="col-10 media text-center")
+            div(class="media-body")
+              h1 {{schedule.home.clan.name}}
+            img(v-bind:src="`https://cdn2.rebbl.net/${schedule.home.clan.logo}`" style="height:120px")
+          div(class="col-2 text-right")
+            h1 {{schedule.home.score}}
+        br
+        div(class="row")
+          template(v-for="power in Object.keys(schedule.home.clan.powers)")
+            template(v-if="schedule.home.clan.powers[power] > 0")
+              div(class="p-1")
+                button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                  | {{powers.find(function(x){return x.key == power}).name}} 
+                  span(class="badge badge-secondary") {{schedule.home.clan.powers[power]}}
+        br
+        div(class="row")
+          template(v-for="team in schedule.home.clan.teams")
+            template(v-if="team")
+              div(class="p-1")
+                a(class="btn btn-outline-info btn-sm")
+                  span(class="text-info")  {{team.team.name}}
+                  img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                  br
+                  span(class="badge badge-success") /u/{{schedule.home.clan.members.find(function(x){return x.coach.toLowerCase() === team.coach.name.toLowerCase()}).reddit}}
+                  span(class="badge badge-warning") {{team.coach.name}}
+                  span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
+
+      div(class="col text-center")
+        h1 -
+      div(class="col-5")
+        div(class="row col-12 border-bottom border-info pb-1 ")
+          div(class="col-2 text-left")
+            h1  {{schedule.away.score}}
+          div(class="col-10 media text-center")
+            img(v-bind:src="`https://cdn2.rebbl.net/${schedule.away.clan.logo}`" style="height:120px")
+            div(class="media-body")
+              h1 {{schedule.away.clan.name}}
+        br
+        div(class="row")
+          template(v-for="power in Object.keys(schedule.away.clan.powers)")
+            template(v-if="schedule.home.clan.powers[power] > 0")
+              div(class="p-1")
+                button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                  | {{powers.find(function(x){return x.key == power}).name}} 
+                  span(class="badge badge-secondary") {{schedule.home.clan.powers[power]}}
+        br
+        div(class="row")
+          template(v-for="team in schedule.away.clan.teams")
+            template(v-if="team")
+              div(class="p-1")
+                a(class="btn btn-outline-info btn-sm")
+                  span(class="text-info")  {{team.team.name}}
+                  img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                  br
+                  span(class="badge badge-success") /u/{{schedule.away.clan.members.find(function(x){return x.coach.toLowerCase() === team.coach.name.toLowerCase()}).reddit}}
+                  span(class="badge badge-warning") {{team.coach.name}}
+                  span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
+  - else
+    script(src="/scripts/vue-2.6.10.min.js")
+
+  script.
+        // app Vue instance
+    var app = new Vue({
+      // app initial state
+      data: {
+        schedule: {},
+        powers:[{
+          key: "miscommunication",
+          name: "Miscommunication!",
+          cost: 100,
+          quantitiy: 2,
+          description: "This power causes opponents to \"miscommunicate\" their intended draft day powers, acting as if those powers were never used at all! The use of this power must be stated to a clan admin (who is NOT in your clan) in a PM prior to the draft. Only notify the opposing Clan Leader AFTER the draft is complete of your diabolical ruse (unless they play Confusion!, in which case they must be told immediately)! Any clan powers used by your opponent failed to trigger, and remain available for future weeks. If BOTH clans attempted to use \"Miscommunication\", both clans use up one charge of this power. Additionally, if this power is used by a clan, then no other clan powers may be activated by this clan during the draft. However, powers such as Emergency Intensive Care which are not called during the draft are still ok to use."
+        },{
+          key: "emergencyRnR",
+          name: "Emergency R&R!",
+          cost: 50,
+          quantitiy: 3,
+          description: "At the start of a draft, the clan leader may choose a team from his own clan and award it a free resting match prior to their next competitive match. The team will concede to an admin team before playing their match and will thus regain all their MNGed players, and may lose 1 Fan Factor as an (uncontrolled by clan admin) bi-product."
+        },{
+          key: "lastMinuteSwitch",
+          name: "Last Minute Switch!",
+          cost: 150,
+          quantitiy: 1,
+          description: "At the end of the draft, the clan leader may pick two teams from his clan and switch up their matches. Coach A will thus face the opponent of Coach B instead, while Coach B faces the opponent of Coach A. Once a Last Minute Switch! is played, the opposing clan may not use a Last Minute Switch! that would affect any of the 4 coaches involved in the first switch."
+        },{
+          key: "lockBank",
+          name: "Lock Bank!",
+          cost: 50,
+          quantitiy: 1,
+          description: "At the end of the draft, the clan leader may pick a team from the opposing clan. That team’s bank has been completely shut down! They will not be allowed to spend ANY money from their bank until the FOLLOWING Clan week. This includes buying players, burning excess cash, adding to inducement, etc. They are still allowed to use petty cash during the inducement phase if they play  against a higher TV team, but may not add to it in any way from their own cash. Please note you get two charges of this power."
+        },{
+          key: "newBlood",
+          name: "New Blood!",
+          cost: 100,
+          quantitiy: 2,
+          description: `Within 24 hours after the team played its last match (and before the next draft), the clan leader can nominate that team to be removed from the league permanently and replaced with a new team costing the same in gold as the original team did AT THE START OF THE SEASON. 
+
+          This new team follows the same rules for buying players and skills as any new team. The new team may be of a different race if so desired, but still must be unique to the clan. If the new team is the same race as the original team, a single player from the original roster may be kept as a legacy player. This legacy player costs the same in gold as he is listed as valued in-game AND any possible statistic upgrades and doubles (or sheer number of skills!) are not counted other than in terms of the price for keeping him around! This means that the number of statistic upgrades or doubles for the new team is not affected by whatever the legacy player already has.
+
+          You cannot switch tiers upwards when using this power, if you move downwards a tier you DO NOT receive any tax rebate associated with that tier. You cannot use this power on a team that started the season under 1100 TV. This power is not mandatory if rolled as part of Nuffles Will (see below).`
+        },{
+          key: "assassination",
+          name: "Assassination!",
+          cost: 100,
+          quantitiy: 2,
+          description: `At the start of a draft you may nominate 1 player from any of the teams in the opposing clan and have a hitman attempt to assassinate their player. Roll a d6 using the discord dice bot. On a roll of a 2+ the assigned player is injured during the assassination attempt and must miss the next match! Sadly, the quality of assassins (or the toughness of Blood Bowl players!) these days mean they leave no permanent injury. This is handled by an admin game being used to apply an MNG injury to the player in question. 
+
+          If you roll a 1, the assassin is interrupted during his task by a random player on the opposing team and attacks them instead! Randomly determine a player on the opposing team WHO WAS NOT THE ORIGINAL TARGET to receive an MNG instead. 
+
+          This power cannot be used to target a player that has already been a target of assassination (either directly, or indirectly) earlier in the season. Assassin’s have too much professional pride to take sloppy seconds! Granted, if the same team is targeted and a 1 is rolled, the same player could accidentally be assassinated instead of the targeted teammate if they are unlucky enough.`
+        },{
+          key: "emergencyIntensiveCare",
+          name: "Emergency Intensive Care!",
+          cost: 0,
+          quantitiy: 1,
+          description: `The player will be whisked away after the game into intensive care to recover from any lasting injury suffered during the game. This means if a player suffers a permanent injury (niggle, stat bust, death) during the game, the coach can decide to not confirm the game and ask his clan leader to use the power. The injury will be changed into MNG by a Clan League Admin instead. 
+
+          The power needs to be officially claimed by the clan leader (or their nominated vice captain, if the clan leader is otherwise unavailable) in the discord channel no later than 24 hours after the game has been played. The game cannot be confirmed in order to be used, so coaches are responsible for pressing “NO” when asked to confirm the game, if you intend to request this power or are considering using it. This power cannot be prevented by using miscommunication.
+
+          Additionally, the power can also be used any number of times at the start of the season to heal an old injury on a returning player, without applying the MNG. This will not count towards the available use of the power, but will cost 100k of the new season’s bank (i.e. NOT from the clan power budget). You need to note this on your “Clan Ledger” when you complete the team re-buy process and you can then purchase the affected player without the injury. This power is automatically added to every clan’s available power list, whether you buy it or not. It has traditionally crowded out other interesting powers, but adds a lot of value to the league so REBBL has decided to officially socialise healthcare!`
+        },{
+          key: "inspiration",
+          name: "Inspiration!",
+          cost: 100,
+          quantitiy: 2,
+          description: "At the start of a draft nominate one player from one of your clan’s teams who is within 5 SPP of levelling. This player has been working hard on the training grounds between matches and has gained a level! The level up will be provided by setting up a game vs an admin team, which will be awarded as an admin concede loss to the clan team (which may result in a loss of Fan Factor). The player to level will receive pass/intercept/cas spp to gain the needed spp to level. A second concede admin game will be assigned after the first, to reissue any MNG injuries on the team. The second game will be applied even if there are no MNG on the team for consistency, due to the potential loss of Fan Factor in each game."
+        },{
+          key: "confusion",
+          name: "Confusion!",
+          cost: 50,
+          quantitiy: 2,
+          description: "Play this power before the draft occurs. This power switches the draft order, causing the team that was due to draft second to draft first instead. You may not play a Confusion! to counter an opponent's Confusion! Additionally, this power does not switch the order of power usage in a draft."
+        },{
+          key: "homefieldAdvantage",
+          name: "Home Field Advantage!",
+          cost: 50,
+          quantitiy: 2,
+          description: "Use this power after drafting is complete. Picking one matchup from your draft, your team will ALWAYS be the home team this round. Your opponent cannot play this power to affect the same matchup. IT IS YOUR COACH’S RESPONSIBILITY TO ENSURE THAT THE CLAN LEADER STARTING THE MATCH IS AWARE YOU NEED TO BE MANUALLY SEEDED AS THE HOME TEAM. It is the responsibility of the clan leader creating the match to include HFA at the start of the match name, and the responsibility of the clan leader that used HFA to validate that the name was given! Please note you get two charges of this power."
+        },{
+          key: "hatredOfPubliTransport",
+          name: "Hatred of Public Transport!",
+          cost: 50,
+          quantitiy: 2,
+          description: "Play this power before either clan has drafted. Pick one team from your opponent’s clan who refuses to be the \"Bus\"!  This team may not be “bused” (i.e. offered-up) by their clan leader when it’s that clan’s turn to nominate their first blindly offered team. Teams selected by this power then become immune to “Last Minute Switch” and their match may not be altered. Each Clan may only use this power once per draft. Please note you get two charges of this power."
+        },{
+          key: "draftDodgers",
+          name: "Draft Dodgers!",
+          cost: 50,
+          quantitiy: 2,
+          description: "Play this power at the beginning of a draft. Both coaches have turned up late to the draft! Roll 1D3 and determine that many matchups at random (assign numbers 1-5 to the teams in each clan and roll a D5 as many times as necessary to generate the required number of matchups) as the officials start making decisions on the coaches' behalf. The remaining matchups are decided in the usual fashion following the original order of the draft. Coaches affected by this power CAN still be affected by “Last Minute Switch” but CANNOT be affected by “Hatred of Public Transport”. If both clans play this power in the same draft, roll both D3 and take the highest result."
+        },{
+          key: "eldrilSidelined",
+          name: "Eldril: Sidelined!",
+          cost: 50,
+          quantitiy: 2,
+          description: "Play this power at the end of a draft. Pick a star player - you manage to convince them that the pitch is a particularly hostile environment this week and that it’s better for their health insurance premium if they don’t show up! This means that this star player cannot be hired by either clan this round (in any of the matches). This power can not be used on Deeproot Strongbranch, because he’s a goddamn TREE and your argument is invalid (Note: Deeproot insists that all stuntie teams are unable to be affected by this power and I’m not going to argue with him, for the previously stated reasons). He also crushed the first two enforcers sent to threaten him, so there have been issues finding willing insurance agents to approach him again. Please note this power comes with two charges."
+        },{
+          key: "nufflesWill",
+          name: "Nuffles Will!",
+          cost: 100,
+          quantitiy: 2,
+          description: "Use this power at the beginning of a draft to leave the choice of a power up to the fickle god that is Nuffle. Roll 1D14 using the discord dice bot and use the power associated with that number (counting down the power list) during this draft, you may not play any other powers during this draft phase, this power is unaffected by Miscommunication! If you roll this ability (a 14) you are truly blessed by Nuffle and may roll 2D13 and receive both associated powers! As noted in New Blood you DO NOT have to use that power if it is rolled, but you are not allowed to re-roll it if you select not to use it. Furthermore, you may use Emergency Intensive Care in the same round as this power is used (and can use ALL EIC’s if you roll extra via this power) but any EIC gained by this power may not be stockpiled for future rounds."
+        }]
+      },
+      // methods that implement data logic.
+      // note there's no DOM manipulation here at all.
+      async mounted() {
+          let path = window.location.pathname.split("/");
+          let response = await fetch(`/api/v2/clan/${path[path.length-4]}/${path[path.length-3]}/${path[path.length-2]}/${path[path.length-1]}`);
+          this.schedule = await response.json();
+      }
+    })
+
+    // mount
+    app.$mount('#app')
