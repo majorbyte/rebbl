@@ -20,21 +20,26 @@ block navigation
 
 block content
   div(class="container")
-    h1(data-bind="text: teamName(), style:{color: teamColor()}")
-    div(class="float-right")
-      // ko if: apothecary > 0
-      img(src=`https://cdn2.rebbl.net/images/apothecary.png` class="align-top" )
-      // /ko
+    div(class="row col-12 d-flex flex-wrap align-items-center")
+      img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" class="align-top" style="height:100px")
+      span(class="h1" data-bind="text: teamName(), style:{color: teamColor()}")
+      div(class="col text-right")
+        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/races/${idraces}.png`}" class="align-top" style="height:100px")
+        // ko if: apothecary > 0
+        img(src=`https://cdn2.rebbl.net/images/apothecary.png` class="align-top" )
+        // /ko
 
-      // ko if: isNecro()
-      img(src=`https://cdn2.rebbl.net/images/necromancer.png` class="align-top")
-      // /ko
+        // ko if: isNecro()
+        img(src=`https://cdn2.rebbl.net/images/necromancer.png` class="align-top")
+        // /ko
 
-      // ko if: stadium()
-      img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/stadium/${stadium().name.toLowerCase()}.png`,title:`${stadiumDescription()}`}" class="align-top")
-      // /ko
-    h3(style="margin-top: 0px;")
-      i(data-bind="text: leitmotiv") 
+        // ko if: stadium()
+        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/stadium/${stadium().name.toLowerCase()}.png`,title:`${stadiumDescription()}`}" class="align-top")
+        // /ko
+      div(class="row col-12")
+        h3(style="margin-top: 0px;")
+          i(data-bind="text: leitmotiv") 
+    br
     div(class="clearfix")
     div(class="row" style="margin-left:0px")
       div(class="col col-2")
