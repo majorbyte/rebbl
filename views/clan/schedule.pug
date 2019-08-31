@@ -24,17 +24,17 @@ block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")
     div(class="container navcontainer" data-index="0" id="app")
       h1(class="u-no-text-transform u-verticalMargin--xx-small") {{schedules[0] ? schedules[0].competition : ''}}
-      div(class="container-flex no-gutters" )
+      div(class="row" )
         template(v-for="row in numberOfRows")
           br
-          div(class="table-striped TeamLabel-info")
-            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
+          div(class="col table-striped" style="width:unset;display:unset" )
+            div(class="col-12 TableHeader" style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
               div(title="" class="Standings-details Standings-header highlight" ) Round {{row}}
             template(v-for="col in 5")
               a(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" v-bind:href="'/clan/'+ schedule(row,col).season + '/' + schedule(row,col).competition + '/' + schedule(row,col).round + '/' + schedule(row,col).house" )
                 div(class="MatchRow-team")
-                  div(class="TeamLabel TeamLabel--reverse")
-                    div(class="TeamLabel-block"): img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).home.logo" alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel TeamLabel--reverse" )
+                    div: img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).home.logo" alt="" class="TeamLabel-logo" style="width:unset")
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="text-info") {{ schedule(row,col).home.clan }}
                 div(class="MatchRow-status")
@@ -54,7 +54,7 @@ block content
                         span(class="MatchStatus-score") {{schedule(row,col).away.score}}
                 div(class="MatchRow-team")
                   div(class="TeamLabel")
-                    div(class="TeamLabel-block"): img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).away.logo" alt="" class="TeamLabel-logo")
+                    div: img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).away.logo" alt="" class="TeamLabel-logo" style="width:unset")
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="text-info ") {{ schedule(row,col).away.clan }}
 block scripts

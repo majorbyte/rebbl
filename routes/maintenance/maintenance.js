@@ -1,6 +1,7 @@
 'use strict';
 const 
   cache = require("memory-cache")
+  , clanService = require("../../lib/ClanService.js")
   , configurationService = require("../../lib/ConfigurationService.js")
   , cripple = require('../../lib/crippleService.js')
   , express = require('express')
@@ -43,11 +44,14 @@ class Maintenance{
 
 
     this.router.get('/updateleague', util.verifyMaintenanceToken, async function(req, res){
-      maintenanceService.getRebblData(req.query.league);
-      maintenanceService.getNewRebblData(req.query.league);
+      await maintenanceService.getRebblData(req.query.league);
+      await maintenanceService.getNewRebblData(req.query.league);
+      await maintenanceService.getImperiumMatches();
+      await clanService.getContestData();
+      await clanService.getMatchData();
       reddit.check();
       reddit.getAccouncements();
-      maintenanceService.getImperiumMatches();
+
       res.redirect('/');
     });
 
