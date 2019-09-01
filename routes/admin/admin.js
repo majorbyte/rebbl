@@ -20,6 +20,7 @@ class Admin{
     this.router.use('/trophies', require(`./trophies.js`));
     this.router.use('/divisions', require(`./divisions.js`));
     this.router.use('/board', require(`./board.js`));
+    this.router.use('/clan', require(`./clan.js`));
 
     return this.router;
 
