@@ -10,6 +10,7 @@ block vars
 block head
   style.
     .MatchRow-contentWrapper--hover:hover .text-info{color:#e67b00 !important}
+    .TeamLabelLogo{max-width: 48px;max-height: 48px;}
 block navigation
   nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
     button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
@@ -24,20 +25,19 @@ block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")
     div(class="container navcontainer" data-index="0" id="app")
       h1(class="u-no-text-transform u-verticalMargin--xx-small") {{schedules[0] ? schedules[0].competition : ''}}
-      div(class="row" )
+      div(class="row col-12 justify-content-around" )
         template(v-for="row in numberOfRows")
-          br
-          div(class="col table-striped" style="width:unset;display:unset" )
+          div(class="col col-lg-5 col-xl-4 col-md-5 table-striped" style="width:unset;display:unset" )
             div(class="col-12 TableHeader" style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
               div(title="" class="Standings-details Standings-header highlight" ) Round {{row}}
             template(v-for="col in 5")
-              a(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" v-bind:href="'/clan/'+ schedule(row,col).season + '/' + schedule(row,col).competition + '/' + schedule(row,col).round + '/' + schedule(row,col).house" )
-                div(class="MatchRow-team")
+              a(class="col-12 MatchRow-contentWrapper MatchRow-contentWrapper--hover " v-bind:href="'/clan/'+ schedule(row,col).season + '/' + schedule(row,col).competition + '/' + schedule(row,col).round + '/' + schedule(row,col).house" )
+                div(class="col-5 MatchRow-team  d-flex flex-wrap align-items-center")
                   div(class="TeamLabel TeamLabel--reverse" )
-                    div: img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).home.logo" alt="" class="TeamLabel-logo" style="width:unset")
+                    div: img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).home.logo" alt="" class="TeamLabelLogo" )
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="text-info") {{ schedule(row,col).home.clan }}
-                div(class="MatchRow-status")
+                div(class="col-2 MatchRow-status")
                   span(class="MatchStatus MatchStatus--transparent")
                     span
                       template(v-if="schedule(row,col).home.score > schedule(row,col).away.score")
@@ -52,9 +52,9 @@ block content
                         span(class="MatchStatus-score") {{schedule(row,col).home.score}}
                         span(class="MatchStatus-score") -
                         span(class="MatchStatus-score") {{schedule(row,col).away.score}}
-                div(class="MatchRow-team")
+                div(class="col-5 MatchRow-team  d-flex flex-wrap align-items-center")
                   div(class="TeamLabel")
-                    div: img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).away.logo" alt="" class="TeamLabel-logo" style="width:unset")
+                    div: img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).away.logo" alt="" class="TeamLabelLogo")
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="text-info ") {{ schedule(row,col).away.clan }}
 block scripts
