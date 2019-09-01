@@ -10,171 +10,219 @@ block vars
 block head
   style.
     .MatchRow-contentWrapper--hover:hover .text-info{color:#e67b00 !important}
-
 block content
-  div(class="Background u-bottomPadding--large u-topPadding--medium")
-    div(class="container navcontainer" data-index="0" id="app")
-      div(class="row col-12")
-        div(class="btn-group-toggle" data-toggle="buttons")
+  div.Background.u-bottomPadding--large.u-topPadding--medium
+    div.container.navcontainer(data-index="0" id="app")
+      div.row.col-12
+        div.btn-group-toggle(data-toggle="buttons")
           template(v-for="x in 5")
-            label(class="btn btn-outline-primary" style="margin-right: 15px" @click="load(x)")
+            label.btn.btn-outline-primary(style="margin-right: 15px" @click="load(x)")
               input(type="radio" checked autocomplete="off")       
               span Division {{x}}
       br
       template(v-if="!schedule && schedules.length > 0")
-        div(class="row" )
+        div.row
           template(v-for="row in numberOfRows")
             br
-            div(class="col table-striped" style="width:unset;display:unset" )
-              div(class="col-12 TableHeader" style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
-                div(title="" class="Standings-details Standings-header highlight" ) Round {{row}}
+            div.col.table-striped(style="width:unset;display:unset" )
+              div.col-12.TableHeader(style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
+                div.Standings-details.Standings-header.highlight(title="") Round {{row}}
               template(v-for="col in 5")
-                div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" @click="showMatchup(_schedule(row,col))")
-                  div(class="MatchRow-team")
-                    div(class="TeamLabel TeamLabel--reverse" )
+                div.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(@click="showMatchup(_schedule(row,col))")
+                  div.MatchRow-team
+                    div.TeamLabel.TeamLabel--reverse
                       div: img(v-bind:src="'https://cdn2.rebbl.net/' + _schedule(row,col).home.logo" alt="" class="TeamLabel-logo" style="width:unset")
-                      div(class="TeamLabel-info TeamLabel-info--noScore")
-                        div(class="text-info") {{ _schedule(row,col).home.clan }}
-                  div(class="MatchRow-status")
-                    span(class="MatchStatus MatchStatus--transparent")
+                      div.TeamLabel-info.TeamLabel-info--noScore
+                        div.text-info {{ _schedule(row,col).home.clan }}
+                  div.MatchRow-status
+                    span.MatchStatus.MatchStatus--transparent
                       span
                         template(v-if="_schedule(row,col).home.score > _schedule(row,col).away.score")
-                          span(class="MatchStatus-score is-winner") {{_schedule(row,col).home.score}}
-                          span(class="MatchStatus-score") -
-                          span(class="MatchStatus-score") {{_schedule(row,col).away.score}}
+                          span.MatchStatus-score.is-winner {{_schedule(row,col).home.score}}
+                          span.MatchStatus-score -
+                          span.MatchStatus-score {{_schedule(row,col).away.score}}
                         template(v-else-if="_schedule(row,col).home.score < _schedule(row,col).away.score")
-                          span(class="MatchStatus-score") {{_schedule(row,col).home.score}}
-                          span(class="MatchStatus-score") -
-                          span(class="MatchStatus-score is-winner") {{_schedule(row,col).away.score}}
+                          span.MatchStatus-score {{_schedule(row,col).home.score}}
+                          span.MatchStatus-score -
+                          span.MatchStatus-score.is-winner {{_schedule(row,col).away.score}}
                         template(v-else)
-                          span(class="MatchStatus-score") {{_schedule(row,col).home.score}}
-                          span(class="MatchStatus-score") -
-                          span(class="MatchStatus-score") {{_schedule(row,col).away.score}}
-                  div(class="MatchRow-team")
-                    div(class="TeamLabel")
+                          span.MatchStatus-score {{_schedule(row,col).home.score}}
+                          span.MatchStatus-score -
+                          span.MatchStatus-score {{_schedule(row,col).away.score}}
+                  div.MatchRow-team
+                    div.TeamLabel
                       div: img(v-bind:src="'https://cdn2.rebbl.net/' + _schedule(row,col).away.logo" alt="" class="TeamLabel-logo" style="width:unset")
-                      div(class="TeamLabel-info TeamLabel-info--noScore")
-                        div(class="text-info ") {{ _schedule(row,col).away.clan }}
+                      div.TeamLabel-info.TeamLabel-info--noScore
+                        div.text-info {{ _schedule(row,col).away.clan }}
 
       template(v-if="schedule")
-        div(class="row col-12 no-gutters")
-          div(class="col-5")
-            div(class="row col-12 border-bottom border-info pb-1")
-              div(class="col-10 media text-center d-flex flex-wrap align-items-center")
-                div(class="media-body")
+        div.row.col-12.no-gutters
+          div.col-5
+            div.row.col-12.border-bottom.border-info.pb-1
+              div.col-10.media.text-centerd.-flex.flex-wrap.align-items-center
+                div.media-body
                   h1 {{schedule.home.clan.name}}
                 img(v-bind:src="`https://cdn2.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
-              div(class="col-2 text-right")
+              div.col-2.text-right
                 h1 {{schedule.home.score}}
             template(v-if="schedule.matches.length === 0")
               br
-              div(class="row")
+              div.row
                 template(v-for="power in Object.keys(schedule.home.clan.powers)")
                   template(v-if="schedule.home.clan.powers[power] > 0")
-                    div(class="p-1")
-                      button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                    div.p-1
+                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                         | {{powers.find(function(x){return x.key == power}).name}} 
-                        span(class="badge badge-secondary") {{schedule.home.clan.powers[power]}}
+                        span.badge.badge-secondary {{schedule.home.clan.powers[power]}}
               br
-              div(class="row")
+              div.row
                 template(v-for="team in schedule.home.clan.teams")
                   template(v-if="team")
-                    div(class="p-1")
-                      a(class="btn btn-outline-info btn-sm" v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
+                    div.p-1
+                      a.btn.btn-outline-info.btn-sm(v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
                         img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
-                        span(class="text-info")  {{team.team.name}}
+                        span.text-info  {{team.team.name}}
                         img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                         br
-                        span(class="badge badge-success") /u/{{reddit(schedule.home.clan,team.coach.name)}}
-                        span(class="badge badge-warning") {{team.coach.name}}
-                        span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
+                        span.badge.badge-success /u/{{reddit(schedule.home.clan,team.coach.name)}}
+                        span.badge.badge-warning {{team.coach.name}}
+                        span.badge.badge-info TV: {{team.team.nextMatchTV || team.team.value}}
 
-          div(class="col text-center")
+          div.col.text-center
             h1 -
-          div(class="col-5")
-            div(class="row col-12 border-bottom border-info pb-1 ")
-              div(class="col-2 text-left")
+            button.btn.btn-primary.btn-sm(data-toggle="modal" data-target="#clanScore") Change score
+          div.col-5
+            div.row.col-12.border-bottom.border-info.pb-1
+              div.col-2.text-left
                 h1  {{schedule.away.score}}
-              div(class="col-10 media text-center d-flex flex-wrap align-items-center")
+              div.col-10.media.text-center.d-flex.flex-wrap.align-items-center
                 img(v-bind:src="`https://cdn2.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
-                div(class="media-body")
+                div.media-body
                   h1 {{schedule.away.clan.name}}
             template(v-if="schedule.matches.length === 0")
               br
-              div(class="row")
+              div.row
                 template(v-for="power in Object.keys(schedule.away.clan.powers)")
                   template(v-if="schedule.away.clan.powers[power] > 0")
-                    div(class="p-1")
-                      button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                    div.p-1
+                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                         | {{powers.find(function(x){return x.key == power}).name}} 
-                        span(class="badge badge-secondary") {{schedule.away.clan.powers[power]}}
+                        span.badge.badge-secondary {{schedule.away.clan.powers[power]}}
               br
-              div(class="row")
+              div.row
                 template(v-for="team in schedule.away.clan.teams")
                   template(v-if="team")
-                    div(class="p-1")
-                      a(class="btn btn-outline-info btn-sm" v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
+                    div.p-1
+                      a.btn.btn-outline-info.btn-sm(v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
                         img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
-                        span(class="text-info")  {{team.team.name}}
+                        span.text-info  {{team.team.name}}
                         img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                         br
-                        span(class="badge badge-success") /u/{{reddit(schedule.away.clan,team.coach.name)}}
-                        span(class="badge badge-warning") {{team.coach.name}}
-                        span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
-          button(type="button" class="close" aria-label="Close" style="position: absolute;right: 0;font-size: 2em;" @click="schedule=null")
+                        span.badge.badge-success /u/{{reddit(schedule.away.clan,team.coach.name)}}
+                        span.badge.badge-warning {{team.coach.name}}
+                        span.badge.badge-info TV: {{team.team.nextMatchTV || team.team.value}}
+          button.close(type="button" aria-label="Close" style="position: absolute;right: 0;font-size: 2em;" @click="schedule=null")
             span(aria-hidden="true") &times;
 
         template(v-if="schedule.matches.length > 0")
-          div(class="row col-12 no-gutters justify-content-center")
-            div(class="col-12 row justify-content-center")
+          div.row.col-12.no-gutters.justify-content-center
+            div.col-12.row.justify-content-center
               h1 Register Powers Used
-              div(class="col-12 row justify-content-center")
-                div(class="col-5")
-                  div(class="row btn-group-toggle" data-toggle="buttons")
+              div.col-12.row.justify-content-center
+                div.col-5
+                  div.row.btn-group-toggle(data-toggle="buttons")
                     template(v-for="power in Object.keys(availablePowers(schedule.home))")
                       template(v-for="t in availablePowers(schedule.home)[power]")
-                        div(class="p-1")
+                        div.p-1
                           button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="togglePower($event,schedule.home,power)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
                             | {{powers.find(function(x){return x.key == power}).name}} 
-                div(class="col")
-                div(class="col-5")
-                  div(class="row btn-group-toggle" data-toggle="buttons")
+                div.col
+                div.col-5
+                  div.row.btn-group-toggle(data-toggle="buttons")
                     template(v-for="power in Object.keys(availablePowers(schedule.away))")
                       template(v-for="t in availablePowers(schedule.away)[power]")
-                        div(class="p-1")
+                        div.p-1
                           button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="togglePower($event,schedule.away,power)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
                             | {{powers.find(function(x){return x.key == power}).name}} 
 
 
-            div(class="col-12 row justify-content-center")
+            div.col-12.row.justify-content-center
               h1 Matches
             template(v-for="match in schedule.matches")
-              a(class="col-8 MatchRow-contentWrapper MatchRow-contentWrapper--hover" v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
-                div(class="MatchRow-team")
-                  div(class="TeamLabel TeamLabel--reverse" )
-                    div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
-                    div(class="TeamLabel-info TeamLabel-info--noScore")
-                      div(class="text-info") {{ match.opponents[0].team.name }}
-                div(class="MatchRow-status")
-                  span(class="MatchStatus MatchStatus--transparent")
-                    span
-                      template(v-if="match.opponents[0].team.score > match.opponents[1].team.score")
-                        span(class="MatchStatus-score is-winner") {{match.opponents[0].team.score}}
-                        span(class="MatchStatus-score") -
-                        span(class="MatchStatus-score") {{match.opponents[1].team.score}}
-                      template(v-else-if="match.opponents[0].team.score < match.opponents[1].team.score")
-                        span(class="MatchStatus-score") {{match.opponents[0].team.score}}
-                        span(class="MatchStatus-score") -
-                        span(class="MatchStatus-score is-winner") {{match.opponents[1].team.score}}
-                      template(v-else)
-                        span(class="MatchStatus-score") {{match.opponents[0].team.score}}
-                        span(class="MatchStatus-score") -
-                        span(class="MatchStatus-score") {{match.opponents[1].team.score}}
-                div(class="MatchRow-team")
-                  div(class="TeamLabel")
-                    div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
-                    div(class="TeamLabel-info TeamLabel-info--noScore")
-                      div(class="text-info ") {{  match.opponents[1].team.name  }}
+              div.row.col-12.justify-content-center
+                template(v-if="match.counted === true")
+                  div.col-2 
+                    template(v-if="match.status === 'scheduled'")
+                      span.badge.badge-warning unconfirmed       
+                a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
+                  div.MatchRow-team
+                    div.TeamLabel.TeamLabel--reverse
+                      div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      div.TeamLabel-info.TeamLabel-info--noScore
+                        div.text-info {{ match.opponents[0].team.name }}
+                  div.MatchRow-status
+                    span.MatchStatus.MatchStatus--transparent
+                      span
+                        template(v-if="match.opponents[0].team.score > match.opponents[1].team.score")
+                          span.MatchStatus-score.is-winner {{match.opponents[0].team.score}}
+                          span.MatchStatus-score -
+                          span.MatchStatus-score {{match.opponents[1].team.score}}
+                        template(v-else-if="match.opponents[0].team.score < match.opponents[1].team.score")
+                          span.MatchStatus-score {{match.opponents[0].team.score}}
+                          span.MatchStatus-score -
+                          span.MatchStatus-score.is-winner {{match.opponents[1].team.score}}
+                        template(v-else)
+                          span.MatchStatus-score {{match.opponents[0].team.score}}
+                          span.MatchStatus-score -
+                          span.MatchStatus-score {{match.opponents[1].team.score}}
+                  div.MatchRow-team
+                    div.TeamLabel
+                      div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      div.TeamLabel-info.TeamLabel-info--noScore
+                        div.text-info {{  match.opponents[1].team.name  }}
+                template(v-if="match.counted === true && match.match_uuid === null")
+                  div.col-2
+                    button.btn.btn-primary.btn-sm(type="button" @click="resetMatch(match)") Reset
+                template(v-if="match.counted === true && match.match_uuid !== null")
+                  div.col-2
+                    button.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#clanScore" @click="selectedMatch=match") Change score
+
+      .modal.fade(tabindex='-1' role='dialog' id="clanScore")
+        .modal-dialog.modal-dialog-centered(role='document')
+          .modal-content
+            .modal-header
+              slot(name="header")
+                h5.modal-title Change score
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                  span(aria-hidden='true') &times;
+            .modal-body
+              template(v-if="selectedMatch")
+                .input-group.mb-3
+                  .input-group-prepend
+                    span#home.input-group-text home score
+                  input.form-control(type='text' aria-describedby='home' v-model="selectedMatch.opponents[0].team.score")
+                .input-group.mb-3
+                  .input-group-prepend
+                    span#away.input-group-text away score
+                  input.form-control(type='text' aria-describedby='away' v-model="selectedMatch.opponents[1].team.score")            
+              template(v-else-if="schedule")
+                .input-group.mb-3
+                  .input-group-prepend
+                    span#home.input-group-text home score
+                  input.form-control(type='text' aria-describedby='home' v-model="schedule.home.score")
+                .input-group.mb-3
+                  .input-group-prepend
+                    span#away.input-group-text away score
+                  input.form-control(type='text' aria-describedby='away' v-model="schedule.away.score")
+
+            .modal-footer
+              slot(name="footer")
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
+                template(v-if="selectedMatch")
+                  button.btn.btn-primary(type='button' @click="saveMatchScore") Save changes
+                template(v-else-if="schedule")
+                  button.btn.btn-primary(type='button' @click="saveClanScore") Save changes
+
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
@@ -187,6 +235,7 @@ block scripts
     var app = new Vue({
       // app initial state
       data: {
+        selectedMatch:null,
         schedules: [],
         schedule: null
       },
@@ -200,6 +249,7 @@ block scripts
           return this.schedules[(r - 1) * 5 + (c - 1)];
         },
         async load(x){
+          this.schedule = null;
           let response = await fetch(`/api/v2/clan/schedule/season 7/Division ${x}`);
           let data = await response.json();
           this.schedules = data.sort((a,b)=>{
@@ -247,12 +297,35 @@ block scripts
           }
         },
         powerUsed:function(side,power,i){
-          console.dir(side.usedPowers);
           if(!side.usedPowers || ((side.usedPowers[power] || 0) === 0)) return false;
           return (side.usedPowers[power] || 0) >= i;
         },
         getClass:function(side,power,i){
           return `btn btn-outline-info btn-sm ${this.powerUsed(side,power,i) ? 'active':''}`;   
+        },
+        saveClanScore:async function(){
+          await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.home.clan.name}/score/${this.schedule.home.score}`, {
+            method: "PUT"
+          });
+          await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.away.clan.name}/score/${this.schedule.away.score}`, {
+            method: "PUT"
+          });
+          $('#clanScore').modal('hide');
+        },
+        resetMatch:async function(match){
+          let response = await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${match.contest_id}/reset`, {
+            method: "PUT"
+          });
+          if (response.ok) match.counted = false;
+        },
+        saveMatchScore:async function(){
+         await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${this.selectedMatch.contest_id}/0/score/${this.selectedMatch.opponents[0].team.score}`, {
+            method: "PUT"
+          });
+          await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${this.selectedMatch.contest_id}/1/score/${this.selectedMatch.opponents[1].team.score}`, {
+            method: "PUT"
+          });
+          $('#clanScore').modal('hide');
         }
 
       },
@@ -271,3 +344,6 @@ block scripts
 
     // mount
     app.$mount('#app')
+
+
+              

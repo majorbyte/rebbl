@@ -274,6 +274,70 @@ class ClanApi{
       });
     });
 
+    this.router.put("/:season/:division/:round/:house/:clan/score/:score", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+
+      let schedule = await dataService.getSchedule({
+        league:"clan", 
+        season:req.params.season, 
+        competition:req.params.division,
+        round:Number(req.params.round),
+        house:Number(req.params.house)
+      });      
+
+      if(!schedule){
+        res.status(500).json("schedule not found");
+      } else{
+        let score = Number(req.params.score);
+        if(schedule.home.clan === req.params.clan)
+          await dataService.updateScheduleAsync({_id:schedule._id},{$set:{"home.score":score}});
+        else 
+          await dataService.updateScheduleAsync({_id:schedule._id},{$set:{"away.score":score}});
+        
+        res.send(202).send();
+      }
+
+    });
+
+    this.router.put("/:season/:division/:round/:house/game/:id/:index/score/:score", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+      let schedule = await dataService.getSchedule({
+        league:"clan", 
+        season:req.params.season, 
+        competition:req.params.division,
+        round:Number(req.params.round),
+        house:Number(req.params.house)
+      });
+
+      if(!schedule){
+        res.status(500).json("schedule not found");
+      } else{
+        let id = Number(req.params.id);
+        let score = Number(req.params.score);
+        if(Number(req.params.index) === 0)
+          await dataService.updateScheduleAsync({_id:schedule._id, "matches.contest_id":id},{$set:{"matches.$.opponents.0.team.score" :score}});
+        else
+          await dataService.updateScheduleAsync({_id:schedule._id, "matches.contest_id":id},{$set:{"matches.$.opponents.1.team.score" :score}});
+        res.status(202).send();
+      }
+    });
+
+    this.router.put("/:season/:division/:round/:house/game/:id/reset/", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+      let schedule = await dataService.getSchedule({
+        league:"clan", 
+        season:req.params.season, 
+        competition:req.params.division,
+        round:Number(req.params.round),
+        house:Number(req.params.house)
+      });
+      
+      if(!schedule){
+        res.status(500).json("schedule not found");
+      } else{
+        let id = Number(req.params.id);
+        await dataService.updateScheduleAsync({_id:schedule._id, "matches.contest_id":id},{$set:{"matches.$.counted" :false}});
+        res.status(202).send();
+      }
+    });
+
     return this.router;
   }
 }
