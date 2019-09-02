@@ -1,0 +1,173 @@
+extends ../no-cache-sub-layout.pug
+include ../nav-link
+
+block vars
+  - let options = {active: league, title: "REBBL SEASON 8", company:"clan"}
+  - let company = "clan";
+
+
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#" data-bind="text: 'STANDINGS' + league" )
+    #rebblSubNav.collapse.navbar-collapse
+      ul(class="navbar-nav mr-auto")
+          li( class="nav-item active")
+            .nav-link DISPLAY 
+          li( class="nav-item dropdown")
+            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
+            .dropdown-menu(aria-labelledby="dropdownSeason")
+              //ko foreach: seasons
+              a(class="dropdown-item " data-bind="text:$data,click:$root.loadSeason.bind($root)")
+              // /ko
+
+block content
+  .container
+    // ko foreach: {data: Object.keys(standings).sort($root.collator.compare)}
+    // ko with: $root.standings[$data] 
+    .row.col-12
+      h2
+        i(data-bind="id:$data[0].division"  style="padding-top:180px;margin-top:-180px")
+        a.highlight(data-bind="text:$data[0].division,attr:{href:`/clan/schedule/${$root.season}/${$data[0].division}`}")
+    table.table-striped.table-sm 
+      thead
+        th(scope="row") #
+        th(scope="row") Clan 
+        th.text-center(scope="row") Clan Wins
+        th.text-center(scope="row") Clan Losses
+        th.text-center(scope="row") Matches Won
+        th.text-center(scope="row") Matches Lost
+        th.text-center(scope="row") +TD 
+        th.text-center(scope="row") -TD
+        th.text-center(scope="row") ΔTD
+      tbody
+        //ko foreach: $data
+        tr
+          td(scope="row" data-bind="text:$index()+1")
+          td
+            a(data-bind="text:clan,attr:{href:`/clan/clan/${clan}`}")
+          td.text-center(data-bind="text:clanWins")
+          td.text-center(data-bind="text:clanLosses")
+          td.text-center(data-bind="text:matchWins")
+          td.text-center(data-bind="text:matchLosses")
+          td.text-center(data-bind="text:tdFor")
+          td.text-center(data-bind="text:tdAgainst")
+          td.text-center(data-bind="text:tdDiff")
+        // /ko
+    // /ko
+    // /ko
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+
+    // this allows if to iterate of object properties.
+    ko.bindingHandlers.foreachprop = {
+        transformObject: function (obj) {
+            var properties = [];
+            ko.utils.objectForEach(obj, function (key, value) {
+                properties.push({ key: key, value: value });
+            });
+            properties = properties.sort(function(a,b){return a.key > b.key ? 1 : -1;})
+            return properties;
+        },
+        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+            var properties = ko.pureComputed(function () {
+            var obj = ko.utils.unwrapObservable(valueAccessor());
+            return ko.bindingHandlers.foreachprop.transformObject(obj);
+            });
+            ko.applyBindingsToNode(element, { foreach: properties }, bindingContext);
+            return { controlsDescendantBindings: true };
+        }
+    };
+
+    class StandingsModel{
+      constructor(data){
+        this.map(data);
+        ko.track(this);
+      }
+      map(data){
+        if(data){
+          delete data._id;
+          Object.assign(this, data);
+        }
+      }
+    }
+
+
+    class ViewModel{
+      constructor(data){
+        this.donators = [];
+        this.league = "clan";
+        this.season = "";
+        this.seasons = [];
+        this.standings = {};
+
+        this.collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+        ko.track(this);
+      }
+
+      competitionUrl(comp){
+        return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competition)}`;
+      };
+      loadSeason(season){
+        if (season) model.season = season;
+        this.standings={};
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", `/api/v2/standings/${this.league}/${this.season}`  ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {
+          let data = xhr.response.map(x => new StandingsModel(x));
+          data = this._groupBy(data,"division")
+
+          this.standings=data;
+        }.bind(this);
+        xhr.send();
+      }
+
+
+      loadSeasons(){
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", `/api/v2/league/${this.league}/seasons`  ,true)
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+
+        xhr.onload  = function() {
+          let seasons = xhr.response.sort(this.collator.compare);
+
+          this.seasons = seasons
+          this.season = seasons[seasons.length-1];
+          this.loadSeason();
+        }.bind(this);
+        xhr.send();
+      }
+      
+      _groupBy(xs, key) {
+        return xs.reduce(function(rv, x) {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      };
+    }
+
+    let model = new ViewModel({});
+
+    $(document).ready(function(){
+      ko.applyBindings(model);
+      model.loadSeasons();
+    });
+    

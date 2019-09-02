@@ -49,6 +49,7 @@ class Maintenance{
       await maintenanceService.getImperiumMatches();
       await clanService.getContestData();
       await clanService.getMatchData();
+      clanService.calculateStandings()
       reddit.check();
       reddit.getAccouncements();
 

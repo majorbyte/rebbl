@@ -13,6 +13,9 @@ class Clan{
   async _root(req,res,next){
     res.render("clan/index");
   }
+  async _standings(req,res,next){
+    res.render("clan/standings");
+  }
   async _clan(req,res,next){
     res.render("clan/clan");
   }
@@ -24,12 +27,13 @@ class Clan{
   }
 
   routesConfig(){
+    this.router.get("/divisions",util.cache(2), this._root);
     this.router.get("/clan",util.cache(2), this._clan);
     this.router.get("/clan/:clan",util.cache(2), this._clan);
     this.router.get("/schedule/:s/:d",util.cache(2), this._schedule);
     this.router.get("/:season/:division/:round/:house",util.cache(2), this._matchup);
     
-    this.router.get("/", util.cache(2), this._root);
+    this.router.get("/", util.cache(2), this._standings);
 
     return this.router;
 

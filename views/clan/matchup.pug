@@ -29,33 +29,11 @@ block content
           div(class="row col-12 border-bottom border-info pb-1")
             div(class="col-10 media text-center d-flex flex-wrap align-items-center")
               div(class="media-body")
-                h1 {{schedule.home.clan.name}}
+                h1 
+                  a(v-bind:href="`/clan/clan/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
               img(v-bind:src="`https://cdn2.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
             div(class="col-2 text-right")
               h1 {{schedule.home.score}}
-          template(v-if="schedule.matches.length === 0 && powers.length > 0")
-            br
-            div(class="row")
-              template(v-for="power in Object.keys(schedule.home.clan.powers)")
-                template(v-if="schedule.home.clan.powers[power] > 0")
-                  div(class="p-1")
-                    button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
-                      | {{powers.find(function(x){return x.key == power}).name}} 
-                      span(class="badge badge-secondary") {{schedule.home.clan.powers[power]}}
-            br
-            div(class="row")
-              template(v-for="team in schedule.home.clan.teams")
-                template(v-if="team")
-                  div(class="p-1")
-                    a(class="btn btn-outline-info btn-sm" v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
-                      img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
-                      span(class="text-info")  {{team.team.name}}
-                      img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
-                      br
-                      span(class="badge badge-success") /u/{{reddit(schedule.home.clan,team.coach.name)}}
-                      span(class="badge badge-warning") {{team.coach.name}}
-                      span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
-
         div(class="col text-center")
           h1 -
         div(class="col-5")
@@ -65,29 +43,55 @@ block content
             div(class="col-10 media text-center d-flex flex-wrap align-items-center")
               img(v-bind:src="`https://cdn2.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
               div(class="media-body")
-                h1 {{schedule.away.clan.name}}
-          template(v-if="schedule.matches.length === 0  && powers.length > 0")
-            br
-            div(class="row")
+                h1 
+                  a(v-bind:href="`/clan/clan/${schedule.away.clan.name}`") {{schedule.away.clan.name}}          
+      template(v-if="schedule.matches.length === 0 && powers.length > 0")
+        div(class="col-12 row")
+          div(class="col-12 row  justify-content-center")
+            h1 Available Powers
+          div(class="col-6 row")
+            template(v-for="power in Object.keys(schedule.home.clan.powers)")
+              template(v-if="schedule.home.clan.powers[power] > 0")
+                div(class="p-1")
+                  button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                    | {{powers.find(function(x){return x.key == power}).name}} 
+                    span(class="badge badge-secondary") {{schedule.home.clan.powers[power]}}
+          div(class="col-6 row")
+            template(v-if="schedule.matches.length === 0  && powers.length > 0")
               template(v-for="power in Object.keys(schedule.away.clan.powers)")
                 template(v-if="schedule.away.clan.powers[power] > 0")
                   div(class="p-1")
                     button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                       | {{powers.find(function(x){return x.key == power}).name}} 
                       span(class="badge badge-secondary") {{schedule.away.clan.powers[power]}}
-            br
-            div(class="row")
-              template(v-for="team in schedule.away.clan.teams")
-                template(v-if="team")
-                  div(class="p-1")
-                    a(class="btn btn-outline-info btn-sm" v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
-                      img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
-                      span(class="text-info")  {{team.team.name}}
-                      img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
-                      br
-                      span(class="badge badge-success") /u/{{reddit(schedule.away.clan,team.coach.name)}}
-                      span(class="badge badge-warning") {{team.coach.name}}
-                      span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
+      template(v-if="schedule.matches.length === 0 && powers.length > 0")
+        div(class="col-12 row justify-content-center")
+          div(class="col-12 row justify-content-center")
+            h1 Available Teams
+          div(class="col-6 row")
+            template(v-for="team in schedule.home.clan.teams")
+              template(v-if="team")
+                div(class="p-1")
+                  a(class="btn btn-outline-info btn-sm" v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
+                    img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
+                    span(class="text-info")  {{team.team.name}}
+                    img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                    br
+                    span(class="badge badge-success") /u/{{reddit(schedule.home.clan,team.coach.name)}}
+                    span(class="badge badge-warning") {{team.coach.name}}
+                    span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
+          div(class="col-6 row")
+            template(v-for="team in schedule.away.clan.teams")
+              template(v-if="team")
+                div(class="p-1")
+                  a(class="btn btn-outline-info btn-sm" v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
+                    img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
+                    span(class="text-info")  {{team.team.name}}
+                    img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                    br
+                    span(class="badge badge-success") /u/{{reddit(schedule.away.clan,team.coach.name)}}
+                    span(class="badge badge-warning") {{team.coach.name}}
+                    span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
 
     template(v-if="schedule !== null && schedule.matches.length > 0")
       div(class="row col-12 no-gutters justify-content-center")
