@@ -44,6 +44,12 @@ class Routes{
 
     data.upcoming = await dataService.getSchedules({"contest_id": {$in:[...new Set(d.map(x => x.id))]}})
 
+    let clan = await dataService.getSchedules({"matches.contest_id": {$in:[...new Set(d.map(x => x.id))]}},{projection:{"matches.$":1}});
+    
+    if(clan.length > 0){
+      clan.map(x => x.matches.map(m => data.upcoming.push(m)));
+  }
+
     await Promise.all(data.upcoming.map(async function(match) {
       let date = d.find(s => s.id === match.contest_id);
       match.date = date.date;

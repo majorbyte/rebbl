@@ -14,6 +14,12 @@ router.get("/", util.checkCache, async function(req, res){
 
     let schedules = await LeagueService.searchLeagues({"contest_id":{$in:dates}});
 
+    let clanSchedules = await LeagueService.searchLeagues({"matches.contest_id":{$in:dates}},{projection:{"matches.$":1}} );
+
+    if(clanSchedules.length > 0){
+        clanSchedules.map(x => x.matches.map(m => schedules.push(m)));
+    }
+
     let data = [];
 
     await Promise.all(schedules.map(async function(match) {

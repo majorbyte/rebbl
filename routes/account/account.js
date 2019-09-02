@@ -97,8 +97,9 @@ class Account{
 
   async _scheduleMatch(req, res, next){
     try{
-      let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(res.locals.user.coach, "i")} })
-  
+      let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")} });
+      if (contest.length === 0) contest = await leagueService.searchLeagues({matches:{$elemMatch:{contest_id:Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")}}} });
+
       if(contest.length > 0){
         if (req.body.date.length === 16)
           datingService.updateDate(Number(req.params.match_id), req.body.date);
