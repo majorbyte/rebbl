@@ -613,7 +613,7 @@ block scripts
         ko.defineProperty(this, 'playerSkills', function () {
           let sk = [...model.skills[this.type]|| []] ;
           for(let x = 0; x < this.skills.length;x++){
-            if(sk.indexOf(this.skills[x]) === -1)
+            if(sk.indexOf(this.skills[x]) === -1 || this.skills[x].indexOf("Increase") === 0)
               sk.push(this.skills[x]);
           }
           return sk;
