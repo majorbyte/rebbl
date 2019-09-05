@@ -281,14 +281,14 @@ block scripts
         togglePower: async function(e, side,power){
           if(!side.usedPowers) side.usedPowers = {};
 
-          if(!e.originalTarget.attributes["aria-pressed"] || e.originalTarget.attributes["aria-pressed"].value === "false"){
+          if(!e.target.attributes["aria-pressed"] || e.target.attributes["aria-pressed"].value === "false"){
             side.clan.powers[power]--; 
             if(side.usedPowers[power]) side.usedPowers[power]++; 
             else side.usedPowers[power] = 1;
             await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${side.clan.name}/usepower/${power}`, {
               method: "PUT"
             });
-          } else if(e.originalTarget.attributes["aria-pressed"].value === "true") {
+          } else if(e.target.attributes["aria-pressed"].value === "true") {
             side.clan.powers[power]++;
             side.usedPowers[power]--;
             await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${side.clan.name}/unusepower/${power}`, {
