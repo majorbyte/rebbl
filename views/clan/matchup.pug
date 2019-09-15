@@ -106,7 +106,6 @@ block content
                       div(class="p-1")
                       button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                         | {{powers.find(function(x){return x.key == power}).name}} 
-                        span(class="badge badge-secondary") {{schedule.home.usedPowers[power]}}
 
             div(class="col")
             div(class="col-5")
@@ -117,7 +116,6 @@ block content
                       div(class="p-1")
                       button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                         | {{powers.find(function(x){return x.key == power}).name}} 
-                        span(class="badge badge-secondary") {{schedule.away.usedPowers[power]}}      
         div(class="col-12 row justify-content-center")
           h1 Matches
         template(v-for="match in schedule.matches")
