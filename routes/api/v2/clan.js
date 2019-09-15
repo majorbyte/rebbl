@@ -29,7 +29,7 @@ class ClanApi{
       res.json({ clan:clan, leader:leader && account.coach.toLowerCase() == clan.leader.toLowerCase() } );
     });
 
-    this.router.get("/:season/:division/:round/:house", util.ensureAuthenticated, async function(req, res){
+    this.router.get("/:season/:division/:round/:house", async function(req, res){
       let schedule = await dataService.getSchedule({
         league:"clan", 
         season:req.params.season, 
@@ -55,7 +55,7 @@ class ClanApi{
       res.json(schedule);
     });
 
-    this.router.get("/schedule/:season/:division", util.ensureAuthenticated, async function(req, res){
+    this.router.get("/schedule/:season/:division", async function(req, res){
       let schedules = await dataService.getSchedules({league:"clan", season:req.params.season, competition:req.params.division});
       let clans = await dataService.getClans({division:req.params.division});
 
@@ -68,7 +68,7 @@ class ClanApi{
     });
 
 
-    this.router.get("/clans", util.ensureAuthenticated, async function(req, res){
+    this.router.get("/clans", async function(req, res){
       res.json(await clanService.getClans());
     });
 
@@ -243,7 +243,7 @@ class ClanApi{
       }
     });
     
-    this.router.get("/:clan", util.ensureAuthenticated, async function(req, res){
+    this.router.get("/:clan", async function(req, res){
       const clan = await clanService.getClanByName(req.params.clan); 
       res.json({ clan:clan, leader:false} );
     });
