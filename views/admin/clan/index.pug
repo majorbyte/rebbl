@@ -124,28 +124,28 @@ block content
           button.close(type="button" aria-label="Close" style="position: absolute;right: 0;font-size: 2em;" @click="schedule=null")
             span(aria-hidden="true") &times;
 
+        div.row.col-12.no-gutters.justify-content-center
+          div.col-12.row.justify-content-center
+            h1 Register Powers Used
+            div.col-12.row.justify-content-center
+              div.col-5
+                div.row.btn-group-toggle(data-toggle="buttons")
+                  template(v-for="power in Object.keys(availablePowers(schedule.home))")
+                    template(v-for="t in availablePowers(schedule.home)[power]")
+                      div.p-1
+                        button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="togglePower($event,schedule.home,power)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
+                          | {{powers.find(function(x){return x.key == power}).name}} 
+              div.col
+              div.col-5
+                div.row.btn-group-toggle(data-toggle="buttons")
+                  template(v-for="power in Object.keys(availablePowers(schedule.away))")
+                    template(v-for="t in availablePowers(schedule.away)[power]")
+                      div.p-1
+                        button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="togglePower($event,schedule.away,power)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
+                          | {{powers.find(function(x){return x.key == power}).name}} 
+
         template(v-if="schedule.matches.length > 0")
           div.row.col-12.no-gutters.justify-content-center
-            div.col-12.row.justify-content-center
-              h1 Register Powers Used
-              div.col-12.row.justify-content-center
-                div.col-5
-                  div.row.btn-group-toggle(data-toggle="buttons")
-                    template(v-for="power in Object.keys(availablePowers(schedule.home))")
-                      template(v-for="t in availablePowers(schedule.home)[power]")
-                        div.p-1
-                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="togglePower($event,schedule.home,power)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
-                            | {{powers.find(function(x){return x.key == power}).name}} 
-                div.col
-                div.col-5
-                  div.row.btn-group-toggle(data-toggle="buttons")
-                    template(v-for="power in Object.keys(availablePowers(schedule.away))")
-                      template(v-for="t in availablePowers(schedule.away)[power]")
-                        div.p-1
-                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="togglePower($event,schedule.away,power)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
-                            | {{powers.find(function(x){return x.key == power}).name}} 
-
-
             div.col-12.row.justify-content-center
               h1 Matches
             template(v-for="match in schedule.matches")
