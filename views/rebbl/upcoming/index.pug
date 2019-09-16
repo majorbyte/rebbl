@@ -17,6 +17,9 @@ block scripts
         if (league === 'twitch'){
           $(event.currentTarget || event.target ).toggleClass("btn-twitch-off");
           $(event.currentTarget || event.target ).toggleClass("btn-twitch-on");
+        } else if (league === 'following'){
+          $(event.currentTarget || event.target ).toggleClass("btn-following-off");
+          $(event.currentTarget || event.target ).toggleClass("btn-following-on");
         } else {
           $(event.currentTarget || event.target ).toggleClass("btn-secondary");
           $(event.currentTarget || event.target ).toggleClass("btn-primary");
@@ -35,10 +38,15 @@ block scripts
             let show = false;
             if(league ==='twitch' && self.visibleLeagues.indexOf(league)>-1){
               show = match.stream() ? self.visibleLeagues.length > 1 ? self.visibleLeagues.indexOf(match.league)>-1 : true : false;
+            } else if(league ==='following' && self.visibleLeagues.indexOf(league)>-1){
+              show = match.following() ? self.visibleLeagues.length > 1 ? self.visibleLeagues.indexOf(match.league)>-1 : true : false;
             } else {
               let twitch = self.visibleLeagues.indexOf('twitch')>-1;
+              let following = self.visibleLeagues.indexOf('following')>-1;
               if (twitch){
-                show = (self.visibleLeagues().length === 1 && match.stream()) || (self.visibleLeagues.indexOf(match.league)>-1 && match.stream())
+                show = (self.visibleLeagues().length > 1 && match.stream()) || (self.visibleLeagues.indexOf(match.league)>-1 && match.stream());
+              } else if (following){
+                show = (self.visibleLeagues().length > 1 && match.following()) || (self.visibleLeagues.indexOf(match.league)>-1 && match.following());
               } else {
                 show = self.visibleLeagues().length === 0 || self.visibleLeagues.indexOf(match.league)>-1;
               }
@@ -53,58 +61,41 @@ block scripts
 
   - if(user && user.twitch)
     script.
-      DateModel.prototype.stream = function(date){
+      DateModel.prototype.stream = async function(date){
+        let result = await fetch(`/api/v1/upcoming/stream/${date.contest_id}`,{method:"POST"});
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/api/v1/upcoming/stream/"+date.contest_id, true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        xhr.onreadystatechange = function() {//Call a function when the state changes.
-          if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-            date.stream(JSON.parse(xhr.response).stream);
-            date.streaming(true);
-          }
-          if(this.readyState == XMLHttpRequest.DONE && this.status == 403) {
-              btn.removeClass("btn-primary").addClass("btn-danger");
-              btn.prop("disabled",true);
-          }
+        if (result.ok){
+          let data = await result.json();
+          date.stream(data.stream);
+          date.streaming(true);
+        } else {
+          btn.removeClass("btn-primary").addClass("btn-danger");
+          btn.prop("disabled",true);
         }
-        xhr.send('');
+
       }
 
-      DateModel.prototype.unstream = function(date){
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/api/v1/upcoming/unstream/"+date.contest_id, true)
-        xhr.setRequestHeader("Content-Type", "application/json");
+      DateModel.prototype.unstream = async function(date){
+        let result = await fetch(`/api/v1/upcoming/unstream/${date.contest_id}`,{method:"POST"});
 
-        xhr.onreadystatechange = function() {//Call a function when the state changes.
-          if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+        if (result.ok){
             date.stream(null);
             date.streaming(false);
-          }
-          if(this.readyState == XMLHttpRequest.DONE && this.status == 403) {
-              btn.removeClass("btn-primary").addClass("btn-danger");
-              btn.prop("disabled",true);
-          }
+        } else {
+          btn.removeClass("btn-primary").addClass("btn-danger");
+          btn.prop("disabled",true);
         }
-
-
-        xhr.send('');
       }
 
-  script.    
+  script.
     const model = new DateModel();
-    $(document).ready(function(){
+    $(document).ready(async function(){
         ko.applyBindings(model);
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/v1/upcoming",true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
+        let result = await fetch("/api/v1/upcoming");
 
-        xhr.onload  = function() {//Call a function when the state changes.
-
-          let dates = xhr.response;
+        if(result.ok){
+          let dates = await result.json();
           dates.map(function(date){
             let time = moment.tz(date.scheduledDate,"UTC").tz(moment.tz.guess());
             date.scheduledDate = time.format('YYYY-MM-DD HH:mm zz(ZZ)');
@@ -117,24 +108,65 @@ block scripts
             date.show = ko.observable(true);
             date.streaming = ko.observable(date.stream ? true: false);
             date.stream = ko.observable(date.stream);
+            date.following = ko.observable(false);
             if(model.leagues.indexOf(date.league) === -1) {
               model.leagues.push(date.league);
             }
-          })
+          });
+
+
+
+          result = await fetch("/api/v2/account/following");
+          if(result.ok){
+            let following = await result.json();
+            following.map(function(date){
+              let ret = {};
+              if(date.date){
+                let time = moment.tz(date.date.date,"UTC").tz(moment.tz.guess());
+                ret.scheduledDate = time.format('YYYY-MM-DD HH:mm zz(ZZ)');
+                ret.shortDate = time.format('YYYY-MM-DD');
+                ret.shortTime = time.format('HH:mm');
+                ret.shortTimeTitle = time.format('zz(ZZ)');
+              } else {
+                ret.scheduledDate = "unknown";
+                ret.shortDate = "unknown";
+                ret.shortTime = "unknown";
+                ret.shortTimeTitle = "unknown";
+              }
+              ret.url = date.match_uuid ? "/rebbl/match/" + date.match_uuid : "/rebbl/match/unplayed/"+date.contest_id;
+              ret.homeCoach = date.opponents[0].coach.name;
+              ret.homeTeam = date.opponents[0].team.name;
+              ret.homeTeamValue =  date.opponents[0].team.team.nextMatchTV;
+              ret.homeTeamRace = date.opponents[0].team.race;
+              ret.homeTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.opponents[0].team.logo.toLowerCase() + '.png';
+              ret.awayTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.opponents[1].team.logo.toLowerCase() + '.png';
+              ret.awayCoach= date.opponents[1].coach.name;
+              ret.awayTeam= date.opponents[1].team.name;
+              ret.awayTeamValue=  date.opponents[1].team.team.nextMatchTV;
+              ret.awayTeamRace= date.opponents[1].team.race;
+              ret.show = ko.observable(true);
+              ret.streaming = ko.observable(date.stream ? true: false);
+              ret.stream = ko.observable(date.stream);
+              ret.following = ko.observable(true);
+              ret.league= date.league;
+              ret.competition= date.competition;
+              if(model.leagues.indexOf(date.league) === -1) {
+                model.leagues.push(date.league);
+              }
+              dates.push(ret);
+            });            }
 
           dates = dates.sort(function(a,b){return a.scheduledDate > b.scheduledDate ? 1 : -1})
           dates = _groupBy(dates,"shortDate")
 
-          let result = []
+          let r = []
           for(var prop in dates){
-            result.push({date: prop, matches:dates[prop]});
+            r.push({date: prop, matches:dates[prop]});
           }
 
-
-          model.dates(result);
+          model.dates(r);
         }
 
-        xhr.send('');
 
     });
 
@@ -146,17 +178,25 @@ block scripts
     };
     
 block content
+  style .btn-following-on {background-color:#4F4F4F}
   div(class="container")
     div(class="row justify-content-center")
       // ko foreach: leagues
       button(class="btn btn-secondary" data-bind="text: $data, click:$parent.toggle.bind(this, $data)" style="margin-right:5px") 
       // /ko
-      button(class="btn btn-twitch-off" data-bind="click:toggle.bind(this,'twitch')" style="margin-right:5px")
+      button(class="btn btn-twitch-off" data-bind="click:toggle.bind(this,'twitch')" style="margin-right:5px;padding:0px 1rem")
         // ko if: visibleLeagues.indexOf('twitch') > -1
-        img(src="/images/glitch_white.png" style="width:24px;height:24px")
+        img(src="https://cdn2.rebbl.net/images/glitch_white.png" style="height:48px")
         // /ko         
         // ko if: visibleLeagues.indexOf('twitch') === -1
-        img(src="/images/glitch.png" style="width:24px;height:24px")
+        img(src="https://cdn2.rebbl.net/images/glitch.png" style="height:48px")
+        // /ko         
+      button(class="btn btn-following-off" data-bind="click:toggle.bind(this,'following')" style="margin-right:5px;padding:0px 1rem")
+        // ko if: visibleLeagues.indexOf('following') > -1
+        img(src="https://cdn2.rebbl.net/images/small-fist.png" style="height:48px")
+        // /ko         
+        // ko if: visibleLeagues.indexOf('following') === -1
+        img(src="https://cdn2.rebbl.net/images/small-fist-gray.png" style="height:48px")
         // /ko         
 
     // ko foreach: dates

@@ -1,7 +1,8 @@
-'use strict';
+"use strict";
 
-const express = require('express')
+const express = require("express")
   /* Endpoints */
+  , accountApi = require("./account.js")
   , bloodbowlApi = require("./bloodbowl.js")
   , clanApi = require("./clan.js")
   , divisionApi = require("./division.js") 
@@ -18,21 +19,23 @@ class ApiV2{
 
   routesConfig(){
 
-    this.router.use('/bloodbowl', new bloodbowlApi().routesConfig());
+    this.router.use("/account", new accountApi().routesConfig());
+
+    this.router.use("/bloodbowl", new bloodbowlApi().routesConfig());
     
-    this.router.use('/clan', new clanApi().routesConfig());
+    this.router.use("/clan", new clanApi().routesConfig());
 
-    this.router.use('/division', new divisionApi().routesConfig());
+    this.router.use("/division", new divisionApi().routesConfig());
 
-    this.router.use('/league', new leagueApi().routesConfig());
+    this.router.use("/league", new leagueApi().routesConfig());
 
-    this.router.use('/match', new matchApi().routesConfig());
+    this.router.use("/match", new matchApi().routesConfig());
 
-    this.router.use('/standings', new standingsApi().routesConfig());
+    this.router.use("/standings", new standingsApi().routesConfig());
     
-    this.router.use('/team', new teamApi().routesConfig());
+    this.router.use("/team", new teamApi().routesConfig());
 
-    this.router.use('/trophies', new trophiesApi().routesConfig());
+    this.router.use("/trophies", new trophiesApi().routesConfig());
 
     return this.router;
   }

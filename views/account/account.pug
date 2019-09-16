@@ -28,8 +28,21 @@ block append scripts
         select.appendChild(option);
       }
       $("#tz_info").text(moment().tz(guessed).format('YYYY-MM-DD HH:mm ZZ'));
-
     });
+
+    const unfollow = async function(id){
+      let result = await fetch(`/api/v2/account/unfollow/${id}`,{method:"PUT"});
+    
+      if (result.ok){
+        let data = await result.json();
+        if (!data){
+          // false means we are not following anymore
+          let e = document.getElementById(id);
+          e.remove();
+        } 
+
+      }
+    }
 
 block content
   div(class="container")
@@ -65,6 +78,13 @@ block content
           input(type="checkbox" id="showDonation" name="showDonation" checked=user.showDonation style="height:25px;width:25px") 
           label(for="showDonation" style="display:inline;verticle-align:middle;margin-left:6px") Show that I donated
       div(style="clear:both")
-        <button type="submit">Save</button>
+        button(type="submit" class="btn btn-primary") Save
         br
         br
+      -if (user.following)
+        h3 Following:
+        each follow in user.following
+          div
+            button(type="button" class="btn btn-primary btn-small my-1" onclick=`unfollow(${follow.id})` id=`${follow.id}`)= `unfollow ${follow.name}`
+
+

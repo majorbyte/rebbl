@@ -36,6 +36,15 @@ block scripts
       }
     }
 
+    async function loadFollowing(){
+      let result = await fetch("/api/v2/account/following/!{id}");
+      
+      if (result.ok){
+        let data = await result.json();
+        model.following = data;
+      }
+    }
+
     class Model{
       constructor(data){
         this.map(data);
@@ -44,7 +53,25 @@ block scripts
       map(data){
         if(data){
           this.standings = [];
+          this.following = null;
         };
+      }
+
+      async follow(){
+        let result = await fetch("/api/v2/account/follow/!{id}",{method:"PUT"});
+      
+        if (result.ok){
+          let data = await result.json();
+          model.following = data;
+        }
+      }
+      async unfollow(){
+        let result = await fetch("/api/v2/account/unfollow/!{id}",{method:"PUT"});
+      
+        if (result.ok){
+          let data = await result.json();
+          model.following = data;
+        }
       }
     }
 
@@ -65,6 +92,7 @@ block scripts
       });
 
       await loadHistory();
+      await loadFollowing();
     });
 
 block content
@@ -98,6 +126,16 @@ block content
             input(type="text" id="steam" name="steam" value=coachDetails.steam disabled)
           br
           br
+        //ko if: following === null
+        i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+        // /ko
+        //ko if: following === false
+        img(src="https://cdn2.rebbl.net/images/small-fist-gray.png" data-bind="click:follow" style="cursor:pointer" title="Click to follow")
+        // /ko
+        //ko if: following 
+        img(src="https://cdn2.rebbl.net/images/small-fist.png" data-bind="click:unfollow" style="cursor:pointer" title="Following, click to unfollow")
+        // /ko
+
       div(class="col-12 col-lg-9")
         div(class="col col-12")
           h1(class="highlight") History
