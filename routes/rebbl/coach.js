@@ -49,8 +49,7 @@ class Coach{
         if (!data.coachDetails)
           data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`,"i")}});
         data.renderExtra = true;
-      }
-      else {
+      } else {
         data = {};
         data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${req.params.coach_id}$`,"i")}});
         if (!data.coachDetails)

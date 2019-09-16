@@ -2,6 +2,7 @@
 
 const accountService = require("../../lib/accountService.js")
   , datingService = require("../../lib/DatingService.js")
+  , dataService = require("../../lib/DataService.js").rebbl
   , express = require('express')
   , leagueService = require("../../lib/LeagueService.js")
   , util = require('../../lib/util.js');
@@ -37,7 +38,17 @@ class Account{
       if (!res.locals.user){
         res.redirect('/signup');
       } else {
-        res.render('account/account', { user: res.locals.user });
+        let account = res.locals.user;
+        if(account.following){
+          let coaches = [];
+          for(var x = 0; x < account.following.length;x++){
+            const schedule = await dataService.getSchedule({"opponents.coach.id" : account.following[x]});
+            const coach = schedule.opponents.find(function(a){return a.coach.id === account.following[x]}).coach;
+            coaches.push(coach);
+          }
+          account.following = coaches;
+        }
+        res.render('account/account', { user: account });
       }
     } catch(err){
       console.log(err);
