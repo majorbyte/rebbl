@@ -52,11 +52,19 @@ block scripts
       }
       map(data){
         if(data){
-          this.standings = [];
+          this.standings = null;
+          this.followers = 0;
           this.following = null;
         };
       }
-
+      async loadFollowers(){
+        let result = await fetch("/api/v2/account/followers/!{id}");
+      
+        if (result.ok){
+          let data = await result.json();
+          model.followers = data;
+        }
+      }
       async follow(){
         let result = await fetch("/api/v2/account/follow/!{id}",{method:"PUT"});
       
@@ -91,8 +99,9 @@ block scripts
 
       });
 
-      await loadHistory();
-      await loadFollowing();
+      loadHistory();
+      loadFollowing();
+      model.loadFollowers();
     });
 
 block content
@@ -125,7 +134,12 @@ block content
             label(for="steam") Steam
             input(type="text" id="steam" name="steam" value=coachDetails.steam disabled)
           br
-          br
+        //ko if: followers > 1
+        h3(data-bind="text:`${followers} Followers`")
+        // /ko
+        //ko if: followers === 1
+        h3(data-bind="text:`1 Follower`")
+        // /ko
         //ko if: following === null
         i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
         // /ko
@@ -139,6 +153,9 @@ block content
       div(class="col-12 col-lg-9")
         div(class="col col-12")
           h1(class="highlight") History
+          //ko if: standings === null
+          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          // /ko
           table(class="table table-striped")
             thead(class="headerText")
               tr
