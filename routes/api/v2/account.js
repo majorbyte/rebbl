@@ -31,7 +31,20 @@ class AccountApi{
         res.status(500).send('Something something error');
       }
     });
-    
+
+    this.router.get("/followers/:coachId", async function(req,res){
+      try {
+        
+         let count = await accountService.followers(Number(req.params.coachId));
+         res.json(count);
+      }
+      catch (ex){
+        console.error(ex);
+        res.status(500).send('Something something error');
+      }
+    });
+
+
     this.router.get("/following/:coachId",util.ensureAuthenticated, async function(req,res){
       try {
         
