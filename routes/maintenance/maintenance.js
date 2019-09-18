@@ -22,55 +22,58 @@ class Maintenance{
 
   routesConfig(){
     this.router.get('/update/cripple', util.verifyMaintenanceToken, async function(req, res){
-      cripple.getMatches();
+      if (req.app.locals.cyanideEnabled) cripple.getMatches();
       res.redirect('/');
     });
 
     this.router.get('/update/cripple/calculate', util.verifyMaintenanceToken, async function(req, res){
-      cripple.calculateStandings("REBBL Cripple Ladder");
+      if (req.app.locals.cyanideEnabled) cripple.calculateStandings("REBBL Cripple Ladder");
       res.redirect('/');
     });
 
 
     this.router.get('/updateleague/init', util.verifyMaintenanceToken, async function(req, res){
-      maintenanceService.initRebblData(req.query.league, req.query.comp);
+      if (req.app.locals.cyanideEnabled) maintenanceService.initRebblData(req.query.league, req.query.comp);
       res.redirect('/');
     });
 
     this.router.get('/updateleague/admininit', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
-      if (req.query.league) maintenanceService.getRebblData(req.query.league, req.query.comp);
+      if (req.query.league && req.app.locals.cyanideEnabled) maintenanceService.getRebblData(req.query.league, req.query.comp);
       res.redirect('/');
     });
 
 
     this.router.get('/updateleague', util.verifyMaintenanceToken, async function(req, res){
-      await maintenanceService.getRebblData(req.query.league);
-      await maintenanceService.getNewRebblData(req.query.league);
-      await maintenanceService.getImperiumMatches();
-      await clanService.getContestData();
-      await clanService.getMatchData();
-      clanService.calculateStandings()
-      reddit.check();
-      reddit.getAccouncements();
-
+      if (req.app.locals.cyanideEnabled){
+        await maintenanceService.getRebblData(req.query.league);
+        await maintenanceService.getNewRebblData(req.query.league);
+        await maintenanceService.getImperiumMatches();
+        await clanService.getContestData();
+        await clanService.getMatchData();
+        clanService.calculateStandings()
+        reddit.check();
+        reddit.getAccouncements();
+      }
       res.redirect('/');
     });
 
     this.router.get('/updateteams', util.verifyMaintenanceToken, async function(req, res){
-      if (req.query.id) team.updateTeams(parseInt(req.query.id));
-      else team.updateTeams(null,req.query.justteams);
+      if (req.app.locals.cyanideEnabled){
+        if (req.query.id) team.updateTeams(parseInt(req.query.id));
+        else team.updateTeams(null,req.query.justteams);
+      }
       res.redirect('/');
     });
 
     this.router.get('/checksignups',util.verifyMaintenanceToken, async function(req, res){
-      signUp.checkTeams({'teamExist':false});
-      signUp.checkTeams({'teamExist':{ $exists: false }});
+      if (req.app.locals.cyanideEnabled) signUp.checkTeams({'teamExist':false});
+      if (req.app.locals.cyanideEnabled) signUp.checkTeams({'teamExist':{ $exists: false }});
       res.redirect('/');
     });
 
     
     this.router.get('/updateHJMC',util.verifyMaintenanceToken, async function(req, res){
-      hjmc.getContests();
+      if (req.app.locals.cyanideEnabled) hjmc.getContests();
       res.redirect('/');
     });
 

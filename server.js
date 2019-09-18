@@ -31,10 +31,8 @@ class Server{
     this.passport = require('passport');
 
     this.port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
-
-
-
     this.app = express();
+    this.app.locals.cyanideEnabled = true;
   }
 
   async appConfig(){
