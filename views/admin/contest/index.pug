@@ -12,7 +12,7 @@ block scripts
         self.competitions = ko.observableArray([]);
         self.contest= ko.observable();
         self.contests = ko.observableArray([]);
-
+        self.state = ko.observable();
         self.cacheKey = ko.observable();
 
         self.setLeague = function(league){
@@ -71,6 +71,25 @@ block scripts
         self.reloadConfig =async function(){
           await fetch("/api/v1/admin/contest/reload");
         }
+
+        self.enableSync = async function(){
+          await fetch("/api/v1/admin/contest/enableSync",{method:"POST"});
+          self.syncState();
+        }
+        self.disableSync = async function(){
+          await fetch("/api/v1/admin/contest/disableSync",{method:"POST"});
+          self.syncState();
+        }
+        self.syncState = async function(){
+          let result = await fetch("/api/v1/admin/contest/syncState");
+          if (result.ok){
+            self.state(await result.json());
+          }
+        }
+        self.testSync = async function(){
+          let result =await fetch("/api/v1/admin/contest/test");
+          if (result.ok) alert(await result.json());
+        }
     }
 
     ko.bindingHandlers.json = {
@@ -99,9 +118,9 @@ block scripts
     };
 
     const model = new DateModel();
-    $(document).ready(function(){
+    $(document).ready(async function(){
         ko.applyBindings(model);
-
+        await model.syncState();
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/api/v1/admin/contest/leagues",true)
         xhr.setRequestHeader("Content-Type", "application/json");
@@ -120,6 +139,9 @@ block scripts
 block content
   div(class="container")
     div(class="row col-12")
+      button(data-bind="click:enableSync" class="btn btn-small btn-success" style="margin:0px 10px") enable sync
+      button(data-bind="click:disableSync" class="btn btn-small btn-success" style="margin:0px 10px") disable sync
+      button(data-bind="click:testSync,css:state() ? 'btn btn-small btn-success' : 'btn btn-small btn-danger'" class="btn btn-small btn-success" style="margin:0px 10px") test sync
       button(data-bind="click:reloadConfig" class="btn btn-small btn-success" style="margin:0px 10px")
         i(class="fa fa-gavel")
       div(class="input-group mb-3")
