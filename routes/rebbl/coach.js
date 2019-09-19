@@ -12,11 +12,11 @@ class Coach{
 
 
   routesConfig(){
-    this.router.get('/:coach_id', util.checkCache, async function(req, res){
+    this.router.get('/:coach_id', util.cache(10*60), async function(req, res){
       res.redirect(`/${req.params.company}/coach/${req.params.coach_id}/details`);
     });
     
-    this.router.get('/:coach_id/teams', util.checkCache, async function(req, res){
+    this.router.get('/:coach_id/teams', util.cache(10*60), async function(req, res){
       let data =  await db.getCoach(req.params.coach_id);
       if (data)
         data.teams = await teamService.getTeams(data.id);
@@ -24,7 +24,7 @@ class Coach{
       res.render('rebbl/coach/teams', data);
     });
     
-    this.router.get('/:coach_id/matches', util.checkCache, async function(req, res){
+    this.router.get('/:coach_id/matches', util.cache(10*60), async function(req, res){
       let data =  await db.getCoach(req.params.coach_id);
       if (data)
         data.matches = await db.getMatchesForCoach(data.id);
@@ -32,7 +32,7 @@ class Coach{
       res.render('rebbl/coach/matches', data);
     });
     
-    this.router.get('/:coach_id/trophies', util.checkCache, async function(req, res){
+    this.router.get('/:coach_id/trophies', util.cache(10*60), async function(req, res){
       let data =  await db.getCoach(req.params.coach_id);
       if (data){
         data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i")}});
@@ -42,7 +42,7 @@ class Coach{
       res.render('rebbl/coach/trophies', data);
     });
     
-    this.router.get('/:coach_id/details', util.checkCache, async function(req, res){
+    this.router.get('/:coach_id/details', util.cache(10*60), async function(req, res){
       let data =  await db.getCoach(req.params.coach_id);
       if (data) {
         data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i")}});

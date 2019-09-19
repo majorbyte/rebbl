@@ -7,7 +7,7 @@ const
   , router = express.Router({mergeParams:true})
   , bloodbowlService = require("../../lib/bloodbowlService.js");
 
-router.get('/unplayed/:match_id',util.checkCache, async function(req, res, next){
+router.get('/unplayed/:match_id',util.cache(10*60), async function(req, res, next){
   try{
     let match = await leagueService.getUnplayedMatch(req.params.match_id);
 

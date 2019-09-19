@@ -8,7 +8,7 @@ const LeagueService = require("../../../lib/LeagueService.js")
   , router = express.Router({mergeParams: true});
 
 
-router.get("/", util.checkCache, async function(req, res){
+router.get("/", util.cache(10*60), async function(req, res){
     let n = await datingService.all();    
     let dates = [...new Set(n.map(date=> date.id))];
 

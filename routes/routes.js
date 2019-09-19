@@ -78,7 +78,7 @@ class Routes{
 
     this.router.use("/:company", new rebbl().routesConfig());
 
-    this.router.get("/", util.checkCache, this._root);
+    this.router.get("/", util.cache(10*60), this._root);
   
     return this.router;
   }

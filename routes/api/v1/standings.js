@@ -5,7 +5,7 @@ const db = require('../../../lib/LeagueService.js')
   , express = require('express')
   , router = express.Router({mergeParams: true});
 
-router.get('/rampup/:league', util.checkCache, async function(req, res){
+router.get('/rampup/:league', util.cache(10*60), async function(req, res){
 
   let standings = await rampup.getCoachScore();
   let league = req.params.league.toUpperCase();
@@ -45,7 +45,7 @@ router.get('/rampup/:league', util.checkCache, async function(req, res){
 
 });
 
-router.get('/stunty', util.checkCache, async function(req, res){
+router.get('/stunty', util.cache(10*60), async function(req, res){
 
   let standings = await db.getStuntyStandings();
 
@@ -132,7 +132,7 @@ router.get('/csv/:league/:filter', util.ensureAuthenticated, util.hasRole("admin
 
 });
 
-router.get('/:league', util.checkCache, async function(req, res){
+router.get('/:league', util.cache(10*60), async function(req, res){
   let league = req.params.league;
   let filter= null
   if (league.toLowerCase().indexOf("eurogamer") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){

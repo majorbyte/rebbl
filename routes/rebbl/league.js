@@ -13,7 +13,7 @@ class League{
 
 
   routesConfig(){
-    this.router.get('/', util.checkCache, async function(req, res){
+    this.router.get('/', util.cache(10*60), async function(req, res){
       let data = {standings:null, rounds:null, league:req.params.league,company:req.params.company };
       let comp = false;
       let league = req.params.league.toLowerCase();

@@ -10,11 +10,11 @@ const load = async(filter) => {
   return data.sort((a,b) => a.score > b.score ? -1 : 1);
 }
 
-router.get('/standings/complete', util.checkCache, async function(req, res){
+router.get('/standings/complete', util.cache(10*60), async function(req, res){
   res.status(200).send(await load(false));
 });
 
-router.get('/standings', util.checkCache, async function(req, res){
+router.get('/standings', util.cache(10*60), async function(req, res){
   res.status(200).send(await load(true));
 });
 

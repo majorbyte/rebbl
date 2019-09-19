@@ -12,8 +12,8 @@ class Division{
 
 
   routesConfig(){
-    this.router.get('/', util.checkCache, this._division);
-    this.router.get('/:week', util.checkCache, this._week);
+    this.router.get('/', util.cache(10*60), this._division);
+    this.router.get('/:week', util.cache(10*60), this._week);
     return this.router;
   }
 
