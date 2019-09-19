@@ -95,7 +95,7 @@ class Rebbl{
     this.router.use('/:league', new league().routesConfig());
     this.router.use('/:league/:division', new division().routesConfig());
 
-    this.router.get("/", util.checkCache, this._root);
+    this.router.get("/", util.cache(10*60), this._root);
 
     return this.router;
   }

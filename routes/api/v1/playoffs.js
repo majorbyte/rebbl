@@ -5,7 +5,7 @@ const db = require('../../../lib/LeagueService.js')
   , express = require('express')
   , router = express.Router({mergeParams: true});
 
-router.get('/:division', util.checkCache, async function(req,res) {
+router.get('/:division', util.cache(10*60), async function(req,res) {
   let data = {matches: null, league: req.params.league, competition: req.params.division, round:1};
   
   let leagueRegex = new RegExp(`^ReBBL Playoffs`,'i');

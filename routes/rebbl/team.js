@@ -5,7 +5,7 @@ const
   , express = require('express')
   , router = express.Router({mergeParams:true});
 
-router.get('/:team_id', /*util.checkCache,*/ async function(req, res, next){
+router.get('/:team_id', /*util.cache(10*60),*/ async function(req, res, next){
   if (req.headers['user-agent'].indexOf("https://discordapp.com") > -1){
     let team = await dataService.getTeam({"team.id":Number(req.params.team_id)});
     if(team){

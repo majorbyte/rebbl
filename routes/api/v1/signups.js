@@ -22,7 +22,7 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
 });
 
 
-router.get('/page', util.checkCache, async function(req, res, next){
+router.get('/page', util.cache(10*60), async function(req, res, next){
   const data = await db.getSignUps({type:"rebbl"});
 
   const ret = data.all.map(function(row){
@@ -44,7 +44,7 @@ router.get('/page', util.checkCache, async function(req, res, next){
   res.status(200).send(ret);
 });
 
-router.get('/count', util.checkCache, async function(req, res, next){
+router.get('/count', util.cache(10*60), async function(req, res, next){
   const data = await db.getSignUps({});
 
   res.status(200).send({count:data.all.length});

@@ -48,9 +48,9 @@ class Signup{
 
     //this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
 
-    this.router.get('/signups', util.checkCache, function(req,res){res.render('signup/signups', {url: ""});});
+    this.router.get('/signups', util.cache(10*60), function(req,res){res.render('signup/signups', {url: ""});});
 
-    this.router.get('/signups/rebbrl', util.checkCache, function(req,res){res.render('signup/signups');});
+    this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
 
     this.router.get('/counter', async function(req, res, next){res.render('signup/counter');});
 
