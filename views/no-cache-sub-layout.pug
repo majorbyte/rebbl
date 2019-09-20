@@ -21,10 +21,16 @@ block body
         -if(renderCompany == "")
           li 
             a(href="/rebbl")
-              div(style="height: 8em;width: 12em;background: rgba(255, 255, 255, 0) url(https://cdn2.rebbl.net/images/rebbl.png) no-repeat 99%;background-size: 12em;left: 5px;position: fixed;top: 0px;z-index: 9999;")
-          li
+              div(style="height: 4em;width: 6em;background: rgba(255, 255, 255, 0) url(https://cdn2.rebbl.net/images/rebbl.png) no-repeat; background-size: 6em;left: 5px;position: fixed;top: 5px;z-index: 9999;")
+          li 
             a(href="/rebbrl")
-              div(style="height: 8em;width: 8em;background: rgba(255, 255, 255, 0) url(https://cdn2.rebbl.net/images/rebbrl.png) no-repeat 99%;background-size: 7em;right: 5px;position: fixed;top: 0px;z-index: 9999;")
+              div(style="height: 4em;width: 4em;background: rgba(255, 255, 255, 0) url(https://cdn2.rebbl.net/images/rebbrl.png) no-repeat 99%;background-size: 3.5em;left: 33.33333%;position: fixed;top: 5px;z-index: 9999;")
+          li 
+            a(href="/clan")
+              div(style="height: 4em;width: 4em;background: rgba(255, 255, 255, 0) url(https://cdn2.rebbl.net/images/clan.png) no-repeat 99%;background-size: 4em;left: 66.66666%;position: fixed;top: 5px;z-index: 9999;")
+          li
+            a(href="https://imperium.rebbl.net" target="_blank")
+              div(style="height: 4em;width: 8em;background: rgba(255, 255, 255, 0) url(https://cdn2.rebbl.net/images/imperium.png) no-repeat 99%;background-size: 2.5em;right: 5px;position: fixed;top: 5px;z-index: 9999;")
 
         -if(renderCompany == "rebbl")
           +nav-link("Home", "/rebbl")
