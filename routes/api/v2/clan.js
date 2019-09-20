@@ -44,9 +44,10 @@ class ClanApi{
 
       let teams = await dataService.getTeams({"team.id":{$in:schedule.home.clan.ledger.teams.map(team=> team.team.id).concat(schedule.away.clan.ledger.teams.map(team=> team.team.id))}});
 
+      const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"})
       for(var x = 0; x <5;x++){
-        schedule.home.clan.teams[x] = teams.find(t => t.team.name === schedule.home.clan.teams[x]);
-        schedule.away.clan.teams[x] = teams.find(t => t.team.name === schedule.away.clan.teams[x]);
+        schedule.home.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.home.clan.teams[x]));
+        schedule.away.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.away.clan.teams[x]));
       }
 
       delete schedule.home.clan.ledger;
