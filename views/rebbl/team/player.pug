@@ -34,6 +34,8 @@ tr(class="stats "+cls )
       each skill in player.skills
         img(src=`${imagePath}skills/${skill}.png` alt="" title=""+skill.replace(/([A-Z])/g, ' $1').trim() data-toggle="modal" data-target=`#${skill.toLowerCase()}` style="z-index:9999" )
   td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)
+    -if(player.eic)
+      span.badge.badge-success EIC!
     each cas in player.casualties_state
       -if (cas !== "BadlyHurt")
         img(src=`${imagePath}skills/${cas}.png` alt="" title=""+cas.replace(/([A-Z])/g, ' $1').trim() )
