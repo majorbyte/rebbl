@@ -46,8 +46,8 @@ class ClanApi{
 
       const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"})
       for(var x = 0; x <5;x++){
-        schedule.home.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.home.clan.teams[x]));
-        schedule.away.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.away.clan.teams[x]));
+        schedule.home.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.home.clan.teams[x]) === 0 );
+        schedule.away.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.away.clan.teams[x]) === 0);
       }
 
       delete schedule.home.clan.ledger;
@@ -73,20 +73,20 @@ class ClanApi{
       let player = await dataService.getPlayer({id:playerId});
 
       let cas_sustained = player.casualties_sustained;
-      let cas_sustained_id = player.casualties_sustained_id;
       let cas_state = player.casualties_state;
-      let cas_state_id = player.casualties_state_id;
       let cas_sustained_total = player.casualties_sustained_total;
 
       cas_sustained.splice(cas_sustained.length-1,1);
       cas_sustained_id = [];
       cas_sustained.push("PinchedNerve");
+
       cas_state.splice(cas_state.length-1,1);
-      cas_state_id.splice(cas_state_id.length-1,1);
+      cas_state.push("PinchedNerve");
+
       cas_sustained_total.splice(cas_sustained_total.length-1,1);
       cas_sustained_total.push("PinchedNerve");
 
-      dataService.updatePlayer({id:playerId},{$set:{"casualties_sustained":cas_sustained,"casualties_sustained_id":cas_sustained_id,"eic":true,active:true,casualties_state: cas_state, casualties_state_id:cas_state_id,casualties_sustained_total:cas_sustained_total}});
+      dataService.updatePlayer({id:playerId},{$set:{"casualties_sustained":cas_sustained,"eic":true,active:true,casualties_state: cas_state, casualties_sustained_total:cas_sustained_total}});
 
       dataService.updateMatch({uuid:req.params.matchId},{$set:{"match.teams.$[].roster.$[player].eic":true}},{arrayFilters:[{"player.id":playerId}]});
       dataService.updateSchedule({league:"clan","matches.match_uuid":req.params.matchId},{$set:{"matches.$.eic":true}});
