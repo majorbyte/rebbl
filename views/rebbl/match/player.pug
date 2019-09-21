@@ -25,6 +25,8 @@ tr
           img(src="https://cdn2.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo-skill" style="margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim()  data-toggle="modal" data-target=`#${skill.toLowerCase()}` )
   // INJ
   td(class="match-stats")
+    if player.eic
+      span.badge.badge-success= "EIC!"
     if player.casualties_sustained.length > 0
       each cas in player.casualties_sustained
         img(src="https://cdn2.rebbl.net/images/skills/" + cas + ".png" alt="", class="TeamLabel-logo" style="margin-top:6px;margin-left:2px;border-radius: 5px;" title=""+cas.replace(/([A-Z])/g, ' $1').trim() )

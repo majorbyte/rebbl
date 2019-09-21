@@ -125,8 +125,8 @@ block content
                 div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                 div(class="TeamLabel-info TeamLabel-info--noScore")
                   div(class="text-info") {{ match.opponents[0].team.name }}
-            div(class="MatchRow-status")
-              span(class="MatchStatus MatchStatus--transparent")
+            div(class="MatchRow-status row")
+              div(class="MatchStatus MatchStatus--transparent col-12")
                 span
                   template(v-if="match.opponents[0].team.score > match.opponents[1].team.score")
                     span(class="MatchStatus-score is-winner") {{match.opponents[0].team.score}}
@@ -140,6 +140,10 @@ block content
                     span(class="MatchStatus-score") {{match.opponents[0].team.score}}
                     span(class="MatchStatus-score") -
                     span(class="MatchStatus-score") {{match.opponents[1].team.score}}
+              template(v-if="match.eic")
+                div(class="justify-content-center")
+                  span.badge.badge-success= "EIC!"
+
             div(class="MatchRow-team")
               div(class="TeamLabel")
                 div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
@@ -166,7 +170,13 @@ block scripts
         reddit: function(clan, coach){
           let account = clan.members.find(function(x){return x.coach.toLowerCase() === coach.toLowerCase()});
           return account ? account.reddit : '??';
-        }
+        },
+        usedEIC: function(match, index){
+          const re = new RegExp(`\\[${this.schedule.home.clan.name}]`,"i");
+          let side = re.test(match.opponents[index].team.name) ? this.schedule.home: this.schedule.away;
+          return side.clan.powers['emergencyIntensiveCare'] > 0;
+        },
+
       },      
       async mounted() {
           const storage = window.localStorage;

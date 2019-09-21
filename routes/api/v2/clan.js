@@ -68,6 +68,31 @@ class ClanApi{
       res.json(schedules);
     });
 
+    this.router.put("/eic/:matchId/:playerId",util.ensureAuthenticated, util.hasRole("admin"),async function(req,res){
+      const playerId = Number(req.params.playerId);
+      let player = await dataService.getPlayer({id:playerId});
+
+      let cas_sustained = player.casualties_sustained;
+      let cas_sustained_id = player.casualties_sustained_id;
+      let cas_state = player.casualties_state;
+      let cas_state_id = player.casualties_state_id;
+      let cas_sustained_total = player.casualties_sustained_total;
+
+      cas_sustained.splice(cas_sustained.length-1,1);
+      cas_sustained_id = [];
+      cas_sustained.push("PinchedNerve");
+      cas_state.splice(cas_state.length-1,1);
+      cas_state_id.splice(cas_state_id.length-1,1);
+      cas_sustained_total.splice(cas_sustained_total.length-1,1);
+      cas_sustained_total.push("PinchedNerve");
+
+      dataService.updatePlayer({id:playerId},{$set:{"casualties_sustained":cas_sustained,"casualties_sustained_id":cas_sustained_id,"eic":true,active:true,casualties_state: cas_state, casualties_state_id:cas_state_id,casualties_sustained_total:cas_sustained_total}});
+
+      dataService.updateMatch({uuid:req.params.matchId},{$set:{"match.teams.$[].roster.$[player].eic":true}},{arrayFilters:[{"player.id":playerId}]});
+      dataService.updateSchedule({league:"clan","matches.match_uuid":req.params.matchId},{$set:{"matches.$.eic":true}});
+
+      res.status(200).send();
+    });
 
     this.router.get("/clans", async function(req, res){
       res.json(await clanService.getClans());

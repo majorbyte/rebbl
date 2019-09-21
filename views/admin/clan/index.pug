@@ -12,7 +12,7 @@ block head
     .MatchRow-contentWrapper--hover:hover .text-info{color:#e67b00 !important}
 block content
   div.Background.u-bottomPadding--large.u-topPadding--medium
-    div.container.navcontainer(data-index="0" id="app")
+    div.container.navcontainer(data-index="0" id="app" style="max-width:1650px")
       div.row.col-12
         div.btn-group-toggle(data-toggle="buttons")
           template(v-for="x in 5")
@@ -133,16 +133,24 @@ block content
                   template(v-for="power in Object.keys(availablePowers(schedule.home))")
                     template(v-for="t in availablePowers(schedule.home)[power]")
                       div.p-1
-                        button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="togglePower($event,schedule.home,power)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
-                          | {{powers.find(function(x){return x.key == power}).name}} 
+                        template(v-if="power === 'emergencyIntensiveCare'")
+                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
+                            | {{powers.find(function(x){return x.key == power}).name}} 
+                        template(v-else)
+                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="togglePower($event,schedule.home,power)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
+                            | {{powers.find(function(x){return x.key == power}).name}} 
               div.col
               div.col-5
                 div.row.btn-group-toggle(data-toggle="buttons")
                   template(v-for="power in Object.keys(availablePowers(schedule.away))")
                     template(v-for="t in availablePowers(schedule.away)[power]")
                       div.p-1
-                        button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="togglePower($event,schedule.away,power)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
-                          | {{powers.find(function(x){return x.key == power}).name}} 
+                        template(v-if="power === 'emergencyIntensiveCare'")
+                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
+                            | {{powers.find(function(x){return x.key == power}).name}} 
+                        template(v-else)
+                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="togglePower($event,schedule.away,power)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
+                            | {{powers.find(function(x){return x.key == power}).name}} 
 
         template(v-if="schedule.matches.length > 0")
           div.row.col-12.no-gutters.justify-content-center
@@ -153,7 +161,10 @@ block content
                 template(v-if="match.counted === true")
                   div.col-2 
                     template(v-if="match.status === 'scheduled'")
-                      span.badge.badge-warning unconfirmed       
+                      span.badge.badge-warning unconfirmed   
+                    template(v-if="match.status === 'scheduled' && hasEIC(match,0)")
+                      button(type="button" class="btn btn-outline-info btn-sm active float-right" @click="loadEicPlayers(match, 0)"  data-toggle="modal" data-target="#eicUse")
+                        | EIC      
                 a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
                   div.MatchRow-team
                     div.TeamLabel.TeamLabel--reverse
@@ -186,6 +197,9 @@ block content
                 template(v-if="match.counted === true && match.match_uuid !== null")
                   div.col-2
                     button.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#clanScore" @click="selectedMatch=match") Change score
+                    template(v-if="match.status === 'scheduled' &&  hasEIC(match, 1)")
+                      button(type="button" class="btn btn-outline-info btn-sm active" @click="loadEicPlayers(match, 1)"  data-toggle="modal" data-target="#eicUse")
+                        | EIC      
 
       .modal.fade(tabindex='-1' role='dialog' id="clanScore")
         .modal-dialog.modal-dialog-centered(role='document')
@@ -223,6 +237,26 @@ block content
                 template(v-else-if="schedule")
                   button.btn.btn-primary(type='button' @click="saveClanScore") Save changes
 
+      .modal.fade(tabindex='-1' role='dialog' id="eicUse")
+        .modal-dialog.modal-dialog-centered(role='document')
+          .modal-content
+            .modal-header
+              slot(name="header")
+                h5.modal-title Use Emergency Intensive Care
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                  span(aria-hidden='true') &times;
+            .modal-body
+              template(v-if="selectedTeam")
+                .input-group.mb-3
+                  .input-group-prepend
+                    span#home.input-group-text player
+                    select.form-control(v-model="selectedPlayer")
+                      option(v-for="player in eicPlayers" v-bind:value="player.id") {{ player.name }}
+            .modal-footer
+              slot(name="footer")
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
+                button.btn.btn-primary(type='button' @click="saveEICUse") Use                  
+
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
@@ -237,7 +271,10 @@ block scripts
       data: {
         selectedMatch:null,
         schedules: [],
-        schedule: null
+        schedule: null,
+        selectedTeam: null,
+        selectedPlayer:null,
+        eicPlayers:[]
       },
       computed: {
         numberOfRows() {
@@ -326,6 +363,40 @@ block scripts
             method: "PUT"
           });
           $('#clanScore').modal('hide');
+        },
+        async loadEicPlayers(match, index) {
+          const re = new RegExp(`\[${this.schedule.home.clan.name}]`,"i");
+          this.selectedSide = re.test(match.opponents[index].team.name) ? this.schedule.home: this.schedule.away;
+
+          this.selectedMatch = match;
+          this.selectedTeam = match.opponents[index].team;
+
+          let result = await fetch(`/api/v2/team/${this.selectedTeam.id}/players`)
+          if(result.ok){
+            let players = await result.json();
+            this.eicPlayers = players.filter(p => p.casualties_sustained.filter(x => x !== "BadlyHurt").length > 0 );
+          }
+        },
+        hasEIC: function(match, index){
+          const re = new RegExp(`\\[${this.schedule.home.clan.name}]`,"i");
+          let side = re.test(match.opponents[index].team.name) ? this.schedule.home: this.schedule.away;
+          return side.clan.powers['emergencyIntensiveCare'] > 0;
+        },
+        saveEICUse:async function(){
+          await fetch(`/api/v2/clan/eic/${this.selectedMatch.match_uuid}/${this.selectedPlayer}`, {
+            method: "PUT"
+          });
+
+
+          if(!this.selectedSide.usedPowers) this.selectedSide.usedPowers = {};
+          this.selectedSide.clan.powers['emergencyIntensiveCare']--; 
+          if(this.selectedSide.usedPowers['emergencyIntensiveCare']) this.selectedSide.usedPowers['emergencyIntensiveCare']++; 
+          else this.selectedSide.usedPowers['emergencyIntensiveCare'] = 1;
+          await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.selectedSide.clan.name}/usepower/emergencyIntensiveCare`, {
+            method: "PUT"
+          });
+
+          $('#eicUse').modal('hide');
         }
 
       },

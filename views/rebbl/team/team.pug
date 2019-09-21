@@ -281,6 +281,9 @@ block content
         img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
         // /ko
       td(data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
+        //ko if: eic
+        span.badge.badge-success EIC!
+        // /ko
         // ko foreach: casualties_state
         //ko if: $data !== "BadlyHurt"
         img(data-bind="attr:{src:$parent.getCASImage($data),title:$data.replace(/([A-Z])/g, ' $1').trim() }"  alt="" style="width:32px;height:32px;" )
@@ -640,6 +643,7 @@ block scripts
         this.type = data.type || '';
         this.value = data.value || 0;
         this.xp = data.xp || 0;
+        this.eic = data.eic || false;
       }
 
       cssClass(){
