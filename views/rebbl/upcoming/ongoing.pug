@@ -1,13 +1,33 @@
 extends ../sublayout.pug
+include ../../nav-link
+
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav" style="margin:0 auto")
+        +nav-link("Upcoming games", "/rebbl/upcoming")
+        +nav-link("Ongoing games", "/rebbl/ongoing")
+        +nav-link("Star Players", "/bloodbowl/starplayers")
+        +nav-link("Legendary players", "/bloodbowl/legendaryplayers")
+        +nav-link("Account", "/account")
+
 
 block content
   style .btn-following-on {background-color:#4F4F4F}
   div(class="container")
     div(class="row justify-content-center no-gutters")
       h1 Is there something to watch?
-      // ko foreach: leagues()
+      div(class="row justify-content-center")
+        // ko foreach: leagues()
+        button(class="btn btn-primary btn-sm" data-bind="text: $data, click:$parent.toggle.bind(this, $data)" style="margin-right:5px") 
+        // /ko
+      // ko foreach: $root.visibleLeagues()
+      // ko foreach: $root.filteredCompetitions($data)
       div(class="row col-12 justify-content-center")  
-        h3(data-bind="text: $data") 
+        h3(data-bind="text: `${$data.league} - ${$data.competition}`") 
       // ko foreach: $root.filterGames($data)
       div(class="row col-12")  
         div(class="row col-12")
@@ -30,6 +50,7 @@ block content
                   div(data-bind="text: NameTeam2"  style="font-size:1.2em")
                   div(class="TeamLabel-coach " data-bind="text: NameCoach2" style="margin-top:-7px" )
       // /ko
+      // /ko
       br
       // /ko
 
@@ -41,7 +62,9 @@ block scripts
       const self = this;
       // Editable data
       self.games = ko.observableArray([]);
+      self.competitions = ko.observableArray([]);
       self.leagues = ko.observableArray([]);
+      self.visibleLeagues =  ko.observableArray([])
 
       self.load = async function(){
         let result = await fetch(`/api/v1/upcoming/ongoing`);
@@ -49,15 +72,34 @@ block scripts
         if (result.ok){
             let data = await result.json();
             self.games(data);
-            let leagues = data.map(d => `${d.LeagueName} - ${d.CompetitionName}`);
+            let leagues = data.map(d =>{return {competition: d.CompetitionName, league:d.LeagueName}});
+            self.competitions([...new Set(leagues)]);
+            leagues = data.map(d => `${d.LeagueName}`);
             self.leagues([...new Set(leagues)]);
+            self.visibleLeagues([...new Set(leagues)]);
+
         }
       }
       self.logo = function(logo){
         return `https://cdn2.rebbl.net/images/logo/logo_${logo.toLowerCase()}.png`;
       }
       self.filterGames = function (league){
-        return self.games().filter(x => `${x.LeagueName} - ${x.CompetitionName}` === league);
+        return self.games().filter(x => x.LeagueName === league.league && x.CompetitionName === league.competition);
+      }
+      self.toggle = function(league,data,event){
+        
+        $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+        $(event.currentTarget || event.target ).toggleClass("btn-primary");
+
+        let index = self.visibleLeagues.indexOf(league);
+        if (index > -1){
+          self.visibleLeagues.splice(index,1);
+        } else {
+          self.visibleLeagues.push(league);
+        }
+      }
+      self.filteredCompetitions = function(league){
+        return self.competitions().filter(x => self.visibleLeagues().indexOf(league)>-1 && x.league === league);
       }
     }
     const model = new Model();

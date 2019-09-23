@@ -10,8 +10,11 @@ block navigation
     a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
     div(class="collapse navbar-collapse" id="rebblSubNav")
       ul(class="navbar-nav" style="margin:0 auto")
-          +nav-link("Upcoming games", "/rebbl/upcoming")
-          +nav-link("Account", "/account")
+        +nav-link("Upcoming games", "/rebbl/upcoming")
+        +nav-link("Ongoing games", "/rebbl/ongoing")
+        +nav-link("Star Players", "/bloodbowl/starplayers")
+        +nav-link("Legendary players", "/bloodbowl/legendaryplayers")
+        +nav-link("Account", "/account")
 
 
 block content
