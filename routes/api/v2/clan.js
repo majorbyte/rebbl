@@ -53,7 +53,9 @@ class ClanApi{
       delete schedule.home.clan.ledger;
       delete schedule.away.clan.ledger;
 
-      res.json(schedule);
+
+
+      res.header("Access-Control-Allow-Origin", "http://localhost:8080").json(schedule);
     });
 
     this.router.get("/schedule/:season/:division", async function(req, res){

@@ -1,0 +1,67 @@
+extends ../sublayout.pug
+
+block content
+  style .btn-following-on {background-color:#4F4F4F}
+  div(class="container")
+    div(class="row justify-content-center no-gutters")
+      h1 Is there something to watch?
+      // ko foreach: leagues()
+      div(class="row col-12 justify-content-center")  
+        h3(data-bind="text: $data") 
+      // ko foreach: $root.filterGames($data)
+      div(class="row col-12")  
+        div(class="row col-12")
+          div(class="col-12 row no-gutters justify-content-center")
+            div(class="col-5")
+              div(class="col-12 row no-gutters" style="padding:unset")
+                div(class="col-12" style="text-align: right;padding-right:5px;")
+                  div(class="float-right d-none d-md-block"): img(data-bind="attr: {src: $root.logo(LogoTeam1)}" alt="" class="TeamLabel-logo" )
+                  div(data-bind="text: NameTeam1" style="font-size:1.2em")
+                  div(class="TeamLabel-coach " data-bind="text: NameCoach1" style="margin-top:-7px" )
+            div(class="col-1" style="text-align:center" )
+              span(class="MatchStatus-score" data-bind="text: ScoreTeam1") 
+              span(class="MatchStatus-score") -
+              span(class="MatchStatus-score" data-bind="text: ScoreTeam2") 
+              div(class="TeamLabel-coach " data-bind="text: `Turn ${CurrentTurn}`" style="margin-top:-7px" )
+            div(class="col-5")
+              div(class="col-12 row no-gutters" style="padding:unset")
+                div(class="col-12")
+                  div(class="float-left d-none d-md-block" style="padding-right:5px"): img(data-bind="attr: {src: $root.logo(LogoTeam2)}" alt="" class="TeamLabel-logo")
+                  div(data-bind="text: NameTeam2"  style="font-size:1.2em")
+                  div(class="TeamLabel-coach " data-bind="text: NameCoach1" style="margin-top:-7px" )
+      // /ko
+      br
+      // /ko
+
+
+block scripts
+  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+  script.
+    function Model() {
+      const self = this;
+      // Editable data
+      self.games = ko.observableArray([]);
+      self.leagues = ko.observableArray([]);
+
+      self.load = async function(){
+        let result = await fetch(`/api/v1/upcoming/ongoing`);
+
+        if (result.ok){
+            let data = await result.json();
+            self.games(data);
+            let leagues = data.map(d => `${d.LeagueName} - ${d.CompetitionName}`);
+            self.leagues([...new Set(leagues)]);
+        }
+      }
+      self.logo = function(logo){
+        return `https://cdn2.rebbl.net/images/logo/logo_${logo.toLowerCase()}.png`;
+      }
+      self.filterGames = function (league){
+        return self.games().filter(x => `${x.LeagueName} - ${x.CompetitionName}` === league);
+      }
+    }
+    const model = new Model();
+    $(document).ready(async function(){
+        ko.applyBindings(model);
+        model.load();
+    });
