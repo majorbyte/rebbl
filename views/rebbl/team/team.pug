@@ -389,7 +389,8 @@ block scripts
     script(src="/scripts/knockout-es5.js")
 
   script.
-
+    const SKILLS = "skills.v2";
+    const SKILLDESCRIPTIONS = 'skillDescriptions.v2'
     class TeamModel{
       constructor(data){
         this.map(data);
@@ -810,29 +811,29 @@ block scripts
       let descriptions = null;
   
       if (storage)    
-        descriptions = localStorage.getItem('skillDescriptions.v2');
+        descriptions = localStorage.getItem(SKILLDESCRIPTIONS);
 
       if(!descriptions){
         let response = await fetch("/api/v2/bloodbowl/skillDescriptions");
         if(response.ok){
-          model.skillDescriptions = await reponse.json();
+          model.skillDescriptions = await response.json();
       
           if (storage)
-            storage.setItem('skillDescriptions.v2', JSON.stringify(model.skillDescriptions));    
+            storage.setItem(SKILLDESCRIPTIONS, JSON.stringify(model.skillDescriptions));    
         }
       } else {
         model.skillDescriptions = JSON.parse(descriptions);
       }
       if (storage)    
-        skills = localStorage.getItem('skills.v1');
+        skills = localStorage.getItem(SKILLS);
 
       if(!skills){
         let response = await fetch("/api/v2/bloodbowl/skills");
         if(response.ok){
-          model.skills = await reponse.json();
+          model.skills = await response.json();
       
           if (storage)
-            storage.setItem('skillDescriptions.v2', JSON.stringify(model.skillDescriptions));    
+            storage.setItem(SKILLS, JSON.stringify(model.skillDescriptions));    
         }
       } else {
         model.skills = JSON.parse(skills);

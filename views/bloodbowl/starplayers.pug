@@ -70,13 +70,14 @@ block scripts
     script(src="/scripts/knockout-es5.js")
 
   script.
-
+    const SKILLS = "skills.v2";
+    const SKILLDESCRIPTIONS = "skillDescriptions.v2";
     function loadSkillDescriptions(){
       const storage = window.localStorage;
       let skills = null;
   
       if (storage)    
-        skills = localStorage.getItem('skillDescriptions.v2');
+        skills = localStorage.getItem(SKILLDESCRIPTIONS);
 
       if(!skills){
         let xhr = new XMLHttpRequest();
@@ -91,7 +92,7 @@ block scripts
           const storage = window.localStorage;
       
           if (storage)
-            storage.setItem('skillDescriptions.v2', JSON.stringify(xhr.response));    
+            storage.setItem(SKILLDESCRIPTIONS, JSON.stringify(xhr.response));    
           loadSkills();
         }
 
@@ -107,7 +108,7 @@ block scripts
       let skills = null;
   
       if (storage)    
-        skills = localStorage.getItem('skills.v1');
+        skills = localStorage.getItem(SKILLS);
 
       if(!skills){
         let xhr = new XMLHttpRequest();
@@ -122,7 +123,7 @@ block scripts
           const storage = window.localStorage;
       
           if (storage)
-            storage.setItem('skills.v1', JSON.stringify(xhr.response));    
+            storage.setItem('SKILLS', JSON.stringify(xhr.response));    
           
           loadRaces();
         }
