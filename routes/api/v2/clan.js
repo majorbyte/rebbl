@@ -79,7 +79,6 @@ class ClanApi{
       let cas_sustained_total = player.casualties_sustained_total;
 
       cas_sustained.splice(cas_sustained.length-1,1);
-      cas_sustained_id = [];
       cas_sustained.push("PinchedNerve");
 
       cas_state.splice(cas_state.length-1,1);
