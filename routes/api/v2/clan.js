@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express')
   , accountService = require("../../../lib/accountService.js")
+  , cyanideService = require("../../../lib/CyanideService.js")
   , clanService = require("../../../lib/ClanService.js")
   , dataService = require("../../../lib/DataService.js").rebbl
   , util = require('../../../lib/util.js')
@@ -201,11 +202,6 @@ class ClanApi{
       );
     });
 
-    this.router.get("/refreshMatch/:uuid", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
-      await clanService.getMatchData(req.params.uuid);
-      res.status(200).send();
-    });
-
     this.router.put("/:season/:division/:round/:house/:clan/usepower/:power", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
       let schedule = await dataService.getSchedule({
         league:"clan", 
@@ -219,10 +215,9 @@ class ClanApi{
       const updatePowers = function(side,power){
         if(!side.usedPowers) {
           side.usedPowers = {};
-          side.usedPowers[power] = 1;
-        } else {
-          side.usedPowers[power]++;
         }
+        if(side.usedPowers[power]) side.usedPowers[power]++
+        else side.usedPowers[power] =1;
       }
 
       if (schedule.home.clan === clan.name){
@@ -369,6 +364,24 @@ class ClanApi{
         res.status(202).send();
       }
     });
+
+    this.router.get("/refreshMatch/:uuid", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+      await clanService.getMatchData(req.params.uuid);
+      res.status(200).send();
+    });
+
+    this.router.get("/team/:name", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+      let team = await cyanideService.team({platform:"pc",name:req.params.name});
+      if (team) res.status(200).send();
+      else res.send(404).send();
+    });
+
+    this.router.post("/:clan/applynewblood/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin"),async function(req,res){
+      await clanService.newBlood(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
+
+      res.status(200).send();
+    });
+
 
     return this.router;
   }

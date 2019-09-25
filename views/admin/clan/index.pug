@@ -136,6 +136,9 @@ block content
                         template(v-if="power === 'emergencyIntensiveCare'")
                           button(type="button" v-bind:class="getClass(schedule.home,power,t)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
                             | {{powers.find(function(x){return x.key == power}).name}} 
+                        template(v-else-if="power === 'newBlood'")
+                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="selectedSide=schedule.home" data-toggle="modal" data-target="#newBlood")
+                            | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else)
                           button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="togglePower($event,schedule.home,power)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
                             | {{powers.find(function(x){return x.key == power}).name}} 
@@ -147,6 +150,9 @@ block content
                       div.p-1
                         template(v-if="power === 'emergencyIntensiveCare'")
                           button(type="button" v-bind:class="getClass(schedule.away,power,t)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
+                            | {{powers.find(function(x){return x.key == power}).name}} 
+                        template(v-else-if="power === 'newBlood'")
+                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="selectedSide=schedule.away" data-toggle="modal" data-target="#newBlood")
                             | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else)
                           button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="togglePower($event,schedule.away,power)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
@@ -259,6 +265,38 @@ block content
                 button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
                 button.btn.btn-primary(type='button' @click="saveEICUse") Use                  
 
+      .modal.fade(tabindex='-1' role='dialog' id="newBlood")
+        .modal-dialog.modal-dialog-centered(role='document')
+          template(v-if="selectedSide !== null")
+            .modal-content
+              .modal-header
+                slot(name="header")
+                  h5.modal-title Apply New Blood for {{`[${selectedSide.clan.name}]`}}
+                  button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+              .modal-body
+                .input-group-prepend
+                  span#home.input-group-text Replace
+                  select.form-control(v-model="selectedTeam")
+                    option(v-for="team in selectedSide.clan.teams" v-bind:value="team.team.id") {{ team.team.name }}
+                .input-group-prepend.my-1
+                  span#home.input-group-text with
+                  input(type="text" v-model="newBloodTeam")
+                  .flex
+                    .m-1.btn.btn-primary.btn-sm(type="button" @click="checkTeam") 
+                      i(class="fa fa-search")
+                    template(v-if="newBloodOK")
+                      .m-1.btn.btn-success.btn-sm(type="button") 
+                        i(class="fa fa-check") 
+                    template(v-if="newBloodOK !== null && !newBloodOK")
+                      .m-1.btn.btn-danger.btn-sm(type="button") 
+                        i(class="fa fa-close")  
+                  
+              .modal-footer
+                slot(name="footer")
+                  button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
+                  button.btn.btn-primary(type='button' @click="saveNewBlood" v-bind:disabled="!newBloodOK") Use    
+
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
@@ -274,7 +312,10 @@ block scripts
         selectedMatch:null,
         schedules: [],
         schedule: null,
+        selectedSide:null,
         selectedTeam: null,
+        newBloodTeam:null,
+        newBloodOK:null,
         selectedPlayer:null,
         eicPlayers:[]
       },
@@ -402,6 +443,26 @@ block scripts
           });
 
           $('#eicUse').modal('hide');
+        },
+        saveNewBlood:async function(){
+          await fetch(`/api/v2/clan/${this.selectedSide.clan.name}/applynewblood/${this.selectedTeam}/${this.newBloodTeam}`, {
+            method: "POST"
+          });
+
+          if(!this.selectedSide.usedPowers) this.selectedSide.usedPowers = {};
+          this.selectedSide.clan.powers['newBlood']--; 
+          if(this.selectedSide.usedPowers['newBlood']) this.selectedSide.usedPowers['newBlood']++; 
+          else this.selectedSide.usedPowers['newBlood'] = 1;
+          await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.selectedSide.clan.name}/usepower/newBlood`, {
+            method: "PUT"
+          });
+
+          $('#eicUse').modal('hide');
+        },
+        checkTeam:async function(){
+          let result = await fetch(`/api/v2/clan/team/${this.newBloodTeam}`);
+          if(result.ok) this.newBloodOK = true;
+          else this.newBloodOK =false;
         }
 
       },
