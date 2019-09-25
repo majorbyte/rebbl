@@ -201,6 +201,11 @@ class ClanApi{
       );
     });
 
+    this.router.get("/refreshMatch/:uuid", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+      await clanService.getMatchData(req.params.uuid);
+      res.status(200).send();
+    });
+
     this.router.put("/:season/:division/:round/:house/:clan/usepower/:power", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
       let schedule = await dataService.getSchedule({
         league:"clan", 
