@@ -196,7 +196,9 @@ block content
                     button.btn.btn-primary.btn-sm(type="button" @click="resetMatch(match)") Reset
                 template(v-if="match.counted === true && match.match_uuid !== null")
                   div.col-2
-                    button.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#clanScore" @click="selectedMatch=match") Change score
+                    button.mx-1.btn.btn-success.btn-sm(type="button" @click="refreshMatch(match.match_uuid)") 
+                      i(class="fa fa-refresh")  
+                    button.mx-1.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#clanScore" @click="selectedMatch=match") Change score
                     template(v-if="match.status === 'scheduled' &&  hasEIC(match, 1)")
                       button(type="button" class="btn btn-outline-info btn-sm active" @click="loadEicPlayers(match, 1)"  data-toggle="modal" data-target="#eicUse")
                         | EIC      
@@ -354,6 +356,9 @@ block scripts
             method: "PUT"
           });
           if (response.ok) match.counted = false;
+        },
+        refreshMatch:async function(id){
+          await fetch(`/api/v2/clan/refreshMatch/${id}`);
         },
         saveMatchScore:async function(){
          await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${this.selectedMatch.contest_id}/0/score/${this.selectedMatch.opponents[0].team.score}`, {
