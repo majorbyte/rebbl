@@ -12,8 +12,8 @@ block scripts
         self.loading = ko.observable(true);
         self.selectedDivision = ko.observable();
 
-
         self.selectedLeague = ko.observableArray();
+        self.unplayed = ko.observableArray();
 
         self.filteredData = ko.computed(function(){
           if ( self.selectedLeague()){
@@ -24,8 +24,12 @@ block scripts
         });
 
 
-        self.toggleLeague= function(l){
+        self.toggleLeague= async function(l){
           self.selectedLeague(l);
+          let result = await fetch(`/api/v1/admin/divisions/unplayed/${self.selectedLeague()}`);
+          if (result.ok)
+            model.unplayed(await result.json());
+
         }
         self.toggleDivision=async function(d){
           self.selectedDivision(d);
@@ -55,6 +59,12 @@ block scripts
             $(".alert-success").show();
             setTimeout(() => $(".alert").hide(),3750);
           }
+        }
+
+        self.reload = async function(contest_id){
+          let response = await fetch(`/api/v1/admin/unplayed/${contest_id}`,{method:"POST"});
+          if(response.ok)
+            self.unplayed().splice(self.unplayed().findIndex(x => x.contest_id === Number(contest_id)),1);
         }
     }
 
@@ -109,6 +119,23 @@ block content
         i(class="fa fa-refresh")
       span update division for new coaches
     // /ko
+    hr
+    div(class="row col-12")
+      div(class="col-3") Unsynced games
+      div(class="col-3") 
+    hr
+    div(data-bind="foreach: unplayed" )
+      div(class="row col-12")
+        div(class="col-1")
+          button(data-bind="click:$root.reload.bind($data,contest_id)" class="btn btn-small btn-success" style="margin:0px 10px")
+            i(class="fa fa-repeat")
+        div(class="col-6")
+          span(data-bind="text: competition")
+          span(data-bind="text: ` round ${round}`")
+        div(class="col-3")
+          span(data-bind="text: opponents[0].coach ? opponents[0].coach.name : ''")
+          span &nbsp; vs &nbsp; 
+          span(data-bind="text: opponents[1].coach ? opponents[1].coach.name : ''")
     hr
     div(class="row col-12")
       div(class="col-3") Expel admin teams below
