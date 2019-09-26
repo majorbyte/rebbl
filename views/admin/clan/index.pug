@@ -457,7 +457,7 @@ block scripts
             method: "PUT"
           });
 
-          $('#eicUse').modal('hide');
+          $('#newBlood').modal('hide');
         },
         checkTeam:async function(){
           let result = await fetch(`/api/v2/clan/team/${this.newBloodTeam}`);
