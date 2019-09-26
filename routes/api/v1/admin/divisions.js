@@ -2,6 +2,8 @@
 
 const express = require("express")
   , api = require("../../../../lib/apiService.js")
+  , cache = require("memory-cache")
+  , cyanideService = require("../../../../lib/CyanideService.js")
   , dataService = require("../../../../lib/DataService").rebbl
   , maintenanceService = require("../../../../lib/MaintenanceService.js")
   , util = require("../../../../lib/util.js")
@@ -56,6 +58,26 @@ const express = require("express")
     }
   });
   
+  router.get("/unplayed/:league", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+    try{
+
+      let competitions = cache.get("admin.competitions");
+      if(!competitions){
+        let data = await cyanideService.competitions({platform:"pc", league:req.params.league})
+        competitions = data.competitions;
+        cache.put("admin.competitions", competitions,10*60*1000);
+      }
+
+      let round = competitions[0].round ;
+      
+      let data = await dataService.getSchedules({league:req.params.league, status:"scheduled", round:{$lt:round}});
+
+      res.status(200).send(data);
+    } catch(err){
+      console.log(err);
+    }
+  });
+
   router.delete("/:competitionId/:teamId", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
