@@ -6,6 +6,7 @@ const
   , cripple = require('../../lib/crippleService.js')
   , express = require('express')
   , hjmc = require("../../lib/TourneyService")
+  , loggingService = require("../../lib/loggingService.js")
   , maintenanceService = require('../../lib/MaintenanceService.js')
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
@@ -45,14 +46,19 @@ class Maintenance{
 
     this.router.get('/updateleague', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled){
-        await maintenanceService.getRebblData(req.query.league);
-        await maintenanceService.getNewRebblData(req.query.league);
-        await maintenanceService.getImperiumMatches();
-        await clanService.getContestData();
-        await clanService.getMatchData();
-        clanService.calculateStandings()
-        reddit.check();
-        reddit.getAccouncements();
+        try{
+          await maintenanceService.getRebblData(req.query.league);
+          await maintenanceService.getNewRebblData(req.query.league);
+          await maintenanceService.getImperiumMatches();
+          await clanService.getContestData();
+          await clanService.getMatchData();
+          clanService.calculateStandings();
+          reddit.check();
+          reddit.getAccouncements();
+        }
+        catch(e){
+          loggingService.error(e);
+        }
       }
       res.redirect('/');
     });
