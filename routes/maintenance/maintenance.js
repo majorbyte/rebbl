@@ -48,12 +48,47 @@ class Maintenance{
       if (req.app.locals.cyanideEnabled){
         try{
           await maintenanceService.getRebblData(req.query.league);
+        }
+        catch(e){
+          loggingService.error(e);
+        }
+        try{
           await maintenanceService.getNewRebblData(req.query.league);
+        }
+        catch(e){
+          loggingService.error(e);
+        }
+        try{
           await maintenanceService.getImperiumMatches();
+        }
+        catch(e){
+          loggingService.error(e);
+        }
+        try{
           await clanService.getContestData();
+        }
+        catch(e){
+          loggingService.error(e);
+        }
+        try{
           await clanService.getMatchData();
+        }
+        catch(e){
+          loggingService.error(e);
+        }
+        try{
           clanService.calculateStandings();
+        }
+        catch(e){
+          loggingService.error(e);
+        }
+        try{
           reddit.check();
+        }
+        catch(e){
+          loggingService.error(e);
+        }
+        try{
           reddit.getAccouncements();
         }
         catch(e){
