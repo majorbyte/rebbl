@@ -48,6 +48,9 @@ class BloodBowlApi{
         if (team){
           player.teamName = team.team.name;
           player.teamLogo = team.team.logo;
+          player.retiredTeam = Date.parse(team.team.datelastmatch) < new Date(Date.now() - 4*7*24*60*60*1000);
+        } else {
+          player.retiredTeam = true;
         }
       }
 

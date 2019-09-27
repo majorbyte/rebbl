@@ -24,11 +24,14 @@ block content
         label.btn.btn-primary.btn-sm.active(data-bind="click: () => show = 'all'")
           input#option1(type='radio', name='options', autocomplete='off', value="all")
           |  all
-        label.btn.btn-primary.btn-sm(data-bind="click: () => show = 'active'")
-          input#option2(type='radio', name='options', autocomplete='off' value="active")
-          |  active
-        label.btn.btn-primary.btn-sm(data-bind="click: () => show = 'inactive'")
-          input#option3(type='radio', name='options', autocomplete='off' value="inactive")
+        label.btn.btn-primary.btn-sm(data-bind="click: () => show = 'aliveActive'")
+          input#option2(type='radio', name='options', autocomplete='off' value="aliveActive")
+          |  alive and active team
+        label.btn.btn-primary.btn-sm(data-bind="click: () => show = 'alive'")
+          input#option2(type='radio', name='options', autocomplete='off' value="alive")
+          |  alive in retired team
+        label.btn.btn-primary.btn-sm(data-bind="click: () => show = 'retired'")
+          input#option3(type='radio', name='options', autocomplete='off' value="retired")
           |  retired
 
     table(class="table table-striped")
@@ -46,7 +49,7 @@ block content
         // /ko
 
   script(type="text/html" id="playerTemplate")
-    tr
+    tr(data-bind="attr:{style: active || $root.show === 'retired' ? '' : 'filter:grayscale(1)'  }")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:number" style="cursor:pointer")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root)" style="cursor:pointer")
         div
@@ -335,6 +338,7 @@ block scripts
 
       map(data, playerType){
         this.active = data.active || false;
+        this.retiredTeam = data.retiredTeam;
         this.attributes = data.attributes || [];
         this.casualties_state = data.casualties_state || [];
         this.casualties_sustained = data.casualties_sustained || [];
@@ -481,9 +485,11 @@ block scripts
         switch (this.show){
           case "all":
             return this.players;
-          case "active":
-            return this.players.filter(p => p.active);
-          case "inactive":
+          case "aliveActive":
+            return this.players.filter(p => p.active && !p.retiredTeam);
+          case "alive":
+            return this.players.filter(p => p.active && p.retiredTeam);
+          case "retired":
             return this.players.filter(p => !p.active);
         }
       }
