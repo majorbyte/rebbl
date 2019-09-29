@@ -10,6 +10,8 @@ block vars
 block head
   style.
     .MatchRow-contentWrapper--hover:hover .text-info{color:#e67b00 !important}
+    .MatchRow-contentWrapper--hover:hover {border-left:0px}
+    .highlight:hover {background-color:gainsboro}
 block content
   div.Background.u-bottomPadding--large.u-topPadding--medium
     div.container.navcontainer(data-index="0" id="app" style="max-width:1650px")
@@ -163,12 +165,12 @@ block content
             div.col-12.row.justify-content-center
               h1 Matches
             template(v-for="match in schedule.matches")
-              div.row.col-12.justify-content-center
-                template(v-if="match.counted === true")
-                  div.col-2 
-                    template(v-if="match.status === 'scheduled'")
+              div.row.col-12.justify-content-center.highlight
+                .col-2 
+                  template(v-if="match.counted === true")
+                    template(v-if="isPlayedButUnconfirmed(match)")
                       span.badge.badge-warning unconfirmed   
-                    template(v-if="match.status === 'scheduled' && hasEIC(match,0)")
+                    template(v-if="isPlayedButUnconfirmed(match) && hasEIC(match,0)")
                       button(type="button" class="btn btn-outline-info btn-sm active float-right" @click="loadEicPlayers(match, 0)"  data-toggle="modal" data-target="#eicUse")
                         | EIC      
                 a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
@@ -177,8 +179,8 @@ block content
                       div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                       div.TeamLabel-info.TeamLabel-info--noScore
                         div.text-info {{ match.opponents[0].team.name }}
-                  div.MatchRow-status
-                    span.MatchStatus.MatchStatus--transparent
+                  div.MatchRow-status.row
+                    .MatchStatus.MatchStatus--transparent
                       span
                         template(v-if="match.opponents[0].team.score > match.opponents[1].team.score")
                           span.MatchStatus-score.is-winner {{match.opponents[0].team.score}}
@@ -192,22 +194,25 @@ block content
                           span.MatchStatus-score {{match.opponents[0].team.score}}
                           span.MatchStatus-score -
                           span.MatchStatus-score {{match.opponents[1].team.score}}
+                    template(v-if="match.eic")
+                      .justify-content-center
+                        span.badge.badge-success= "EIC!"
                   div.MatchRow-team
                     div.TeamLabel
                       div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                       div.TeamLabel-info.TeamLabel-info--noScore
                         div.text-info {{  match.opponents[1].team.name  }}
-                template(v-if="match.counted === true && match.match_uuid === null")
-                  div.col-2
-                    button.btn.btn-primary.btn-sm(type="button" @click="resetMatch(match)") Reset
-                template(v-if="match.counted === true && match.match_uuid !== null")
-                  div.col-2
+                .col-2
+                  template(v-if="match.counted === true && match.match_uuid !== null")
                     button.mx-1.btn.btn-success.btn-sm(type="button" @click="refreshMatch(match.match_uuid)") 
                       i(class="fa fa-refresh")  
+                  template(v-if="isPlayedButUnconfirmed(match) &&  hasEIC(match, 1)")
+                    button.btn.btn-outline-info.btn-sm.active(type="button" @click="loadEicPlayers(match, 1)"  data-toggle="modal" data-target="#eicUse")
+                      | EIC      
+                  template(v-if="match.counted === true && isPlayedButUnconfirmed(match)")
+                    button.btn.btn-primary.btn-sm(type="button" @click="resetMatch(match)") Reset Game
+                  template(v-if="match.counted === true && match.match_uuid !== null")
                     button.mx-1.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#clanScore" @click="selectedMatch=match") Change score
-                    template(v-if="match.status === 'scheduled' &&  hasEIC(match, 1)")
-                      button(type="button" class="btn btn-outline-info btn-sm active" @click="loadEicPlayers(match, 1)"  data-toggle="modal" data-target="#eicUse")
-                        | EIC      
 
       .modal.fade(tabindex='-1' role='dialog' id="clanScore")
         .modal-dialog.modal-dialog-centered(role='document')
@@ -422,6 +427,9 @@ block scripts
             let players = await result.json();
             this.eicPlayers = players.filter(p => p.casualties_sustained.filter(x => x !== "BadlyHurt").length > 0 );
           }
+        },
+        isPlayedButUnconfirmed: function(match){
+          return match.status === 'scheduled' && match.match_uuid !== null;
         },
         hasEIC: function(match, index){
           const re = new RegExp(`\\[${this.schedule.home.clan.name}]`,"i");
