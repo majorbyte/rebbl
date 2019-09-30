@@ -70,7 +70,7 @@ block scripts
     script(src="/scripts/knockout-es5.js")
 
   script.
-    const SKILLS = "skills.v2";
+    const SKILLS = "skills.v3";
     const SKILLDESCRIPTIONS = "skillDescriptions.v2";
     function loadSkillDescriptions(){
       const storage = window.localStorage;
@@ -123,7 +123,7 @@ block scripts
           const storage = window.localStorage;
       
           if (storage)
-            storage.setItem('SKILLS', JSON.stringify(xhr.response));    
+            storage.setItem(SKILLS, JSON.stringify(xhr.response));    
           
           loadRaces();
         }
