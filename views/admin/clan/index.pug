@@ -255,7 +255,7 @@ block content
           .modal-content
             .modal-header
               slot(name="header")
-                h5.modal-title Use Emergency Intensive Care
+                h5.modal-title Use Emergency Intensive Care for {{selectedSide ? selectedSide.clan.name : ''}}
                 button.close(type='button' data-dismiss='modal' aria-label='Close')
                   span(aria-hidden='true') &times;
             .modal-body
@@ -416,7 +416,7 @@ block scripts
           $('#clanScore').modal('hide');
         },
         async loadEicPlayers(match, index) {
-          const re = new RegExp(`\[${this.schedule.home.clan.name}]`,"i");
+          const re = new RegExp(`\\[${this.schedule.home.clan.name}]`,"i");
           this.selectedSide = re.test(match.opponents[index].team.name) ? this.schedule.home: this.schedule.away;
 
           this.selectedMatch = match;
