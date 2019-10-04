@@ -108,32 +108,37 @@ block content
   div(class="container")
     div(class="row")
       div(class="col-12 col-lg-3")
-        h1(class="highlight") &nbsp;
-          - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("admin")>-1)
-            img(style="float:left" src="https://cdn2.rebbl.net/images/skills/StaffMember.png" title="Admin")
-          - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("clanleader")>-1)
-            img(style="float:left" src="https://cdn2.rebbl.net/images/skills/CoachSkill.png" title="Clan Leader")
-          = coachDetails ? coachDetails.coach : name
-        h3 Contact Data
-        div
-          label(for="coach") Blood Bowl 2 coach name
-          input(type="text" id="coach" name="coach" value=(coachDetails ? coachDetails.coach : name)  disabled)
-        - if(coachDetails)  
+        h1(class="highlight")= coachDetails ? coachDetails.coach : name
+
+        - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("admin")>-1)
+          img.text-left.mx-1(style="float:left" src="https://cdn2.rebbl.net/images/skills/StaffMember.png" title="Admin")
+        - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("clanleader")>-1)
+          img.text-left.mx-1(style="float:left" src="https://cdn2.rebbl.net/images/skills/CoachSkill.png" title="Clan Leader")
+          - if(coachDetails && coachDetails.twitch)
+            div
+              a(href=coachDetails.twitch target="_blank")
+                img.text-left.mx-1(src="https://cdn2.rebbl.net/images/glitch.png" style="height:64px", title=coachDetails.twitch)
+        .row.col-12
+          h3 Contact Data
           div
-            label(for="coach") Reddit
-            input(type="text" id="reddit" name="coach" value="/u/" + coachDetails.reddit.toLowerCase()  disabled)
-            span(id="copy" title="copy to clipboard" style="cursor:pointer")= '📋'
-          div
-            label(for="timezone") Timezone
-            input(id="timezone" name="timezone" disabled title="timezone" value=coachDetails.timezone)
-            label(id="tz_info")
-          div
-            label(for="discord") Discord
-            input(type="text" id="discord" name="discord" value=coachDetails.discord  disabled)
-          div
-            label(for="steam") Steam
-            input(type="text" id="steam" name="steam" value=coachDetails.steam disabled)
-          br
+            label(for="coach") Blood Bowl 2 coach name
+            input(type="text" id="coach" name="coach" value=(coachDetails ? coachDetails.coach : name)  disabled)
+          - if(coachDetails)  
+            div
+              label(for="coach") Reddit
+              input(type="text" id="reddit" name="coach" value="/u/" + coachDetails.reddit.toLowerCase()  disabled)
+              span(id="copy" title="copy to clipboard" style="cursor:pointer")= '📋'
+            div
+              label(for="timezone") Timezone
+              input(id="timezone" name="timezone" disabled title="timezone" value=coachDetails.timezone)
+              label(id="tz_info")
+            div
+              label(for="discord") Discord
+              input(type="text" id="discord" name="discord" value=coachDetails.discord  disabled)
+            div
+              label(for="steam") Steam
+              input(type="text" id="steam" name="steam" value=coachDetails.steam disabled)
+            br
         //ko if: followers > 1
         h3(data-bind="text:`${followers} Followers`")
         // /ko

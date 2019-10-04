@@ -382,6 +382,12 @@ class ClanApi{
       res.status(200).send();
     });
 
+    this.router.post("/:clan/substitutecoach/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin"),async function(req,res){
+      await clanService.newCoach(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
+
+      res.status(200).send();
+    });
+
 
     return this.router;
   }
