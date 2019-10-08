@@ -83,6 +83,18 @@ class AccountApi{
       }
     });
 
+    this.router.get("/me",util.ensureAuthenticated, util.cache(600), async function(req,res){
+      const account = await accountService.getAccount(req.user.name);
+      const schedule = await leagueService.searchLeagues({round:1, season:"season 12", league:/rebbl - /i, "opponents.coach.name":"majorbyte","opponents.0.team.name":/^(?!\[admin]).+/i,"opponents.1.team.name":/^(?!\[admin]).+/i});
+
+      let ret = {coach: account.coach, division:"", league:""};
+      if (schedule){
+        ret.division = schedule[0].competition;
+        ret.league = schedule[0].league;
+      }
+
+      res.status(200).send(ret);
+    });
 
     return this.router;
   }
