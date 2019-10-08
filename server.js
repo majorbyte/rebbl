@@ -13,8 +13,6 @@ const express = require('express')
   , dataService = require("./lib/DataService.js")
   , configurationService = require("./lib/ConfigurationService.js");
 
-if (!Promise.each) Promise.each = async (arr, fn) => {for(const item of arr) await fn(item)}
-
 class Server{
   constructor(){
     if (process.env.NODE_ENV === 'production'){
