@@ -28,8 +28,9 @@ block content
     // ko with: $root.standings[$data] 
     div(class="row col-12" )
       h2
-        i(data-bind="id:$data[0].competition"  style="padding-top:180px;margin-top:-180px")
-        a( data-bind="text:$data[0].competition,attr:{href:$root.competitionUrl($data)}" class="highlight")
+        i(data-bind="attr:{id:$data[0].competition}"  style="padding-top:180px;margin-top:-180px")
+        a(data-bind="text:$data[0].competition,attr:{href:$root.competitionUrl($data)}" class="highlight")
+
     div(class="season-table")  
       div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
         div(class="row col-6" style="font-size:1.25em")
@@ -176,6 +177,7 @@ block scripts
         this.tickets = [];
         this.challenger =[];
         this.trophies =[];
+        this.me = {};
 
         this.collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
         ko.track(this);
@@ -194,93 +196,71 @@ block scripts
       competitionUrl(comp){
         return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competition)}`;
       };
-      loadSeason(season){
+      async loadSeason(season){
         if (season) model.season = season;
+
         this.standings={};
         this.loadTickets();
 
-        let xhr = new XMLHttpRequest();
-
-        xhr.open("GET", `/api/v2/standings/${this.league}/${this.season}`  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {
-          let data = xhr.response.map(x => new StandingsModel(x));
+        let response = await fetch(`/api/v2/standings/${this.league}/${this.season}`);
+        if (response.ok){
+          let data  = await response.json();
+          data = data.map(x => new StandingsModel(x));
           data = this._groupBy(data,"competition")
 
           this.standings=data;
-        }.bind(this);
-        xhr.send();
+        }        
       }
 
-      loadTickets(){
-        let xhr = new XMLHttpRequest();
-
-        xhr.open("GET", `/api/v2/standings/${this.league}/${this.season}/tickets`,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {
-          if (xhr.response){
-            this.challenger = xhr.response.challenger || [];
-            this.tickets = xhr.response.cutoff;
-          } else {
-            this.tickets = [];
-            this.challenger = [];
-          }
-        }.bind(this);
-
-        xhr.send();
+      async loadTickets(){
+        let response = await fetch(`/api/v2/standings/${this.league}/${this.season}/tickets`);
+        if (response.ok){
+          let data = await response.json()
+          this.challenger = data.challenger || [];
+          this.tickets = data.cutoff;
+        } else {
+          this.tickets = [];
+          this.challenger = [];
+        }
       }
 
-      loadSeasons(){
-        let xhr = new XMLHttpRequest();
-
-        xhr.open("GET", `/api/v2/league/${this.league}/seasons`  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {
-          let seasons = xhr.response.sort(this.collator.compare);
-
-          this.seasons = seasons
+      async loadSeasons(){
+        let response = await fetch(`/api/v2/league/${this.league}/seasons`);
+        if (response.ok){
+          let seasons =  await response.json();
+          this.seasons = seasons.sort(this.collator.compare)
           this.season = seasons[seasons.length-1];
-          this.loadSeason();
-          this.loadTrophies();
-          this.loadDonators();
-        }.bind(this);
-        xhr.send();
+          await Promise.all([
+            this.loadSeason(),
+            this.loadTrophies(),
+            this.loadDonators(),
+          ])
+          this.loadMe();
+        }
       }
 
-      loadTrophies(){
-        let xhr = new XMLHttpRequest();
-
-        xhr.open("GET", `/api/v2/trophies/${this.league}/${this.season}`,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {
-          if (xhr.response) this.trophies = xhr.response;
-          else this.trophies = [];
-        }.bind(this);
-
-        xhr.send();
+      async loadTrophies(){
+        let response = await fetch(`/api/v2/trophies/${this.league}/${this.season}`);
+        if (response.ok){
+          this.trophies = await response.json();
+        }
       }
 
-      loadDonators(){
-        let xhr = new XMLHttpRequest();
+      async loadDonators(){
+        let response = await fetch(`/api/v2/trophies/${this.league}/${this.season}/donations`);
+        if (response.ok){
+          this.donators = await response.json();
+        }
+      }
 
-        xhr.open("GET", `/api/v2/trophies/${this.league}/${this.season}/donations`,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {
-          if (xhr.response) this.donators = xhr.response;
-          else this.donators = [];
-        }.bind(this);
-
-        xhr.send();
+      async loadMe(){
+        const response = await fetch("/api/v2/account/me");
+        if (response.ok) {
+          this.me = await response.json();
+          if (this.me.league !== decodeURI(this.league)) return;
+          const e = document.getElementById(this.me.division);
+          e.scrollIntoView();
+        }
       }
 
       showTrophy(e){
