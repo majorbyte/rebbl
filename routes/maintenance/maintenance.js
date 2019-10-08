@@ -54,6 +54,7 @@ class Maintenance{
         }
         try{
           await maintenanceService.getNewRebblData(req.query.league);
+          await maintenanceService.getContests(req.query.league);
         }
         catch(e){
           loggingService.error(e);
