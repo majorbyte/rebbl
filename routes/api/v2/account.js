@@ -89,7 +89,7 @@ class AccountApi{
       const schedule = await leagueService.searchLeagues({round:1, season:"season 12", league:/rebbl - /i, "opponents.coach.name":regex,"opponents.0.team.name":/^(?!\[admin]).+/i,"opponents.1.team.name":/^(?!\[admin]).+/i});
 
       let ret = {coach: account.coach, division:"", league:""};
-      if (schedule && schedule.length.length > 0){
+      if (schedule && schedule.length > 0){
         ret.division = schedule[0].competition;
         ret.league = schedule[0].league;
       }
