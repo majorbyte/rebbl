@@ -83,7 +83,7 @@ class AccountApi{
       }
     });
 
-    this.router.get("/me",util.ensureAuthenticated, util.cache(600), async function(req,res){
+    this.router.get("/me",util.ensureAuthenticated, async function(req,res){
       const account = await accountService.getAccount(req.user.name);
       const schedule = await leagueService.searchLeagues({round:1, season:"season 12", league:/rebbl - /i, "opponents.coach.name":"majorbyte","opponents.0.team.name":/^(?!\[admin]).+/i,"opponents.1.team.name":/^(?!\[admin]).+/i});
 
