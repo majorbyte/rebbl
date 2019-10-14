@@ -46,12 +46,12 @@ class Maintenance{
 
     this.router.get('/updateleague', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled){
-        try{
+        /*try{
           await maintenanceService.getRebblData(req.query.league);
         }
         catch(e){
           loggingService.error(e);
-        }
+        }*/
         try{
           await maintenanceService.getNewRebblData(req.query.league);
           await maintenanceService.getContests(req.query.league);
@@ -90,7 +90,7 @@ class Maintenance{
           loggingService.error(e);
         }
         try{
-          reddit.getAccouncements();
+          reddit.getAnnouncements();
         }
         catch(e){
           loggingService.error(e);
