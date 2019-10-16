@@ -71,7 +71,7 @@ class ClanApi{
       res.json(schedules);
     });
 
-    this.router.put("/eic/:matchId/:playerId",util.ensureAuthenticated, util.hasRole("admin"),async function(req,res){
+    this.router.put("/eic/:matchId/:playerId",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
       const playerId = Number(req.params.playerId);
       let player = await dataService.getPlayer({id:playerId});
 
@@ -202,7 +202,7 @@ class ClanApi{
       );
     });
 
-    this.router.put("/:season/:division/:round/:house/:clan/usepower/:power", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    this.router.put("/:season/:division/:round/:house/:clan/usepower/:power", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
       let schedule = await dataService.getSchedule({
         league:"clan", 
         season:req.params.season, 
@@ -238,7 +238,7 @@ class ClanApi{
       }
     });
 
-    this.router.put("/:season/:division/:round/:house/:clan/unusepower/:power", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    this.router.put("/:season/:division/:round/:house/:clan/unusepower/:power", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
       let schedule = await dataService.getSchedule({
         league:"clan", 
         season:req.params.season, 
@@ -301,7 +301,7 @@ class ClanApi{
       });
     });
 
-    this.router.put("/:season/:division/:round/:house/:clan/score/:score", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    this.router.put("/:season/:division/:round/:house/:clan/score/:score", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
 
       let schedule = await dataService.getSchedule({
         league:"clan", 
@@ -325,7 +325,7 @@ class ClanApi{
 
     });
 
-    this.router.put("/:season/:division/:round/:house/game/:id/:index/score/:score", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    this.router.put("/:season/:division/:round/:house/game/:id/:index/score/:score", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
       let schedule = await dataService.getSchedule({
         league:"clan", 
         season:req.params.season, 
@@ -347,7 +347,7 @@ class ClanApi{
       }
     });
 
-    this.router.put("/:season/:division/:round/:house/game/:id/reset/", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    this.router.put("/:season/:division/:round/:house/game/:id/reset/", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
       let schedule = await dataService.getSchedule({
         league:"clan", 
         season:req.params.season, 
@@ -365,24 +365,24 @@ class ClanApi{
       }
     });
 
-    this.router.get("/refreshMatch/:uuid", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    this.router.get("/refreshMatch/:uuid", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
       await clanService.getMatchData(req.params.uuid);
       res.status(200).send();
     });
 
-    this.router.get("/team/:name", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    this.router.get("/team/:name", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
       let team = await cyanideService.team({platform:"pc",name:req.params.name});
       if (team) res.status(200).send();
       else res.send(404).send();
     });
 
-    this.router.post("/:clan/applynewblood/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin"),async function(req,res){
+    this.router.post("/:clan/applynewblood/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
       await clanService.newBlood(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
 
       res.status(200).send();
     });
 
-    this.router.post("/:clan/substitutecoach/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin"),async function(req,res){
+    this.router.post("/:clan/substitutecoach/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
       await clanService.newCoach(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
 
       res.status(200).send();

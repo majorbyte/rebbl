@@ -7,7 +7,7 @@ const express = require('express')
 
 
 
-  router.get('/', async function(req, res){
+  router.get('/', util.hasRole("admin"), async function(req, res){
     try{
       let user = await accountService.getAccount(req.user.name);
   
@@ -19,7 +19,7 @@ const express = require('express')
   });
   
 
-  router.get('/add', async function(req, res){
+  router.get('/add', util.hasRole("admin"), async function(req, res){
     try{
       res.render('admin/user/user', { user: null, admin:res.locals.user });
   
@@ -28,7 +28,7 @@ const express = require('express')
     }
   });
 
-router.get('/:user', async function(req, res){
+router.get('/:user', util.hasRole("admin"), async function(req, res){
   try{
   
     res.render('admin/user/user', { user: req.params.user, admin:res.locals.user });
@@ -39,7 +39,7 @@ router.get('/:user', async function(req, res){
 });
 
 
-router.post('/update', async function(req, res){
+router.post('/update', util.hasRole("admin"), async function(req, res){
   try{
     let account = { reddit: req.body.reddit
       , coach: req.body.coach      
@@ -59,7 +59,7 @@ router.post('/update', async function(req, res){
   }
 });
 
-router.post('/new', async function(req, res){
+router.post('/new', util.hasRole("admin"), async function(req, res){
   try{
     let account = { reddit: req.body.reddit
       , coach: req.body.coach      

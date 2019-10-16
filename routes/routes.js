@@ -72,7 +72,7 @@ class Routes{
     this.router.use("/bloodbowl", new bloodbowl().routesConfig());
     this.router.use("/signup", new signup().routesConfig());
     this.router.use("/auth", new auth().routesConfig());
-    this.router.use("/admin", util.ensureAuthenticated, util.hasRole("admin"), new admin().routesConfig());
+    this.router.use("/admin", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), new admin().routesConfig());
 
     this.router.use("/clan",new clan().routesConfig())
 
