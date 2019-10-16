@@ -5,7 +5,7 @@ const express = require("express")
   , router = express.Router();
 
 
-router.get("/", /*util.ensureAuthenticated, util.hasRole("admin"),*/ async function(req, res){
+router.get("/", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req, res){
   try{
     res.render("admin/clan/index");
   } catch(err){

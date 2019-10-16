@@ -169,7 +169,22 @@ router.post('/updateWarning', util.ensureAuthenticated, util.hasRole("admin"), a
   }
 });
 
-router.post('/toggleRole', util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
+router.post('/toggleAdmin', util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
+  try{
+    let role = { 
+      role: req.body.role
+      , action: req.body.action
+    };
+    await accountService.toggleRole(req.body.reddit, role);
+
+    res.status(200).send();
+  } catch(err){
+    res.status(500).send(err);
+    console.log(err);
+  }
+});
+
+router.post('/toggleRole', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
   try{
     let role = { 
       role: req.body.role
