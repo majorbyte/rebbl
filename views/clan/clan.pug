@@ -24,6 +24,14 @@ block content
       div(v-if="clan.logo == null || clan.logo == 'images/clanlogos/clan.png'")
         input( @change="onFileSelectedEvent" type="file" accept="image/*" class="fileChooser")
         button(@click="uploadLogo" class="btn btn-primary" ) upload logo
+    h3 Purchased Clan Powers
+    div(class="row")
+      template(v-for="power in Object.keys(clan.ledger)")
+        template(v-if="clan.ledger[power] > 0")
+          div(class="p-1")
+            button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+              | {{powers.find(function(x){return x.key == power}).name}} 
+              span(class="badge badge-secondary") {{clan.ledger[power]}}
     h3 Remaining Clan Powers
     div(class="row")
       template(v-for="power in Object.keys(clan.powers)")
@@ -67,6 +75,7 @@ block scripts
         me: "",
         newLogo: null,
         clanLeader: false,
+        ledger:{},
         powers:[]
       },
 

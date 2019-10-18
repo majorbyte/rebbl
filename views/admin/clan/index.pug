@@ -68,7 +68,8 @@ block content
             .row.col-12.border-bottom.border-info.pb-1
               .col-10.media.text-centerd.-flex.flex-wrap.align-items-center
                 .media-body
-                  h1 {{schedule.home.clan.name}}
+                  h1 
+                    a(v-bind:href="`/clan/clan/${schedule.home.clan.name}`" target="_blank") {{ schedule.home.clan.name }}
                 img(v-bind:src="`https://cdn2.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
               .col-2.text-right
                 h1 {{schedule.home.score}}
@@ -105,7 +106,8 @@ block content
               .col-10.media.text-center.d-flex.flex-wrap.align-items-center
                 img(v-bind:src="`https://cdn2.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
                 .media-body
-                  h1 {{schedule.away.clan.name}}
+                  h1 
+                    a(v-bind:href="`/clan/clan/${schedule.away.clan.name}`" target="_blank") {{schedule.away.clan.name}}
             template(v-if="schedule.matches.length === 0")
               br
               .row
