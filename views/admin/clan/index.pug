@@ -171,8 +171,10 @@ block content
           .row.col-12.no-gutters.justify-content-center
             .col-12.row.justify-content-center
               h1 Matches
-            template(v-for="match in schedule.matches")
+            template(v-for="match in sortedMatches")
               .row.col-12.justify-content-center.highlight
+                .row.col-12.justify-content-center(style="color:#cacaca")
+                  |  {{match.competition}}
                 .col-2 
                   template(v-if="match.counted === true")
                     template(v-if="isPlayedButUnconfirmed(match)")
@@ -220,6 +222,45 @@ block content
                     button.btn.btn-primary.btn-sm(type="button" @click="resetMatch(match)") Reset Game
                   template(v-if="match.counted === true && match.match_uuid !== null")
                     button.mx-1.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#clanScore" @click="selectedMatch=match") Change score
+        template(v-if="loadingMissingGames")        
+          .row.col-12.no-gutters.justify-content-center
+            .col-12.row.justify-content-center
+              i(class="fa fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
+        template(v-if="missingGames.length > 0")
+          .row.col-12.no-gutters.justify-content-center
+            .col-12.row.justify-content-center
+              h2 Not Started
+            template(v-for="match in missingGames")
+              .row.col-12.justify-content-center.highlight
+                .row.col-12.justify-content-center(style="color:#cacaca")
+                  |  {{match.competitionName}}
+                .col-12.MatchRow-contentWrapper.MatchRow-contentWrapper--hover
+                  .MatchRow-team
+                    .TeamLabel.TeamLabel--reverse
+                      div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[0].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      .TeamLabel-info.TeamLabel-info--noScore
+                        .text-info {{ match.coaches[0].teamName }}
+                        .TeamLabel-coach
+                          template(v-if="match.coaches[0].notAcceptedTicket")
+                            span.badge.badge-danger {{ match.coaches[0].coachName }}
+                          template(v-else)
+                            span.badge.badge-success {{ match.coaches[0].coachName }}
+                  .MatchRow-status.row
+                    .MatchStatus.MatchStatus--transparent
+                      span
+                          span.MatchStatus-score &nbsp;
+                          span.MatchStatus-score -
+                          span.MatchStatus-score &nbsp;
+                  .MatchRow-team
+                    .TeamLabel
+                      div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      .TeamLabel-info.TeamLabel-info--noScore
+                        .text-info {{  match.coaches[1].teamName  }}
+                        .TeamLabel-coach
+                          template(v-if="match.coaches[1].notAcceptedTicket")
+                            span.badge.badge-danger {{ match.coaches[1].coachName }}
+                          template(v-else)
+                            span.badge.badge-success {{ match.coaches[1].coachName }}
 
       .modal.fade(tabindex='-1' role='dialog' id="clanScore")
         .modal-dialog.modal-dialog-centered(role='document')
@@ -356,16 +397,21 @@ block scripts
         selectedMatch:null,
         schedules: [],
         schedule: null,
+        missingGames:[],
         selectedSide:null,
         selectedTeam: null,
         newBloodTeam:null,
         newBloodOK:null,
         selectedPlayer:null,
-        eicPlayers:[]
+        eicPlayers:[],
+        loadingMissingGames:false
       },
       computed: {
         numberOfRows() {
           return Math.ceil(this.schedules.length / 5);
+        },
+        sortedMatches(){
+          return this.schedule.matches.sort(function(a,b){return a.competition > b.competition;})
         }
       },
       methods:{
@@ -374,6 +420,7 @@ block scripts
         },
         async load(x){
           this.schedule = null;
+          this.missingGames =[];
           let response = await fetch(`/api/v2/clan/schedule/season 7/Division ${x}`);
           let data = await response.json();
           this.schedules = data.sort((a,b)=>{
@@ -386,7 +433,17 @@ block scripts
         },
         async showMatchup(s){
           let response = await fetch(`/api/v2/clan/season 7/${s.competition}/${s.round}/${s.house}`);
+
           this.schedule = await response.json();
+          if(this.schedule.matches.length < 5){
+            this.loadingMissingGames = true;
+            this.loadMissingCompetitions(s.competition.replace(/\D/g,""), s.round, s.house);
+          }
+        },
+        loadMissingCompetitions: async function(division, round, house){
+          let response = await fetch(`/api/v2/clan/competition/${division}/${round}/${house}`);
+          this.loadingMissingGames = false;
+          this.missingGames = await response.json();
         },
         reddit: function(clan, coach){
           let account = clan.members.find(function(x){return x.coach.toLowerCase() === coach.toLowerCase()});

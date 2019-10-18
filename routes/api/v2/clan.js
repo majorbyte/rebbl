@@ -30,6 +30,36 @@ class ClanApi{
       res.json({ clan:clan, leader:leader && account.coach.toLowerCase() == clan.leader.toLowerCase() } );
     });
 
+    this.router.get("/competition/:division/:round/:house",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
+      let data = await clanService.getCompetitionInformation(Number(req.params.division), Number(req.params.round), Number(req.params.house));
+
+      data = data.filter(x => x.Row.CompetitionStatus === "0");
+
+
+      const mapData = function(p){
+        return {
+          coachId: Number(p.RowTeam.IdCoach),
+          coachName: p.NameCoach || p.Coach.User,
+          logo: p.RowTeam.Logo,
+          teamId: Number(p.RowTeam.ID.Value.replace(/\D/g,"")),
+          teamName: p.RowTeam.Name,
+          notAcceptedTicket: p.hasOwnProperty("Coach")
+        }
+      }
+
+      let returnValue = data.map(x => {
+        return {
+          competitionId : Number(x.Row.Id.Value.replace(/\D/g,"")),
+          competitionName: x.Row.Name,
+          coaches: x.participants.map(mapData).concat(x.tickets.map(mapData))
+        }
+      });
+
+
+
+      res.json(returnValue);
+    });
+
     this.router.get("/:season/:division/:round/:house", async function(req, res){
       let schedule = await dataService.getSchedule({
         league:"clan", 
@@ -388,9 +418,11 @@ class ClanApi{
       res.status(200).send();
     });
 
-
+  
     return this.router;
   }
+
+
 }
 
 module.exports = ClanApi;
