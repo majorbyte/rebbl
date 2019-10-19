@@ -39,6 +39,8 @@ class LeagueApi{
 
         let data = await dataService.getSchedules({league:league,season:season,round:Number(round)});
 
+        data = data.filter(d => d.opponents);
+
         let ret = data.map(m => {
           let division = m.competition;
           let match_uuid = m.match_uuid;
@@ -65,7 +67,7 @@ class LeagueApi{
       }
       catch (ex){
         console.error(ex);
-        res.status(500).send('Something something error');
+        res.status(500).send('{"error": "Something something error"}');
       }
     });  
 
