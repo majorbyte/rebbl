@@ -284,6 +284,10 @@ block content
         //ko if: eic
         span.badge.badge-success EIC!
         // /ko
+        //ko if: assassinated
+        span.badge.badge-danger(title="The player has been assassinated and cannot be targeted again, unless it's the result of a failed assassination attempt")
+          i.fa.fa-small.fa-crosshairs(style="font-size:24px") 
+        // /ko        
         // ko foreach: casualties_state
         //ko if: $data !== "BadlyHurt"
         img(data-bind="attr:{src:$parent.getCASImage($data),title:$data.replace(/([A-Z])/g, ' $1').trim() }"  alt="" style="width:32px;height:32px;" )
@@ -645,6 +649,7 @@ block scripts
         this.value = data.value || 0;
         this.xp = data.xp || 0;
         this.eic = data.eic || false;
+        this.assassinated = data.assassinated || false;
       }
 
       cssClass(){
