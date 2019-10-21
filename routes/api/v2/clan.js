@@ -55,10 +55,15 @@ class ClanApi{
         }
       });
 
-
-
       res.json(returnValue);
     });
+
+    this.router.put("/assassinate/:teamId/:playerId",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),function(req,res){
+      clanService.assassinate(Number(req.params.teamId),Number(req.params.playerId));
+
+      res.status(200).send();
+    });
+
 
     this.router.get("/:season/:division/:round/:house", async function(req, res){
       let schedule = await dataService.getSchedule({
@@ -107,7 +112,7 @@ class ClanApi{
 
       let cas_sustained = player.casualties_sustained;
       let cas_state = player.casualties_state;
-      let cas_sustained_total = player.casualties_sustained_total;
+      let cas_sustained_total = player.casualties_sustained_total || [];
 
       cas_sustained.splice(cas_sustained.length-1,1);
       cas_sustained.push("PinchedNerve");

@@ -148,6 +148,9 @@ block content
                         template(v-else-if="power === 'newBlood'")
                           button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="selectedSide=schedule.home" data-toggle="modal" data-target="#newBlood")
                             | {{powers.find(function(x){return x.key == power}).name}} 
+                        template(v-else-if="power === 'assassination'")
+                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="selectedSide=schedule.home;oppositeSide=schedule.away" data-toggle="modal" data-target="#assassination")
+                            | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else)
                           button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="togglePower($event,schedule.home,power)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
                             | {{powers.find(function(x){return x.key == power}).name}} 
@@ -162,6 +165,9 @@ block content
                             | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else-if="power === 'newBlood'")
                           button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="selectedSide=schedule.away" data-toggle="modal" data-target="#newBlood")
+                            | {{powers.find(function(x){return x.key == power}).name}} 
+                        template(v-else-if="power === 'assassination'")
+                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="selectedSide=schedule.away;oppositeSide=schedule.home;" data-toggle="modal" data-target="#assassination")
                             | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else)
                           button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="togglePower($event,schedule.away,power)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
@@ -350,6 +356,34 @@ block content
                   button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
                   button.btn.btn-primary(type='button' @click="saveNewBlood" v-bind:disabled="!newBloodOK") Use    
 
+      .modal.fade(tabindex='-1' role='dialog' id="assassination")
+        .modal-dialog.modal-dialog-centered(role='document')
+          template(v-if="selectedSide !== null")
+            .modal-content
+              .modal-header
+                slot(name="header")
+                  h5.modal-title Apply Assassination for {{`[${selectedSide.clan.name}]`}}
+                  button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') &times;
+              .modal-body
+                .input-group-prepend
+                  span#home.input-group-text Assassinate
+                  select.form-control(v-model="selectedTeam" @change="loadPlayersForAssassination()")
+                    option(v-for="team in oppositeSide.clan.teams" v-bind:value="team.team.id" ) {{ team.team.name }}
+                template(v-if="selectedTeam")
+                  .input-group.mb-3
+                    .input-group-prepend
+                      span#home.input-group-text player
+                      select.form-control(v-model="selectedPlayer")
+                        option(v-for="player in assPlayers" v-bind:value="player.id") {{ player.name }} 
+                  
+              .modal-footer
+                slot(name="footer")
+                  button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
+                  button.btn.btn-primary(type='button' @click="saveAssassination") Use    
+
+
+
       .modal.fade(tabindex='-1' role='dialog' id="newCoach")
         .modal-dialog.modal-dialog-centered(role='document')
           template(v-if="selectedSide !== null")
@@ -399,11 +433,13 @@ block scripts
         schedule: null,
         missingGames:[],
         selectedSide:null,
+        oppositeSide:null,
         selectedTeam: null,
         newBloodTeam:null,
         newBloodOK:null,
         selectedPlayer:null,
         eicPlayers:[],
+        assPlayers:[],
         loadingMissingGames:false
       },
       computed: {
@@ -524,6 +560,12 @@ block scripts
             this.eicPlayers = players.filter(p => p.casualties_sustained.filter(x => x !== "BadlyHurt").length > 0 );
           }
         },
+        async loadPlayersForAssassination(){
+          let result = await fetch(`/api/v2/team/${this.selectedTeam}/players`)
+          if(result.ok){
+            this.assPlayers = await result.json();
+          }
+        },
         isPlayedButUnconfirmed: function(match){
           return match.status === 'scheduled' && match.match_uuid !== null;
         },
@@ -534,10 +576,13 @@ block scripts
         },
         reset: function(){
           this.selectedSide =null;
+          this.oppositeSite =null;
           this.selectedTeam =null;
           this.newBloodTeam =null;
           this.newBloodOK =null;
           this.selectedPlayer =null;
+          this.eicPlayers=[];
+          this.assPlayers=[];
         },
         saveEICUse:async function(){
           await fetch(`/api/v2/clan/eic/${this.selectedMatch.match_uuid}/${this.selectedPlayer}`, {
@@ -573,6 +618,24 @@ block scripts
           this.reset();
 
           $('#newBlood').modal('hide');
+        },
+        saveAssassination:async function(){
+          await fetch(`/api/v2/clan/assassinate/${this.selectedTeam}/${this.selectedPlayer}`, {
+            method: "PUT"
+          });
+
+          if(!this.selectedSide.usedPowers) this.selectedSide.usedPowers = {};
+          this.selectedSide.clan.powers['assassination']--; 
+          if(this.selectedSide.usedPowers['assassination']) this.selectedSide.usedPowers['assassination']++; 
+          else this.selectedSide.usedPowers['assassination'] = 1;
+          await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.selectedSide.clan.name}/usepower/assassination`, {
+            method: "PUT"
+          });
+
+          this.reset();
+
+          $('#assassination').modal('hide');
+
         },
         saveNewCoach:async function(){
           await fetch(`/api/v2/clan/${this.selectedSide.clan.name}/substitutecoach/${this.selectedTeam}/${this.newBloodTeam}`, {
