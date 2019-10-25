@@ -210,7 +210,7 @@ block content
                           span.MatchStatus-score -
                           span.MatchStatus-score {{match.opponents[1].team.score}}
                     template(v-if="match.eic")
-                      .justify-content-center
+                      .justify-content-center 
                         span.badge.badge-success= "EIC!"
                   .MatchRow-team
                     .TeamLabel
@@ -226,6 +226,8 @@ block content
                       | EIC      
                   template(v-if="match.counted === true && isPlayedButUnconfirmed(match)")
                     button.btn.btn-primary.btn-sm(type="button" @click="resetMatch(match)") Reset Game
+                  template(v-if="!match.counted && match.match_uuid === null")
+                    button.btn.btn-primary.btn-sm(type="button" @click="abandonMatch(match)") Abandon Game
                   template(v-if="match.counted === true && match.match_uuid !== null")
                     button.mx-1.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#clanScore" @click="selectedMatch=match") Change score
         template(v-if="loadingMissingGames")        
@@ -468,6 +470,7 @@ block scripts
           });
         },
         async showMatchup(s){
+          this.reset();
           let response = await fetch(`/api/v2/clan/season 7/${s.competition}/${s.round}/${s.house}`);
 
           this.schedule = await response.json();
@@ -535,6 +538,12 @@ block scripts
           });
           if (response.ok) match.counted = false;
         },
+        abandonMatch:async function(match){
+          let response = await fetch(`/api/v2/clan/abandon/${match.contest_id}/`, {
+            method: "PUT"
+          });
+          if (response.ok) this.reset();
+        },
         refreshMatch:async function(id){
           await fetch(`/api/v2/clan/refreshMatch/${id}`);
         },
@@ -583,6 +592,7 @@ block scripts
           this.selectedPlayer =null;
           this.eicPlayers=[];
           this.assPlayers=[];
+          this.missingGames=[];
         },
         saveEICUse:async function(){
           await fetch(`/api/v2/clan/eic/${this.selectedMatch.match_uuid}/${this.selectedPlayer}`, {

@@ -4,6 +4,7 @@ const express = require('express')
   , cyanideService = require("../../../lib/CyanideService.js")
   , clanService = require("../../../lib/ClanService.js")
   , dataService = require("../../../lib/DataService.js").rebbl
+  , draftApi = require("./draft.js")
   , util = require('../../../lib/util.js')
   , multer = require('multer')
   , inMemoryStorage = multer.memoryStorage()
@@ -29,6 +30,8 @@ class ClanApi{
       const leader = await accountService.hasRole(req.user.name, "clanleader");
       res.json({ clan:clan, leader:leader && account.coach.toLowerCase() == clan.leader.toLowerCase() } );
     });
+
+    this.router.use("/draft", new draftApi().routesConfig());
 
     this.router.get("/competition/:division/:round/:house",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
       let data = await clanService.getCompetitionInformation(Number(req.params.division), Number(req.params.round), Number(req.params.house));
@@ -64,6 +67,10 @@ class ClanApi{
       res.status(200).send();
     });
 
+    this.router.put("/abandon/:contestId",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),function(req,res){
+      clanService.abandon(Number(req.params.contestId));
+      res.status(200).send();
+    });
 
     this.router.get("/:season/:division/:round/:house", async function(req, res){
       let schedule = await dataService.getSchedule({
@@ -88,8 +95,6 @@ class ClanApi{
 
       delete schedule.home.clan.ledger;
       delete schedule.away.clan.ledger;
-
-
 
       res.header("Access-Control-Allow-Origin", "http://localhost:8080").json(schedule);
     });
