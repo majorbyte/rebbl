@@ -360,7 +360,7 @@ block content
 
       .modal.fade(tabindex='-1' role='dialog' id="assassination")
         .modal-dialog.modal-dialog-centered(role='document')
-          template(v-if="selectedSide !== null")
+          template(v-if="selectedSide !== null && oppositeSide !== null")
             .modal-content
               .modal-header
                 slot(name="header")
@@ -585,7 +585,7 @@ block scripts
         },
         reset: function(){
           this.selectedSide =null;
-          this.oppositeSite =null;
+          this.oppositeSide =null;
           this.selectedTeam =null;
           this.newBloodTeam =null;
           this.newBloodOK =null;
