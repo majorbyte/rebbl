@@ -12,6 +12,9 @@ block scripts
             $(this).parent().parent().addClass('active');
           }
       });
+      const el = $(".unplayed").first().prev(".unplayed-anchor").prevObject[0];
+      const y = el.getBoundingClientRect().top + window.pageYOffset -240 ;
+      window.scrollTo({top: y});
     });
 block vars
   - var options = {active: league, title: league, company:company}
@@ -50,7 +53,7 @@ block content
             br
             div(class="table-striped TeamLabel-info")
               div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
-                a(name=x style="padding-top:180px;margin-top:-180px" href=`/${company}/${league}/${competition}/${x}`)
+                a(name=x class="unplayed-anchor" style="padding-top:180px;margin-top:-180px" href=`/${company}/${league}/${competition}/${x}`)
                   div(title="" class="Standings-details Standings-header highlight" )= "Week " + x
               each match, y in week
                 include matches.pug

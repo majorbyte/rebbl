@@ -27,8 +27,7 @@ block content
     // ko foreach: {data: Object.keys(standings).sort($root.collator.compare)}
     // ko with: $root.standings[$data] 
     div(class="row col-12" )
-      h2
-        i(data-bind="attr:{id:$data[0].competition}"  style="padding-top:180px;margin-top:-180px")
+      h2(data-bind="attr:{id:$data[0].competition}")
         a(data-bind="text:$data[0].competition,attr:{href:$root.competitionUrl($data)}" class="highlight")
 
     div(class="season-table")  
@@ -258,8 +257,9 @@ block scripts
         if (response.ok) {
           this.me = await response.json();
           if (this.me.league !== decodeURI(this.league)) return;
-          const e = document.getElementById(this.me.division);
-          e.scrollIntoView();
+          const el = document.getElementById(this.me.division);
+          const y = el.getBoundingClientRect().top + window.pageYOffset -180 ;
+          window.scrollTo({top: y});
         }
       }
 

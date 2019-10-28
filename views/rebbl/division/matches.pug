@@ -25,6 +25,8 @@
             span(class="MatchStatus-score") -
             span(class="MatchStatus-score is-winner")= match.opponents[1].team.score
           else
+            - if (!match.match_uuid)
+              span(class="unplayed")  
             span(class="MatchStatus-score")= match.opponents[0].team.score
             - if (hasDate && hasDate.stream)
               span(class="MatchStatus-score" style="color:#2F6FAD;font-size:2.3em;width:unset")  
