@@ -137,6 +137,9 @@ class Maintenance{
           })
         })
       });
+
+      seasons = [configurationService.getActiveOneMinuteSeason()];
+      seasons.map(season => hjmc.calculateStandingsHJMC(season.leagues[0].name,season.name,season.leagues[0].name));
       res.redirect('/');
     });
 
