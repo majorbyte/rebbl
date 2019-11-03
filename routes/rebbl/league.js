@@ -29,14 +29,17 @@ class League{
           res.redirect(`/rebbl/standings/REBBL - REL`);
           return;
         case "rebbrl upstarts":
-            res.redirect(`/rebbrl/standings/ReBBRL Upstarts`);
-            return;
+          res.redirect(`/rebbrl/standings/ReBBRL Upstarts`);
+          return;
         case "rebbrl minors league":
-            res.redirect(`/rebbrl/standings/ReBBRL Minors League`);
-            return;
+          res.redirect(`/rebbrl/standings/ReBBRL Minors League`);
+          return;
         case "rebbrl college league":
           res.redirect(`/rebbrl/standings/ReBBRL College League`);
           return;
+        case "rebbl one minute league":
+          res.redirect(`/rebbl/standings/Rebll One Minute League`);
+          return
       }
     
       if(league == "open invitational"){
