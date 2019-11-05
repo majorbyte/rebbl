@@ -38,7 +38,7 @@ class League{
           res.redirect(`/rebbrl/standings/ReBBRL College League`);
           return;
         case "rebbl one minute league":
-          res.redirect(`/rebbl/standings/Rebll One Minute League`);
+          res.redirect(`/rebbl/standings/Rebbl One Minute League`);
           return
       }
     
