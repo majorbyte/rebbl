@@ -300,7 +300,7 @@ block content
 
             .modal-footer
               slot(name="footer")
-                button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
+                button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
                 template(v-if="selectedMatch")
                   button.btn.btn-primary(type='button' @click="saveMatchScore") Save changes
                 template(v-else-if="schedule")
@@ -323,7 +323,7 @@ block content
                       option(v-for="player in eicPlayers" v-bind:value="player.id") {{ player.name }}
             .modal-footer
               slot(name="footer")
-                button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
+                button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
                 button.btn.btn-primary(type='button' @click="saveEICUse") Use                  
 
       .modal.fade(tabindex='-1' role='dialog' id="newBlood")
@@ -355,7 +355,7 @@ block content
                   
               .modal-footer
                 slot(name="footer")
-                  button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
+                  button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
                   button.btn.btn-primary(type='button' @click="saveNewBlood" v-bind:disabled="!newBloodOK") Use    
 
       .modal.fade(tabindex='-1' role='dialog' id="assassination")
@@ -381,7 +381,7 @@ block content
                   
               .modal-footer
                 slot(name="footer")
-                  button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
+                  button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
                   button.btn.btn-primary(type='button' @click="saveAssassination") Use    
 
 
@@ -415,7 +415,7 @@ block content
                   
               .modal-footer
                 slot(name="footer")
-                  button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel &amp; Close
+                  button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
                   button.btn.btn-primary(type='button' @click="saveNewCoach" v-bind:disabled="!newBloodOK") Save                      
 
 
@@ -531,6 +531,7 @@ block scripts
             method: "PUT"
           });
           $('#clanScore').modal('hide');
+          this.reset();
         },
         resetMatch:async function(match){
           let response = await fetch(`/api/v2/clan/season 7/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${match.contest_id}/reset`, {
@@ -555,6 +556,7 @@ block scripts
             method: "PUT"
           });
           $('#clanScore').modal('hide');
+          this.reset();
         },
         async loadEicPlayers(match, index) {
           const re = new RegExp(`\\[${this.schedule.home.clan.name}]`,"i");

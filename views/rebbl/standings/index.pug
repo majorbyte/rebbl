@@ -253,14 +253,22 @@ block scripts
       }
 
       async loadMe(){
-        const response = await fetch("/api/v2/account/me");
-        if (response.ok) {
-          this.me = await response.json();
-          if (this.me.league !== decodeURI(this.league)) return;
-          const el = document.getElementById(this.me.division);
-          const y = el.getBoundingClientRect().top + window.pageYOffset -180 ;
-          window.scrollTo({top: y});
+        let division = "";
+        if (window.location.hash !== ""){
+          division = decodeURI(window.location.hash.replace("#",""));
+        } else {
+          const response = await fetch("/api/v2/account/me");
+
+          if (response.ok) {
+            this.me = await response.json();
+            if (this.me.league !== decodeURI(this.league)) return;
+            division = this.me.division;
+          }
         }
+        const el = document.getElementById(division);
+        const y = el.getBoundingClientRect().top + window.pageYOffset -180 ;
+        window.scrollTo({top: y});
+
       }
 
       showTrophy(e){
