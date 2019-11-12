@@ -7,10 +7,10 @@ block content
         span(class="highlight")= user.reddit
         span !
 
-      h3 It looks like we don't have you on file yet, please continue with your sign up for the REBBL Season 12
+      h3 It looks like we don't have you on file yet, please continue with your sign up for the REBBL Season 13
         a(href="/signup/change" class="highlighted-rules")= " here"
       p 
-        a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 12
+        a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 13
 
       h3 If you rather want to play in our rookie's College league Season 9, continue with your sign up
         a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
@@ -20,7 +20,7 @@ block content
       each signup in signups
         - if(signup.hasOwnProperty('signedUp'))
           - if (signup.type ==="rebbl")
-            h2= "Welcome back to REBBL Season 12, "
+            h2= "Welcome back to REBBL Season 13, "
               span(class="highlight")= signup.coach
               span !
           - else 
@@ -38,7 +38,7 @@ block content
                 div(class="warning")
                   p Your team is either misspelled or not yet existing
                 br
-              - if(signup.saveType ==="rampup")
+              //- if(signup.saveType ==="rampup")
                 form(action="/signup/change" method="get" style="float:left;margin-right:116px;")
                   button(type="submit"  class="btn btn-primary") Change
 
@@ -47,27 +47,39 @@ block content
                   span Thank you for confirming!
                 -else
                   button(type="submit") Confirm
-              //- if (signup.type==="rebbl")
-                h3= "REBBL SEASON 12 - " + signup.league
+              - if (signup.type==="rebbl")
+                h3= "REBBL SEASON 13 - " + signup.league
                 form(action="/signup/resign" method="post" )
                   br
                   button(type="submit"  class="btn btn-primary") Resign
-                //- else
-              h3= "REBBRL " + signup.league
-              form(action="/signup/resign-rebbrl" method="post")
-                br
-                button(type="submit"  class="btn btn-primary") Resign
+              - else
+                h3= "REBBRL " + signup.league
+                form(action="/signup/resign-rebbrl" method="post")
+                  br
+                  button(type="submit"  class="btn btn-primary") Resign
 
-            //-if (signup.greenHorn)
+            -if (signup.greenHorn)
               div
                 h3 THE GREENHORN CUP
               form(action="/signup/resign-greenhorn" method="post" )
                 br
                 button(type="submit"  class="btn btn-primary") Resign
-            //-else if(signup.type === "rebbl" && signup.saveType !== "existing")
+            -else if(signup.type === "rebbl" && signup.saveType !== "existing")
               div
                 h3 You can still sign up for THE GREENHORN CUP
                 a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
+
+            -if (signup.OI)
+              div
+                h3 THE OFF-SEASON INTERNATIONAL
+              form(action="/signup/resign-oi" method="post" )
+                br
+                button(type="submit"  class="btn btn-primary") Resign
+            -else if(signup.saveType === "existing")
+              div
+                h3 You can still sign up for THE OFF-SEASON INTERNATIONAL
+                a(href="/signup/signup-oi") Sign me up for OSI
+
             p Nagivate 
               a(href="/signup/signups" class="highlighted-rules") here
               span &nbsp;to view all current signups
@@ -76,10 +88,10 @@ block content
           span(class="highlight")= user.coach
           span !
 
-        h3 You haven't signed up yet, so continue with your sign up for the REBBL Season 12
+        h3 You haven't signed up yet, so continue with your sign up for the REBBL Season 13
           a(href="/signup/change" class="highlighted-rules")= " here"          
         p 
-          a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 12
+          a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 13
 
         h3 If you rather want to play in our rookie's College league Season 9, continue with your sign up
           a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
