@@ -12,41 +12,41 @@ class Signup{
   }
 
   routesConfig(){
-    this.router.get('/', async function(req, res){
+     /*   this.router.get('/', async function(req, res){
       res.render('signup/closed');
     });
 
-    /*
+
     this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup);
-    
+    */
 
     this.router.get('/', util.ensureLoggedIn, this._getStatus);
 
     this.router.get('/change', util.ensureLoggedIn, this._changeSignup);
-*/
-    //this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
 
-    //this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
+    this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
 
-    //this.router.get('/signup-oi',util.ensureAuthenticated, this._signupOpenInvitational);
+    this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
 
-    //this.router.get('/signup-greenhorn',util.ensureAuthenticated, this._signupGreenhornCup);
+    this.router.get('/signup-oi',util.ensureAuthenticated, this._signupOpenInvitational);
 
-    //this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll);
+    this.router.get('/signup-greenhorn',util.ensureAuthenticated, this._signupGreenhornCup);
 
-    //this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew);
+    this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll);
 
-    //this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
+    this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew);
 
-    //this.router.post('/confirm-oi', util.ensureAuthenticated, this._confirmOpenInvitational);
+    this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
 
-  //  this.router.post('/resign', util.ensureAuthenticated, this._resign);
+    this.router.post('/confirm-oi', util.ensureAuthenticated, this._confirmOpenInvitational);
 
-    //this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
+    this.router.post('/resign', util.ensureAuthenticated, this._resign);
 
-    //this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
+    this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
 
-    //this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
+    this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
+
+    this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
 
     this.router.get('/signups', util.cache(10*60), function(req,res){res.render('signup/signups', {url: ""});});
 
@@ -98,18 +98,18 @@ class Signup{
       let account = await accountService.getAccount(req.user.name);
 
       // Disabled while during season
-      /*if(!signup && user && user.team){
+      if(!signup && user && user.team){
         res.render('signup/signup-existing', { user: user});
         return;
-      }*/
+      }
 
       if (!signup){
         if(account){
-          //res.render('signup/signup-new-coach', {user: {account: account}});
-          res.render('signup/signup-rampup', {user: {account: account}});
+          res.render('signup/signup-new-coach', {user: {account: account}});
+          //res.render('signup/signup-rampup', {user: {account: account}});
         } else {
-          //res.render('signup/signup-new-coach', {user: req.user.name});
-          res.render('signup/signup-rampup', {user: req.user.name});
+          res.render('signup/signup-new-coach', {user: req.user.name});
+          //res.render('signup/signup-rampup', {user: req.user.name});
         }
         return;
       }
@@ -190,8 +190,8 @@ class Signup{
       req.body.type="rebbl";
       let user = await signupService.saveSignUp(req.user.name, req.body);
 
-      //res.render('signup/signup-confirmed-oi', {user: user});
-      res.redirect('/signup');
+      res.render('signup/signup-confirmed-oi', {user: user});
+      //res.redirect('/signup');
     } catch (err){
       console.log(err);
     }
