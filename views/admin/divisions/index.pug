@@ -124,6 +124,19 @@ block content
     // /ko
     hr
     div(class="row col-12")
+      div(class="col-3") Expel admin teams below
+      div(class="col-3") 
+    hr
+    div(data-bind="foreach: teams" )
+      div(class="row col-12")
+        div(class="col-3")
+          span(data-bind="text: team")
+        div(class="col-3")
+          button(data-bind="click:$root.expel" class="btn btn-small btn-success" style="margin:0px 10px")
+            i(class="fa fa-gavel")
+          span expel
+    hr
+    div(class="row col-12")
       div(class="col-3") Unsynced games
       div(class="col-3") 
     hr
@@ -139,19 +152,7 @@ block content
           span(data-bind="text: opponents[0].coach ? opponents[0].coach.name : ''")
           span &nbsp; vs &nbsp; 
           span(data-bind="text: opponents[1].coach ? opponents[1].coach.name : ''")
-    hr
-    div(class="row col-12")
-      div(class="col-3") Expel admin teams below
-      div(class="col-3") 
-    hr
-    div(data-bind="foreach: teams" )
-      div(class="row col-12")
-        div(class="col-3")
-          span(data-bind="text: team")
-        div(class="col-3")
-          button(data-bind="click:$root.expel" class="btn btn-small btn-success" style="margin:0px 10px")
-            i(class="fa fa-gavel")
-          span expel
+
 
     div(class="alert alert-success" role="alert")
     div(class="alert alert-danger" role="alert")
