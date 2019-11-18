@@ -253,7 +253,7 @@ block content
         span(class="slider" data-bind="click: model.toggle")
       | show all
 
-    // ko foreach: ["REBBL Cripple Ladder","REBBL Cripple Ladder - Season 1b","REBBL Cripple Ladder - Season 1a"]
+    // ko foreach: ["REBBL Cripple Ladder - Season 3","REBBL Cripple Ladder - Season 2","REBBL Cripple Ladder - Season 1b","REBBL Cripple Ladder - Season 1a"]
     div(class="row col-12")
       h2
         i(style="padding-top:180px;margin-top:-180px")
@@ -284,7 +284,7 @@ block content
           div(class="col-3" data-bind="text: $data.wins")
           div(class="col-3" data-bind="text: $data.draws")
           div(class="col-3" data-bind="text: $data.gp - $data.wins - $data.draws")
-      // ko if: (($index() === 3 && $parent !== "REBBL Cripple Ladder") || ($index() === 6 && $parent === "REBBL Cripple Ladder") )
+      // ko if: $index() === 6 
       div(class="row col-12 season-table-row")
         div(class="col-1 Standings-divider--flex")
           span(class="Standings-dividerText--correction")
