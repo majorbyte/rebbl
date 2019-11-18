@@ -7,15 +7,26 @@ block content
         span(class="highlight")= user.reddit
         span !
 
+      h1 For Bitter Bloow Bowl Veterans:
+      hr
       h3 It looks like we don't have you on file yet, please continue with your sign up for the REBBL Season 13
-        a(href="/signup/change" class="highlighted-rules")= " here"
-      p 
+        a(href="/signup/change" class="highlighted-rules")= " here"          
+      h4 
         a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 13
 
-      h3 If you rather want to play in our rookie's College league Season 9, continue with your sign up
+      h1 For new (semi)fresh meat:
+      hr
+      h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 10? Read more about what the College League is about 
+        a(href="https://www.reddit.com/r/ReBBRL/comments/dy6czq/rebbrl_college_league_season_10_sign_ups/" class="highlighted-rules") here     
+        | and continue with your sign up 
         a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
-      p 
-        a(href="https://www.reddit.com/r/ReBBRL/comments/cgeg6c/rebbrl_college_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Season 9         
+
+      h3 If you played in our College League last season and want to continue in the Minors Leauge, continue with your sign up
+        a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
+      h4 
+        a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 9       
+
+
     - else 
       each signup in signups
         - if(signup.hasOwnProperty('signedUp'))
@@ -88,12 +99,21 @@ block content
           span(class="highlight")= user.coach
           span !
 
+        h1 For Bitter Bloow Bowl Veterans:
+        hr
         h3 You haven't signed up yet, so continue with your sign up for the REBBL Season 13
           a(href="/signup/change" class="highlighted-rules")= " here"          
-        p 
+        h4 
           a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 13
 
-        h3 If you rather want to play in our rookie's College league Season 9, continue with your sign up
+        h1 For new (semi)fresh meat:
+        hr
+        h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 10? Read more about what the College League is about 
+          a(href="https://www.reddit.com/r/ReBBRL/comments/dy6czq/rebbrl_college_league_season_10_sign_ups/" class="highlighted-rules") here     
+          | and continue with your sign up 
           a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
-        p 
-          a(href="https://www.reddit.com/r/ReBBRL/comments/cgeg6c/rebbrl_college_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Season 9         
+
+        h3 If you played in our College League last season and want to continue in the Minors Leauge, continue with your sign up
+          a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
+        h4 
+          a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 9       
