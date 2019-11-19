@@ -13,7 +13,7 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
 
   
 
-  let csv = 'team name,race,timezone,reddit name,discord,blood bowl 2 name,steam name,reqion,comp\n';
+  let csv = 'team name,race,timezone,reddit name,discord,blood bowl 2 name,steam name,reqion,comp\r\n';
   
   for (var row of data){
     let regexp = new RegExp(row.team,"i");
@@ -34,7 +34,7 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
         comp = schedules[0].competition
     }
 
-    csv += `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.timezone)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.coach)},${JSON.stringify(row.steam)},${JSON.stringify(row.league)},${comp}\n`
+    csv += `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.timezone)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.coach)},${JSON.stringify(row.steam)},${JSON.stringify(row.league)},${comp}\r\n`
   }
 
 
