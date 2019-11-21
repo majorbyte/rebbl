@@ -4,7 +4,7 @@ extends ../../no-cache-sub-layout.pug
 block vars
   - let options = {active: league, title: "REBBL SEASON 12", company:company}
   - let seasons = []
-  - let ignoreLeagues = ["rebbrl upstarts","rebbrl minors league","rebbrl college league","xscessively elfly league", "open invitational", "greenhorn cup", "rabble", "eurogamer", "playins - s10"]
+  - let ignoreLeagues = ["rebbrl upstarts","rebbrl minors league","rebbrl college league","xscessively elfly league", "open invitational","off season international", "greenhorn cup", "rabble", "eurogamer", "playins - s10"]
   - if (ignoreLeagues.indexOf(league.toLowerCase()) === -1)
     for div, x in standings
       - if (div[0].competition.toLowerCase().indexOf("rampup") > 0 ) continue;

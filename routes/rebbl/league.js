@@ -41,15 +41,17 @@ class League{
           res.redirect(`/rebbl/standings/Rebbl One Minute League`);
           return
       }
-    
-      if(league == "open invitational"){
+      let season = "";
+      if(league == "off season international"){
         league = new RegExp(`^ReBBL Open Invitational`, 'i');
+        season = "season 13";
       } else if (league === "playins - s10"){
         league = new RegExp(`^ReBBL Playoffs`,'i');
         comp = "Play-Ins Qualifier";
       } else if(league.toLowerCase() == "greenhorn cup") {
         league = new RegExp(`^Greenhorn Cup`,'i');
         comp ="Greenhorn Cup$";
+        season ="season 13";
       } else if (league.toLowerCase().indexOf("rebbrl") == -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer" ){
         league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
       }  
@@ -71,7 +73,7 @@ class League{
         res.render('rebbl/league/rampup', data);
       } else {
         data.cutoffs = configuration.getPlayoffTickets(req.params.league);
-        data.standings = await db.getCoachScore(league, comp || null, true);
+        data.standings = await db.getCoachScore(league, comp || null, true,season);
         data.rounds = await db.getDivisions(league);
         res.render('rebbl/league/index', data);
       }
