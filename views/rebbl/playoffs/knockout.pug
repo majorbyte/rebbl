@@ -111,9 +111,9 @@ block content
           // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(0,1), as: 'match' }
           // /ko
           // ko with: model.matches['5'][0]
-          div(class="gameinfo semis-l" style="width: 121%;margin-left: -40px;margin-top: -86px;" data-bind="{css: $data.winner && $data.winner.coach && $data.round === model.round ? 'spoiler played': ''}")
+          div(class="gameinfo semis-l" style="width: 121%;margin-left: -40px;margin-top: -86px;" )
             div(class="round-details" style="font-size: 20px;" ) semifinals
-            ul(class ="matchup championship" style="padding:0px")
+            ul(class ="matchup championship" style="padding:0px" data-bind="{css: $data.winner && $data.winner.coach && $data.round === model.round ? 'spoiler played': ''}")
               // ko if:  $data.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && $data.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
               li(class=`team team-top` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id ? 'looser' :''  }")
                 //ko if: $data.opponents[0].team.logo.length > 0
@@ -140,9 +140,7 @@ block content
                   div(data-bind="text: $data.opponents[1].team.score")
                   // /ko
               // /ko
-            // ko if: $data.round <= model.round  
             div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
-            // /ko
           // /ko        
           // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(1,2), as: 'match' }
           // /ko
@@ -177,8 +175,8 @@ block content
           // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(2,3), as: 'match' }
           // /ko
           // ko with: model.matches['5'][1]
-          div(class="gameinfo semis-r" style="width: 121%;margin-top: -86px;" data-bind="{css: $data.winner && $data.winner.coach &&  $data.round === model.round  ? 'spoiler played': ''}")
-            div(class="round-details" style="font-size: 20px;" ) semifinals
+          div(class="gameinfo semis-r" style="width: 121%;margin-top: -86px;" )
+            div(class="round-details" style="font-size: 20px;" data-bind="{css: $data.winner && $data.winner.coach &&  $data.round === model.round  ? 'spoiler played': ''}") semifinals
             ul(class ="matchup championship" style="padding:0px")
               // ko if:  $data.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && $data.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
               li(class=`team team-top` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id ? 'looser' :''  }")
@@ -206,9 +204,8 @@ block content
                   div(data-bind="text: $data.opponents[1].team.score")
                   // /ko
               // /ko
-            // ko if: $data.round <= model.round  
             div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
-            // /ko              
+
           // /ko  
 
           // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(3,4), as: 'match' }
@@ -262,8 +259,8 @@ block content
 
 
   script(type="text/html" id="knockoutTemplate")
-    div(class="gameinfo" data-bind="{css: model.spoiled && match.winner && match.winner.coach && match.round === model.round ? 'spoiler played': ''}")
-      ul(class="matchup" )
+    div(class="gameinfo" )
+      ul(class="matchup" data-bind="{css: model.spoiled && match.winner && match.winner.coach && match.round === model.round ? 'spoiler played': ''}")
         // ko if:  match.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && match.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
         li(class=`team team-top` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id == match.opponents[1].coach.id ? 'looser' :''  }")
           //ko if: match.opponents[0].team.logo.length > 0
@@ -290,9 +287,8 @@ block content
             div(data-bind="text: match.opponents[1].team.score")
             // /ko
         // /ko    
-      // ko if: match.round <= model.round  
       div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
-      // /ko
+
   script(type="text/html" id="knockoutTemplateRev")
     div(class="gameinfo" data-bind="{css: match.winner && match.winner.coach && match.round === model.round ? 'spoiler played': ''}")
       ul(class="matchup" )
@@ -322,6 +318,4 @@ block content
           img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`}}")
           // /ko
         // /ko
-      // ko if: match.round <= model.round  
       div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
-      // /ko
