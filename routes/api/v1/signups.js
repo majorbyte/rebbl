@@ -23,7 +23,7 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
 
 
 router.get('/page', util.cache(10*60), async function(req, res, next){
-  const data = await db.getSignUps({type:"rebbl"});
+  const data = await db.getSignUps();
 
   const ret = data.all.map(function(row){
 
@@ -31,7 +31,7 @@ router.get('/page', util.cache(10*60), async function(req, res, next){
       team: row.team,
       teamId: row.teamId,
       coach: row.coach,
-      race: row.race,
+      race: row.race.replace(/([A-Z])/g, ' $1').replace("  "," "),
       timezone: row.timezone,
       saveType: row.saveType,
       TV: row.currentTV,
