@@ -18,4 +18,5 @@ router.get('/standings', util.cache(10*60), async function(req, res){
   res.status(200).send(await load(true));
 });
 
+
 module.exports = router;
