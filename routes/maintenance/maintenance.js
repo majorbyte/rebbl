@@ -1,6 +1,7 @@
 'use strict';
 const 
   cache = require("memory-cache")
+  , campingService = require("../../lib/CampingService.js")
   , clanService = require("../../lib/ClanService.js")
   , configurationService = require("../../lib/ConfigurationService.js")
   , cripple = require('../../lib/crippleService.js')
@@ -24,6 +25,11 @@ class Maintenance{
   routesConfig(){
     this.router.get('/update/cripple', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled) cripple.getMatches();
+      res.redirect('/');
+    });
+
+    this.router.get('/wintercamping', util.verifyMaintenanceToken, async function(req, res){
+      if (req.app.locals.cyanideEnabled) campingService.updateBadges();
       res.redirect('/');
     });
 
