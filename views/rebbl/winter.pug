@@ -1,33 +1,23 @@
 extends ../no-cache-sub-layout.pug
 include ../nav-link
 
+block vars
+  - let options = {company:"rebbl"}
 
 
-block navigation
+block additionalMainNavigation
   nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
     button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
       span(class="navbar-toggler-icon")
-    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
     div(class="collapse navbar-collapse" id="rebblSubNav")
-      -let style = company === "" ? "margin:0 auto" : ""
-      ul(class="navbar-nav" style=style)
-        - if (company === "")
-          +nav-link("Upcoming games", "/rebbl/upcoming")
-          +nav-link("Ongoing games", "/rebbl/ongoing")
-          +nav-link("Star Players", "/bloodbowl/starplayers")
-          +nav-link("Legendary players", "/bloodbowl/legendaryplayers")
-          +nav-link("REBBL Winter Camp", "/rebbl/camping")
-          +nav-link("Account", "/account")
-        - if (company === "rebbrl")
-          +nav-link("Upcoming games", "/rebbrl/upcoming")
-        - if (company === "rebbl")
-          +nav-link("Upcoming games", "/rebbl/upcoming")
-          +nav-link("Challenger Cup", "rebbl/playoffs/Challenger's Cup XII")
-          +nav-link("Playoffs", "rebbl/playoffs/REBBL Playoffs Season 12")
-          +nav-link("OSI", "/rebbl/Off Season International")
-          +nav-link("GREENHORN", "/rebbl/Greenhorn Cup")
-          +nav-link("EUROGAMER", "/rebbl/eurogamer")
-          +nav-link("CRIPPLE", "/cripple/standings")
+      ul(class="navbar-nav" style="margin:0 auto")
+        +nav-link("Upcoming games", "/rebbl/upcoming")
+        +nav-link("Challenger Cup", "/rebbl/playoffs/Challenger's Cup XII")
+        +nav-link("Playoffs", "/rebbl/playoffs/REBBL Playoffs Season 12")
+        +nav-link("OSI", "/rebbl/Off Season International")
+        +nav-link("GREENHORN", "/rebbl/Greenhorn Cup")
+        +nav-link("REBBL Winter Camp", "/rebbl/camping")
+        +nav-link("CRIPPLE", "/cripple/standings")
 
 block content          
   .container
@@ -46,16 +36,16 @@ block content
       .col(title="You're Not Famous Anymore!") 💯
       .col(title="Referee's a Scrooge") 💰
     //ko foreach: coaches
-    .row.col-12
+    .row.col-12()
       .col-2(data-bind="{text:$data.name}")
-      .col(data-bind="{text:$data.badges.eurotrasher ? '✔' : '❌'}")
+      .col( data-bind="{text:$data.badges.eurotrasher ? '✔' : '❌'}")
       .col(data-bind="{text:$data.badges.allAmericanHero ? '✔' : '❌'}")
       .col(data-bind="{text:$data.badges.downUnderMyBoot ? '✔' : '❌'}")
       // ko if: $data.badges.theHardYards >= 10
-      .col ✔
+      .col() ✔
       // /ko
       // ko if: $data.badges.theHardYards < 10
-      .col
+      .col()
         .progress
           .progress-bar.progress-bar-striped.bg-success(role="progressbar" aria-valuemin="0" aria-valuemax="10" data-bind="attr:{'aria-valuenow':$data.badges.theHardYards, style:`width:${$data.badges.theHardYards*10}%`}")
       // /ko
@@ -95,35 +85,6 @@ block scripts
     script(src="/scripts/knockout-es5.js")
 
   script.
-    class StandingsModel{
-      constructor(data){
-        this.map(data);
-        ko.track(this);
-      }
-      map(data){
-        if(data){
-          delete data._id;
-          Object.assign(this, data);
-        }
-      }
-
-      teamColor(){
-        if (/\[colour=/i.test(this.team)){
-          if (/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.team)) {
-            return "#"+this.team.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1];
-          }
-          return "#000000";
-        }
-
-        return "inherit";      }
-
-      teamName(){
-        if (/\[colour=/i.test(this.team)){
-            return this.team.replace(/\[colour=.*]/i,'')
-        }
-        return this.team;
-      }
-    }
     class ViewModel{
       constructor(data){
         this.coaches = [];
