@@ -9,7 +9,7 @@ class CampingApi{
   }
 
   routesConfig(){
-    this.router.get('/', util.checkCache, async function(req, res){
+    this.router.get('/', util.cache(10*60), async function(req, res){
       res.json(await dataService.getStandings({competition:"REBBL Winter Camp"}));
     });
 
