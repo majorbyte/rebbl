@@ -4,4 +4,8 @@ FROM mongo:latest AS imports
 WORKDIR /usr/src/
 ADD rebbl.tar.gz /usr/src/rebbl
 ADD docker/mongodb.init.sh mongodb.init.sh
+
+# Converts DOS line endings to Unix
+RUN tr -d '\r' < mongodb.init.sh > mongodb.init.sh
+
 RUN chmod +x mongodb.init.sh
