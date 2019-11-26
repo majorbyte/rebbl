@@ -260,7 +260,7 @@ block content
                           span.MatchStatus-score -
                           span.MatchStatus-score &nbsp;
                   .MatchRow-team
-                    .TeamLabel
+                    .TeamLabel(v-if="match.coaches.length > 1")
                       div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{  match.coaches[1].teamName  }}
