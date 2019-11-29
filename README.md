@@ -36,6 +36,8 @@ You need NodeJS and MongoDB to run this locally
 
 ## How to run using Docker
 
+⚠️**Important:** Windows 10 hosts must use [Linux containers](https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers).
+
 1. Install [Docker](https://www.docker.com/get-started)
 2. Download the [Rebbel.net dump](https://cdn2.rebbl.net/rebbl.net/rebbl.tar.gz) and store it on this folder as `rebbl.tar.gz`
 3. Run `docker-compose build`
