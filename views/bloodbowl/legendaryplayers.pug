@@ -82,7 +82,8 @@ block content
     div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
       div(class="modal-content")
         div(class="modal-header")
-          h3(class="modal-title" data-bind="text: name")
+          h3.modal-title( data-bind="text: name")
+          a.highlight(style="float:right" target="_blank" data-bind="{attr:{href:`/rebbl/match/${lastMatch}`}}") Last Match
         div(class="modal-body")
           table(class="table-striped") 
             tr
@@ -181,7 +182,7 @@ block content
                 td(data-bind="text:stats.inflictedpushouts")      
                 td -
         div(class="modal-footer")
-          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+          button( type="button" class="btn btn-secondary" data-dismiss="modal" data-bind="click:$root.selectedPlayer = null") Close
     // /ko
     // /ko
 
@@ -195,7 +196,7 @@ block content
           img( data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
           p(data-bind="text:activeSkill.description")
         div(class="modal-footer")
-          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+          button( type="button" class="btn btn-secondary" data-dismiss="modal" ) Close
     // /ko
 
 
@@ -357,6 +358,7 @@ block scripts
         this.teamName = data.teamName || '';
         this.teamId = data.teamId || '';
         this.teamLogo = data.teamLogo || '';
+        this.lastMatch = data.lastMatch || "";
       }
 
       cssClass(){
@@ -477,8 +479,13 @@ block scripts
 
       getSkills(player) {return this.skills[player.type]};
 
-      selectPlayer(self,e){
-        self.selectedPlayer = e;
+      async selectPlayer(self,e){
+        let response = await fetch(`/api/v2/bloodbowl/legendaryplayers/${e.id}/lastMatch`);
+        if(response.ok){
+          e.lastMatch = await response.json();
+          self.selectedPlayer = e;
+        }
+
       };
 
       filteredPlayers(){
