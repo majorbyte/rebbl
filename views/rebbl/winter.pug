@@ -36,8 +36,26 @@ block content
       .col(title="You're Not Famous Anymore!") 💯
       .col(title="Referee's a Scrooge") 💰
     //ko foreach: coaches
-    .row.col-12()
-      .col-2(data-bind="{text:$data.name}")
+    .row.col-12
+
+      .col-2
+        span(data-bind="{text:$data.name}")
+        // ko if: $data.mainLeague.indexOf("GMan") > 0
+        i 💶
+        // /ko
+        // ko if: $data.mainLeague.indexOf("REL") > 0
+        i 💵
+        // /ko
+        // ko if: $data.mainLeague.indexOf("Big") > 0
+        i 🦘
+        // /ko
+        // ko if: $data.mainCompetition.indexOf("Division 1") > 0
+        i 🥇
+        // /ko
+        // ko if: $data.mainCompetition.indexOf("Division 5") > 0
+        i 🏏
+        // /ko
+
       .col( data-bind="{text:$data.badges.eurotrasher ? '✔' : '❌'}")
       .col(data-bind="{text:$data.badges.allAmericanHero ? '✔' : '❌'}")
       .col(data-bind="{text:$data.badges.downUnderMyBoot ? '✔' : '❌'}")
@@ -47,7 +65,7 @@ block content
       // ko if: $data.badges.theHardYards < 10
       .col()
         .progress
-          .progress-bar.progress-bar-striped.bg-success(role="progressbar" aria-valuemin="0" aria-valuemax="10" data-bind="attr:{'aria-valuenow':$data.badges.theHardYards, style:`width:${$data.badges.theHardYards*10}%`}")
+          .progress-bar.progress-bar-striped.bg-success(role="progressbar" aria-valuemin="0" aria-valuemax="10" data-bind="attr:{'title':`${$data.badges.theHardYards} / 10`, 'aria-valuenow':$data.badges.theHardYards, style:`width:${$data.badges.theHardYards*10}%`}")
       // /ko
       .col(data-bind="{text:$data.badges.newSheriffInTown ? '✔' : '❌'}")
       .col(data-bind="{text:$data.badges.flatTrackBully ? '✔' : '❌'}")
@@ -57,7 +75,7 @@ block content
       // ko if: $data.badges.iMissTheDevastational < 5
       .col
         .progress
-          .progress-bar.progress-bar-striped.bg-success(role="progressbar" aria-valuemin="0" aria-valuemax="5" data-bind="attr:{'aria-valuenow':$data.badges.iMissTheDevastational, style:`width:${$data.badges.iMissTheDevastational*20}%`}")
+          .progress-bar.progress-bar-striped.bg-success(role="progressbar" aria-valuemin="0" aria-valuemax="5" data-bind="attr:{'title':`${$data.badges.iMissTheDevastational} / 5`, 'aria-valuenow':$data.badges.iMissTheDevastational, style:`width:${$data.badges.iMissTheDevastational*20}%`}")
       // /ko
       // ko if: $data.badges.collusion >= 15
       .col ✔
@@ -65,7 +83,7 @@ block content
       // ko if: $data.badges.collusion < 15
       .col
         .progress
-          .progress-bar.progress-bar-striped.bg-success(role="progressbar" aria-valuemin="0" aria-valuemax="15" data-bind="attr:{'aria-valuenow':$data.badges.collusion, style:`width:${$data.badges.collusion*6.6667}%`}")
+          .progress-bar.progress-bar-striped.bg-success(role="progressbar" aria-valuemin="0" aria-valuemax="15" data-bind="attr:{'title':`${$data.badges.collusion} / 15`,'aria-valuenow':$data.badges.collusion, style:`width:${$data.badges.collusion*6.6667}%`}")
       // /ko
       .col(data-bind="{text:$data.badges.hellOfADrug ? '✔' : '❌'}")
       .col(data-bind="{text:$data.badges.Clawgeous ? '✔' : '❌'}")
