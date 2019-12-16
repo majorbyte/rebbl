@@ -6,6 +6,7 @@ const express = require("express")
   , bloodbowlApi = require("./bloodbowl.js")
   , campingApi = require("./camping.js")
   , clanApi = require("./clan.js")
+  , crackerApi = require("./cracker.js")
   , divisionApi = require("./division.js") 
   , leagueApi = require("./league.js")
   , matchApi = require("./match.js")
@@ -39,6 +40,8 @@ class ApiV2{
     this.router.use("/trophies", new trophiesApi().routesConfig());
 
     this.router.use("/camping",  new campingApi().routesConfig());
+    
+    this.router.use("/cracker",  new crackerApi().routesConfig());
 
     return this.router;
   }
