@@ -48,8 +48,7 @@ class CrackerApi{
 
     let result = await crackerService.registerTeam(account.coach, req.params.teamName);
 
-    if (result.length > 0) res.status(400).json(result);
-    else res.status(200).send();
+    res.status(200).send(result);
   }
 
 
