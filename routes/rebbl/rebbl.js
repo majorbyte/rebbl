@@ -94,6 +94,7 @@ class Rebbl{
     this.router.use('/old_team', require(`./old_team.js`));
     this.router.use('/playoffs', require(`./playoffs.js`));
     this.router.get("/camping", util.cache(10*60), (req, res, next) => res.render("rebbl/winter"));
+    this.router.get("/christmascracker", util.cache(1), (req, res, next) => res.render("rebbl/cracker"));
     this.router.use('/:league', new league().routesConfig());
     this.router.use('/:league/:division', new division().routesConfig());
 
