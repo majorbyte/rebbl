@@ -1,0 +1,125 @@
+extends ../no-cache-sub-layout.pug
+include ../nav-link
+
+block vars
+  - let options = {company:"rebbl"}
+
+
+block additionalMainNavigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav" style="margin:0 auto")
+        +nav-link("Upcoming games", "/rebbl/upcoming")
+        +nav-link("Challenger Cup", "/rebbl/playoffs/Challenger's Cup XII")
+        +nav-link("Playoffs", "/rebbl/playoffs/REBBL Playoffs Season 12")
+        +nav-link("OSI", "/rebbl/Off Season International")
+        +nav-link("GREENHORN", "/rebbl/Greenhorn Cup")
+        +nav-link("REBBL Winter Camp", "/rebbl/camping")
+        +nav-link("CRIPPLE", "/cripple/standings")
+
+block content          
+  .container
+    .row.col-12
+      // ko if: coach !== null
+      .col-12.row
+        h1(data-bind="text:coach.team")
+      .col-12.row
+        h2 collected Packs
+      .col-12.row 
+        .col-2 Nice Packs
+        .col(data-bind="text:nice()")
+      .col-12.row 
+        .col-2 Naughty Packs
+        .col(data-bind="text:naughty()")
+      .col-12.row 
+        .col-2 Immortal Packs
+        .col(data-bind="text:immortal()")
+      .col-12.row 
+        .col-2 Huge Bonus Packs
+        .col(data-bind="text:hugeBonus()")
+      .col-12.row 
+        .col-2 Stocking Filler Packs
+        .col(data-bind="text:filler()")
+
+      // /ko
+      // ko if: coach === null
+      .col-12.row 
+        h1(data-bind="text:'Register your team'")
+        .row.col-12
+          label(for="teamname") team name
+          input(type="text" id="teamname" data-bind="value:newTeamName")
+          .btn.btn-sm.btn-default(data-bind="click: $root.registerTeam") Register
+        .col-12.row
+          // ko foreach: errors
+          .col-12(data-bind="text:$data.error")
+          // /ko
+      // /ko
+
+
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+    class ViewModel{
+      constructor(){
+        this.coach = null;
+        this.newTeamName = "";
+        this.errors = [];
+        ko.track(this);
+      }
+
+      async loadBadges(){
+        let response = await fetch(`/api/v2/cracker`);
+        if (response.ok){
+          this.coach = await response.json();
+        }
+      }
+
+      nice(){
+        return this.coach.touchdownsPacks || 0 + this.coach.completionsPacks || 0 + this.coach.levelsPacks || 0 + this.coach.armourBreaksPacks || 0;
+      }
+
+      naughty(){
+        return this.coach.casualtiesPacks || 0+ this.coach.killsPacks || 0 + this.coach.surfsPacks || 0 + this.coach.weaponsPacks || 0;
+      }
+
+      immortal(){
+        return this.coach.matchesLostPacks || 0;
+      }
+
+      filler(){
+        return this.coach.matchesPlayedPack || 0 + this.coach.streakPacks || 0;
+      }
+
+      hugeBonus(){
+        return this.coach.bigGuyTouchdownsPacks || 0  ;
+      }
+
+      async registerTeam(){
+        let response = await fetch(`/api/v2/cracker/register/${this.newTeamName}`,{method:"POST"});
+        if (response.ok){
+          this.loadBadges();
+        } else{
+          this.errors = await response.json();
+        }
+
+      }
+    }
+
+    let model = new ViewModel();
+
+    $(document).ready(function(){
+      ko.applyBindings(model);
+      model.loadBadges();
+    });
+    

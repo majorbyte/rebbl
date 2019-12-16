@@ -13,6 +13,7 @@ const
   , signUp = require('../../lib/signupService.js')
   , standingsService = require("../../lib/StandingsService.js")
   , util = require('../../lib/util.js')
+  , cracker = require("../../lib/ChristmasCracker.js")
   , reddit = require("../../lib/RedditService.js");
 
 
@@ -30,6 +31,12 @@ class Maintenance{
 
     this.router.get('/wintercamping', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled) campingService.updateBadges();
+      res.redirect('/');
+    });
+
+    this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
+      //cracker.registerTeam("majorbyte", "MajorTest2")
+      cracker.checkAchievements();
       res.redirect('/');
     });
 
