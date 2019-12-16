@@ -108,11 +108,10 @@ block scripts
       async registerTeam(){
         let response = await fetch(`/api/v2/cracker/register/${this.newTeamName}`,{method:"POST"});
         if (response.ok){
-          this.loadBadges();
-        } else{
-          this.errors = await response.json();
-        }
-
+          let result = await response.json();
+          if (result.length === 0) this.loadBadges();
+          else this.errors = result;
+        } 
       }
     }
 
