@@ -15,6 +15,9 @@ class CrackerApi{
 
     this.router.post("/register/:teamName", util.ensureAuthenticated,this._registerTeam);
 
+    this.router.get("/packs", util.ensureAuthenticated, this._getPacks);
+    this.router.get("/rebuild", util.ensureAuthenticated, this._rebuild);
+
     return this.router;
   }
 
@@ -39,8 +42,8 @@ class CrackerApi{
       delete ret.weapons;
       delete ret.armourBreaks;
       delete ret.matchesLost;
-      res.status(200).send(ret);
-    } else res.status(404).send("Not registerd yet");
+      res.status(200).json(ret);
+    } else res.status(404).json({error:"not registered yet"});
   }
 
   async _registerTeam(req,res){
@@ -51,7 +54,16 @@ class CrackerApi{
     res.status(200).send(result);
   }
 
-
+  async _getPacks(req,res){
+    const account = await accountService.getAccount(req.user.name);
+    let result = await crackerService.getPacks(account.coach);
+    res.status(200).send(result.map(x => x.cracker_template));
+  }
+  async _rebuild(req,res){
+    const account = await accountService.getAccount(req.user.name);
+    let result = await crackerService.claimPacks(account.coach);
+    res.status(200).send(result.map(x => x.cracker_template));
+  }
 }
 
 module.exports = CrackerApi;
