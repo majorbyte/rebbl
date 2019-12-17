@@ -22,29 +22,33 @@ block additionalMainNavigation
 block content          
   .container
     .row.col-12
-      // ko if: coach !== null
+      // ko if: coach !== null && (coach && !coach.rebuilding)
       .col-12.row
         h1(data-bind="text:coach.team")
       .col-12.row
-        h2 collected Packs
+        h2
+          img(src="https://cdn2.rebbl.net/images/skills/CardSet.png") 
+          | &nbsp; Available Packs
       .col-12.row 
-        .col-2 Nice Packs
-        .col(data-bind="text:nice()")
+        .col-4 Nice Packs
+        .col(data-bind="text:nice() - coach.claimedPacks.nice")
       .col-12.row 
-        .col-2 Naughty Packs
-        .col(data-bind="text:naughty()")
+        .col-4 Naughty Packs
+        .col(data-bind="text:naughty() - coach.claimedPacks.naughty")
       .col-12.row 
-        .col-2 Immortal Packs
-        .col(data-bind="text:immortal()")
+        .col-4 Immortal Packs
+        .col(data-bind="text:immortal() - coach.claimedPacks.immortal")
       .col-12.row 
-        .col-2 Huge Bonus Packs
-        .col(data-bind="text:hugeBonus()")
+        .col-4 Huge Bonus Packs
+        .col(data-bind="text:hugeBonus() - coach.claimedPacks.huge")
       .col-12.row 
-        .col-2 Stocking Filler Packs
-        .col(data-bind="text:filler()")
-
+        .col-4 Stocking Filler Packs
+        .col(data-bind="text:filler() - coach.claimedPacks.filler")
+      // ko if:allowRebuild()
+      .btn.btn-sm.btn-default(data-bind="click: $root.rebuildTeam") Rebuild
       // /ko
-      // ko if: coach === null
+      // /ko
+      // ko if: coach === null || (coach && coach.rebuilding)
       .col-12.row 
         h1(data-bind="text:'Register your team'")
         .row.col-12
@@ -56,7 +60,41 @@ block content
           .col-12(data-bind="text:$data.error")
           // /ko
       // /ko
-
+      .col-12.row
+        h2
+          img(src="https://cdn2.rebbl.net/images/skills/CardSet.png") 
+          | &nbsp; Available Cards
+      // ko if: coach && coach.rebuilding      
+      // ko foreach: cards
+      .row.col-12
+        .col-4(data-bind="click:$root.showDescription.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog")
+          img(data-bind="{attr:{src:`/images/${$data.rarity}.png`}}" height="25px" style="margin-right:7px")
+          span(data-bind="text:$data.name")
+        .col
+          // ko if: $data.built_in_skill.length > 1
+          img(data-bind="{attr:{src:$root.getSkillImage($data.built_in_skill)}}" height="25px" style="border-radius: 5px;")
+          // /ko
+          // ko if: $data.built_in_skill === "-"
+          // ko foreach: $root.getSkills($data.notes)
+          img(data-bind="{attr:{src:$root.getSkillImage($data)}}" height="25px" style="border-radius: 5px;")
+          // /ko
+          // /ko
+        .col
+          span(data-bind="text:$data.card_type")
+        .col
+          span(data-bind="text:$data.klass")
+      // /ko
+      // /ko
+ 
+  div(class="modal" tabindex="-1" role="dialog" id="skill-dialog")
+    div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+      div(class="modal-content")
+        div(class="modal-header")
+          h5(class="modal-title" data-bind="text: activeCard.name")
+        div(class="modal-body")
+          p(data-bind="text:activeCard.description")
+        div(class="modal-footer")
+          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
 
 
 block scripts
@@ -75,6 +113,8 @@ block scripts
         this.coach = null;
         this.newTeamName = "";
         this.errors = [];
+        this.cards = [];
+        this.activeCard={};
         ko.track(this);
       }
 
@@ -82,15 +122,82 @@ block scripts
         let response = await fetch(`/api/v2/cracker`);
         if (response.ok){
           this.coach = await response.json();
+          if (this.coach.rebuilding) {
+            response = await fetch("/api/v2/cracker/packs");
+            if (response.ok){
+              this._loadCards(await response.json());
+            }
+          }
+        }
+      }
+      async rebuildTeam(){
+        let response = await fetch("/api/v2/cracker/rebuild");
+        if (response.ok){
+          this._loadCards(await response.json());
         }
       }
 
+      _loadCards(cards){
+        let rarity = ["Common","Rare", "Epic", "Legendary", "Unique"];
+        cards.map(x => x.r = rarity.indexOf(x.rarity));
+
+        cards = cards.sort((a,b) => {
+          if (a.card_type > b.card_type) return 1;
+          if (a.card_type < b.card_type) return -1;
+
+          if (a.r > b.r) return -1;
+          if (a.r < b.r) return 1;
+
+          if (a.name > b.name) return 1;
+          if (a.name < b.name) return -1;
+
+          return 0;
+        });
+        this.cards = cards;        
+      }
+      showDescription(e,data){
+        e.activeCard = data;
+      };
+      getSkillImage(skill){
+
+          switch (skill){
+            case "MA+":
+            case "+MA":
+              return `https://cdn2.rebbl.net/images/skills/IncreaseMovement.png`;
+            case "+AG":
+            case "AG+":
+              return `https://cdn2.rebbl.net/images/skills/IncreaseAgility.png`;
+            case "ST+":
+            case "+ST":
+              return `https://cdn2.rebbl.net/images/skills/IncreaseStrength.png`;
+            case "AV+":
+            case "+AV":
+              return `https://cdn2.rebbl.net/images/skills/IncreaseArmour.png`;
+            default:
+              if (skill === "Sidestep") skill = "Side Step";
+              return `https://cdn2.rebbl.net/images/skills/${skill.replace(' ','').replace('-','')}.png`;
+          }
+      }
+
+      getSkills(list){
+        if (list.length === 0) return [];
+        list = list.replace(" and ", ", ").replace("Sidestep", "Side Step");
+        return list.split(", ");
+      }
+      
+
       nice(){
-        return this.coach.touchdownsPacks || 0 + this.coach.completionsPacks || 0 + this.coach.levelsPacks || 0 + this.coach.armourBreaksPacks || 0;
+        return (this.coach.touchdownsPacks || 0) + 
+        (this.coach.completionsPacks || 0) +
+        (this.coach.levelsPacks || 0) + 
+        (this.coach.armourBreaksPacks || 0);
       }
 
       naughty(){
-        return this.coach.casualtiesPacks || 0+ this.coach.killsPacks || 0 + this.coach.surfsPacks || 0 + this.coach.weaponsPacks || 0;
+        return (this.coach.casualtiesPacks || 0) + 
+        (this.coach.killsPacks || 0) + 
+        (this.coach.surfsPacks || 0) + 
+        (this.coach.weaponsPacks || 0);
       }
 
       immortal(){
@@ -98,11 +205,26 @@ block scripts
       }
 
       filler(){
-        return this.coach.matchesPlayedPack || 0 + this.coach.streakPacks || 0;
+        return (this.coach.matchesPlayedPacks || 0) + (this.coach.streakPacks || 0);
       }
 
       hugeBonus(){
         return this.coach.bigGuyTouchdownsPacks || 0  ;
+      }
+
+      allowRebuild(){
+        let total = 
+          this.coach.claimedPacks.nice 
+          + this.coach.claimedPacks.naughty 
+          + this.coach.claimedPacks.immortal 
+          + this.coach.claimedPacks.filler 
+          + this.coach.claimedPacks.huge
+          - this.nice()
+          - this.hugeBonus()
+          - this.naughty()
+          - this.immortal()
+          - this.filler() ;
+          return total > 0
       }
 
       async registerTeam(){
