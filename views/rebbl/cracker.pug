@@ -60,11 +60,11 @@ block content
           .col-12(data-bind="text:$data.error")
           // /ko
       // /ko
+      // ko if: coach && coach.rebuilding      
       .col-12.row
         h2
           img(src="https://cdn2.rebbl.net/images/skills/CardSet.png") 
           | &nbsp; Available Cards
-      // ko if: coach && coach.rebuilding      
       // ko foreach: cards
       .row.col-12
         .col-4(data-bind="click:$root.showDescription.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog")
@@ -215,16 +215,17 @@ block scripts
 
       allowRebuild(){
         let total = 
-          this.coach.claimedPacks.nice 
-          + this.coach.claimedPacks.naughty 
-          + this.coach.claimedPacks.immortal 
-          + this.coach.claimedPacks.filler 
-          + this.coach.claimedPacks.huge
-          - this.nice()
-          - this.hugeBonus()
-          - this.naughty()
-          - this.immortal()
-          - this.filler() ;
+          this.nice()
+          + this.hugeBonus()
+          + this.naughty()
+          + this.immortal()
+          + this.filler() 
+          - this.coach.claimedPacks.nice 
+          - this.coach.claimedPacks.naughty 
+          - this.coach.claimedPacks.immortal 
+          - this.coach.claimedPacks.filler 
+          - this.coach.claimedPacks.huge
+          ;
           return total > 0
       }
 
