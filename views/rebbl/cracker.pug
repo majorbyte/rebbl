@@ -115,6 +115,7 @@ block scripts
         this.errors = [];
         this.cards = [];
         this.activeCard={};
+        this.rebuildClicked = false
         ko.track(this);
       }
 
@@ -131,6 +132,7 @@ block scripts
         }
       }
       async rebuildTeam(){
+        this.rebuildClicked = true;
         let response = await fetch("/api/v2/cracker/rebuild");
         if (response.ok){
           this._loadCards(await response.json());
@@ -226,7 +228,7 @@ block scripts
           - this.coach.claimedPacks.filler 
           - this.coach.claimedPacks.huge
           ;
-          return total > 0
+          return total > 0 && !this.rebuildClicked;
       }
 
       async registerTeam(){
