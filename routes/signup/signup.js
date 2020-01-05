@@ -12,14 +12,14 @@ class Signup{
   }
 
   routesConfig(){
-     /*   this.router.get('/', async function(req, res){
+        this.router.get('/', async function(req, res){
       res.render('signup/closed');
     });
 
-
+/*
     this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup);
     */
-
+/*
     this.router.get('/', util.ensureLoggedIn, this._getStatus);
 
     this.router.get('/change', util.ensureLoggedIn, this._changeSignup);
@@ -47,6 +47,7 @@ class Signup{
     this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
 
     this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
+*/
 
     this.router.get('/signups', util.cache(10*60), function(req,res){res.render('signup/signups', {url: ""});});
 
