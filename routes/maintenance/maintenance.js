@@ -37,7 +37,8 @@ class Maintenance{
 
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       //cracker.registerTeam("majorbyte", "MajorTest2")
-      cracker.fixTeam();
+      //cracker.getCheaters();
+      cracker.fixRebuilders();
       res.redirect('/');
     });
 

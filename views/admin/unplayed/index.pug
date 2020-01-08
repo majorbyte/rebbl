@@ -17,7 +17,7 @@ block scripts
 
         self.divisions = ko.computed(function(){
           let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-          return [...new Set(self.games().map(x => x.competition.replace(/Season 12 - Division /i,'Div ').replace(/Season 12 - Divsion /i,'Div ')))].sort(collator.compare); 
+          return [...new Set(self.games().map(x => x.competition.replace(/Season 13 - Division /i,'Div ').replace(/Season 13 - Divsion /i,'Div ')))].sort(collator.compare); 
         });
 
         self.rounds = ko.computed(function(){
@@ -30,7 +30,7 @@ block scripts
           if (self.filteredDivisions().length > 0  && self.filteredLeagues().length > 0 && self.filteredRounds().length  > 0){
 
             return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1
-              && self.filteredDivisions.indexOf(x.competition.replace(/Season 12 - Division /i,'Div ').replace(/Season 12 - Divsion /i,'Div ')) > -1
+              && self.filteredDivisions.indexOf(x.competition.replace(/Season 13 - Division /i,'Div ').replace(/Season 13 - Divsion /i,'Div ')) > -1
               && self.filteredRounds.indexOf(x.round || 2) > -1       
             );
           }
@@ -44,7 +44,7 @@ block scripts
 
           if (self.filteredDivisions().length > 0  && self.filteredRounds().length  > 0){
 
-            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition.replace(/Season 12 - Division /i,'Div ').replace(/Season 12 - Divsion /i,'Div ')) > -1
+            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition.replace(/Season 13 - Division /i,'Div ').replace(/Season 13 - Divsion /i,'Div ')) > -1
               && self.filteredRounds.indexOf(x.round || 2) > -1       
             );
           }
@@ -52,14 +52,14 @@ block scripts
           if (self.filteredDivisions().length > 0  && self.filteredLeagues().length > 0){
 
             return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1
-              && self.filteredDivisions.indexOf(x.competition.replace(/Season 12 - Division /i,'Div ').replace(/Season 12 - Divsion /i,'Div ')) > -1
+              && self.filteredDivisions.indexOf(x.competition.replace(/Season 13 - Division /i,'Div ').replace(/Season 13 - Divsion /i,'Div ')) > -1
             );
           }
 
 
 
           if (self.filteredDivisions().length > 0 ){
-            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition.replace(/Season 12 - Division /i,'Div ').replace(/Season 12 - Divsion /i,'Div ')) > -1);
+            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition.replace(/Season 13 - Division /i,'Div ').replace(/Season 13 - Divsion /i,'Div ')) > -1);
           }
 
           if ( self.filteredLeagues().length > 0){
@@ -176,7 +176,7 @@ block content
         div(class="col-2")
           button(data-bind="click:$root.refresh" class="btn btn-small btn-success" style="margin:0px 10px")
             i(class="fa fa-refresh")
-          span( data-bind="text: league.replace(/rebbl - /i, '') + ' ' + competition.replace(/Season 12 - Division /i,'Div ').replace(/Season 12 - Divsion /i,'Div ')")
+          span( data-bind="text: league.replace(/rebbl - /i, '') + ' ' + competition.replace(/Season 13 - Division /i,'Div ').replace(/Season 13 - Divsion /i,'Div ')")
         div(class="col-2" )
           a(data-bind="text: coach1, attr:{href:'/rebbl/coach/'+ coach1 + '/details' }"  target="_blank" style="color:#03a9f4")
         div(class="col-3")

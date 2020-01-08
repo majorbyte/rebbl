@@ -1,0 +1,358 @@
+extends ../../no-cache-sub-layout.pug
+include ../../nav-link
+
+block vars
+  - let options = {company:"rebbl"}
+
+
+block additionalMainNavigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    div(class="collapse navbar-collapse" id="rebblSubNav")
+      ul(class="navbar-nav" style="margin:0 auto")
+        +nav-link("Upcoming games", "/rebbl/upcoming")
+        +nav-link("Challenger Cup", "/rebbl/playoffs/Challenger's Cup XII")
+        +nav-link("Playoffs", "/rebbl/playoffs/REBBL Playoffs Season 13")
+        +nav-link("OSI", "/rebbl/Off Season International")
+        +nav-link("GREENHORN", "/rebbl/Greenhorn Cup")
+        +nav-link("REBBL Winter Camp", "/rebbl/camping")
+        +nav-link("CRIPPLE", "/cripple/standings")
+
+block content          
+  .container
+    .row.col-12
+      // ko if: coach !== null && (coach && !coach.rebuilding)
+      .col-12.row
+        h1(data-bind="text:coach.team")
+      .col-12.row
+        h2
+          img(src="https://cdn2.rebbl.net/images/skills/CardSet.png") 
+          | &nbsp; Available Packs
+      .col-12.row 
+        .col-4 Nice Packs
+        .col(data-bind="text:nice() - coach.claimedPacks.nice")
+      .col-12.row 
+        .col-4 Naughty Packs
+        .col(data-bind="text:naughty() - coach.claimedPacks.naughty")
+      .col-12.row 
+        .col-4 Immortal Packs
+        .col(data-bind="text:immortal() - coach.claimedPacks.immortal")
+      .col-12.row 
+        .col-4 Huge Bonus Packs
+        .col(data-bind="text:hugeBonus() - coach.claimedPacks.huge")
+      .col-12.row 
+        .col-4 Stocking Filler Packs
+        .col(data-bind="text:filler() - coach.claimedPacks.filler")
+      // ko if:allowRebuild()
+      .btn.btn-sm.btn-default(data-bind="click: $root.rebuildTeam") Rebuild
+      // /ko
+      // /ko
+      // ko if: !coach 
+      .col-12.row 
+        h1(data-bind="text:'Register your team'")
+        .row.col-12
+          label(for="teamname") team name
+          input(type="text" id="teamname" data-bind="value:newTeamName")
+          .btn.btn-sm.btn-default(data-bind="click: $root.registerTeam") Register
+        .col-12.row
+          // ko foreach: errors
+          .col-12(data-bind="text:$data.error")
+          // /ko
+      // /ko
+      // ko if: coach && coach.rebuilding && !coach.review     
+      .col-12.row 
+        h1(data-bind="text:'Load your new team'")
+        .row.col-12
+          label(for="teamname") team name
+          input(type="text" id="teamname" data-bind="value:newTeamName")
+          .btn.btn-sm.btn-default(data-bind="click: $root.loadTeam") Load
+        .col-12.row
+          // ko foreach: errors
+          .col-12(data-bind="text:$data.error")
+          // /ko
+        // ko if: newTeam
+        .col-12.row
+          // ko foreach: newTeam.roster
+          .col-12.row 
+            .col-2(data-bind="text:$data.name")
+            .col-6
+              select(class="selectpicker" data-bind="options:$root.availableCards(), selectedOptions: $data.selectedCards,  optionsValue:'cardId', optionsText:'name'" multiple)
+          // /ko
+        // /ko
+      .col-12.row.mt-4
+        nav.col-12
+          .nav.nav-tabs
+            a.nav-item.nav-link.active(data-toggle="tab" id="nav-cards-tab" href="#nav-cards" aria-controls="nav-cards" role="tab" aria-selected="true") Cards
+            a.nav-item.nav-link(data-toggle="tab" id="nav-comments-tab" href="#nav-comments" aria-controls="nav-comments" role="tab" aria-selected="false") Comments
+            a.nav-item.nav-link(data-toggle="tab" id="nav-review-tab" href="#nav-review" aria-controls="nav-review" role="tab" aria-selected="false") Review
+          .tab-content(id="tabContent")
+            .tab-pane.fade.show.active(id="nav-cards" role="tabpanel" aria-labelledby="nav-cards-tab")
+              h2
+                img(src="https://cdn2.rebbl.net/images/skills/CardSet.png") 
+                | &nbsp; Available Cards
+              // ko foreach: cards
+              .row.col-12
+                .col-4(data-bind="click:$root.showDescription.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog")
+                  img(data-bind="{attr:{src:`/images/${$data.rarity}.png`}}" height="25px" style="margin-right:7px")
+                  span(data-bind="text:$data.name")
+                .col
+                  // ko if: $data.built_in_skill.length > 1
+                  img(data-bind="{attr:{src:$root.getSkillImage($data.built_in_skill)}}" height="25px" style="border-radius: 5px;")
+                  // /ko
+                  // ko if: $data.built_in_skill === "-"
+                  // ko foreach: $root.getSkills($data.notes)
+                  img(data-bind="{attr:{src:$root.getSkillImage($data)}}" height="25px" style="border-radius: 5px;")
+                  // /ko
+                  // /ko
+                .col
+                  span(data-bind="text:$data.card_type")
+                .col
+                  span(data-bind="text:$data.klass")
+                .col
+                  span(data-bind="text:$root.useCount($data.cardId)")
+              // /ko
+            .tab-pane.fade.show(id="nav-comments" role="tabpanel" aria-labelledby="nav-comments-tab")
+              p please describe which players are coming from the old team, skill cards used (describe dice rolls etc) ...
+              textarea(name="", cols="30", rows="10" data-bind="value:comment")
+            .tab-pane.fade.show(id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab")
+              p When you have selected your cards and written your comment, you can submit your team for review
+              // ko if: comment !== "" 
+              .btn.btn-sm.btn-primary(data-bind="click:$root.reviewTeam") Submit for review
+              // /ko
+      // /ko
+      // ko if: coach &&  coach.review
+      .col-12.row
+        .col-12
+          h1(data-bind="text:coach.review.newTeam.team.name")
+        .col-12 
+          p Your team is currently under review.
+          p It will require 3 independant approvals, current status:
+        // ko foreach: review.result
+        .row
+          p(data-bind="text:$data")
+        // /ko
+      // /ko
+ 
+  div(class="modal" tabindex="-1" role="dialog" id="skill-dialog")
+    div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+      div(class="modal-content")
+        div(class="modal-header")
+          h5(class="modal-title" data-bind="text: activeCard.name")
+        div(class="modal-body")
+          p(data-bind="text:activeCard.description")
+        div(class="modal-footer")
+          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+
+block head
+  link(rel="stylesheet" href="/styles/bootstrap-select.css")
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="/scripts/bootstrap-select.min.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+    script(src="/scripts/bootstrap-select.min.js")
+
+  script.
+    class Player{
+      constructor(player){
+        Object.assign(this, player);
+        this.selectedCards =[];
+        ko.track(this);
+      }
+    }
+
+    class Team{
+      constructor(team){
+        Object.assign(this, team);
+        this.roster = team.roster.map(x => new Player(x));
+        ko.track(this);
+      }
+    }
+
+    class ViewModel{
+      constructor(){
+        this.coach = null;
+        this.newTeamName = "";
+        this.newTeam = {roster:[{selectedCards:[]  }]};
+        this.errors = [];
+        this.cards = [];
+        this.activeCard={};
+        this.rebuildClicked = false
+        this.comment = "";
+        ko.track(this);
+      }
+
+      async loadBadges(){
+        let response = await fetch(`/api/v2/cracker`);
+        if (response.ok){
+          this.coach = await response.json();
+          if (this.coach.rebuilding) {
+            response = await fetch("/api/v2/cracker/packs");
+            if (response.ok){
+              this._loadCards(await response.json());
+            }
+          }
+        }
+      }
+      async rebuildTeam(){
+        this.rebuildClicked = true;
+        let response = await fetch("/api/v2/cracker/rebuild");
+        if (response.ok){
+          this._loadCards(await response.json());
+        }
+      }
+      async reviewTeam(){
+        this.rebuildClicked = true;
+        let response = await fetch("/api/v2/cracker/review",{
+            method:"POST",
+            headers:{
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              newTeam : this.newTeam,
+              comment : this.comment
+            })
+        });
+      }
+      _loadCards(cards){
+        let rarity = ["Common","Rare", "Epic", "Legendary", "Unique"];
+        cards.map(x => x.r = rarity.indexOf(x.rarity));
+
+        cards = cards.sort((a,b) => {
+          if (a.card_type > b.card_type) return 1;
+          if (a.card_type < b.card_type) return -1;
+
+          if (a.r > b.r) return -1;
+          if (a.r < b.r) return 1;
+
+          if (a.name > b.name) return 1;
+          if (a.name < b.name) return -1;
+
+          return 0;
+        });
+        this.cards = cards;        
+      }
+      showDescription(e,data){
+        e.activeCard = data;
+      };
+      getSkillImage(skill){
+
+          switch (skill){
+            case "MA+":
+            case "+MA":
+              return `https://cdn2.rebbl.net/images/skills/IncreaseMovement.png`;
+            case "+AG":
+            case "AG+":
+              return `https://cdn2.rebbl.net/images/skills/IncreaseAgility.png`;
+            case "ST+":
+            case "+ST":
+              return `https://cdn2.rebbl.net/images/skills/IncreaseStrength.png`;
+            case "AV+":
+            case "+AV":
+              return `https://cdn2.rebbl.net/images/skills/IncreaseArmour.png`;
+            default:
+              if (skill === "Sidestep") skill = "Side Step";
+              return `https://cdn2.rebbl.net/images/skills/${skill.replace(' ','').replace('-','')}.png`;
+          }
+      }
+
+      availableCards(){
+        let used = [];
+        this.newTeam.roster.map(x => used = used.concat(x.cards));
+
+        return this.cards.filter(x => !used.includes(x.id));
+      }
+      
+      useCount(id){
+        if (!this.newTeam) return 0;
+
+        let count = this.newTeam.roster.filter(x => x.selectedCards.includes(id)).length;
+        return count;
+      }
+
+
+      getSkills(list){
+        if (list.length === 0) return [];
+        list = list.replace(" and ", ", ").replace("Sidestep", "Side Step");
+        return list.split(", ");
+      }
+      
+
+      nice(){
+        return (this.coach.touchdownsPacks || 0) + 
+        (this.coach.completionsPacks || 0) +
+        (this.coach.levelsPacks || 0) + 
+        (this.coach.initPack || 0) + 
+        (this.coach.armourBreaksPacks || 0);
+      }
+
+      naughty(){
+        return (this.coach.casualtiesPacks || 0) + 
+        (this.coach.killsPacks || 0) + 
+        (this.coach.surfsPacks || 0) + 
+        (this.coach.weaponsPacks || 0);
+      }
+
+      immortal(){
+        return this.coach.matchesLostPacks || 0;
+      }
+
+      filler(){
+        return (this.coach.matchesPlayedPacks || 0) + (this.coach.streakPacks || 0);
+      }
+
+      hugeBonus(){
+        return this.coach.bigGuyTouchdownsPacks || 0  ;
+      }
+
+      allowRebuild(){
+        let total = 
+          this.nice()
+          + this.hugeBonus()
+          + this.naughty()
+          + this.immortal()
+          + this.filler() 
+          - this.coach.claimedPacks.nice 
+          - this.coach.claimedPacks.naughty 
+          - this.coach.claimedPacks.immortal 
+          - this.coach.claimedPacks.filler 
+          - this.coach.claimedPacks.huge
+          ;
+          return total > 0 && !this.rebuildClicked;
+      }
+
+      async loadTeam(){
+        let response = await fetch(`/api/v2/cracker/load/${this.newTeamName}`,{method:"GET"});
+        if (response.ok){ 
+          let team = await response.json();
+          this.newTeam = new Team(team);
+          $('select').selectpicker();
+        }
+        else this.errors = await response.json();
+      }
+
+      async registerTeam(){
+        let response = await fetch(`/api/v2/cracker/register/${this.newTeamName}`,{method:"POST"});
+        if (response.ok){
+          let result = await response.json();
+          if (result.length === 0) this.loadBadges();
+          else this.errors = result;
+        } 
+      }
+    }
+    
+    //ko.options.deferUpdates = true;
+    let model = new ViewModel();
+
+    $(document).ready(function(){
+      ko.applyBindings(model);
+      model.loadBadges();
+    });
+    
