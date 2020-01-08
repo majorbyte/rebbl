@@ -1,5 +1,5 @@
-extends ../no-cache-sub-layout.pug
-include ../nav-link
+extends ../../no-cache-sub-layout.pug
+include ../../nav-link
 
 block vars
   - let options = {company:"rebbl"}
@@ -13,7 +13,7 @@ block additionalMainNavigation
       ul(class="navbar-nav" style="margin:0 auto")
         +nav-link("Upcoming games", "/rebbl/upcoming")
         +nav-link("Challenger Cup", "/rebbl/playoffs/Challenger's Cup XII")
-        +nav-link("Playoffs", "/rebbl/playoffs/REBBL Playoffs Season 12")
+        +nav-link("Playoffs", "/rebbl/playoffs/REBBL Playoffs Season 13")
         +nav-link("OSI", "/rebbl/Off Season International")
         +nav-link("GREENHORN", "/rebbl/Greenhorn Cup")
         +nav-link("REBBL Winter Camp", "/rebbl/camping")
@@ -21,52 +21,18 @@ block additionalMainNavigation
 
 block content          
   .container
+    // ko if: newTeam !== null && currentTeam !== null
     .row.col-12
-      // ko if: coach !== null && (coach && !coach.rebuilding)
-      .col-12.row
-        h1(data-bind="text:coach.team")
-      .col-12.row
-        h2
-          img(src="https://cdn2.rebbl.net/images/skills/CardSet.png") 
-          | &nbsp; Available Packs
-      .col-12.row 
-        .col-4 Nice Packs
-        .col(data-bind="text:nice() - coach.claimedPacks.nice")
-      .col-12.row 
-        .col-4 Naughty Packs
-        .col(data-bind="text:naughty() - coach.claimedPacks.naughty")
-      .col-12.row 
-        .col-4 Immortal Packs
-        .col(data-bind="text:immortal() - coach.claimedPacks.immortal")
-      .col-12.row 
-        .col-4 Huge Bonus Packs
-        .col(data-bind="text:hugeBonus() - coach.claimedPacks.huge")
-      .col-12.row 
-        .col-4 Stocking Filler Packs
-        .col(data-bind="text:filler() - coach.claimedPacks.filler")
-      // ko if:allowRebuild()
-      .btn.btn-sm.btn-default(data-bind="click: $root.rebuildTeam") Rebuild
+      // ko template: { name: 'teamTemplate', data: currentTeam, as:'team' }
       // /ko
+      // ko template: { name: 'teamTemplate', data: newTeam, as:'team'   }
       // /ko
-      // ko if: coach === null || (coach && coach.rebuilding)
-      .col-12.row 
-        h1(data-bind="text:'Register your team'")
-        .row.col-12
-          label(for="teamname") team name
-          input(type="text" id="teamname" data-bind="value:newTeamName")
-          .btn.btn-sm.btn-default(data-bind="click: $root.registerTeam") Register
-        .col-12.row
-          // ko foreach: errors
-          .col-12(data-bind="text:$data.error")
-          // /ko
-      // /ko
-      // ko if: coach && coach.rebuilding      
-      .col-12.row
-        h2
-          img(src="https://cdn2.rebbl.net/images/skills/CardSet.png") 
-          | &nbsp; Available Cards
+    .row.col-12
+      h2
+        img(src="https://cdn2.rebbl.net/images/skills/CardSet.png") 
+        | &nbsp; Available Cards
       // ko foreach: cards
-      .row.col-12
+      .row.col-12(data-bind="css:$data.highlight ? 'highlight': ''")
         .col-4(data-bind="click:$root.showDescription.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog")
           img(data-bind="{attr:{src:`/images/${$data.rarity}.png`}}" height="25px" style="margin-right:7px")
           span(data-bind="text:$data.name")
@@ -83,9 +49,11 @@ block content
           span(data-bind="text:$data.card_type")
         .col
           span(data-bind="text:$data.klass")
+        .col
+          span(data-bind="text:$root.useCount($data.cardId)")   
       // /ko
-      // /ko
- 
+    // /ko
+    
   div(class="modal" tabindex="-1" role="dialog" id="skill-dialog")
     div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
       div(class="modal-content")
@@ -96,47 +64,85 @@ block content
         div(class="modal-footer")
           button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
 
+  script(type="text/html" id="teamTemplate")
+    .col-6
+      h1(data-bind="text:team.name")
+      //ko foreach: roster
+      .row.col-12(data-bind="{event:{mouseover:$root.highlightCards.bind(model,$data), mouseout:$root.disableHighlight.bind(model)}}")
+        .col(data-bind="text:$data.name")
+        .col(data-bind="text:$root.playerType($data.type)")
+      // /ko
+
+
+
+block head
+  link(rel="stylesheet" href="/styles/bootstrap-select.css")
+  style.
+    .highlight{background-color: #3a2f99;}
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
     script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
     script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
     script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="/scripts/bootstrap-select.min.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")
     script(src="/scripts/knockout-es5.js")
+    script(src="/scripts/bootstrap-select.min.js")
 
   script.
+    class Card{
+      constructor(card){
+        Object.assign(this, card);
+        this.highlight=false;
+        ko.track(this);
+      }
+    }
+
     class ViewModel{
       constructor(){
-        this.coach = null;
-        this.newTeamName = "";
-        this.errors = [];
-        this.cards = [];
+        this.newTeam = null;
+        this.currentTeam = null;
+        this.reviewId = "";
         this.activeCard={};
-        this.rebuildClicked = false
+        this.cards =[];
+        this.error = null
         ko.track(this);
       }
 
-      async loadBadges(){
-        let response = await fetch(`/api/v2/cracker`);
+      map(data){
+        this.reviewId = data._id;
+        this.cards = data.cards.map(x => new Card(x));
+        this.newTeam = data.newTeam;
+        this.currentTeam = data.currentTeam;
+      }
+
+      async loadReview(){
+        let response = await fetch(`/api/v2/cracker/review`);
         if (response.ok){
-          this.coach = await response.json();
-          if (this.coach.rebuilding) {
-            response = await fetch("/api/v2/cracker/packs");
-            if (response.ok){
-              this._loadCards(await response.json());
-            }
+
+          try{
+            this.map(await response.json());
+          }
+          catch(e){
+            this.error = "Currently no reviews available for you.";
           }
         }
       }
-      async rebuildTeam(){
-        this.rebuildClicked = true;
-        let response = await fetch("/api/v2/cracker/rebuild");
-        if (response.ok){
-          this._loadCards(await response.json());
-        }
+
+      highlightCards(player){
+        this.cards.map(x => x.highlight = player.selectedCards && player.selectedCards.includes(x.cardId) );
+      }
+      disableHighlight(){
+        this.cards.map(x => x.highlight = false);
+      }
+
+      playerType(type){
+        let t = type.split("_");
+        t.splice(0,1);
+        return t.join(" ");
       }
 
       _loadCards(cards){
@@ -161,7 +167,6 @@ block scripts
         e.activeCard = data;
       };
       getSkillImage(skill){
-
           switch (skill){
             case "MA+":
             case "+MA":
@@ -181,70 +186,27 @@ block scripts
           }
       }
 
+     
+      useCount(id){
+        if (!this.newTeam) return 0;
+
+        let count = this.newTeam.roster.filter(x => x.selectedCards.includes(id)).length;
+        return count;
+      }
+
       getSkills(list){
         if (list.length === 0) return [];
         list = list.replace(" and ", ", ").replace("Sidestep", "Side Step");
         return list.split(", ");
       }
       
-
-      nice(){
-        return (this.coach.touchdownsPacks || 0) + 
-        (this.coach.completionsPacks || 0) +
-        (this.coach.levelsPacks || 0) + 
-        (this.coach.initPack || 0) + 
-        (this.coach.armourBreaksPacks || 0);
-      }
-
-      naughty(){
-        return (this.coach.casualtiesPacks || 0) + 
-        (this.coach.killsPacks || 0) + 
-        (this.coach.surfsPacks || 0) + 
-        (this.coach.weaponsPacks || 0);
-      }
-
-      immortal(){
-        return this.coach.matchesLostPacks || 0;
-      }
-
-      filler(){
-        return (this.coach.matchesPlayedPacks || 0) + (this.coach.streakPacks || 0);
-      }
-
-      hugeBonus(){
-        return this.coach.bigGuyTouchdownsPacks || 0  ;
-      }
-
-      allowRebuild(){
-        let total = 
-          this.nice()
-          + this.hugeBonus()
-          + this.naughty()
-          + this.immortal()
-          + this.filler() 
-          - this.coach.claimedPacks.nice 
-          - this.coach.claimedPacks.naughty 
-          - this.coach.claimedPacks.immortal 
-          - this.coach.claimedPacks.filler 
-          - this.coach.claimedPacks.huge
-          ;
-          return total > 0 && !this.rebuildClicked;
-      }
-
-      async registerTeam(){
-        let response = await fetch(`/api/v2/cracker/register/${this.newTeamName}`,{method:"POST"});
-        if (response.ok){
-          let result = await response.json();
-          if (result.length === 0) this.loadBadges();
-          else this.errors = result;
-        } 
-      }
     }
-
+    
+    //ko.options.deferUpdates = true;
     let model = new ViewModel();
 
     $(document).ready(function(){
       ko.applyBindings(model);
-      model.loadBadges();
+      model.loadReview();
     });
     

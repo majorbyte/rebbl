@@ -18,7 +18,7 @@ class Rebbl{
   async _root(req, res, next) {
     let data = {company:req.params.company}
     data.announcements = await dataService.getAnnouncements({});
-    let c = new RegExp(`^(^Season 12)|(^REL Rampup)|(^GMAN Rampup)`, "i");
+    let c = new RegExp(`^(^Season 13)|(^REL Rampup)|(^GMAN Rampup)`, "i");
     let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
     let s  = new RegExp("(The REBBL Rabble Mixer)|(XScessively Elfly League)|(Rebbl One Minute League)|(REBBLL )","i")
     let d = await datingService.all();
@@ -94,7 +94,8 @@ class Rebbl{
     this.router.use('/old_team', require(`./old_team.js`));
     this.router.use('/playoffs', require(`./playoffs.js`));
     this.router.get("/camping", util.cache(10*60), (req, res, next) => res.render("rebbl/winter"));
-    this.router.get("/christmascracker", util.cache(1), (req, res, next) => res.render("rebbl/cracker"));
+    this.router.get("/christmascracker/review", util.cache(1), (req, res, next) => res.render("rebbl/cracker/review"));
+    this.router.get("/christmascracker", util.cache(1), (req, res, next) => res.render("rebbl/cracker/cracker"));
     this.router.use('/:league', new league().routesConfig());
     this.router.use('/:league/:division', new division().routesConfig());
 
