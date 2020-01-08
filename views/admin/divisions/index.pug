@@ -17,7 +17,7 @@ block scripts
 
         self.filteredData = ko.computed(function(){
           if ( self.selectedLeague()){
-            return self.data().filter(x => self.selectedLeague() === x.league).sort((a,b) => a.competition>b.competition ? 1: -1);
+            return self.data().filter(x => x.league.startsWith(self.selectedLeague())).sort((a,b) => a.competition>b.competition ? 1: -1);
           }
 
           return [];
