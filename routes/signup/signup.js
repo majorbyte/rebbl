@@ -12,18 +12,21 @@ class Signup{
   }
 
   routesConfig(){
-        this.router.get('/', async function(req, res){
+/*        this.router.get('/', async function(req, res){
       res.render('signup/closed');
     });
 
-/*
+*/
     this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup);
-    */
-/*
+
+    
     this.router.get('/', util.ensureLoggedIn, this._getStatus);
 
     this.router.get('/change', util.ensureLoggedIn, this._changeSignup);
 
+    this.router.post('/resign', util.ensureAuthenticated, this._resign);
+
+  /*
     this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
 
     this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
@@ -40,7 +43,6 @@ class Signup{
 
     this.router.post('/confirm-oi', util.ensureAuthenticated, this._confirmOpenInvitational);
 
-    this.router.post('/resign', util.ensureAuthenticated, this._resign);
 
     this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
 
@@ -68,7 +70,6 @@ class Signup{
       let signups = [];
 
       let signup = await signupService.getSignUp(req.user.name,"rebbl");
-
 
       if (signup){
         signup.signedUp = true;
@@ -99,18 +100,18 @@ class Signup{
       let account = await accountService.getAccount(req.user.name);
 
       // Disabled while during season
-      if(!signup && user && user.team){
+      /*if(!signup && user && user.team){
         res.render('signup/signup-existing', { user: user});
         return;
-      }
+      }*/
 
       if (!signup){
         if(account){
-          res.render('signup/signup-new-coach', {user: {account: account}});
-          //res.render('signup/signup-rampup', {user: {account: account}});
+          //res.render('signup/signup-new-coach', {user: {account: account}});
+          res.render('signup/signup-rampup', {user: {account: account}});
         } else {
-          res.render('signup/signup-new-coach', {user: req.user.name});
-          //res.render('signup/signup-rampup', {user: req.user.name});
+          //res.render('signup/signup-new-coach', {user: req.user.name});
+          res.render('signup/signup-rampup', {user: req.user.name});
         }
         return;
       }

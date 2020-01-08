@@ -50,7 +50,7 @@ block content
                 div(class="warning")
                   p Your team is either misspelled or not yet existing
                 br
-              //- if(signup.saveType ==="rampup")
+              - if(signup.saveType ==="rampup")
                 form(action="/signup/change" method="get" style="float:left;margin-right:116px;")
                   button(type="submit"  class="btn btn-primary") Change
 
