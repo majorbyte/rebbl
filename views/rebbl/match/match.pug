@@ -26,7 +26,7 @@ block content
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let tn = match.teams[0].teamname
-                      -if (company === "imperium")
+                      -if (company === "imperium" || noTeamLink )
                         span=tn
                       -else
                         - if (tn.indexOf('[colour=') > -1)
@@ -59,7 +59,7 @@ block content
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let on = match.teams[1].teamname
-                      -if (company === "imperium")
+                      -if (company === "imperium" || noTeamLink)
                         span=on
                       -else
                         - if (on.indexOf('[colour=') > -1)
