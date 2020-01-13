@@ -178,7 +178,7 @@ block scripts
         this.trophies =[];
         this.me = {};
 
-        this.collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+        this.collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base", ignorePunctuation:true});
         ko.track(this);
       }
 
@@ -205,7 +205,8 @@ block scripts
         if (response.ok){
           let data  = await response.json();
           data = data.map(x => new StandingsModel(x));
-          data = this._groupBy(data,"competition")
+          data = this._groupBy(data,"competition");
+
 
           this.standings=data;
         }        
