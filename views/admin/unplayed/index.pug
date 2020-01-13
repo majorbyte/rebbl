@@ -29,7 +29,7 @@ block scripts
 
           if (self.filteredDivisions().length > 0  && self.filteredLeagues().length > 0 && self.filteredRounds().length  > 0){
 
-            return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1
+            return self.games().filter(x => self.filteredLeagues.indexOf(x.league.replace(" 2","")) > -1
               && self.filteredDivisions.indexOf(x.competition.replace(/Season 13.{1,3}Division /i,'Div ')) > -1
               && self.filteredRounds.indexOf(x.round || 2) > -1       
             );
@@ -37,7 +37,7 @@ block scripts
 
           if (self.filteredLeagues().length > 0 && self.filteredRounds().length  > 0){
 
-            return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1
+            return self.games().filter(x => self.filteredLeagues.indexOf(x.league.replace(" 2","")) > -1
               && self.filteredRounds.indexOf(x.round || 2) > -1       
             );
           }
@@ -51,7 +51,7 @@ block scripts
 
           if (self.filteredDivisions().length > 0  && self.filteredLeagues().length > 0){
 
-            return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1
+            return self.games().filter(x => self.filteredLeagues.indexOf(x.league.replace(" 2","")) > -1
               && self.filteredDivisions.indexOf(x.competition.replace(/Season 13.{1,3}Division /i,'Div ')) > -1
             );
           }
@@ -63,7 +63,7 @@ block scripts
           }
 
           if ( self.filteredLeagues().length > 0){
-            return self.games().filter(x => self.filteredLeagues.indexOf(x.league) > -1);
+            return self.games().filter(x => self.filteredLeagues.indexOf(x.league.replace(" 2","")) > -1);
           }
 
           if ( self.filteredRounds().length > 0){
@@ -78,7 +78,7 @@ block scripts
         self.toggleLeague= function(l){
           let i = self.filteredLeagues.indexOf(l);
           if( i === -1){
-            self.filteredLeagues.push(l);
+            self.filteredLeagues.push(l.replace(" 2", ""));
           } else {
             self.filteredLeagues.splice(i,1);  
           }
