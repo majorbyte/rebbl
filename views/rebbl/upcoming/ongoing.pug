@@ -72,8 +72,13 @@ block scripts
         if (result.ok){
             let data = await result.json();
             self.games(data);
-            let leagues = data.map(d =>{return {competition: d.CompetitionName, league:d.LeagueName}});
-            self.competitions([...new Set(leagues)]);
+            let leagues = data.reduce((p,c) => {
+              if (!p.find(x => x.competition === c.CompetitionName && x.league === c.LeagueName))
+                p.push({competition: c.CompetitionName, league:c.LeagueName});
+              return p;
+            },[]);
+            
+            self.competitions(leagues);
             leagues = data.map(d => `${d.LeagueName}`);
             self.leagues([...new Set(leagues)]);
             self.visibleLeagues([...new Set(leagues)]);
