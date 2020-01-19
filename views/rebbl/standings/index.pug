@@ -262,7 +262,7 @@ block scripts
 
           if (response.ok) {
             this.me = await response.json();
-            if (this.me.league !== decodeURI(this.league)) return;
+            if (!this.me.league.startsWith(decodeURI(this.league))) return;
             division = this.me.division;
           }
         }
