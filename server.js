@@ -1,6 +1,7 @@
 "use strict";
 const express = require('express')
   , path = require('path')
+  , chaosService = require('./lib/ChaosService.js')
   , crippleService = require('./lib/crippleService.js')
   , maintenanceService = require('./lib/MaintenanceService.js')
   , signupService = require('./lib/signupService.js')
@@ -178,11 +179,16 @@ class Server{
 
       socket.emit('greenhorn', data);
 
+      data = await chaosService.getCasualties();
+
+      socket.emit('chaos', data);
+
     });
 
     crippleService.init(this.io);
     signupService.init(this.io);
     maintenanceService.init(this.io);
+    chaosService.init(this.io);
 
     this.server.listen(this.port);
   }
