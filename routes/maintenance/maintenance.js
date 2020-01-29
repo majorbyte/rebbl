@@ -4,6 +4,7 @@ const
   , campingService = require("../../lib/CampingService.js")
   , clanService = require("../../lib/ClanService.js")
   , configurationService = require("../../lib/ConfigurationService.js")
+  , chaos = require('../../lib/ChaosService.js')
   , cripple = require('../../lib/crippleService.js')
   , express = require('express')
   , hjmc = require("../../lib/TourneyService")
@@ -26,6 +27,12 @@ class Maintenance{
   routesConfig(){
     this.router.get('/update/cripple', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled) cripple.getMatches();
+      try{
+        chaos.getMatches();
+      }
+      catch(e){
+        loggingService.error(e);
+      }
       cracker.checkAchievements();
       res.redirect('/');
     });
@@ -38,7 +45,13 @@ class Maintenance{
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       //cracker.registerTeam("majorbyte", "MajorTest2")
       //cracker.getCheaters();
-      cracker.fixRebuilders();
+      //cracker.fixRebuilders();
+      try{
+        chaos.notifyClients();
+      }
+      catch(e){
+        loggingService.error(e);
+      }
       res.redirect('/');
     });
 
@@ -61,7 +74,7 @@ class Maintenance{
 
     this.router.get('/updateleague', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled){
-        try{
+        /*try{
           await maintenanceService.getRebblData(req.query.league);
         }
         catch(e){
@@ -109,8 +122,10 @@ class Maintenance{
         }
         catch(e){
           loggingService.error(e);
-        }
+        }*/
+        
       }
+
       res.redirect('/');
     });
 

@@ -1,0 +1,55 @@
+html
+  head
+    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css")
+    link(href="https://fonts.googleapis.com/css?family=Nosifer&display=swap" rel="stylesheet") 
+    script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/bootstrap.min.js")  
+    - if (process.env.NODE_ENV === 'production')
+      script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+      script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+      script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    - else
+      script(src="/scripts/knockout-3.4.2.js")
+      script(src="/scripts/knockout-mapping.min.js")
+      script(src="/scripts/knockout-es5.js")
+      
+    script(src="/scripts/socket.io.js")
+    style.
+      h1,h2{font-family: 'Nosifer', cursive;color:#AF111C}
+
+  body
+    .container-flex
+      .row(style="background: url(/images/gengar.png) no-repeat ;background-size:cover")
+        h1.col-12.text-center Gengar's Day of Death
+        // ko foreach: coaches
+        .col-9.offset-1
+          h2(data-bind="text: $data.coach") 
+        .col-2
+          h2(data-bind="text: $data.kills") 
+        // /ko
+
+    script.
+
+    
+      //event emmited when receiving message 
+      function update(data) {
+        //data.result;
+        model.coaches = data.data;
+      }
+
+      function StandingsModel(data){
+        this.map = (data) => {
+          if (data) {
+            this.coaches = data.data;	
+          }
+        };
+        this.map(data);
+        ko.track(this);
+      }
+      
+      let model = new StandingsModel({data:[]}); 
+      ko.applyBindings(model);
+      $(document).ready(function(){
+        var socket = io.connect('/');
+        socket.on('chaos', function(data) {update(data)});
+      });
