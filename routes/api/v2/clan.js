@@ -80,7 +80,7 @@ class ClanApi{
         round:Number(req.params.round),
         house:Number(req.params.house)
       });
-      let clans = await dataService.getClans({name:{$in:[schedule.home.clan,schedule.away.clan]}});
+      let clans = await dataService.getClans({name:{$in:[schedule.home.clan,schedule.away.clan]},season:req.params.season});
 
       schedule.home.clan = clans.find(c => c.name === schedule.home.clan);
       schedule.away.clan = clans.find(c => c.name === schedule.away.clan);
@@ -100,7 +100,7 @@ class ClanApi{
     });
 
     this.router.get("/schedule/:season/:division", async function(req, res){
-      let schedules = await dataService.getSchedules({league:"clan", season:req.params.season, competition:req.params.division});
+      let schedules = await dataService.getSchedules({league:"clan", season:req.params.season, competition:new RegExp(req.params.division,"i")});
       let clans = await dataService.getClans({division:req.params.division});
 
       schedules.map(x =>{
@@ -137,7 +137,7 @@ class ClanApi{
     });
 
     this.router.get("/clans", async function(req, res){
-      res.json(await clanService.getClans());
+      res.json(await clanService.getClans({}));
     });
 
     this.router.get("/powers", function(req,res){
