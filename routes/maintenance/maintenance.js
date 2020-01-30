@@ -74,7 +74,7 @@ class Maintenance{
 
     this.router.get('/updateleague', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled){
-        /*try{
+        try{
           await maintenanceService.getRebblData(req.query.league);
         }
         catch(e){
@@ -122,10 +122,8 @@ class Maintenance{
         }
         catch(e){
           loggingService.error(e);
-        }*/
-        
+        }
       }
-
       res.redirect('/');
     });
 
