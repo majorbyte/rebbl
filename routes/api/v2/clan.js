@@ -80,7 +80,7 @@ class ClanApi{
         round:Number(req.params.round),
         house:Number(req.params.house)
       });
-      let clans = await dataService.getClans({name:{$in:[schedule.home.clan,schedule.away.clan]}});
+      let clans = await dataService.getClans({name:{$in:[schedule.home.clan,schedule.away.clan]},season:req.params.season});
 
       schedule.home.clan = clans.find(c => c.name === schedule.home.clan);
       schedule.away.clan = clans.find(c => c.name === schedule.away.clan);
@@ -100,7 +100,7 @@ class ClanApi{
     });
 
     this.router.get("/schedule/:season/:division", async function(req, res){
-      let schedules = await dataService.getSchedules({league:"clan", season:req.params.season, competition:req.params.division});
+      let schedules = await dataService.getSchedules({league:"clan", season:req.params.season, competition:new RegExp(req.params.division,"i")});
       let clans = await dataService.getClans({division:req.params.division});
 
       schedules.map(x =>{
@@ -137,7 +137,7 @@ class ClanApi{
     });
 
     this.router.get("/clans", async function(req, res){
-      res.json(await clanService.getClans());
+      res.json(await clanService.getClans({}));
     });
 
     this.router.get("/powers", function(req,res){
@@ -170,7 +170,7 @@ class ClanApi{
         key: "newBlood",
         name: "New Blood!",
         cost: 100,
-        quantitiy: 2,
+        quantitiy: 1,
         description: `Within 24 hours after the team played its last match (and before the next draft), the clan leader can nominate that team to be removed from the league permanently and replaced with a new team costing the same in gold as the original team did AT THE START OF THE SEASON. 
 
         This new team follows the same rules for buying players and skills as any new team. The new team may be of a different race if so desired, but still must be unique to the clan. If the new team is the same race as the original team, a single player from the original roster may be kept as a legacy player. This legacy player costs the same in gold as he is listed as valued in-game AND any possible statistic upgrades and doubles (or sheer number of skills!) are not counted other than in terms of the price for keeping him around! This means that the number of statistic upgrades or doubles for the new team is not affected by whatever the legacy player already has.
@@ -238,8 +238,31 @@ class ClanApi{
         cost: 100,
         quantitiy: 2,
         description: "Use this power at the beginning of a draft to leave the choice of a power up to the fickle god that is Nuffle. Roll 1D14 using the discord dice bot and use the power associated with that number (counting down the power list) during this draft, you may not play any other powers during this draft phase, this power is unaffected by Miscommunication! If you roll this ability (a 14) you are truly blessed by Nuffle and may roll 2D13 and receive both associated powers! As noted in New Blood you DO NOT have to use that power if it is rolled, but you are not allowed to re-roll it if you select not to use it. Furthermore, you may use Emergency Intensive Care in the same round as this power is used (and can use ALL EIC’s if you roll extra via this power) but any EIC gained by this power may not be stockpiled for future rounds."
-      }] 
-      );
+      },{
+        key: "financialFraudAudit",
+        name: "Financial Fraud Audit!",
+        cost: 50,
+        quantitiy: 2,
+        description: `At the end of the draft, the clan leader buys off a Blood Bowl Bank Association official to conduct a 'random' financial fraud audit of the opposing clan's treasury. Depending on how many charges are used of this power, it has slightly different effects.
+
+        For 1 charge, the clan leader gently directs the auditor to have a look at target team in the opposing clan. During the inducement phase, the targeted team cannot use any bank cash to add to the petty cash (which is given based on the TV difference). The team is free to use the petty cash as they see fit, however.
+        
+        For 2 charges, the clan leader sets off a general fraud audit, which affects all match-ups for BOTH clans. During inducements, no team from either clan may use any bank cash to add to the petty cash (which is given based on the TV difference). The teams are free to use the petty cash as they see fit, however.
+        
+        The power may only be used ONCE every draft by the same clan (for the 1 charge version or the 2 charge version, i.e. not two 1 charge versions). However, if both clans use the 1 charge version, it automatically becomes the 2 charges version of the power instead! Please note you get two charges of this power for each 50k spent. `
+      },{
+        key: "bloodSacrifice",
+        name: "Blood Sacrifice!",
+        cost: 50,
+        quantitiy: 2,
+        description: `At the end of the draft, the clan leader may target one of the clan’s own teams. That team sacrifices one or two players to the God of Kash. If one player is sacrificed, the team gets an admin win game and receives the winnings. However, all SPP are placed on the sacrificed player who is killed in the process. If two players are targeted, the team gets an admin concede win (i.e. likely more Kash!) instead but all SPP is again put on the killed players. It is legal to sacrifice MNG players (we have the technology!). An admin game (concede loss) may be needed to reapply any (not sacrificed) MNG again`
+      },{
+        key: "badInducementDeal",
+        name: "Bad Inducement Deal!",
+        cost: 50,
+        quantitiy: 2,
+        description: `At the start of the draft, the clan leader may pick any one inducement and one opposing team. During that team’s match for the round, this inducement may not be bought during the inducement phase. The team may take any other inducement as normal, however. Note that stadiums that e.g. give wizards or bribes still do so, and may be used during game. Similarly, if a kick-off event gives for instance bribes, these are free to use even if Bribe was the inducement picked in a Bad Inducement Deal! as it is only PURCHASES DURING INDUCEMENT that is prohibited. If a coach forgets or otherwise violates this, ask for the game to be reset by an admin. `
+      }]);
     });
 
     this.router.put("/:season/:division/:round/:house/:clan/usepower/:power", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){

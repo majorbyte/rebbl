@@ -21,15 +21,15 @@ block navigation
 block content
   div(class="container no-gutters" id="app")
     div(class="row col-12")
-      template(v-for="row in numberOfRows")
-        a(v-bind:href="`/clan/schedule/season 7/Division ${row}`" target="_blank" )
-          h3 Division {{row}}
-        div(class="row col-12")
-          template(v-for="col in 10")
-            div(class="p-1")
-              a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/clan/' + clans[(row - 1) * 10 + (col - 1)].name" target="_blank" )
-                | {{ clans[(row - 1) * 10 + (col - 1)].name }} &nbsp;
-                img(v-bind:src="'https://cdn2.rebbl.net/' + clans[(row - 1) * 10 + (col - 1)].logo" style="height:48px")
+      template(v-for="division in divisions")
+        a(v-bind:href="`/clan/schedule/season 8/${division}`" target="_blank" )
+          h3 {{division}}
+          div(class="row col-12")
+            template(v-for="clan of filter(division)")
+              div(class="p-1")
+                a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/clan/' + clan.name" target="_blank" )
+                  | {{ clan.name }} &nbsp;
+                  img(v-bind:src="'https://cdn2.rebbl.net/' + clan.logo" style="height:48px")
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
@@ -42,11 +42,13 @@ block scripts
     var app = new Vue({
       // app initial state
       data: {
+        divisions:["Division 1","Division 2A","Division 2B","Division 3A","Division 3B"],
         clans: []
+
       },
-      computed: {
-        numberOfRows() {
-          return Math.ceil(this.clans.length / 10);
+      methods: {
+        filter(division) {
+          return this.clans.filter(x => x.division === division);
         }
       },
       // methods that implement data logic.
