@@ -26,14 +26,14 @@ class Maintenance{
 
   routesConfig(){
     this.router.get('/update/cripple', util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) cripple.getMatches();
+      //if (req.app.locals.cyanideEnabled) cripple.getMatches();
       try{
         chaos.getMatches();
       }
       catch(e){
         loggingService.error(e);
       }
-      cracker.checkAchievements();
+      //cracker.checkAchievements();
       res.redirect('/');
     });
 
