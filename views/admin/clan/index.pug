@@ -17,7 +17,7 @@ block content
     .container.navcontainer(data-index="0" id="app" style="max-width:1650px")
       .row.col-12
         .btn-group-toggle(data-toggle="buttons")
-          template(v-for="division of divisions")
+          template(v-for="division in divisions")
             label.btn.btn-outline-primary(style="margin-right: 15px" @click="load(division)")
               input(type="radio" checked autocomplete="off")       
               span {{division}}
@@ -477,7 +477,7 @@ block scripts
           this.schedule = await response.json();
           if(this.schedule.matches.length < 5){
             this.loadingMissingGames = true;
-            this.loadMissingCompetitions(s.competition.replace(/\D/g,""), s.round, s.house);
+            this.loadMissingCompetitions(s.competition, s.round, s.house);
           }
         },
         loadMissingCompetitions: async function(division, round, house){

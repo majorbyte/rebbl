@@ -34,7 +34,7 @@ class ClanApi{
     this.router.use("/draft", new draftApi().routesConfig());
 
     this.router.get("/competition/:division/:round/:house",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
-      let data = await clanService.getCompetitionInformation(Number(req.params.division), Number(req.params.round), Number(req.params.house));
+      let data = await clanService.getCompetitionInformation(req.params.division, Number(req.params.round), Number(req.params.house));
 
       data = data.filter(x => x.Row.CompetitionStatus === "0");
 
@@ -101,7 +101,7 @@ class ClanApi{
 
     this.router.get("/schedule/:season/:division", async function(req, res){
       let schedules = await dataService.getSchedules({league:"clan", season:req.params.season, competition:new RegExp(req.params.division,"i")});
-      let clans = await dataService.getClans({division:req.params.division});
+      let clans = await dataService.getClans({division:req.params.division, active:true});
 
       schedules.map(x =>{
         x.home.logo = clans.find(c => c.name === x.home.clan).logo;
@@ -137,7 +137,7 @@ class ClanApi{
     });
 
     this.router.get("/clans", async function(req, res){
-      res.json(await clanService.getClans({}));
+      res.json(await clanService.getClans({active:true}));
     });
 
     this.router.get("/powers", function(req,res){
@@ -273,7 +273,7 @@ class ClanApi{
         round:Number(req.params.round),
         house:Number(req.params.house)
       });
-      let clan = await dataService.getClan({name:req.params.clan});
+      let clan = await dataService.getClan({name:req.params.clan, active:true});
 
       const updatePowers = function(side,power){
         if(!side.usedPowers) {
@@ -293,7 +293,7 @@ class ClanApi{
 
       clan.powers[req.params.power]--;
       try{
-        await dataService.updateClan({name:clan.name},{$set:{powers:clan.powers}});
+        await dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
         res.status(202).send();
       }
       catch(ex){
@@ -309,7 +309,7 @@ class ClanApi{
         round:Number(req.params.round),
         house:Number(req.params.house)
       });
-      let clan = await dataService.getClan({name:req.params.clan});
+      let clan = await dataService.getClan({name:req.params.clan, active:true});
 
       const updatePowers = function(side,power){
           side.usedPowers[power]--;
@@ -325,7 +325,7 @@ class ClanApi{
 
       clan.powers[req.params.power]++;
       try{
-        await dataService.updateClan({name:clan.name},{$set:{powers:clan.powers}});
+        await dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
         res.status(202).send();
       }
       catch(ex){
