@@ -101,7 +101,7 @@ class ClanApi{
 
     this.router.get("/schedule/:season/:division", async function(req, res){
       let schedules = await dataService.getSchedules({league:"clan", season:req.params.season, competition:new RegExp(req.params.division,"i")});
-      let clans = await dataService.getClans({division:req.params.division, active:true});
+      let clans = await dataService.getClans({division:new RegExp(req.params.division,"i"), season:req.params.season});
 
       schedules.map(x =>{
         x.home.logo = clans.find(c => c.name === x.home.clan).logo;
