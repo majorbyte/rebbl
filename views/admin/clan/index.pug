@@ -185,7 +185,7 @@ block content
                   template(v-if="match.counted === true")
                     template(v-if="isPlayedButUnconfirmed(match)")
                       span.badge.badge-warning unconfirmed   
-                    template(v-if="isPlayedButUnconfirmed(match) && hasEIC(match,0)")
+                    template(v-if="isPlayed(match) && hasEIC(match,0)")
                       button(type="button" class="btn btn-outline-info btn-sm active float-right" @click="loadEicPlayers(match, 0)"  data-toggle="modal" data-target="#eicUse")
                         | EIC      
                 a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
@@ -221,7 +221,7 @@ block content
                   template(v-if="match.counted === true && match.match_uuid !== null")
                     button.mx-1.btn.btn-success.btn-sm(type="button" @click="refreshMatch(match.match_uuid)") 
                       i(class="fa fa-refresh")  
-                  template(v-if="isPlayedButUnconfirmed(match) &&  hasEIC(match, 1)")
+                  template(v-if="isPlayed(match) &&  hasEIC(match, 1)")
                     button.btn.btn-outline-info.btn-sm.active(type="button" @click="loadEicPlayers(match, 1)"  data-toggle="modal" data-target="#eicUse")
                       | EIC      
                   template(v-if="match.counted === true && isPlayedButUnconfirmed(match)")
@@ -580,6 +580,9 @@ block scripts
         },
         isPlayedButUnconfirmed: function(match){
           return match.status === 'scheduled' && match.match_uuid !== null;
+        },
+        isPlayed: function(match){
+          return match.match_uuid !== null;
         },
         hasEIC: function(match, index){
           const re = new RegExp(`\\[${this.schedule.home.clan.name}]`,"i");

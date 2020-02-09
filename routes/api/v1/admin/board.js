@@ -32,7 +32,7 @@ const express = require("express")
       if (info.ResponseGetLeagueBoard.CallResult.Result === "1"){
         let data = info.ResponseGetLeagueBoard.BoardMembers.BoardMember.map(member =>  {
           return {
-            coachId: member.CoachId,
+            coachId: member.IdCoach,
             coachName: member.NameCoach,
             type: member.RowBoard.IdProfileType,
             leagueName: member.RowLeague.Name,
