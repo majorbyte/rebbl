@@ -461,7 +461,7 @@ block content
                 div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" )
                   for match,index in data.upcoming.slice(x*5,5*x + 5)      
                     div(class="col-12")    
-                      -let url=`/${company}/match/unplayed/${match.contest_id}`
+                      -let url=`/${company === "" ? "rebbl" : company}/match/unplayed/${match.contest_id}`
                       div(class="row col-md-12 no-gutters" style="margin: 0 auto;")
                         a(href=url class="col-md-11 MatchRow-contentWrapper" target="_blank")
                           div(class="col-md-3 col-sm-4  no-gutters")
