@@ -42,7 +42,11 @@ class Account{
         if(account.following){
           let coaches = [];
           for(var x = 0; x < account.following.length;x++){
-            const schedule = await dataService.getSchedule({"opponents.coach.id" : account.following[x]});
+            let schedule = await dataService.getSchedule({"opponents.coach.id" : account.following[x]});
+            if (!schedule) {
+              schedule = await dataService.getSchedule({"matches.opponents.coach.id" : account.following[x]});
+              schedule = schedule.matches.find(m => m.opponents.some(o => o.coach.id ===account.following[x]))
+            }
             const coach = schedule.opponents.find(function(a){return a.coach.id === account.following[x]}).coach;
             coaches.push(coach);
           }
