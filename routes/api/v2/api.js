@@ -16,7 +16,7 @@ const express = require("express")
 
 class ApiV2{
   constructor(){
-    this.router =express.Router()
+    this.router =express.Router();
   }
 
   routesConfig(){
@@ -39,9 +39,9 @@ class ApiV2{
 
     this.router.use("/trophies", new trophiesApi().routesConfig());
 
-    this.router.use("/camping",  new campingApi().routesConfig());
+    this.router.use("/camping", new campingApi().routesConfig());
     
-    this.router.use("/cracker",  new crackerApi().routesConfig());
+    this.router.use("/cracker", new crackerApi().routesConfig());
 
     return this.router;
   }

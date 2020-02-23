@@ -24,16 +24,16 @@ class Division{
     let league = req.params.league;
     let divRegex = new RegExp(`^${req.params.division}$`, 'i');
     let season = "";
-    if(league.toLowerCase() == "off season international"){
+    if(league.toLowerCase() === "off season international"){
       leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
       season = "season 13";
-    } else if(league.toLowerCase() == "rebbl one minute league"){
+    } else if(league.toLowerCase() === "rebbl one minute league"){
       leagueRegex = new RegExp(`^Rebbl One Minute League`, 'i');  
-    } else if(league.toLowerCase() == "greenhorn cup") {
+    } else if(league.toLowerCase() === "greenhorn cup") {
       leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
       season = "season 13";
       divRegex =new RegExp(`^${req.params.division}$`, 'i');
-    } else if (league.toLowerCase().indexOf("hjmc") == -1 && league.toLowerCase().indexOf("rebbrl") == -1 && league.toLowerCase().indexOf("rebbl -") == -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
+    } else if (league.toLowerCase().indexOf("hjmc") === -1 && league.toLowerCase().indexOf("rebbrl") === -1 && league.toLowerCase().indexOf("rebbl -") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
       leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
     } else {
       if (league === "rabble"){
@@ -56,19 +56,19 @@ class Division{
     else 
       data.matches = await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
 
-    let ids = []
+    let ids = [];
     for(var prop in data.matches){
       data.matches[prop].map(m => ids.push(m.contest_id));
     }
   
-    data.dates = await datingService.search({"id":{$in:ids}})
+    data.dates = await datingService.search({"id":{$in:ids}});
   
     data.divisions = await db.getDivisions(leagueRegex);
   
     if(league.toLowerCase() === "xscessively elfly league"){
       data.matches["1"] = await data.matches["1"].sort(function(a,b){
-        return a.match_id > b.match_id ? -1 : 1 ;
-      })
+        return a.match_id > b.match_id ? -1 : 1;
+      });
     }
   
     res.render('rebbl/division/index', data);
@@ -81,17 +81,17 @@ class Division{
       let data = {matches:null, divisions:null, league:req.params.league, competition: req.params.division, week: week,company:req.params.company };
       let leagueRegex;
       let league = req.params.league;
-      let season = ""
-      if(league.toLowerCase() == "off season international"){
+      let season = "";
+      if(league.toLowerCase() === "off season international"){
         leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
         season = "season 13";
-      } else if(league.toLowerCase() == "rebbl one minute league"){
+      } else if(league.toLowerCase() === "rebbl one minute league"){
         leagueRegex = new RegExp(`^Rebbl One Minute League`, 'i');  
-      } else if(league.toLowerCase() == "greenhorn cup") {
+      } else if(league.toLowerCase() === "greenhorn cup") {
         leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
         season = "season 13";
         divRegex =new RegExp(`^${req.params.division}$`, 'i');
-      } else if (league.toLowerCase().indexOf("rebbrl") == -1 && league.toLowerCase().indexOf("rebbl -") == -1 && league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
+      } else if (league.toLowerCase().indexOf("rebbrl") === -1 && league.toLowerCase().indexOf("rebbl -") === -1 && league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
         leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
       } else {
         if (league === "rabble"){
@@ -110,10 +110,10 @@ class Division{
       else
         data.matches = await db.getLeagues({round: week, league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
   
-      let ids = []
+      let ids = [];
       data.matches.map(m => ids.push(m.contest_id));
     
-      data.dates = await datingService.search({"id":{$in:ids}})
+      data.dates = await datingService.search({"id":{$in:ids}});
     
   
       data.divisions = await db.getDivisions(leagueRegex);

@@ -1,7 +1,7 @@
 'use strict';
 
-const  accountService = require('../../lib/accountService.js')
-  ,  express = require('express')
+const accountService = require('../../lib/accountService.js')
+  , express = require('express')
   , util = require('../../lib/util.js')
   , signupService = require('../../lib/signupService.js');
 
@@ -55,7 +55,7 @@ class Signup{
 
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
 
-    this.router.get('/counter', async function(req, res, next){res.render('signup/counter');});
+    this.router.get('/counter', async function(req, res){res.render('signup/counter');});
 
     this.router.get('/rebbrl', util.ensureLoggedIn, this._rebbrl);
     this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl);
@@ -87,7 +87,7 @@ class Signup{
       if (signups.length === 0 && user) {
         user.signedUp = false;
       }
-      res.render('signup/overview', {signups:signups,  user: signups.length > 0 ? signups[0] : user || {reddit: req.user.name, isNew :true} });
+      res.render('signup/overview', {signups:signups, user: signups.length > 0 ? signups[0] : user || {reddit: req.user.name, isNew :true} });
     } catch (err){
       console.log(err);
     }
@@ -95,12 +95,12 @@ class Signup{
 
   async _changeSignup(req, res){
     try {
-      let user = await signupService.getExistingTeam(req.user.name);
       let signup = await signupService.getSignUp(req.user.name,"rebbl");
       let account = await accountService.getAccount(req.user.name);
 
       // Disabled while during season
-      /*if(!signup && user && user.team){
+      /*let user = await signupService.getExistingTeam(req.user.name);
+      if(!signup && user && user.team){
         res.render('signup/signup-existing', { user: user});
         return;
       }*/
@@ -328,7 +328,6 @@ class Signup{
   /* REBBRL */
   async _rebbrl(req, res){
     try {
-      let user = await signupService.getExistingTeam(req.user.name);
       let signup = await signupService.getSignUp(req.user.name,"rebbrl");
       let account = await accountService.getAccount(req.user.name);
 
@@ -343,7 +342,6 @@ class Signup{
         return;
       }
 
-      let data = Object.assign(signup, account);
       if(account){
         signup.account = account;
       }

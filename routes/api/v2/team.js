@@ -35,7 +35,7 @@ class TeamApi{
       message:
         "Too many requests, please wait 30 seconds",
       keyGenerator: function(req){
-        return req.user.name
+        return req.user.name;
       }
 
     });
@@ -59,7 +59,7 @@ class TeamApi{
         if (players.length === 0){
           let team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
           if (team){
-            players = team.roster
+            players = team.roster;
           }
         }
         res.json(players);

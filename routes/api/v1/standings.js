@@ -20,22 +20,22 @@ router.get('/rampup/:league', util.cache(10*60), async function(req, res){
     res.sendResponse(
       standings[league].sort(function (a, b) {
         if (a.points > b.points) {
-          return -1
+          return -1;
         }
         if (b.points > a.points) {
-          return 1
+          return 1;
         }
         if (a.tddiff > b.tddiff) {
-          return -1
+          return -1;
         }
         if (b.tddiff > a.tddiff) {
-          return 1
+          return 1;
         }
         if (a.loss > b.loss) {
-          return 1
+          return 1;
         }
         if (b.loss > a.loss) {
-          return -1
+          return -1;
         }
         return 0;
       })
@@ -52,22 +52,22 @@ router.get('/stunty', util.cache(10*60), async function(req, res){
   res.sendResponse(
     standings.sort(function (a, b) {
       if (a.points > b.points) {
-        return -1
+        return -1;
       }
       if (b.points > a.points) {
-        return 1
+        return 1;
       }
       if (a.tddiff > b.tddiff) {
-        return -1
+        return -1;
       }
       if (b.tddiff > a.tddiff) {
-        return 1
+        return 1;
       }
       if (a.loss > b.loss) {
-        return 1
+        return 1;
       }
       if (b.loss > a.loss) {
-        return -1
+        return -1;
       }
       return 0;
     })
@@ -89,30 +89,30 @@ router.get('/csv/:league/:filter', util.ensureAuthenticated, util.hasRole("admin
 
   let standings = await db.getCoachScore(league,req.params.filter,false);
 
-  standings =  standings.sort(function (a, b) {
+  standings = standings.sort(function (a, b) {
     if (a.competition > b.competition){
-      return 1
+      return 1;
     }
     if (b.competition > a.competition){
-      return -1
+      return -1;
     }
     if (a.points > b.points) {
-      return -1
+      return -1;
     }
     if (b.points > a.points) {
-      return 1
+      return 1;
     }
     if (a.tddiff > b.tddiff) {
-      return -1
+      return -1;
     }
     if (b.tddiff > a.tddiff) {
-      return 1
+      return 1;
     }
     if (a.loss > b.loss) {
-      return 1
+      return 1;
     }
     if (b.loss > a.loss) {
-      return -1
+      return -1;
     }
     return 0;
   });
@@ -134,7 +134,7 @@ router.get('/csv/:league/:filter', util.ensureAuthenticated, util.hasRole("admin
 
 router.get('/:league', util.cache(10*60), async function(req, res){
   let league = req.params.league;
-  let filter= null
+  let filter= null;
   if (league.toLowerCase().indexOf("eurogamer") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){
     league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
     filter= "Season 13";
@@ -152,34 +152,34 @@ router.get('/:league', util.cache(10*60), async function(req, res){
   }
   
   standings.map(d => {
-    delete d.account
+    delete d.account;
   });
 
   res.sendResponse(
     standings.sort(function (a, b) {
       if (a.competition > b.competition){
-        return 1
+        return 1;
       }
       if (b.competition > a.competition){
-        return -1
+        return -1;
       }
       if (a.points > b.points) {
-        return -1
+        return -1;
       }
       if (b.points > a.points) {
-        return 1
+        return 1;
       }
       if (a.tddiff > b.tddiff) {
-        return -1
+        return -1;
       }
       if (b.tddiff > a.tddiff) {
-        return 1
+        return 1;
       }
       if (a.loss > b.loss) {
-        return 1
+        return 1;
       }
       if (b.loss > a.loss) {
-        return -1
+        return -1;
       }
 
       return 0;

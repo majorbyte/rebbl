@@ -3,12 +3,11 @@
 const dataService = require('../../../lib/DataService.js').rebbl
   , configurationService = require("../../../lib/ConfigurationService.js")
   , express = require('express')
-  , leagueService = require('../../../lib/LeagueService.js') 
   , util = require('../../../lib/util.js');
 
 class StandingsApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
   }
   routesConfig(){
     this.router.get('/coach/:id', util.cache(600), async function(req, res){

@@ -1,7 +1,6 @@
 
 'use strict';
 const dataService = require('../../../lib/DataService.js').rebbl
-  , configurationService = require('../../../lib/ConfigurationService.js')
   , express = require('express')
   , util = require('../../../lib/util.js');
 

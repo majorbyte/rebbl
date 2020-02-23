@@ -8,7 +8,7 @@ const load = async(filter) => {
   let data = await crippleService.getStandings();
   if (filter) data = data.filter(x => x.gp > 9);
   return data.sort((a,b) => a.score > b.score ? -1 : 1);
-}
+};
 
 router.get('/standings/complete', util.cache(10*60), async function(req, res){
   res.status(200).send(await load(false));

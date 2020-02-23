@@ -18,7 +18,7 @@ const express = require('express')
 
 class ClanApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
     this.getBlobName = (originalName) => `images/clanlogos/${originalName}`;
 
   }
@@ -28,7 +28,7 @@ class ClanApi{
       const account = await accountService.getAccount(req.user.name);
       const clan = await clanService.getClanByUser(account.coach); 
       const leader = await accountService.hasRole(req.user.name, "clanleader");
-      res.json({ clan:clan, leader:leader && account.coach.toLowerCase() == clan.leader.toLowerCase() } );
+      res.json({ clan:clan, leader:leader && account.coach.toLowerCase() === clan.leader.toLowerCase() } );
     });
 
     this.router.use("/draft", new draftApi().routesConfig());
@@ -46,16 +46,16 @@ class ClanApi{
           logo: p.RowTeam.Logo,
           teamId: Number(p.RowTeam.ID.Value.replace(/\D/g,"")),
           teamName: p.RowTeam.Name,
-          notAcceptedTicket: p.hasOwnProperty("Coach")
-        }
-      }
+          notAcceptedTicket: Object.prototype.hasOwnProperty.call(p,"Coach")
+        };
+      };
 
       let returnValue = data.map(x => {
         return {
           competitionId : Number(x.Row.Id.Value.replace(/\D/g,"")),
           competitionName: x.Row.Name,
           coaches: x.participants.map(mapData).concat(x.tickets.map(mapData))
-        }
+        };
       });
 
       res.json(returnValue);
@@ -87,8 +87,8 @@ class ClanApi{
 
       let teams = await dataService.getTeams({"team.id":{$in:schedule.home.clan.ledger.teams.filter(x => x.active).map(team=> team.team.id).concat(schedule.away.clan.ledger.teams.filter(x => x.active).map(team=> team.team.id))}});
 
-      const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"})
-      for(var x = 0; x <5;x++){
+      const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+      for(var x = 0; x <5; x++){
         schedule.home.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.home.clan.teams[x]) === 0 );
         schedule.away.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.away.clan.teams[x]) === 0);
       }
@@ -284,15 +284,15 @@ class ClanApi{
         if(!side.usedPowers) {
           side.usedPowers = {};
         }
-        if(side.usedPowers[power]) side.usedPowers[power]++
+        if(side.usedPowers[power]) side.usedPowers[power]++;
         else side.usedPowers[power] =1;
-      }
+      };
 
       if (schedule.home.clan === clan.name){
-        updatePowers(schedule.home, req.params.power)
+        updatePowers(schedule.home, req.params.power);
         await dataService.updateSchedule({_id:schedule._id},{$set:{"home.usedPowers":schedule.home.usedPowers}});
       }else{
-        updatePowers(schedule.away, req.params.power)
+        updatePowers(schedule.away, req.params.power);
         await dataService.updateSchedule({_id:schedule._id},{$set:{"away.usedPowers":schedule.away.usedPowers}});
       }
 
@@ -318,13 +318,13 @@ class ClanApi{
 
       const updatePowers = function(side,power){
           side.usedPowers[power]--;
-      }
+      };
 
       if (schedule.home.clan === clan.name){
-        updatePowers(schedule.home, req.params.power)
+        updatePowers(schedule.home, req.params.power);
         await dataService.updateSchedule({_id:schedule._id},{$set:{"home.usedPowers":schedule.home.usedPowers}});
       }else{
-        updatePowers(schedule.away, req.params.power)
+        updatePowers(schedule.away, req.params.power);
         await dataService.updateSchedule({_id:schedule._id},{$set:{"away.usedPowers":schedule.away.usedPowers}});
       }
 

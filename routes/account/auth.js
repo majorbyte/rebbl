@@ -24,7 +24,7 @@ class Authentication{
     this.router.get('/reddit/callback', function(req, res, next){
       try {
         // Check for origin via state token
-        if (req.query.state == req.session.state){
+        if (req.query.state === req.session.state){
           passport.authenticate('reddit', {
             successRedirect: req.session.returnUrl || '/',
             failureRedirect: '/login'
@@ -34,7 +34,7 @@ class Authentication{
           next( new Error(403) );
         }
       }catch(ex){
-          console.log(ex.message)
+          console.log(ex.message);
           console.log(ex.stack);
       }
     });

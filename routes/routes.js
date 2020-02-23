@@ -22,17 +22,17 @@ class Routes{
 		this.router = express.Router();
 	}
 	
-  async _root(req, res, next) {
-    let data = {}
+  async _root(req, res) {
+    let data = {};
     data.announcements = await dataService.getAnnouncements({});
     let c = new RegExp(`^(^Season 13)|(^REL Rampup)|(^GMAN Rampup)`, "i");
     let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
 
     let docs = await dataService.getSchedulesChain({ "league":{"$regex":l}, "competition":{"$regex":c} }).sort({ match_uuid: -1 }).limit(20).toArray();
 
-    data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);;
+    data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
 
-    let s  = new RegExp("^(REBBRL)","i")
+    let s = new RegExp("^(REBBRL)","i");
     docs = await dataService.getSchedulesChain({ "league":{"$regex":s} }).sort({ match_uuid: -1 }).limit(20).toArray();
     data.sides = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
     
@@ -42,7 +42,7 @@ class Routes{
 
     
 
-    data.upcoming = await dataService.getSchedules({"contest_id": {$in:[...new Set(d.map(x => x.id))]}})
+    data.upcoming = await dataService.getSchedules({"contest_id": {$in:[...new Set(d.map(x => x.id))]}});
 
     let clan = await dataService.getSchedules({"matches.contest_id": {$in:[...new Set(d.map(x => x.id))]}},{projection:{"matches.$":1}});
     
@@ -57,7 +57,7 @@ class Routes{
       match.stream=date.stream;
     }));
 
-    data.upcoming = data.upcoming.sort((a,b) => a.date < b.date ? -1 : 1)
+    data.upcoming = data.upcoming.sort((a,b) => a.date < b.date ? -1 : 1);
 
     res.render("rebbl/index", {data:data});
   }
@@ -74,7 +74,7 @@ class Routes{
     this.router.use("/auth", new auth().routesConfig());
     this.router.use("/admin", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), new admin().routesConfig());
 
-    this.router.get('/chaos', async function(req, res, next){
+    this.router.get('/chaos', async function(req, res){
       try{
         res.render('chaos/counter',null );
       } catch(err){
@@ -82,7 +82,7 @@ class Routes{
       }
     });
 
-    this.router.use("/clan",new clan().routesConfig())
+    this.router.use("/clan",new clan().routesConfig());
 
     this.router.use("/:company", new rebbl().routesConfig());
 

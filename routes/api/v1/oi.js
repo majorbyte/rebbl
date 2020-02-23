@@ -5,7 +5,7 @@ const db = require('../../../lib/signupService.js')
   , express = require('express')
   , router = express.Router();
 
-router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res,next){
+router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
 
   const signups = await db.getSignUps();
 
@@ -26,15 +26,15 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
     }
     let comp = "";
     if (schedules.length !== 0)
-      comp = schedules[0].competition
+      comp = schedules[0].competition;
 
     if (schedules.length === 0){
       schedules = await dataService.getSchedules({"opponents.team.name":regexp, league:/^Rebbrl/i});
       if (schedules.length !== 0)
-        comp = schedules[0].competition
+        comp = schedules[0].competition;
     }
 
-    csv += `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.timezone)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.coach)},${JSON.stringify(row.steam)},${JSON.stringify(row.league)},${comp}\r\n`
+    csv += `${JSON.stringify(row.team)},${JSON.stringify(row.race)},${JSON.stringify(row.timezone)},${JSON.stringify(row.reddit)},${JSON.stringify(row.discord)},${JSON.stringify(row.coach)},${JSON.stringify(row.steam)},${JSON.stringify(row.league)},${comp}\r\n`;
   }
 
 

@@ -5,13 +5,13 @@ const
   , express = require('express')
   , router = express.Router({mergeParams:true});
 
-router.get('/:team_id', /*util.cache(10*60),*/ async function(req, res, next){
+router.get('/:team_id', /*util.cache(10*60),*/ async function(req, res){
   if (req.headers['user-agent'].indexOf("https://discordapp.com") > -1){
     let team = await dataService.getTeam({"team.id":Number(req.params.team_id)});
     if(team){
       let standing = await dataService.getStandings({teamId:team.team.id},{sort:{season:-1},collation:{locale:"en_US", numericOrdering: true },limit:1 });
       res.render('rebbl/team/discord',{team:team,company:req.params.company,standing:standing[0]});
-    } else res.status(500).send("Team not found")
+    } else res.status(500).send("Team not found");
   } else {
     let cachedBody = cache.get(req.baseUrl);
     if (cachedBody) {

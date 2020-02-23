@@ -1,12 +1,12 @@
 'use strict';
-const   dataService = require("../../../lib/DataService.js").rebbl
+const dataService = require("../../../lib/DataService.js").rebbl
   , express = require('express')
   , bloodbowlService = require("../../../lib/bloodbowlService.js")
   , util = require('../../../lib/util.js');
 
 class BloodBowlApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
   }
 
   routesConfig(){
@@ -57,7 +57,7 @@ class BloodBowlApi{
       res.json(data);
     });
     this.router.get('/legendaryplayers/:id/lastMatch', util.checkCache, async function(req, res){
-      let matches = await dataService.getMatches({"match.teams.roster.id":Number(req.params.id)},{sort:{"match.id":-1},limit:1})
+      let matches = await dataService.getMatches({"match.teams.roster.id":Number(req.params.id)},{sort:{"match.id":-1},limit:1});
 
       res.json(matches[0].uuid);
     });

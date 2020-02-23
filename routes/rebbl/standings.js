@@ -11,7 +11,7 @@ class Standings{
 
   routesConfig(){
     this.router.get('/:league', util.cache(10*60), async function(req, res){
-      let data  = {company:req.params.company};
+      let data = {company:req.params.company};
       if(data.company ==="hjmc")
         res.render('rebbl/standings/hjmc', data);
       if(req.params.league === "Rebbl One Minute League")

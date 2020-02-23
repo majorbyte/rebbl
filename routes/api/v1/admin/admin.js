@@ -19,7 +19,7 @@ router.use('/divisions', require(`./divisions.js`));
 
 router.use('/board', require(`./board.js`));
 
-router.post("/clearcache",  util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
+router.post("/clearcache", util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
   try{
 
       let data = req.body;

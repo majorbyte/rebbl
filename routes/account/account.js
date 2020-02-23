@@ -41,13 +41,13 @@ class Account{
         let account = res.locals.user;
         if(account.following){
           let coaches = [];
-          for(var x = 0; x < account.following.length;x++){
+          for(var x = 0; x < account.following.length; x++){
             let schedule = await dataService.getSchedule({"opponents.coach.id" : account.following[x]});
             if (!schedule) {
               schedule = await dataService.getSchedule({"matches.opponents.coach.id" : account.following[x]});
-              schedule = schedule.matches.find(m => m.opponents.some(o => o.coach.id ===account.following[x]))
+              schedule = schedule.matches.find(m => m.opponents.some(o => o.coach.id ===account.following[x]));
             }
-            const coach = schedule.opponents.find(function(a){return a.coach.id === account.following[x]}).coach;
+            const coach = schedule.opponents.find(function(a){return a.coach.id === account.following[x];}).coach;
             coaches.push(coach);
           }
           account.following = coaches;
@@ -84,7 +84,7 @@ class Account{
   async _getTrophies(req, res){
     try{
   
-      const user =  await accountService.searchAccount({"reddit": {$regex: new RegExp(`^${req.user.name}`,"i")}});
+      const user = await accountService.searchAccount({"reddit": {$regex: new RegExp(`^${req.user.name}`,"i")}});
   
       res.render('account/trophies',{user:user} );
     } catch(err){
@@ -110,7 +110,7 @@ class Account{
     }
   }
 
-  async _scheduleMatch(req, res, next){
+  async _scheduleMatch(req, res){
     try{
       let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")} });
       if (contest.length === 0) contest = await leagueService.searchLeagues({matches:{$elemMatch:{contest_id:Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")}}} });
@@ -137,10 +137,10 @@ class Account{
         , timezone: req.body.timezone
         , twitch: req.body.twitch
         , useDark: req.body.useDark
-        , showDonation: (req.body.showDonation === "on")
+        , showDonation: req.body.showDonation === "on"
       };
   
-      account = await accountService.updateAccount(account);
+      await accountService.updateAccount(account);
   
       res.redirect('/account');
     } catch(err){

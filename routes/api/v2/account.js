@@ -7,7 +7,7 @@ const accountService = require('../../../lib/accountService.js')
 
 class AccountApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
   }
   routesConfig(){
     this.router.get("/following",util.ensureAuthenticated, async function(req,res){
@@ -18,7 +18,7 @@ class AccountApi{
 
         let data = [];
         if (isFollowing){
-          for(var x = 0; x < account.following.length;x++){
+          for(var x = 0; x < account.following.length; x++){
             let d = await leagueService.getUpcomingMatch(null, account.following[x]);
             data = data.concat(d);
           }

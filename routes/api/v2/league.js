@@ -7,11 +7,11 @@ const dataService = require('../../../lib/DataService.js').rebbl
 
 class LeagueApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
   }
   routesConfig(){
     
-    this.router.get("/",util.cache(600), async function(req,res,next){
+    this.router.get("/",util.cache(600), async function(req,res){
       try {
         let data = configurationService.getLeagues();
         res.json(data);
@@ -61,7 +61,7 @@ class LeagueApi{
           return {division, round, match_uuid, 
             homeCoachId, homeCoachName, homeTeamId, homeTeamName, homeTeamRace, homeScore, 
             awayCoachId, awayCoachName, awayTeamId, awayTeamName, awayTeamRace, awayScore };
-        })
+        });
 
         res.json(ret.sort((a,b)=> a.division > b.division ? 1 : -1));
       }
