@@ -53,7 +53,7 @@ router.post('/update', util.hasRole("admin"), async function(req, res){
 
     await accountService.updateAccount(account);
 
-    res.render('admin/user/user', { user: req.body.reddit, admin:res.locals.user  });
+    res.render('admin/user/user', { user: req.body.reddit, admin:res.locals.user });
   } catch(err){
     console.log(err);
   }
@@ -73,7 +73,7 @@ router.post('/new', util.hasRole("admin"), async function(req, res){
 
     await accountService.saveAccount(account);
 
-    res.render('admin/user/user', { user: req.body.reddit, admin:res.locals.user  });
+    res.render('admin/user/user', { user: req.body.reddit, admin:res.locals.user });
   } catch(err){
     console.log(err);
   }

@@ -6,7 +6,7 @@ const dataService = require('../../../lib/DataService.js').rebbl
 
 class MatchApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
   }
   routesConfig(){
     

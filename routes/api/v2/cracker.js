@@ -2,13 +2,12 @@
 const accountService = require('../../../lib/accountService.js')
   , crackerService = require("../../../lib/ChristmasCracker.js")
   , cyanideService = require("../../../lib/CyanideService.js")
-  , dataService = require("../../../lib/DataService.js").cripple
   , express = require('express')
   , util = require('../../../lib/util.js');
 
 class CrackerApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
   }
 
   routesConfig(){

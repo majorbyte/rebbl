@@ -1,14 +1,13 @@
 'use strict';
 const express = require('express')
   , accountService = require("../../../lib/accountService.js")
-  , cyanideService = require("../../../lib/CyanideService.js")
   , clanService = require("../../../lib/ClanService.js")
   , dataService = require("../../../lib/DataService.js").rebbl
-  , util = require('../../../lib/util.js')
+  , util = require('../../../lib/util.js');
 
 class DraftApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
   }
 
   routesConfig(){
@@ -26,8 +25,8 @@ class DraftApi{
 
       let teams = await dataService.getTeams({"team.id":{$in:schedule.home.clan.ledger.teams.map(team=> team.team.id).concat(schedule.away.clan.ledger.teams.map(team=> team.team.id))}});
 
-      const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"})
-      for(var x = 0; x <5;x++){
+      const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+      for(var x = 0; x <5; x++){
         schedule.home.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.home.clan.teams[x]) === 0 );
         schedule.away.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.away.clan.teams[x]) === 0);
       }

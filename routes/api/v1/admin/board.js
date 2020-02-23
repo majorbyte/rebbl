@@ -30,14 +30,14 @@ const express = require("express")
       let info = await api.getBoardInfo(Number(req.params.leagueId));
 
       if (info.ResponseGetLeagueBoard.CallResult.Result === "1"){
-        let data = info.ResponseGetLeagueBoard.BoardMembers.BoardMember.map(member =>  {
+        let data = info.ResponseGetLeagueBoard.BoardMembers.BoardMember.map(member => {
           return {
             coachId: member.IdCoach,
             coachName: member.NameCoach,
             type: member.RowBoard.IdProfileType,
             leagueName: member.RowLeague.Name,
             boardId: member.RowBoard.Id.Value
-          }
+          };
         });
         res.status(200).send(data);
       } else {

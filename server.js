@@ -103,12 +103,12 @@ class Server{
     }
 
     if (process.env.NODE_ENV === 'production'){
-      this.app.set('trust proxy', 1) // trust first proxy
+      this.app.set('trust proxy', 1); // trust first proxy
       this.sessionObject.cookie.secure = true; // serve secure cookies
-      this.sessionObject.secret =  process.env['sessionSecret'];
+      this.sessionObject.secret = process.env['sessionSecret'];
     }
 
-    this.app.use(bodyParser.urlencoded({  extended: true}));
+    this.app.use(bodyParser.urlencoded({ extended: true}));
     this.app.use(bodyParser.json());
     this.app.use(methodOverride());
     this.app.use(session(this.sessionObject));
@@ -146,7 +146,7 @@ class Server{
     const routes = require("./routes/routes.js");
     this.app.use('/', new routes().routesConfig());
 
-    this.app.use(function(err, req, res, next){
+    this.app.use(function(err, req, res){
       // log it
         if (!module.parent) console.error(err.stack);
 
@@ -156,7 +156,7 @@ class Server{
     });
 
     // assume 404 since no middleware responded
-    this.app.use(function(req, res,next){
+    this.app.use(function(req, res){
       res.status(404).render('404', { url: req.originalUrl });
     });
   }

@@ -7,7 +7,7 @@ const
   , router = express.Router()
   , bloodbowlService = require("../../lib/bloodbowlService.js");
 
-router.get('/unplayed/:match_id',util.cache(10*60), async function(req, res, next){
+router.get('/unplayed/:match_id',util.cache(10*60), async function(req, res){
   try{
     let match = await leagueService.getUnplayedMatch(req.params.match_id);
 
@@ -19,7 +19,7 @@ router.get('/unplayed/:match_id',util.cache(10*60), async function(req, res, nex
 
 router.get('/:match_id', util.cache(10*60), async function(req, res, next){
   let data = await leagueService.getMatchDetails(req.params.match_id);
-  data.lonersValue = [await bloodBowlService.getLonerCost(data.match.teams[0].idraces), await bloodBowlService.getLonerCost(data.match.teams[1].idraces)]
+  data.lonersValue = [await bloodBowlService.getLonerCost(data.match.teams[0].idraces), await bloodBowlService.getLonerCost(data.match.teams[1].idraces)];
   if (!data) return next('route');
 
   data.skills =[];
@@ -28,7 +28,7 @@ router.get('/:match_id', util.cache(10*60), async function(req, res, next){
   if (data.match.teams[0].roster) {
     await data.match.teams[0].roster.map(async player => {
       player.skills.map(async skill => {
-        let description =skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() )
+        let description =skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() );
         if (description) {
           description.id = description.name.toLowerCase().replace(/[ \-']/g,'');
           if (data.skills.indexOf(description) === -1) data.skills.push(description);
@@ -41,7 +41,7 @@ router.get('/:match_id', util.cache(10*60), async function(req, res, next){
   if (data.match.teams[1].roster) {
     await data.match.teams[1].roster.map(async player => {
       player.skills.map(async skill => {
-        let description = skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() )
+        let description = skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() );
         if (description) {
           description.id = description.name.toLowerCase().replace(/[ \-']/g,'');
           if (data.skills.indexOf(description) === -1) data.skills.push(description);

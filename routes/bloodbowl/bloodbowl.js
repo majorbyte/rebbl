@@ -1,7 +1,6 @@
 'use strict';
 
-const  express = require('express')
-  , util = require('../../lib/util.js');
+const express = require('express');
 
 class BloodBowl{
 	constructor(){

@@ -63,6 +63,6 @@ router.get("/", util.ensureAuthenticated, util.hasRole("admin"),async (req,res) 
 
   const data = await trophyService.getTrophies();
   res.status(200).send({"trophies": data});
-})
+});
 
 module.exports = router;

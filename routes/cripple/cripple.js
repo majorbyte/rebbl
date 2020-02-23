@@ -15,7 +15,7 @@ class Cripple{
     
     this.router.use('/standings', require(`./standings.js`));
     
-    return this.router
+    return this.router;
   }
 } 
 module.exports = Cripple;

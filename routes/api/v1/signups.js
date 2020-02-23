@@ -5,7 +5,7 @@ const db = require('../../../lib/signupService.js')
   , router = express.Router();
 
 
-router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res, next){
+router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     const data = await db.getSignUps({});
 
     const csv = data.all.map(function(row){
@@ -22,7 +22,7 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
 });
 
 
-router.get('/page', util.cache(10*60), async function(req, res, next){
+router.get('/page', util.cache(10*60), async function(req, res){
   const data = await db.getSignUps();
 
   const ret = data.all.map(function(row){
@@ -38,19 +38,19 @@ router.get('/page', util.cache(10*60), async function(req, res, next){
       league: row.league,
       OI: row.OI,
       greenHorn: row.greenHorn
-    }
+    };
 
   });
   res.status(200).send(ret);
 });
 
-router.get('/count', util.cache(10*60), async function(req, res, next){
+router.get('/count', util.cache(10*60), async function(req, res){
   const data = await db.getSignUps({});
 
   res.status(200).send({count:data.all.length});
 });
 
-router.get('/rookie/:coach', async function(req, res, next){
+router.get('/rookie/:coach', async function(req, res){
   const data = await db.getRookieTeam(req.params.coach);
 
   res.status(200).send(JSON.stringify({"team":data.team, race:data.race}));

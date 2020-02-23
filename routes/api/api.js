@@ -12,7 +12,7 @@ class Api{
     this.router.use('/v1', new apiV1().routesConfig());
     this.router.use('/v2', new apiV2().routesConfig());
 
-    return this.router
+    return this.router;
   }
 } 
 

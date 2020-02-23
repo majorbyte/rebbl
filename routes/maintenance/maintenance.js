@@ -14,7 +14,6 @@ const
   , signUp = require('../../lib/signupService.js')
   , standingsService = require("../../lib/StandingsService.js")
   , util = require('../../lib/util.js')
-  , cracker = require("../../lib/ChristmasCracker.js")
   , reddit = require("../../lib/RedditService.js");
 
 
@@ -156,14 +155,14 @@ class Maintenance{
 
       seasons.map(season => {
         season.leagues.map(league =>{
-          league.divisions.map(division => standingsService.updateStandings(league.name,division))
+          league.divisions.map(division => standingsService.updateStandings(league.name,division));
 
           cache.keys().map(key => {
             if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
               cache.del(key);
             }
-          })
-        })
+          });
+        });
       });
 
       seasons = [configurationService.getActiveOneMinuteSeason()];

@@ -27,7 +27,7 @@ router.post("/disableSync", util.ensureAuthenticated, util.hasRole("admin"), asy
 router.get('/leagues', util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
     try{
 
-        let data = await leagueService.getLeagues({round: {$gt:-1}}) 
+        let data = await leagueService.getLeagues({round: {$gt:-1}}); 
 
         res.status(200).send([...new Set(data.map(item => item.league))]);
     } catch(err){
@@ -39,7 +39,7 @@ router.get('/leagues', util.ensureAuthenticated, util.hasRole("superadmin"), asy
 router.get('/competitions/:league', util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
     try{
 
-        let data = await leagueService.getLeagues({"league":req.params.league,round: {$gt:-1}}) 
+        let data = await leagueService.getLeagues({"league":req.params.league,round: {$gt:-1}}); 
 
         res.status(200).send([...new Set(data.map(item => item.competition))]);
     } catch(err){
@@ -50,7 +50,7 @@ router.get('/competitions/:league', util.ensureAuthenticated, util.hasRole("supe
 router.get('/contests/:league/:competition', util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
     try{
 
-        let data = await leagueService.getLeagues({"league":req.params.league,"competition":req.params.competition, round: {$gt:-1}}) 
+        let data = await leagueService.getLeagues({"league":req.params.league,"competition":req.params.competition, round: {$gt:-1}}); 
 
         res.status(200).send(data);
     } catch(err){
@@ -58,7 +58,7 @@ router.get('/contests/:league/:competition', util.ensureAuthenticated, util.hasR
     }
 });
 
-router.post("/",  util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
+router.post("/", util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
     try{
 
         let data = req.body;

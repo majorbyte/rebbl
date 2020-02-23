@@ -1,11 +1,11 @@
 'use strict';
-const   dataService = require("../../../lib/DataService.js").cripple
+const dataService = require("../../../lib/DataService.js").cripple
   , express = require('express')
   , util = require('../../../lib/util.js');
 
 class CampingApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
   }
 
   routesConfig(){

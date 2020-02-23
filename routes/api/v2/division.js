@@ -6,7 +6,7 @@ const dataService = require('../../../lib/DataService.js').rebbl
 
 class DivisionApi{
   constructor(){
-    this.router = express.Router({mergeParams: true})
+    this.router = express.Router({mergeParams: true});
   }
   routesConfig(){
     
@@ -62,7 +62,7 @@ class DivisionApi{
           return {round, match_uuid, 
             homeCoachId, homeCoachName, homeTeamId, homeTeamName, homeTeamRace, homeScore, 
             awayCoachId, awayCoachName, awayTeamId, awayTeamName, awayTeamRace, awayScore };
-        })
+        });
 
         res.json(ret.sort((a,b)=> a.round > b.round ? 1 : -1));
       }

@@ -5,7 +5,7 @@ const db = require('../../../lib/signupService.js')
   , express = require('express')
   , router = express.Router();
 
-router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res,next){
+router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
 
   const signups = await db.getSignUps();
   
@@ -19,7 +19,7 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
 
       if (team){
         s.stadium = team.team.stadiumname;
-        s.fresh = team.team.created == team.team.datelastmatch;
+        s.fresh = team.team.created === team.team.datelastmatch;
       }
       return s;
   }));

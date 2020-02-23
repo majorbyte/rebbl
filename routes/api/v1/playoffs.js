@@ -15,7 +15,7 @@ router.get('/:division', util.cache(10*60), async function(req,res) {
 
   let missing = ['2','3','4','5','6'];
   let sizes = [32,16,8,4,2,1];
-  let dummy =  {"opponents":[{
+  let dummy = {"opponents":[{
     "coach":{"id":null,"name":"","twitch":null,"youtube":null,"country":"","lang":""},
     "team":{"id":null,"name":"","logo":"","value":null,"motto":"","score":null,"death":null,"race":""}
     },{
@@ -33,17 +33,17 @@ router.get('/:division', util.cache(10*60), async function(req,res) {
       data.matches[m] = [];
       while (x) {
         data.matches[m].push(dummy);
-        x--
+        x--;
       }
     }
   });
 
-  let ids = []
+  let ids = [];
   for(var prop in data.matches){
     data.matches[prop].map(m => ids.push(m.contest_id));
   }
 
-  data.dates = await datingService.search({"id":{$in:ids}})
+  data.dates = await datingService.search({"id":{$in:ids}});
 
   res.status(200).send(data);
 });

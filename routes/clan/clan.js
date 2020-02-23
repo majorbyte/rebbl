@@ -10,19 +10,19 @@ class Clan{
 
 
 
-  async _root(req,res,next){
+  async _root(req,res){
     res.render("clan/index");
   }
-  async _standings(req,res,next){
+  async _standings(req,res){
     res.render("clan/standings");
   }
-  async _clan(req,res,next){
+  async _clan(req,res){
     res.render("clan/clan");
   }
-  async _schedule(req,res,next){
+  async _schedule(req,res){
     res.render("clan/schedule");
   }
-  async _matchup(req,res,next){
+  async _matchup(req,res){
     res.render("clan/matchup");
   }
 

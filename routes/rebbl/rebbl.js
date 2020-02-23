@@ -1,5 +1,5 @@
 'use strict';
-const  coach = require(`./coach.js`),
+const coach = require(`./coach.js`),
     dataService = require("../../lib/DataService.js").rebbl
   , datingService = require("../../lib/DatingService.js")
   , division = require(`./division.js`)
@@ -15,12 +15,12 @@ class Rebbl{
 		this.router = express.Router({mergeParams:true});
 	}
 
-  async _root(req, res, next) {
-    let data = {company:req.params.company}
+  async _root(req, res) {
+    let data = {company:req.params.company};
     data.announcements = await dataService.getAnnouncements({});
     let c = new RegExp(`^(^Season 13)|(^REL Rampup)|(^GMAN Rampup)`, "i");
     let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
-    let s  = new RegExp("(The REBBL Rabble Mixer)|(XScessively Elfly League)|(Rebbl One Minute League)|(REBBLL )","i")
+    let s = new RegExp("(The REBBL Rabble Mixer)|(XScessively Elfly League)|(Rebbl One Minute League)|(REBBLL )","i");
     let d = await datingService.all();
 
     let docs = {};
@@ -29,14 +29,14 @@ class Rebbl{
       case "rebbl":
         docs = await dataService.getSchedulesChain({ "league":{"$regex":l}, "competition":{"$regex":c} }).sort({ match_uuid: -1 }).limit(20).toArray();
     
-        data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);;
+        data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
     
         docs = await dataService.getSchedulesChain({ "league":{"$regex":s} }).sort({ match_uuid: -1 }).limit(20).toArray();
         data.sides = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
         
         d = d.filter(a => new Date(a.date) > now ).sort((a,b) => a.date < b.date ? -1 : 1).splice(0,20);
     
-        data.upcoming = await dataService.getSchedules({"contest_id": {$in:[...new Set(d.map(x => x.id))]}})
+        data.upcoming = await dataService.getSchedules({"contest_id": {$in:[...new Set(d.map(x => x.id))]}});
     
         await Promise.all(data.upcoming.map(async function(match) {
           let date = d.find(s => s.id === match.contest_id);
@@ -45,7 +45,7 @@ class Rebbl{
           match.stream=date.stream;
         }));
     
-        data.upcoming = data.upcoming.filter(a => a.league.toLowerCase().indexOf("rebbrl") === -1).sort((a,b) => a.date < b.date ? -1 : 1)
+        data.upcoming = data.upcoming.filter(a => a.league.toLowerCase().indexOf("rebbrl") === -1).sort((a,b) => a.date < b.date ? -1 : 1);
   
         break;
       case "rebbrl":
@@ -53,15 +53,15 @@ class Rebbl{
     
         docs = await dataService.getSchedulesChain({ "league":{"$regex":l}}).sort({ match_uuid: -1 }).limit(20).toArray();
     
-        data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);;
+        data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
     
-        s  = new RegExp("^(ReBBRL Minors)","i")
+        s = new RegExp("^(ReBBRL Minors)","i");
         docs = await dataService.getSchedulesChain({ "league":{"$regex":s} }).sort({ match_uuid: -1 }).limit(20).toArray();
         data.sides = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
         
         d = d.filter(a => new Date(a.date) > now ).sort((a,b) => a.date < b.date ? -1 : 1).splice(0,20);
     
-        data.upcoming = await dataService.getSchedules({"contest_id": {$in:[...new Set(d.map(x => x.id))]}})
+        data.upcoming = await dataService.getSchedules({"contest_id": {$in:[...new Set(d.map(x => x.id))]}});
     
         await Promise.all(data.upcoming.map(async function(match) {
           let date = d.find(s => s.id === match.contest_id);
@@ -70,7 +70,7 @@ class Rebbl{
           match.stream=date.stream;
         }));
     
-        data.upcoming = data.upcoming.filter(a => a.league.toLowerCase().indexOf("rebbrl") > -1) .sort((a,b) => a.date < b.date ? -1 : 1)
+        data.upcoming = data.upcoming.filter(a => a.league.toLowerCase().indexOf("rebbrl") > -1) .sort((a,b) => a.date < b.date ? -1 : 1);
       break;
 
 
@@ -93,9 +93,9 @@ class Rebbl{
     this.router.use('/team', require(`./team.js`));
     this.router.use('/old_team', require(`./old_team.js`));
     this.router.use('/playoffs', require(`./playoffs.js`));
-    this.router.get("/camping", util.cache(10*60), (req, res, next) => res.render("rebbl/winter"));
-    this.router.get("/christmascracker/review", util.cache(1), (req, res, next) => res.render("rebbl/cracker/review"));
-    this.router.get("/christmascracker", util.cache(1), (req, res, next) => res.render("rebbl/cracker/cracker"));
+    this.router.get("/camping", util.cache(10*60), (req, res) => res.render("rebbl/winter"));
+    this.router.get("/christmascracker/review", util.cache(1), (req, res) => res.render("rebbl/cracker/review"));
+    this.router.get("/christmascracker", util.cache(1), (req, res) => res.render("rebbl/cracker/cracker"));
     this.router.use('/:league', new league().routesConfig());
     this.router.use('/:league/:division', new division().routesConfig());
 
