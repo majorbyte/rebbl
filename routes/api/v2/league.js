@@ -38,6 +38,12 @@ class LeagueApi{
         let {league,season, round} = req.params;
 
         let data = await dataService.getSchedules({league:league,season:season,round:Number(round)});
+        let split = [];
+        if (round > 8){
+          split = await dataService.getSchedules({league:league,season:season,round:Number(round-8),division:/^S13/i});
+          split.map(x => x.round += 8);
+        }
+        data = data.contact(split);
 
         data = data.filter(d => d.opponents);
 
