@@ -43,7 +43,7 @@ class LeagueApi{
           split = await dataService.getSchedules({league:league,season:season,round:Number(round-8),division:/^S13/i});
           split.map(x => x.round += 8);
         }
-        data = data.contact(split);
+        data = data.concat(split);
 
         data = data.filter(d => d.opponents);
 
