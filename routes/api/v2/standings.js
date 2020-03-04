@@ -42,6 +42,12 @@ class StandingsApi{
         "league":new RegExp(`^${req.params.league}$`,"i"), 
         "season":new RegExp(`^${req.params.season}$`,"i")
       });
+      standings.map(x => x.competition = x.competition.replace('S13','Season 13'));
+      standings =standings.sort((a,b) => {
+        if (a.competition > b.competition) return -1;
+        if (a.competition < b.competition) return 1;
+        return 0;
+      });
     
       res.json(standings);
     });
