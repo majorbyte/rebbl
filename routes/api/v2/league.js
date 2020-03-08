@@ -37,7 +37,7 @@ class LeagueApi{
       try {
         let {league,season, round} = req.params;
 
-        let data = await dataService.getSchedules({league:league,season:season,round:Number(round)});
+        let data = await dataService.getSchedules({league:league,season:season,round:Number(round),competition:/^(?!S13.*$)/i});
         let split = [];
         if (round > 8){
           split = await dataService.getSchedules({league:league,season:season,round:Number(round)-8,competition:/^S13/i});
