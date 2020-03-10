@@ -193,7 +193,7 @@ block scripts
       }
 
       competitionUrl(comp){
-        return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competition)}`;
+        return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
       };
       async loadSeason(season){
         if (season) model.season = season;

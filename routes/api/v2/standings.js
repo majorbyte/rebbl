@@ -43,10 +43,15 @@ class StandingsApi{
         "season":new RegExp(`^${req.params.season}$`,"i")
       });
       if (standings.every(x => x.competition)){
-        standings.map(x => x.competition = x.competition.replace('S13','Season 13'));
+        standings.map(x => {
+          if (x.competition.includes('S13')){ 
+            x.competitionUrl = x.competition; 
+            x.competition = x.competition.replace('S13','Season 13');
+          }
+        });
         standings =standings.sort((a,b) => {
-          if (a.competition > b.competition) return -1;
-          if (a.competition < b.competition) return 1;
+          if (a.competition > b.competition) return 1;
+          if (a.competition < b.competition) return -1;
           if (a.position > b.position) return 1;
           if (a.position < b.position) return -1;
           return 0;
