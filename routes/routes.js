@@ -62,12 +62,15 @@ class Routes{
     res.render("rebbl/index", {data:data});
   }
 
-
+  async _perpetual(req, res){
+    res.render('perpetual/standings');
+  }
 
 	routesConfig(){
 		this.router.use("/api", new api().routesConfig() );
     this.router.use("/maintenance", new maintenance().routesConfig());
     this.router.use("/cripple", new cripple().routesConfig());
+    this.router.get("/perpetual", util.cache(1), this._perpetual);
     this.router.use("/account", new account().routesConfig());
     this.router.use("/bloodbowl", new bloodbowl().routesConfig());
     this.router.use("/signup", new signup().routesConfig());

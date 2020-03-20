@@ -146,7 +146,7 @@ class Server{
     const routes = require("./routes/routes.js");
     this.app.use('/', new routes().routesConfig());
 
-    this.app.use(function(err, req, res){
+    this.app.use(function(req, res,err){
       // log it
         if (!module.parent) console.error(err.stack);
 
