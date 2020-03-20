@@ -10,6 +10,7 @@ const
   , hjmc = require("../../lib/TourneyService")
   , loggingService = require("../../lib/loggingService.js")
   , maintenanceService = require('../../lib/MaintenanceService.js')
+  , perpetualService = require('../../lib/PerpetualService.js')
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , standingsService = require("../../lib/StandingsService.js")
@@ -46,7 +47,7 @@ class Maintenance{
       //cracker.getCheaters();
       //cracker.fixRebuilders();
       try{
-        chaos.notifyClients();
+        perpetualService.getMatches();
       }
       catch(e){
         loggingService.error(e);
@@ -88,6 +89,7 @@ class Maintenance{
         }
         try{
           await maintenanceService.getImperiumMatches();
+          await perpetualService.getMatches();
         }
         catch(e){
           loggingService.error(e);

@@ -1,0 +1,211 @@
+extends ../layout.pug
+block vars
+  - let options = {active: league, title: "REBBL PERPETUAL LADDER"}
+
+block append scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+  style.
+    .odometer {font-size: 100px;}
+    .switch input {display:none;}
+    .switch {display:inline-block;width:60px;height:30px;margin:8px;transform:translateY(50%);position:relative;}
+    .slider {position:absolute;top:0;bottom:0;left:0;right:0;border-radius:30px;box-shadow:0 0 0 2px #777, 0 0 4px #777;cursor:pointer;border:4px solid transparent;overflow:hidden;transition:.4s;}
+    .slider:before {position:absolute;content:"";width:100%;height:100%;background:#777;border-radius:30px;transform:translateX(-30px);transition:.4s;}
+    input:checked + .slider:before {transform:translateX(30px);background:limeGreen;}
+    input:checked + .slider {box-shadow:0 0 0 2px limeGreen,0 0 2px limeGreen;}
+    .unqualified{opacity:0.55}    
+
+  script.
+    function ScoreModel(data){
+      this.map = (data) => {
+        if (data) {
+          this.competition = data.competition;	
+          this.teamId = data.teamId;	
+          this.draws = data.draws;	
+          this.gp = data.gp;	
+          this.limFactor = data.limFactor;	
+          this.score = data.score;	
+          this.winPercentage = data.winPercentage;	
+          this.wins = data.wins;	
+          this.team = data.team;
+          this.coach = data.coach,
+          this.teamExists = data.teamExists,
+          this.raceId = data.race;
+        }
+      };
+      this.map(data);
+      ko.track(this); 
+
+      this.races = [
+        {id:13,name:"Amazon"}
+        ,{id:24,name:"Bretonnian"}
+        ,{id:8,name:"Chaos"}
+        ,{id:21,name:"Chaos Dwarf"}
+        ,{id:9,name:"Dark Elf"}
+        ,{id:2,name:"Dwarf"}
+        ,{id:14,name:"Elven Union"}
+        ,{id:6,name:"Goblin"}
+        ,{id:11,name:"Halfling"}
+        ,{id:15,name:"High Elf"}
+        ,{id:1,name:"Human"}
+        ,{id:16,name:"Khemri"}
+        ,{id:25,name:"Kislev"}
+        ,{id:5,name:"Lizardman"}
+        ,{id:17,name:"Necromantic"}
+        ,{id:12,name:"Norse"}
+        ,{id:18,name:"Nurgle"}
+        ,{id:4,name:"Orc"}
+        ,{id:19,name:"Ogre"}
+        ,{id:3,name:"Skaven"}
+        ,{id:10,name:"Undead"}
+        ,{id:22,name:"Underworld Denizens"}
+        ,{id:20,name:"Vampire"}
+        ,{id:7,name:"Wood Elf"}
+      ];
+
+      this.teamRace = function(){
+        const id = this.raceId;
+        const race = this.races.find(r => r.id ===id );
+        return race ? race.name : id;
+      }
+
+      this.teamColor = function(){
+        if (/\[colour=/i.test(this.team)){
+          if (/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i.test(this.team)) {
+            return "#"+this.team.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1];
+          }
+          return "#000000";
+        }
+
+        return "inherit";
+      }
+
+      this.teamName = function(){
+        if (/\[colour=/i.test(this.nteamame)){
+            return this.team.replace(/\[colour=.*]/i,'')
+        }
+        return this.team;
+      }
+    }
+
+    function StandingsModel(data){
+      var self = this;
+      this.scores = ko.observableArray();
+      this.all = ko.observableArray();
+      this.filtered =ko.observableArray();
+      this.complete = ko.observable(false);
+      
+      this.load = async() => {
+        if (this.complete() && this.all().length > 0){
+          this.scores(this.all());
+          return;
+        } 
+        if (!this.complete() && this.all().length > 0){
+          this.scores(this.all().filter(x => x.gp > 9));
+          return;
+        } 
+
+        const response = await fetch(`/api/v2/standings/rebbl perpetual/season 1/`);
+
+        if (response.ok){
+          let data = await response.json();
+          data = data.sort((a,b) => {
+            if (a.score > b.score) return -1;
+            if (a.score < b.score) return 1;
+          });
+          ko.mapping.fromJS(data,mapping,model.all);
+          if (this.complete()){
+            this.scores(this.all());
+          } else {
+            this.scores(this.all().filter(x => x.gp > 9));
+          }
+        } else {
+            model.isError(true);
+            model.error(await response.text());
+        }
+      }
+
+      this.toggle = () => {
+        this.complete(!this.complete());
+        model.scores([]);
+        this.load();
+      }
+    }
+
+    var mapping = {
+      '': {
+          create: function(options) {
+              return new ScoreModel(options.data);
+          }
+      }
+    }
+
+    let model = new StandingsModel(); 
+    ko.applyBindings(model);
+    $(document).ready(function(){
+      model.load();
+    });
+    
+block navigation
+  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
+    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+      span(class="navbar-toggler-icon")
+    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
+    .collapse.navbar-collapse(id="rebblSubNav")
+      ul(class="navbar-nav mr-auto")
+        li( class="nav-item active")
+          .nav-link DISPLAY 
+
+block content
+  div(class=`container `)
+    div
+      label(class="switch")
+        input(type="checkbox" id="spoiled-switch" data-bind="checked: model.complete")
+        span(class="slider" data-bind="click: model.toggle")
+      | show all
+
+    // ko foreach: ["ReBBL Perpetual Ladder - Season 1.2","ReBBL Perpetual Ladder - Season 1.1"]
+    .row.col-12
+      h2
+        i(style="padding-top:180px;margin-top:-180px")
+        span(data-bind="text: $data")
+    .season-table  
+      .row.col-12(style="border-bottom: 3px solid #bdbcbccf;")
+        .row.col-6(style="font-size:1.25em")
+          .col-1 #
+          .col-4 Coach
+          .col-7 Team
+        .col-3(style="font-size:1.25em") Race
+        .row.col-3(style="font-size:1.25em")
+          .col-3 Pts.
+          .col-3 W  
+          .col-3 D  
+          .col-3 L
+      // ko foreach: model.scores().filter(x => x.competition === $data)
+      .row.col-12.season-table-row(data-bind="css: $data.gp < 10 ? 'unqualified' : ''")
+        .row.col-6
+          .col-1(data-bind="text: ($index() + 1) ")
+          .col-4(style=";overflow:hidden") 
+            span(data-bind="text: $data.coach" )
+          .col-7(style=";overflow:hidden")
+            //ko if: $data.teamExists
+            a(data-bind="attr:{href:`/rebbl/team/${$data.teamId}`}")
+              span(data-bind="text: $data.teamName(), style:{color: $data.teamColor()}")
+            // /ko
+            //ko ifnot: $data.teamExists
+            span(data-bind="text: $data.teamName(), style:{color: $data.teamColor()}")
+            // /ko
+        .col-3(style=";overflow:hidden" data-bind="text: $data.teamRace()")
+        .row.col-3
+          .col-3(data-bind="text: Math.round($data.score*100)/100")
+          .col-3(data-bind="text: $data.wins")
+          .col-3(data-bind="text: $data.draws")
+          .col-3(data-bind="text: $data.gp - $data.wins - $data.draws")
+      // /ko
+    // /ko
