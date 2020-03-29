@@ -169,7 +169,7 @@ block content
                 th(scope="col") Competition
                 th(scope="col") Team
             tbody
-              // ko foreach: standings
+              // ko foreach: (standings !== null ? standings.filter(x => x.position) : [])
               tr
                 td(data-bind="text:position")
                 td(data-bind="text:league")
