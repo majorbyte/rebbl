@@ -9,30 +9,32 @@ block content
 
       h1 For Bitter Bloow Bowl Veterans:
       hr
-      h3 It looks like we don't have you on file yet, please continue with your sign up for the REBBL Season 13
+      h3 It looks like we don't have you on file yet, please continue with your sign up for the REBBL Season 14
         a(href="/signup/change" class="highlighted-rules")= " here"          
       h4 
-        a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 13
+        //a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 14
+        | more information on REBBL Season 14 will come soon
 
       h1 For new (semi)fresh meat:
       hr
-      h3 College signups are closed, school has started
-      // h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 10? Read more about what the College League is about 
-        a(href="https://www.reddit.com/r/ReBBRL/comments/dy6czq/rebbrl_college_league_season_10_sign_ups/" class="highlighted-rules") here     
+      //h3 College signups are closed, school has started
+      h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 11? Read more about what the College League is about 
+        a(href="https://www.reddit.com/r/ReBBRL/comments/dy6czq/rebbrl_college_league_season_10_sign_ups/" class="highlighted-rules") here (link will update to season 11 in a while)     
         | and continue with your sign up 
         a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
 
       h3 If you played in our College League last season and want to continue in the Minors Leauge, continue with your sign up
         a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
       h4 
-        a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 9       
+        //a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 10       
+        | more information on REBBRL Minors Season 10 will come soon
 
 
     - else 
       each signup in signups
         - if(signup.hasOwnProperty('signedUp'))
           - if (signup.type ==="rebbl")
-            h2= "Welcome back to REBBL Season 13, "
+            h2= "Welcome back to REBBL Season 14, "
               span(class="highlight")= signup.coach
               span !
           - else 
@@ -60,7 +62,7 @@ block content
                 -else
                   button(type="submit") Confirm
               - if (signup.type==="rebbl")
-                h3= "REBBL SEASON 13 - " + signup.league
+                h3= "REBBL SEASON 14 - " + signup.league
                 form(action="/signup/resign" method="post" )
                   br
                   button(type="submit"  class="btn btn-primary") Resign
@@ -102,15 +104,16 @@ block content
 
         h1 For Bitter Bloow Bowl Veterans:
         hr
-        h3 You haven't signed up yet, so continue with your sign up for the REBBL Season 13
+        h3 You haven't signed up yet, so continue with your sign up for the REBBL Season 14
           a(href="/signup/change" class="highlighted-rules")= " here"          
         h4 
-          a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 13
+          //a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 14
+          | more information on REBBL Season 14 will come soon
 
         h1 For new (semi)fresh meat:
         hr
-        h3 College signups are closed, school has started
-        //h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 10? Read more about what the College League is about 
+        //h3 College signups are closed, school has started
+        h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 11? Read more about what the College League is about 
           a(href="https://www.reddit.com/r/ReBBRL/comments/dy6czq/rebbrl_college_league_season_10_sign_ups/" class="highlighted-rules") here     
           | and continue with your sign up 
           a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
@@ -118,4 +121,5 @@ block content
         h3 If you played in our College League last season and want to continue in the Minors Leauge, continue with your sign up
           a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
         h4 
-          a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 9       
+         //a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 10       
+         | more information on REBBRL Minors Season 10 will come soon

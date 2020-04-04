@@ -12,21 +12,22 @@ class Signup{
   }
 
   routesConfig(){
-        this.router.get('/', async function(req, res){
+    /*
+    this.router.get('/', async function(req, res){
       res.render('signup/closed');
     });
 
-/*
-    this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup);
 
+    this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup);
+    */
     
     this.router.get('/', util.ensureLoggedIn, this._getStatus);
 
     this.router.get('/change', util.ensureLoggedIn, this._changeSignup);
 
     this.router.post('/resign', util.ensureAuthenticated, this._resign);
-*/
-  /*
+
+  
     this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
 
     this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
@@ -49,7 +50,7 @@ class Signup{
     this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
 
     this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
-*/
+
 
     this.router.get('/signups', util.cache(10*60), function(req,res){res.render('signup/signups', {url: ""});});
 
@@ -99,19 +100,19 @@ class Signup{
       let account = await accountService.getAccount(req.user.name);
 
       // Disabled while during season
-      /*let user = await signupService.getExistingTeam(req.user.name);
+      let user = await signupService.getExistingTeam(req.user.name);
       if(!signup && user && user.team){
         res.render('signup/signup-existing', { user: user});
         return;
-      }*/
+      }
 
       if (!signup){
         if(account){
-          //res.render('signup/signup-new-coach', {user: {account: account}});
-          res.render('signup/signup-rampup', {user: {account: account}});
+          res.render('signup/signup-new-coach', {user: {account: account}});
+          //res.render('signup/signup-rampup', {user: {account: account}});
         } else {
-          //res.render('signup/signup-new-coach', {user: req.user.name});
-          res.render('signup/signup-rampup', {user: req.user.name});
+          res.render('signup/signup-new-coach', {user: req.user.name});
+          //res.render('signup/signup-rampup', {user: req.user.name});
         }
         return;
       }
@@ -191,6 +192,7 @@ class Signup{
       req.body.saveType = "existing";
       req.body.type="rebbl";
       let user = await signupService.saveSignUp(req.user.name, req.body);
+
 
       res.render('signup/signup-confirmed-oi', {user: user});
       //res.redirect('/signup');
