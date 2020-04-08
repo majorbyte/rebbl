@@ -25,7 +25,7 @@ block content
             div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:75px")
               div(style="display: table-cell;width: 100px;" class="Standings-header") League
               for race in races
-                div(style="display: table-cell;width: 10px;transform: rotate(-90deg);" class="Standings-header" title=race)= race.substr(0,3)
+                div(style="display: table-cell;width: 10px;transform: rotate(-90deg);" class="Standings-header" title=race)= race.toLowerCase() === "chaos dwarf" ? "💿" : race.substr(0,3)
             // ko foreach: {data: leagues, as: 'league'}
             div(class="TableRow")
               div(style="display: table-cell;width: 100px;" )
