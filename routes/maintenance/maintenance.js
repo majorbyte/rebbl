@@ -56,7 +56,7 @@ class Maintenance{
     });
 
     this.router.get('/update/cripple/calculate', util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) cripple.calculateStandings("REBBL Cripple Ladder - Season 3");
+      if (req.app.locals.cyanideEnabled) cripple.calculateStandings("REBBL Cripple Ladder - Season 4");
       res.redirect('/');
     });
 
