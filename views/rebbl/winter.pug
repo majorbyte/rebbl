@@ -110,7 +110,7 @@ block scripts
       }
 
       async loadBadges(){
-        let response = await fetch(`/api/v2/camping`);
+        let response = await fetch(`/api/v2/camping/winter`);
         if (response.ok){
           this.coaches = await response.json();
         }
