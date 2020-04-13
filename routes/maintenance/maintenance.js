@@ -26,8 +26,7 @@ class Maintenance{
 
   routesConfig(){
     this.router.get('/update/cripple', util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) 
-      {
+      if (req.app.locals.cyanideEnabled) {
         try{
           //chaos.getMatches();
           cripple.getMatches();
