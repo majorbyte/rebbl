@@ -10,13 +10,28 @@ const express = require("express")
   router.get("/", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
-      let leagues = config.getSeasons();
+      const coach = await api.getCoachInfo(307300);
+
+    
+
+      
       let data = [];
   
-      leagues.map(league => league.leagues.filter(l => l.id))
-        .filter(x => x.length > 0)
-        .map(x => data = data.concat(x));
-  
+      coach.ResponseGetCoachOverview.BoardMemberships.BoardMember.map(member => data.push({
+        id:Number(member.RowLeague.Id.Value.replace(/\D/g,"")),
+        description:member.RowLeague.Description,
+        flags:member.RowLeague.Flags,
+        logo:member.RowLeague.Logo,
+        name:member.RowLeague.Name,
+        teams: member.RowLeague.NbRegisteredTeams,
+        website:member.RowLeague.Websites
+      }));
+    
+      data = data.sort((a,b) => a.name > b.name ? 1 : -1);
+      
+      const excludeLeagues = [55861, 64853, 68241, 68663];
+      excludeLeagues.map(ex => data.splice(data.findIndex(x => x.id === ex ),1));
+
       res.status(200).send(data);
     } catch(err){
       console.log(err);
@@ -39,6 +54,9 @@ const express = require("express")
             boardId: member.RowBoard.Id.Value
           };
         });
+
+        data.splice(data.findIndex(x=>x.coachId === "307300"),1);
+
         res.status(200).send(data);
       } else {
         res.status(500).send(info.ResponseGetLeagueBoard.CallResult);
@@ -90,7 +108,6 @@ const express = require("express")
 
   router.delete("/:id", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
-      
       let data = await api.removeBoardMember(req.params.id);
 
       if(data.ResponseRemoveBoardMember.CallResult.Result === "1"){
