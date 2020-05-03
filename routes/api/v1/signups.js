@@ -31,7 +31,7 @@ router.get('/page', util.cache(10*60), async function(req, res){
       team: row.team,
       teamId: row.teamId,
       coach: row.coach,
-      race: row.race.replace(/([A-Z])/g, ' $1').replace("  "," "),
+      race: row.race.replace(/([A-Z]+.*?)([A-Z]+)/g, '$1 $2').replace("  "," "),
       timezone: row.timezone,
       saveType: row.saveType,
       TV: row.currentTV,

@@ -4,7 +4,6 @@ const
   , campingService = require("../../lib/CampingService.js")
   , clanService = require("../../lib/ClanService.js")
   , configurationService = require("../../lib/ConfigurationService.js")
-  , chaos = require('../../lib/ChaosService.js')
   , cripple = require('../../lib/crippleService.js')
   , express = require('express')
   , hjmc = require("../../lib/TourneyService")
@@ -28,7 +27,6 @@ class Maintenance{
     this.router.get('/update/cripple', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled) {
         try{
-          //chaos.getMatches();
           cripple.getMatches();
         }
         catch(e){
@@ -48,7 +46,7 @@ class Maintenance{
       //cracker.getCheaters();
       //cracker.fixRebuilders();
       try{
-        perpetualService.getMatches();
+        clanService.calculateStandings();
       }
       catch(e){
         loggingService.error(e);
@@ -113,12 +111,13 @@ class Maintenance{
         catch(e){
           loggingService.error(e);
         }
+        /*
         try{
           reddit.check();
         }
         catch(e){
           loggingService.error(e);
-        }
+        }*/
         try{
           reddit.getAnnouncements();
         }
