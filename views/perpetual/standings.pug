@@ -188,7 +188,7 @@ block content
           .col-3 D  
           .col-3 L
       // ko foreach: model.scores().filter(x => x.competition === $data)
-      .row.col-12.season-table-row(data-bind="css: $data.gp < 10 ? 'unqualified' : ''")
+      .row.col-12.season-table-row(data-bind="css: $data.gp < 8 ? 'unqualified' : ''")
         .row.col-6
           .col-1(data-bind="text: ($index() + 1) ")
           .col-4(style=";overflow:hidden") 
