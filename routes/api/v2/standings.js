@@ -57,8 +57,19 @@ class StandingsApi{
           return 0;
         });
       }
-    
       res.json(standings);
+    });
+
+    this.router.get('/:league/:season/admins', util.cache(300), async function(req, res){
+      let standings = await dataService.getStandings({
+        "league":new RegExp(`^${req.params.league}$`,"i"), 
+        "season":new RegExp(`^${req.params.season}$`,"i")
+      });
+
+      let id = [...new Set(standings.map(x => x.competitionId))];
+      let admins = await dataService.getDivisions({competition_id:{$in:id}});
+
+      res.json(admins);
     });
 
 
