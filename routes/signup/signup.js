@@ -12,15 +12,15 @@ class Signup{
   }
 
   routesConfig(){
-    /*
+    
     this.router.get('/', async function(req, res){
       res.render('signup/closed');
     });
-
+/*
 
     this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup);
     */
-    
+  /*  
     this.router.get('/', util.ensureLoggedIn, this._getStatus);
 
     this.router.get('/change', util.ensureLoggedIn, this._changeSignup);
@@ -50,18 +50,18 @@ class Signup{
     this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
 
     this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
-
+*/
 
     this.router.get('/signups', util.cache(10*60), function(req,res){res.render('signup/signups', {url: ""});});
 
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
 
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
-
+/*
     this.router.get('/rebbrl', util.ensureLoggedIn, this._rebbrl);
     this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl);
     this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
-
+*/
     return this.router;
   }
 
