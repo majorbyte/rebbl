@@ -3,8 +3,10 @@ include ../../nav-link
 
 block vars
  - let options = {company: company}
-  
 
+block head
+  style.
+    h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
 
 block navigation
   nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
@@ -26,11 +28,14 @@ block content
   div(class=`container`)
     // ko foreach: {data: Object.keys(standings).sort($root.collator.compare)}
     // ko with: $root.standings[$data] 
-    div(class="row col-12" )
+    div
       h2(data-bind="attr:{id:$data[0].competition}")
         a(data-bind="text:$data[0].competition,attr:{href:$root.competitionUrl($data)}" class="highlight")
-
-    div(class="season-table")  
+      //ko if:$root.getAdmin($data[0].competitionId ? $data[0].competitionId:  0) !== ""
+      span division admin:&nbsp;
+      a(data-bind="text:$root.getAdmin($data[0].competitionId ? $data[0].competitionId:  0),attr:{href:$root.adminUrl($data[0].competitionId ? $data[0].competitionId : 0)}" class="highlight")
+      // /ko
+    div(class="season-table" style="margin-bottom:40px;")  
       div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
         div(class="row col-6" style="font-size:1.25em")
           div(class="col-1" ) #
@@ -174,6 +179,7 @@ block scripts
         this.seasons = [];
         this.standings = {};
         this.tickets = [];
+        this.admins = [];
         this.challenger =[];
         this.trophies =[];
         this.me = {};
@@ -195,11 +201,26 @@ block scripts
       competitionUrl(comp){
         return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
       };
+
+      adminUrl(competitionId){
+        const admin = this.admins.find(a => a.competition_id === competitionId);
+        if (admin)
+          return `/!{company}/coach/${encodeURIComponent(admin.admin)}`;
+
+        return "";
+      };
+
+      getAdmin(competitionId){
+        const admin = this.admins.find(a => a.competition_id === competitionId);
+        return admin ? admin.admin : "";
+      }
+
       async loadSeason(season){
         if (season) model.season = season;
 
         this.standings={};
         this.loadTickets();
+        this.loadAdmins();
 
         let response = await fetch(`/api/v2/standings/${this.league}/${this.season}`);
         if (response.ok){
@@ -210,6 +231,15 @@ block scripts
 
           this.standings=data;
         }        
+      }
+
+      async loadAdmins(){
+        let response = await fetch(`/api/v2/standings/${this.league}/${this.season}/admins`);
+        if (response.ok){
+          this.admins = await response.json();
+        } else {
+          this.admins = [];
+        }
       }
 
       async loadTickets(){
