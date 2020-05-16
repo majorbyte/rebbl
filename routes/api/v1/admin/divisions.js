@@ -24,11 +24,26 @@ const express = require("express")
 
       let temp = [...new Set(data.map(x=> x.competition_id))];
       data = temp.map(x => data.find(d => d.competition_id === x));
+      
+      let id = [... new Set(data.map(x => x.competition_id))];
+
+      let divisions = await dataService.getDivisions({competition_id:{$in:id}});
+      divisions.map(d => {
+        let division = data.find(x => x.competition_id === d.competition_id);
+        if (division)
+          division.admin = d.admin;
+      });
 
       res.status(200).send(data);
     } catch(err){
       console.log(err); 
     }
+  });
+
+  router.get("/admins", util.ensureAuthenticated, async function(req, res){
+    let users = await dataService.getAccounts({roles:"admin"});
+    users = users.map(x => {return {coach: x.coach, reddit:x.reddit};}).sort((a,b) => a.coach > b.coach ? 1 : -1 );
+    res.status(200).send(users);
   });
 
   router.get("/:competitionId", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
@@ -95,6 +110,22 @@ const express = require("express")
     } catch(err){
       console.log(err);
     }
+  });
+
+  router.put("/:competitionId/:admin", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    try{
+
+      dataService.updateDivision(
+        {competition_id: Number(req.params.competitionId)},
+        {competition_id: Number(req.params.competitionId), admin:req.params.admin},
+        {upsert:true});
+      
+      res.status(200).send("ok");
+    } catch(err){
+      console.log(err);
+      res.status(500).send("oy vey");
+    }
+
   });
 
 
