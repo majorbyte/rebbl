@@ -130,7 +130,14 @@ block content
     div(class="container h-100")    
       div(class="row justify-content-center")
         div(class="row col-12 justify-content-center")
-          h2= match.competition + " - week " + match.round
+          -if(match.admin)
+            div 
+              h2(style="margin-bottom:0px")= match.competition + " - week " + match.round
+              .row.justify-content-center(style="margin-bottom:20px")
+                span division admin:&nbsp;
+                a(href=`/rebbl/coach/${match.admin}` class="highlight" target="blank")= match.admin
+          -if(!match.admin)
+            h2= match.competition + " - week " + match.round
           div(class="row col-10 justify-content-center")
             - if(user)
               span Enter match date in your own local time

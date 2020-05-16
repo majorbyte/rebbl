@@ -145,7 +145,7 @@ block content
           // /ko
       // ko if: selectedDivision
       div.mx-1
-        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownAdmin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-bind="text:selectedDivision != undefined ? selectedDivision.admin : 'Choose Admin'")
+        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownAdmin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-bind="text:selectedDivision &&  selectedDivision.admin ? selectedDivision.admin : 'Choose Admin'")
         div.dropdown-menu(aria-labelledby="dropdownAdmin" style="max-height: 400px;  overflow-y: auto")
           //ko foreach: admins
           a.dropdown-item(data-bind="attr:{href:'#', title:$data.redd},text:$data.coach,click: $root.setAdmin")

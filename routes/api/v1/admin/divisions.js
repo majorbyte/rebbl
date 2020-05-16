@@ -42,7 +42,7 @@ const express = require("express")
 
   router.get("/admins", util.ensureAuthenticated, async function(req, res){
     let users = await dataService.getAccounts({roles:"admin"});
-    users = users.map(x => {return {coach: x.coach, reddit:x.reddit};}).sort((a,b) => a.coach > b.coach ? 1 : -1 );
+    users = users.map(x => {return {coach: x.coach, reddit:x.reddit};}).sort((a,b) => a.coach.localeCompare(b.coach,undefined, {sensitivity:"base"}));
     res.status(200).send(users);
   });
 
