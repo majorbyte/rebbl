@@ -52,8 +52,19 @@ block content
       //ko foreach: $data
       div(class="row col-12 season-table-row")
         div(class="row col-6")
+          // ko if: position > 0 
           div(class="col-1" data-bind="text:position")
-          div(class="col-4" style=";overflow:hidden") 
+          // /ko
+          // ko if: position === 0 
+          div(class="col-1")
+            // ko if: acceptedTicket
+            i(class="fa fa-thumbs-o-up" title="ticket accepted")
+            // /ko
+            // ko if: !acceptedTicket
+            i(class="fa fa-ticket" title="go accept your ticket!")
+            // /ko
+          // /ko
+          div(class="col" style=";overflow:hidden") 
             a(data-bind="text: name, attr:{href:`/rebbl/coach/${id}`}")
             // ko if: $root.isDonator($data.name)
             | &nbsp; &nbsp; 
@@ -65,9 +76,9 @@ block content
             img(data-bind="attr:{src:`https://cdn2.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
             // /ko
             // /ko
-          div(class="col-7" style=";overflow:hidden") 
+          div(class="col" style=";overflow:hidden") 
             a(data-bind="text: teamName(),attr:{href:`/rebbl/team/${teamId}`}")
-        div(class="col-2" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
+        div(class="col" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
         div(class="row col-4" )
           div(class="col-2" data-bind="text:points")
           div(class="col-2" data-bind="text:win")
