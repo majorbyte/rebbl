@@ -44,9 +44,9 @@ class StandingsApi{
       });
       if (standings.every(x => x.competition)){
         standings.map(x => {
-          if (x.competition.includes('S14')){ 
+          if (/s\d+/i.test(x.competition)){ 
             x.competitionUrl = x.competition; 
-            x.competition = x.competition.replace('S14','Season 14');
+            x.competition = x.competition.replace(/s(\d+)/i,'Season $1');
           }
         });
         standings =standings.sort((a,b) => {
