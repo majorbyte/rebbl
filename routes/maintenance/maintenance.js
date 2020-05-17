@@ -13,7 +13,7 @@ const
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , standingsService = require("../../lib/StandingsService.js")
-  , ts = require("../../lib/TicketService.js");
+  , ts = require("../../lib/TicketService.js")
   , util = require('../../lib/util.js')
   , reddit = require("../../lib/RedditService.js");
 
