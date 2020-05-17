@@ -26,12 +26,12 @@ class Division{
     let season = "";
     if(league.toLowerCase() === "off season international"){
       leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
-      season = "season 13";
+      season = "season 14";
     } else if(league.toLowerCase() === "rebbl one minute league"){
       leagueRegex = new RegExp(`^Rebbl One Minute League`, 'i');  
     } else if(league.toLowerCase() === "greenhorn cup") {
       leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
-      season = "season 14";
+      season = "season 15";
       divRegex =new RegExp(`^${req.params.division}$`, 'i');
     } else if (league.toLowerCase().indexOf("hjmc") === -1 && league.toLowerCase().indexOf("rebbrl") === -1 && league.toLowerCase().indexOf("rebbl -") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
       leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
@@ -84,12 +84,12 @@ class Division{
       let season = "";
       if(league.toLowerCase() === "off season international"){
         leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
-        season = "season 13";
+        season = "season 14";
       } else if(league.toLowerCase() === "rebbl one minute league"){
         leagueRegex = new RegExp(`^Rebbl One Minute League`, 'i');  
       } else if(league.toLowerCase() === "greenhorn cup") {
         leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
-        season = "season 14";
+        season = "season 15";
         divRegex =new RegExp(`^${req.params.division}$`, 'i');
       } else if (league.toLowerCase().indexOf("rebbrl") === -1 && league.toLowerCase().indexOf("rebbl -") === -1 && league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
         leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');

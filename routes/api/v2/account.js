@@ -86,7 +86,7 @@ class AccountApi{
     this.router.get("/me",util.ensureAuthenticated, async function(req,res){
       const account = await accountService.getAccount(req.user.name);
       const regex = new RegExp(`^${account.coach}$`,"i");
-      const schedule = await leagueService.searchLeagues({round:1, season:"season 13", league:/rebbl - /i, "opponents.coach.name":regex,"opponents.0.team.name":/^(?!\[admin]).+/i,"opponents.1.team.name":/^(?!\[admin]).+/i});
+      const schedule = await leagueService.searchLeagues({round:1, season:"season 14", league:/rebbl - /i, "opponents.coach.name":regex,"opponents.0.team.name":/^(?!\[admin]).+/i,"opponents.1.team.name":/^(?!\[admin]).+/i});
 
       let ret = {coach: account.coach, division:"", league:""};
       if (schedule && schedule.length > 0){
