@@ -7,27 +7,27 @@ block content
         span(class="highlight")= user.reddit
         span !
 
-      h1 For Bitter Bloow Bowl Veterans:
+      h1 For Bitter Blood Bowl Veterans:
       hr
       h3 It looks like we don't have you on file yet, please continue with your sign up for the REBBL Season 14
         a(href="/signup/change" class="highlighted-rules")= " here"          
-      h4 
-        //a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 14
-        | more information on REBBL Season 14 will come soon
+      //- h4 
+      //-   //a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 14
+      //-   | more information on REBBL Season 14 will come soon
 
-      h1 For new (semi)fresh meat:
-      hr
-      //h3 College signups are closed, school has started
-      h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 11? Read more about what the College League is about 
-        a(href="https://www.reddit.com/r/ReBBRL/comments/dy6czq/rebbrl_college_league_season_10_sign_ups/" class="highlighted-rules") here (link will update to season 11 in a while)     
-        | and continue with your sign up 
-        a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
+      //- h1 For new (semi)fresh meat:
+      //- hr
+      //- //h3 College signups are closed, school has started
+      //- h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 11? Read more about what the College League is about 
+      //-   a(href="https://www.reddit.com/r/ReBBRL/comments/dy6czq/rebbrl_college_league_season_10_sign_ups/" class="highlighted-rules") here (link will update to season 11 in a while)     
+      //-   | and continue with your sign up 
+      //-   a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
 
-      h3 If you played in our College League last season and want to continue in the Minors Leauge, continue with your sign up
-        a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
-      h4 
-        //a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 10       
-        | more information on REBBRL Minors Season 10 will come soon
+      //- h3 If you played in our College League last season and want to continue in the Minors Leauge, continue with your sign up
+      //-   a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
+      //- h4 
+      //-   //a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 10       
+      //-   | more information on REBBRL Minors Season 10 will come soon
 
 
     - else 
@@ -52,10 +52,6 @@ block content
                 div(class="warning")
                   p Your team is either misspelled or not yet existing
                 br
-              - if(signup.saveType ==="rampup")
-                form(action="/signup/change" method="get" style="float:left;margin-right:116px;")
-                  button(type="submit"  class="btn btn-primary") Change
-
               //- form(action="/signup/confirm" method="post" )
                 -if(signup.confirmed)
                   span Thank you for confirming!
@@ -64,35 +60,35 @@ block content
               - if (signup.type==="rebbl")
                 h3= "REBBL SEASON 14 - " + signup.league
                 form(action="/signup/resign" method="post" )
-                  br
-                  button(type="submit"  class="btn btn-primary") Resign
+                  //- br
+                  //- button(type="submit"  class="btn btn-primary") Resign
               - else
                 h3= "REBBRL " + signup.league
                 form(action="/signup/resign-rebbrl" method="post")
-                  br
-                  button(type="submit"  class="btn btn-primary") Resign
+                  //- br
+                  //- button(type="submit"  class="btn btn-primary") Resign
 
-            -if (signup.greenHorn)
-              div
-                h3 THE GREENHORN CUP
-              form(action="/signup/resign-greenhorn" method="post" )
-                br
-                button(type="submit"  class="btn btn-primary") Resign
-            -else if(signup.type === "rebbl" && signup.saveType !== "existing")
-              div
-                h3 You can still sign up for THE GREENHORN CUP
-                a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
+            //- -if (signup.greenHorn)
+            //-   div
+            //-     h3 THE GREENHORN CUP
+            //-   form(action="/signup/resign-greenhorn" method="post" )
+            //-     br
+            //-     button(type="submit"  class="btn btn-primary") Resign
+            //- -else if(signup.type === "rebbl" && signup.saveType !== "existing")
+            //-   div
+            //-     h3 You can still sign up for THE GREENHORN CUP
+            //-     a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
 
-            -if (signup.OI)
-              div
-                h3 THE OFF-SEASON INTERNATIONAL
-              form(action="/signup/resign-oi" method="post" )
-                br
-                button(type="submit"  class="btn btn-primary") Resign
-            -else if(signup.saveType === "existing")
-              div
-                h3 You can still sign up for THE OFF-SEASON INTERNATIONAL
-                a(href="/signup/signup-oi") Sign me up for OSI
+            //- -if (signup.OI)
+            //-   div
+            //-     h3 THE OFF-SEASON INTERNATIONAL
+            //-   form(action="/signup/resign-oi" method="post" )
+            //-     br
+            //-     button(type="submit"  class="btn btn-primary") Resign
+            //- -else if(signup.saveType === "existing")
+            //-   div
+            //-     h3 You can still sign up for THE OFF-SEASON INTERNATIONAL
+            //-     a(href="/signup/signup-oi") Sign me up for OSI
 
             p Nagivate 
               a(href="/signup/signups" class="highlighted-rules") here
@@ -102,24 +98,24 @@ block content
           span(class="highlight")= user.coach
           span !
 
-        h1 For Bitter Bloow Bowl Veterans:
+        h1 For Bitter Blood Bowl Veterans:
         hr
         h3 You haven't signed up yet, so continue with your sign up for the REBBL Season 14
           a(href="/signup/change" class="highlighted-rules")= " here"          
-        h4 
-          //a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 14
-          | more information on REBBL Season 14 will come soon
+        //- h4 
+        //-   //a(href="https://www.reddit.com/r/ReBBl/comments/c4vvqg/season_12_signup_get_it_while_its_hot/" class="highlighted-rules") more information on REBBL Season 14
+        //-   | more information on REBBL Season 14 will come soon
 
-        h1 For new (semi)fresh meat:
-        hr
-        //h3 College signups are closed, school has started
-        h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 11? Read more about what the College League is about 
-          a(href="https://www.reddit.com/r/ReBBRL/comments/dy6czq/rebbrl_college_league_season_10_sign_ups/" class="highlighted-rules") here     
-          | and continue with your sign up 
-          a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
+        //- h1 For new (semi)fresh meat:
+        //- hr
+        //- //h3 College signups are closed, school has started
+        //- h3 Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 11? Read more about what the College League is about 
+        //-   a(href="https://www.reddit.com/r/ReBBRL/comments/dy6czq/rebbrl_college_league_season_10_sign_ups/" class="highlighted-rules") here     
+        //-   | and continue with your sign up 
+        //-   a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
 
-        h3 If you played in our College League last season and want to continue in the Minors Leauge, continue with your sign up
-          a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
-        h4 
-         //a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 10       
-         | more information on REBBRL Minors Season 10 will come soon
+        //- h3 If you played in our College League last season and want to continue in the Minors Leauge, continue with your sign up
+        //-   a(href="/signup/rebbrl" class="highlighted-rules")= " here"          
+        //- h4 
+        //-  //a(href="https://www.reddit.com/r/ReBBRL/comments/dy6j4e/rebbrl_minor_league_season_9_sign_ups/" class="highlighted-rules") more information on REBBRL Minors Season 10       
+        //-  | more information on REBBRL Minors Season 10 will come soon

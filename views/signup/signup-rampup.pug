@@ -30,6 +30,7 @@ block append scripts
 
 
 block content
+  - console.log(user)
   form(action="/signup/confirm-rampup" method="post" class="container signup")
     div
       - if (user.reddit) {
@@ -42,44 +43,18 @@ block content
           legend Required
           div
             label(for="coach") Blood Bowl 2 coach name
+            -console.dir(user)
             - if (user.account)
               input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
             - else
               input(type="text" id="coach" name="coach" value=user.coach required placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name")
               - if (user.error && user.error.coach)
-                p(class="error")= user.error.coach
+                p(class="error my-0")= user.error.coach
           div
             label(for="team") Team name
             input(type="text" id="team" name="team" value=user.team required placeholder="team name" title="team name")
-          div
-            label(for="race") Team race
-            select(id="race" name="race" required)
-              option(value="Amazon" selected=user.race==="Amazon" ) Amazon
-              option(value="Bretonnia" selected=user.race==="Bretonnia") Bretonnia
-              option(value="Chaos" selected=user.race==="Chaos") Chaos
-              option(value="Chaos Dwarf" selected=user.race==="Chaos Dwarf") Chaos Dwarf
-              option(value="Dark Elf" selected=user.race==="Dark Elf") Dark Elf
-              option(value="Dwarf" selected=user.race==="Dwarf") Dwarf
-              option(value="Goblin" selected=user.race==="Goblin") Goblin
-              option(value="Human" selected=user.race==="Human") Human
-              option(value="Halfling" selected=user.race==="Halfling") Halfling
-              option(value="High Elf" selected=user.race==="High Elf") High Elf
-              option(value="Khemri" selected=user.race==="Khemri") Khemri
-              option(value="Kislev" selected=user.race==="Kislev") Kislev
-              option(value="Lizardman" selected=user.race==="Lizardman") Lizardman
-              option(value="Necromantic" selected=user.race==="Necromantic") Necromantic
-              option(value="Norse" selected=user.race==="Norse") Norse
-              option(value="Nurgle" selected=user.race==="Nurgle") Nurgle
-              option(value="Ogre" selected=user.race==="Ogre") Ogre
-              option(value="Orc" selected=user.race==="Orc") Orc
-              option(value="Pro Elf" selected=user.race==="Pro Elf") Pro Elf
-              option(value="Skaven" selected=user.race==="Skaven") Skaven
-              option(value="Undead" selected=user.race==="Undead") Undead
-              option(value="Underworld" selected=user.race==="Underworld") Underworld
-              option(value="Vampire" selected=user.race==="Vampire") Vampire
-              option(value="Wood Elf" selected=user.race==="Wood Elf") Wood Elf
-            - if (user.error && user.error.race)
-              p(class="error")= user.error.race
+            - if (user.error && user.error.team)
+              p(class="error my-0")= user.error.team            
           div
             label(for="league") League
             select(name="league" id="league")
@@ -121,43 +96,17 @@ block content
             - if (user.account)
               input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
             - else
-              input(type="text" id="coach" name="coach" value="" required placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name")
+              input(type="text" id="coach" name="coach" value=user.coach required placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name")
               - if (user.error && user.error.coach)
-                p(class="error")= user.error.coach
+                p(class="error my-0")= user.error.coach
           div
             label(for="team") Team name
-            input(type="text" id="team" name="team" value="" required placeholder="team name" title="team name")
-          div
-            label(for="race") Team race
-            select(id="race" name="race" required)
-               option(value="" disabled selected style="color: #9b959166;") Select race
-                option(value="Amazon") Amazon
-                option(value="Bretonnia") Bretonnia
-                option(value="Chaos") Chaos
-                option(value="Chaos Dwarf") Chaos Dwarf
-                option(value="Dark Elf") Dark Elf
-                option(value="Dwarf") Dwarf
-                option(value="Goblin") Goblin
-                option(value="Human") Human
-                option(value="Halfling") Halfling
-                option(value="High Elf") High Elf
-                option(value="Khemri") Khemri
-                option(value="Kislev") Kislev
-                option(value="Lizardman") Lizardman
-                option(value="Necromantic") Necromantic
-                option(value="Norse") Norse
-                option(value="Nurgle") Nurgle
-                option(value="Ogre") Ogre
-                option(value="Orc") Orc
-                option(value="Pro Elf") Pro Elf
-                option(value="Skaven") Skaven
-                option(value="Undead") Undead
-                option(value="Underworld") Underworld
-                option(value="Vampire") Vampire
-                option(value="Wood Elf") Wood Elf
+            input(type="text" id="team" name="team" value=user.team required placeholder="team name" title="team name")
+            - if (user.error && user.error.team)
+              p(class="error my-0")= user.error.team            
           div
             label(for="league") League
-            select(name="league" id="league" required)
+            select(name="league" id="league" required value=user.league)
               option(value="" disabled selected style="color: #9b959166;") Select your league
               //option(value="BIG O") BIG O
               option(value="GMAN") RAMPUP GMAN
@@ -170,10 +119,10 @@ block content
           legend Optional
           div
             label(for="discord") Discord
-            input(type="text" id="discord" name="discord" value="" placeholder="discord name" title="discord name")
+            input(type="text" id="discord" name="discord" value=user.discord placeholder="discord name" title="discord name")
           div
             label(for="steam") Steam
-            input(type="text" id="steam" name="steam" value="" placeholder="steam name" title="steam name")
+            input(type="text" id="steam" name="steam" value=user.steam placeholder="steam name" title="steam name")
           div
             h3 By pressing complete, you confirm that you have read and will abide by our rules
               a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " as described here"
