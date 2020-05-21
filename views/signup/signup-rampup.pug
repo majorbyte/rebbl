@@ -45,7 +45,7 @@ block content
             label(for="coach") Blood Bowl 2 coach name
             -console.dir(user)
             - if (user.account)
-              input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
+              input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" readonly)
             - else
               input(type="text" id="coach" name="coach" value=user.coach required placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name")
               - if (user.error && user.error.coach)
@@ -94,7 +94,7 @@ block content
           div
             label(for="coach") Coach Name
             - if (user.account)
-              input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
+              input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" readonly)
             - else
               input(type="text" id="coach" name="coach" value=user.coach required placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name")
               - if (user.error && user.error.coach)
