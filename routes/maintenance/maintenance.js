@@ -48,7 +48,7 @@ class Maintenance{
       //cracker.fixRebuilders();
       try{
         //await perpetualService.getMatches();
-        
+        await ts.checkTickets();
       }
       catch(e){
         loggingService.error(e);
@@ -114,13 +114,13 @@ class Maintenance{
         catch(e){
           loggingService.error(e);
         }
-        /*
+        
         try{
           reddit.check();
         }
         catch(e){
           loggingService.error(e);
-        }*/
+        }
         try{
           reddit.getAnnouncements();
         }
