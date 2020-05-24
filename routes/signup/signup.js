@@ -370,6 +370,9 @@ class Signup{
       }
       req.body.coach = coachRecord.User;
       req.body.race = this.races.find(x => x.id === team.team.idraces).name;
+      req.body.teamCreated = team.team.created;
+      req.body.lastPlayed = team.team.datelastmatch;
+
 
       let user = await signupService.saveSignUp(req.user.name, req.body);
 
