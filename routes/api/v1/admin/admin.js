@@ -19,6 +19,8 @@ router.use('/divisions', require(`./divisions.js`));
 
 router.use('/board', require(`./board.js`));
 
+router.use('/rampup', require(`./rampup.js`));
+
 router.post("/clearcache", util.ensureAuthenticated, util.hasRole("superadmin"), async function(req, res){
   try{
 

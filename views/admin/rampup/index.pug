@@ -1,0 +1,146 @@
+extends ../layout.pug
+
+block head
+  style.
+
+block content
+  .Background.u-bottomPadding--large.u-topPadding--medium
+    .container.navcontainer(data-index="0" id="app" style="max-width:1650px")
+      .row.col-12
+        .btn-group-toggle(data-toggle="buttons")
+          template(v-for="league in ['GMAN','REL']")
+            label.btn.btn-outline-primary(style="margin-right: 15px" @click="selectedLeague = league")
+              input(type="radio" checked autocomplete="off")       
+              span {{league}}
+      br
+
+      .col.my-1
+        .btn.btn-primary(@click="addMatchup") Add matchup
+
+      template(v-for="matchup of matchups.filter(x => x.league === this.selectedLeague)")
+        .row(v-bind:class="{'alert alert-warning':checkMatchup(matchup)}")
+          .col
+            select.form-control(v-model="matchup.home")
+              option(v-if="matchup.home" v-bind:value="matchup.home" selected)  {{matchup.home.coach}}
+              option(v-if="!matchup.home.coach" selected disabled)  Choose coach
+              option(v-for="coach of availableCoaches" v-bind:value="coach" ) {{ coach.coach }}
+          .col
+            select.form-control(v-model="matchup.away")
+              option(v-if="matchup.away" v-bind:value="matchup.away" selected)  {{matchup.away.coach}}
+              option(v-if="!matchup.away.coach" selected disabled)  Choose coach
+              option(v-for="coach of availableCoaches" v-bind:value="coach" ) {{ coach.coach }}
+          .col
+            input(type="text" v-bind:value="matchup.competitionName")
+          .col-1  
+            button(@click="removeMatchup(matchup)" class="btn btn-small btn-success" style="margin:0px 10px")
+              i(class="fa fa-trash")
+
+      .col.my-1
+        .btn.btn-primary(@click="create") Create competitions
+      
+
+
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
+  - else
+    script(src="/scripts/vue-2.6.10.min.js")
+
+  script.
+    Date.prototype.getWeek = function () {
+      dowOffset = 1
+      var newYear = new Date(this.getFullYear(),0,1);
+      var day = newYear.getDay() - dowOffset; //the day of week the year begins on
+      day = (day >= 0 ? day : day + 7);
+      var daynum = Math.floor((this.getTime() - newYear.getTime() - 
+      (this.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
+      var weeknum;
+      //if the year starts before the middle of a week
+      if(day < 4) {
+        weeknum = Math.floor((daynum+day-1)/7) + 1;
+        if(weeknum > 52) {
+          nYear = new Date(this.getFullYear() + 1,0,1);
+          nday = nYear.getDay() - dowOffset;
+          nday = nday >= 0 ? nday : nday + 7;
+          /*if the next year starts before the middle of
+            the week, it is week #1 of that year*/
+          weeknum = nday < 4 ? 1 : 53;
+        }
+      }
+      else {
+        weeknum = Math.floor((daynum+day-1)/7);
+      }
+      return weeknum;
+    };
+
+    // app Vue instance
+    const app = new Vue({
+      // app initial state
+      data: {
+        coaches: [],
+        matchups: [],
+        played:[],
+        selectedLeague: "",
+        round: (new Date(Date.now())).getWeek() -20
+      },
+      computed: {
+        availableCoaches(){
+          let filtered = this.coaches.filter(x => x.league === this.selectedLeague);
+          
+          let used = this.matchups.map(x => x.home ? x.home.coach : false)
+             .concat(this.matchups.map(x => x.away ? x.away.coach : false));
+
+          return filtered.filter(x => !used.includes(x.coach));
+        }
+      },
+      methods:{
+        checkMatchup: function(matchup){
+          let game = this.played.find(x =>{
+            let found = matchup.home.coach === x.homeCoachName && matchup.away.coach === x.awayCoachName;
+            return found || matchup.home.coach === x.awayCoachName && matchup.away.coach === x.homeCoachName;
+          });
+
+          return game ? true: false;
+
+        },
+        addMatchup: function(){
+          const name = `${this.selectedLeague} S14 W${this.round} GAME ${this.matchups.filter(x => x.league === this.selectedLeague).length+1}`
+          this.matchups.push({home:{},away:{},league:this.selectedLeague, competitionName:name});
+        },
+        removeMatchup: function(matchup){
+          this.matchups.splice(this.matchups.findIndex(x => x === matchup),1);
+        },
+        setMatchup: function(e, matchup, coach, side){
+          matchup[side] = coach;
+        },
+        create: async function(){
+          let response = await fetch("/api/v1/admin/rampup", {
+              method:"POST",
+              headers:{
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(this.matchups)
+            });
+        }
+      },
+      watch:{
+        selectedLeague: async function(val){
+          let response = await fetch(`/api/v2/division/${val} Rampup/season 14/${val} Rampup/slim`);
+          this.played = await response.json();
+          let count = Math.ceil(this.coaches.filter(x => x.league === this.selectedLeague).length / 2);
+          let len = count + count%2;
+          while ( this.matchups.filter(x => x.league === this.selectedLeague).length < len ) this.addMatchup();
+        }
+      },
+      async mounted() {
+        let response = await fetch("/api/v1/admin/rampup");
+        this.coaches = await response.json();
+        
+      }
+    });
+
+    // mount
+    app.$mount('#app')
+
+

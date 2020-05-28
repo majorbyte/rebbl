@@ -49,6 +49,7 @@ class Division{
     if( req.params.league.toLowerCase() === "rampup"){
       leagueRegex = new RegExp(`${league}$`, 'i');
       divRegex = new RegExp(`^${req.params.division}`, 'i');
+      season = "season 14";
     }
     
     if (season !== "")
@@ -104,7 +105,13 @@ class Division{
       }
         
       let divRegex = new RegExp(`^${req.params.division}$`, 'i');
-      
+
+      if( req.params.league.toLowerCase() === "rampup"){
+        leagueRegex = new RegExp(`${league}$`, 'i');
+        divRegex = new RegExp(`^${req.params.division}`, 'i');
+        season = "season 14";
+      }
+
       if(season !== "")
         data.matches = await db.getLeagues({round: week, league: {"$regex": leagueRegex}, competition: {"$regex": divRegex},season:season});
       else

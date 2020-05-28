@@ -21,6 +21,8 @@ class Admin{
     this.router.use('/divisions', require(`./divisions.js`));
     this.router.use('/board', require(`./board.js`));
     this.router.use('/clan', require(`./clan.js`));
+    
+    this.router.use('/rampup', (req, res) => res.render("admin/rampup/index"));
 
     return this.router;
 
