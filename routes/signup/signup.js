@@ -354,12 +354,45 @@ class Signup{
         if (!coachRecord) error.coach = `Coach ${req.body.coach} does not exist`;
       } 
       if (coach.ResponseSearchCoach.Coaches === "") error.coach = `Coach ${req.body.coach} does not exist`;
+      
+      let team;
+      if (req.app.locals.cyanideEnabled){
+        team = await cyanideService.team({platform:"pc",name:req.body.team});
 
-      var team = await cyanideService.team({platform:"pc",name:req.body.team});
+        if (!team) error.team = `Team ${req.body.team} not found`;
 
-      if (!team) error.team = `Team ${req.body.team} not found`;
+        if (team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${req.body.team} does not belong this coach`;
 
-      if (team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${req.body.team} does not belong this coach`;
+        if (team){
+          req.body.teamCreated = team.team.created;
+          req.body.lastPlayed = team.team.datelastmatch;
+          req.body.race = this.races.find(x => x.id === team.team.idraces).name;
+        }
+      } else {
+        if (coachRecord){
+          const coach = await apiService.getCoachInfo(coachRecord.IdUser);
+
+          if (!Array.isArray(coach.ResponseGetCoachOverview.Teams.Team))
+            coach.ResponseGetCoachOverview.Teams.Team = [coach.ResponseGetCoachOverview.Teams.Team];
+
+          team = coach.ResponseGetCoachOverview.Teams.Team.find(team => team.Row.Name.localeCompare(req.body.team,undefined,{sensitivity:"base"}) === 0);
+          if (!team) error.team = `Team ${req.body.team} not found`;
+          else {
+            req.body.race = this.races.find(x => x.id === Number(team.Row.IdRaces)).name;
+
+            const matches = await apiService.getTeamMatches(team.Row.ID.Value.replace(/\D/g,""));
+
+
+            if (Number(matches.ResponseGetTeamMatchRecords.TotalRecords) === 0){
+              req.body.teamCreated = req.body.lastPlayed = "A";
+            } else {
+              req.body.teamCreated = "A";
+              req.body.lastPlayed = "B";
+            }
+          }
+        }
+      }
+
 
       if (Object.keys(error).length !== 0){
         let data = req.body;
@@ -369,9 +402,6 @@ class Signup{
         return;
       }
       req.body.coach = coachRecord.User;
-      req.body.race = this.races.find(x => x.id === team.team.idraces).name;
-      req.body.teamCreated = team.team.created;
-      req.body.lastPlayed = team.team.datelastmatch;
 
 
       let user = await signupService.saveSignUp(req.user.name, req.body);
