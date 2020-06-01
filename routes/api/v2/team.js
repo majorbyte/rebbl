@@ -17,6 +17,7 @@ class TeamApi{
   routesConfig(){
     this.router.get('/:teamId', util.cache(600), async function(req, res){
       try {
+        
         let team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
         team.team.coachname = team.coach ? team.coach.name : 'AI';
         delete team.roster;
@@ -24,7 +25,7 @@ class TeamApi{
         res.json(team);
       }
       catch (ex){
-        res.status(500).send({error:ex.message});
+        res.status(500).json({error:ex.message});
       }
     
     });
@@ -47,7 +48,7 @@ class TeamApi{
       }
       catch (ex){
         console.error(ex);
-        res.status(500).send({error:'Something something error'});
+        res.status(500).json({error:'Something something error'});
       }
     
     });
@@ -62,7 +63,7 @@ class TeamApi{
             players = team.roster;
           }
         }
-        res.json(players);
+        res.header("Access-Control-Allow-Origin", "http://localhost:8080").json(players);
       }
       catch (ex){
         console.error(ex);

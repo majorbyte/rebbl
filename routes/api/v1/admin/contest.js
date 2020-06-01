@@ -71,7 +71,7 @@ router.post("/", util.ensureAuthenticated, util.hasRole("superadmin"), async fun
         res.status(200).send("ok");
     } catch(err){
         console.log(err);
-        res.status(500).send(err);
+        res.status(500).json(err);
     }
 });
 

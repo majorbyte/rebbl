@@ -57,9 +57,9 @@ const express = require("express")
 
         data.splice(data.findIndex(x=>x.coachId === "307300"),1);
 
-        res.status(200).send(data);
+        res.status(200).json(data);
       } else {
-        res.status(500).send(info.ResponseGetLeagueBoard.CallResult);
+        res.status(500).json(info.ResponseGetLeagueBoard.CallResult);
       }
     } catch(err){
       console.log(err);
@@ -77,7 +77,7 @@ const express = require("express")
           date: new Date(Date.now()),
           state:"success"
         });
-        res.status(200).send(data);
+        res.status(200).json(data);
       } else {
         dataService.insertModerationEntry({
           user: req.user.name,
@@ -86,7 +86,7 @@ const express = require("express")
           date: new Date(Date.now()),
           state:data.ResponseSetBoardMember.CallResult.Message
         });
-        res.status(500).send(data.ResponseSetBoardMember.CallResult);
+        res.status(500).json(data.ResponseSetBoardMember.CallResult);
       }
 
     } catch(err){
@@ -100,7 +100,7 @@ const express = require("express")
       
       let data = await api.searchCoach(req.params.coachName);
 
-      res.status(200).send(data.ResponseSearchCoach.Coaches.DataUser);
+      res.status(200).json(data.ResponseSearchCoach.Coaches.DataUser);
     } catch(err){
       console.log(err);
     }
@@ -118,7 +118,7 @@ const express = require("express")
           date: new Date(Date.now()),
           state:"succes"
         });
-        res.status(200).send(data);
+        res.status(200).json(data);
       } else{
         dataService.insertModerationEntry({
           user: req.user.name,
@@ -127,7 +127,7 @@ const express = require("express")
           date: new Date(Date.now()),
           state:data.ResponseSetBoardMember.CallResult.Message
         });
-        res.status(500).send(data.ResponseRemoveBoardMember.CallResult);
+        res.status(500).json(data.ResponseRemoveBoardMember.CallResult);
       }
     } catch(err){
       console.log(err);

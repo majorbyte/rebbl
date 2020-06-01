@@ -73,7 +73,7 @@ class LeagueApi{
       }
       catch (ex){
         console.error(ex);
-        res.status(500).send('{"error": "Something something error"}');
+        res.status(500).json('{"error": "Something something error"}');
       }
     });  
 
