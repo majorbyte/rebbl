@@ -31,7 +31,7 @@ router.post('/upload', util.ensureAuthenticated, util.hasRole("admin"), uploadSt
     blobService.createBlockBlobFromStream(containerName, blobName, stream, streamLength, {contentSettings:{contentType:req.file.mimetype}} , err => {
 
         if(err) {
-            res.status(500).send(err);
+            res.status(500).json(err);
         }
 
         res.status(200).send(blobName);

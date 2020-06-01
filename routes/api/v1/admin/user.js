@@ -24,7 +24,7 @@ const express = require('express')
             delete x.warnings;
             delete x.bans;
         });  
-        res.status(200).send(data);
+        res.status(200).json(data);
       });
     } catch(err){
       console.log(err);
@@ -36,10 +36,10 @@ router.get('/:user', util.ensureAuthenticated, util.hasRole("admin"), async func
   try{
     let user = await accountService.getAccount(req.params.user);
 
-    res.status(200).send(user);
+    res.status(200).json(user);
 
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
   }
 });
 
@@ -88,9 +88,9 @@ router.post('/addStrike', util.ensureAuthenticated, util.hasRole("admin"), async
 
     let strikes = await accountService.addStrike(req.body.reddit, strike);
 
-    res.status(200).send(strikes);
+    res.status(200).json(strikes);
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -107,9 +107,9 @@ router.post('/toggleStrike', util.ensureAuthenticated, util.hasRole("admin"), as
 
     await accountService.setStrike(req.body.reddit, Number(req.body.id), strike);
 
-    res.status(200).send();
+    res.status(200).json();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -125,9 +125,9 @@ router.post('/updateStrike', util.ensureAuthenticated, util.hasRole("admin"), as
     };
     await accountService.updateStrike(req.body.reddit, strike);
 
-    res.status(200).send();
+    res.status(200).json();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -144,9 +144,9 @@ router.post('/addWarning', util.ensureAuthenticated, util.hasRole("admin"), asyn
 
     let warnings = await accountService.addWarning(req.body.reddit, warning);
 
-    res.status(200).send(warnings);
+    res.status(200).json(warnings);
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -164,7 +164,7 @@ router.post('/updateWarning', util.ensureAuthenticated, util.hasRole("admin"), a
 
     res.status(200).send();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -179,7 +179,7 @@ router.post('/toggleAdmin', util.ensureAuthenticated, util.hasRole("superadmin")
 
     res.status(200).send();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -194,7 +194,7 @@ router.post('/toggleRole', util.ensureAuthenticated, util.hasRole("admin"), asyn
 
     res.status(200).send();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -210,7 +210,7 @@ router.post('/addDonation', util.ensureAuthenticated, util.hasRole("superadmin")
 
     res.status(200).send();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -227,7 +227,7 @@ router.post('/addTrophy', util.ensureAuthenticated, util.hasRole("admin"), async
 
     res.status(200).send();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -244,7 +244,7 @@ router.post('/deleteTrophy', util.ensureAuthenticated, util.hasRole("admin"), as
 
     res.status(200).send();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -261,9 +261,9 @@ router.post('/addBan', util.ensureAuthenticated, util.hasRole("admin"), async fu
 
     let bans = await accountService.addBan(req.body.reddit, ban);
 
-    res.status(200).send(bans);
+    res.status(200).json(bans);
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -282,7 +282,7 @@ router.post('/toggleBan', util.ensureAuthenticated, util.hasRole("admin"), async
 
     res.status(200).send();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -300,7 +300,7 @@ router.post('/updateBan', util.ensureAuthenticated, util.hasRole("admin"), async
 
     res.status(200).send();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -315,9 +315,9 @@ router.post('/addNote', util.ensureAuthenticated, util.hasRole("admin"), async f
 
     let notes = await accountService.addNote(req.body.reddit, note);
 
-    res.status(200).send(notes);
+    res.status(200).json(notes);
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });
@@ -334,7 +334,7 @@ router.post('/updateNote', util.ensureAuthenticated, util.hasRole("admin"), asyn
 
     res.status(200).send();
   } catch(err){
-    res.status(500).send(err);
+    res.status(500).json(err);
     console.log(err);
   }
 });

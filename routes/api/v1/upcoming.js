@@ -69,7 +69,7 @@ router.post("/stream/:contest_id", util.ensureAuthenticatedApi, async function(r
         }
     } catch(ex){
         console.log(ex);
-        res.status(500).send();
+        res.status(500).json();
     }
 });
 
@@ -80,13 +80,13 @@ router.post("/unstream/:contest_id", util.ensureAuthenticatedApi, async function
         if(date && date.stream){
             delete date.stream;
             datingService.update(date.id, date);
-            res.status(200).send(date);
+            res.status(200).json(date);
         } else {
-            res.status(403).send();
+            res.status(403).json();
         }
     } catch(ex){
         console.log(ex);
-        res.status(500).send();
+        res.status(500).json();
     }
 });
 

@@ -17,14 +17,20 @@ class TeamApi{
   routesConfig(){
     this.router.get('/:teamId', util.cache(600), async function(req, res){
       try {
-        let team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
+        let team;
+        if (isNaN(req.params.teamsId)){
+          const r = new RegExp(`^${req.params.teamId}$`,"i");
+          team = await dataService.getTeam({"team.name":{$regex: r}});
+        } else {
+          team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
+        }
         team.team.coachname = team.coach ? team.coach.name : 'AI';
         delete team.roster;
         delete team.coach;
         res.json(team);
       }
       catch (ex){
-        res.status(500).send({error:ex.message});
+        res.status(500).json({error:ex.message});
       }
     
     });
@@ -47,7 +53,7 @@ class TeamApi{
       }
       catch (ex){
         console.error(ex);
-        res.status(500).send({error:'Something something error'});
+        res.status(500).json({error:'Something something error'});
       }
     
     });
