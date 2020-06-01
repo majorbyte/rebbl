@@ -460,6 +460,44 @@
         }
       }
     },
+    "/team/{name}": {
+      "get": {
+        "tags": [
+          "team"
+        ],
+        "summary": "Get team data",
+        "description": "Returns a teams data and statistics",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "name of the team",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TeamData"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "League not found"
+          }
+        }
+      }
+    },
     "/team/{teamId}/players": {
       "get": {
         "tags": [

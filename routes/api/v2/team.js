@@ -17,8 +17,13 @@ class TeamApi{
   routesConfig(){
     this.router.get('/:teamId', util.cache(600), async function(req, res){
       try {
-        
-        let team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
+        let team;
+        if (isNaN(req.params.teamsId)){
+          const r = new RegExp(`^${req.params.teamId}$`,"i");
+          team = await dataService.getTeam({"team.name":{$regex: r}});
+        } else {
+          team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
+        }
         team.team.coachname = team.coach ? team.coach.name : 'AI';
         delete team.roster;
         delete team.coach;
@@ -63,7 +68,7 @@ class TeamApi{
             players = team.roster;
           }
         }
-        res.header("Access-Control-Allow-Origin", "http://localhost:8080").json(players);
+        res.json(players);
       }
       catch (ex){
         console.error(ex);
