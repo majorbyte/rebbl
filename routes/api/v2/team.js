@@ -18,7 +18,7 @@ class TeamApi{
     this.router.get('/:teamId', util.cache(600), async function(req, res){
       try {
         let team;
-        if (isNaN(req.params.teamsId)){
+        if (isNaN(req.params.teamId)){
           const r = new RegExp(`^${req.params.teamId}$`,"i");
           team = await dataService.getTeam({"team.name":{$regex: r}});
         } else {
