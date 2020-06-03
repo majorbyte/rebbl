@@ -48,7 +48,8 @@ class Maintenance{
       //cracker.fixRebuilders();
       try{
         //await perpetualService.getMatches();
-        await ts.checkTickets();
+        //await ts.checkTickets();
+        clanService.calculateStandings();
       }
       catch(e){
         loggingService.error(e);
@@ -77,7 +78,7 @@ class Maintenance{
       if (req.app.locals.cyanideEnabled){
         try{
           await maintenanceService.getRebblData(req.query.league);
-          await ts.checkTickets();
+         // await ts.checkTickets();
         }
         catch(e){
           loggingService.error(e);
