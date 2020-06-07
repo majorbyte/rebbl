@@ -162,6 +162,7 @@ class Maintenance{
       seasons = seasons.concat(configurationService.getActiveUpstartSeason());          
       seasons = seasons.concat(configurationService.getActiveMinorsSeason());          
       seasons = seasons.concat(configurationService.getActiveCollegeSeason());          
+      seasons = seasons.concat(configurationService.getActiveBeerSeason());          
 
       seasons.map(season => {
         season.leagues.map(league =>{
