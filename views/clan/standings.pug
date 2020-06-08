@@ -16,7 +16,7 @@ block navigation
           li( class="nav-item active")
             .nav-link DISPLAY 
           li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
+            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bind="text:season" ) 
             .dropdown-menu(aria-labelledby="dropdownSeason")
               //ko foreach: seasons
               a(class="dropdown-item " data-bind="text:$data,click:$root.loadSeason.bind($root)")
@@ -34,10 +34,18 @@ block content
       thead
         th(scope="row") #
         th(scope="row") Clan 
+        // ko if: $root.usePoints()
+        th.text-center(scope="row") Points
+        th.text-center(scope="row") Wins
+        th.text-center(scope="row") Draws
+        // /ko
+        // ko if: !$root.usePoints()
         th.text-center(scope="row") Clan Wins
         th.text-center(scope="row") Clan Losses
-        th.text-center(scope="row") Matches Won
-        th.text-center(scope="row") Matches Lost
+        // /ko
+        th.text-center(scope="row") Match Wins
+        th.text-center(scope="row") Match Losses
+        th.text-center(scope="row") ΔMatch
         th.text-center(scope="row") +TD 
         th.text-center(scope="row") -TD
         th.text-center(scope="row") ΔTD
@@ -46,11 +54,22 @@ block content
         tr
           td(scope="row" data-bind="text:$index()+1")
           td
+            // ko if: $data.hasOwnProperty("logo")
+            img(data-bind="attr:{src: `https://cdn2.rebbl.net/${logo}`}" style="width:32px;margin-right:15px")
+            // /ko
             a(data-bind="text:clan,attr:{href:`/clan/clan/${clan}`}")
+          // ko if: $root.usePoints() && $data.hasOwnProperty("clanPoints")
+          td.text-center(data-bind="text:clanPoints")
+          td.text-center(data-bind="text:clanWins")
+          td.text-center(data-bind="text:clanDraws")
+          // /ko
+          // ko if: !$root.usePoints()
           td.text-center(data-bind="text:clanWins")
           td.text-center(data-bind="text:clanLosses")
+          // /ko
           td.text-center(data-bind="text:matchWins")
           td.text-center(data-bind="text:matchLosses")
+          td.text-center(data-bind="text:(matchWins - matchLosses)")
           td.text-center(data-bind="text:tdFor")
           td.text-center(data-bind="text:tdAgainst")
           td.text-center(data-bind="text:tdDiff")
@@ -136,6 +155,9 @@ block scripts
           this.standings=data;
         }.bind(this);
         xhr.send();
+      }
+      usePoints(){
+        return this.season > "season 8";
       }
 
 
