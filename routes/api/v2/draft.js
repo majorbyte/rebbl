@@ -23,7 +23,7 @@ class DraftApi{
     }
     catch(e){
       logging.error(e);
-      res.status(403).send(e.message);
+      res.send(403 ,{error: e.message});
     }
   }
 
@@ -34,7 +34,7 @@ class DraftApi{
     }
     catch(e){
       logging.error(e);
-      res.status(403).send(e.message);
+      res.send(403 ,{error: e.message});
     }
   }
 
