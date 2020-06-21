@@ -96,7 +96,7 @@ class ClanApi{
       delete schedule.home.clan.ledger;
       delete schedule.away.clan.ledger;
 
-      res.header("Access-Control-Allow-Origin", "http://localhost:8080").json(schedule);
+      res.json(schedule);
     });
 
     this.router.get("/schedule/:season/:division", async function(req, res){
@@ -141,8 +141,8 @@ class ClanApi{
     });
 
     this.router.get("/powers", function(req,res){
-      res.header("Access-Control-Allow-Origin", "http://localhost:8080").json( [
-      {key:"version2.1",description:2.1},
+      res.json( [
+      {key:"version3.0",description:3.0},
       {
         key: "miscommunication",
         name: "Miscommunication!",
@@ -152,7 +152,7 @@ class ClanApi{
       },{
         key: "emergencyRnR",
         name: "Emergency R&R!",
-        cost: 50,
+        cost: 0,
         quantitiy: 3,
         description: "At the start of a draft, the clan leader may choose a team from his own clan and award it a free resting match prior to their next competitive match. The team will concede to an admin team before playing their match and will thus regain all their MNGed players, and may lose 1 Fan Factor as an (uncontrolled by clan admin) bi-product."
       },{
@@ -162,15 +162,9 @@ class ClanApi{
         quantitiy: 1,
         description: "At the end of the draft, the clan leader may pick two teams from his clan and switch up their matches. Coach A will thus face the opponent of Coach B instead, while Coach B faces the opponent of Coach A. Once a Last Minute Switch! is played, the opposing clan may not use a Last Minute Switch! that would affect any of the 4 coaches involved in the first switch."
       },{
-        key: "lockBank",
-        name: "Lock Bank!",
-        cost: 50,
-        quantitiy: 1,
-        description: "At the end of the draft, the clan leader may pick a team from the opposing clan. That team’s bank has been completely shut down! They will not be allowed to spend ANY money from their bank until the FOLLOWING Clan week. This includes buying players, burning excess cash, adding to inducement, etc. They are still allowed to use petty cash during the inducement phase if they play  against a higher TV team, but may not add to it in any way from their own cash. Please note you get two charges of this power."
-      },{
         key: "newBlood",
         name: "New Blood!",
-        cost: 100,
+        cost: 0,
         quantitiy: 1,
         description: `Within 24 hours after the team played its last match (and before the next draft), the clan leader can nominate that team to be removed from the league permanently and replaced with a new team costing the same in gold as the original team did AT THE START OF THE SEASON.
 
@@ -186,7 +180,7 @@ class ClanApi{
         name: "Assassination!",
         cost: 100,
         quantitiy: 2,
-        description: `At the start of a draft you may nominate 1 player from any of the teams in the opposing clan and have a hitman attempt to assassinate their player. Roll a d6 using the discord dice bot. On a roll of a 2+ the assigned player is injured during the assassination attempt and must miss the next match! Sadly, the quality of assassins (or the toughness of Blood Bowl players!) these days mean they leave no permanent injury. This is handled by an admin game being used to apply an MNG injury to the player in question. 
+        description: `At the end of a draft you may nominate 1 player from any of the teams in the opposing clan and have a hitman attempt to assassinate their player. Roll a d6 using the discord dice bot. On a roll of a 2+ the assigned player is injured during the assassination attempt and must miss the next match! Sadly, the quality of assassins (or the toughness of Blood Bowl players!) these days mean they leave no permanent injury. This is handled by an admin game being used to apply an MNG injury to the player in question. 
 
         If you roll a 1, the assassin is interrupted during his task by a random player on the opposing team and attacks them instead! Randomly determine a player on the opposing team WHO WAS NOT THE ORIGINAL TARGET to receive an MNG instead. 
 
@@ -208,59 +202,11 @@ class ClanApi{
         quantitiy: 2,
         description: "At the start of a draft nominate one player from one of your clan’s teams who is within 5 SPP of levelling. This player has been working hard on the training grounds between matches and has gained a level! The level up will be provided by setting up a game vs an admin team, which will be awarded as an admin concede loss to the clan team (which may result in a loss of Fan Factor). The player to level will receive pass/intercept/cas spp to gain the needed spp to level. A second concede admin game will be assigned after the first, to reissue any MNG injuries on the team. The second game will be applied even if there are no MNG on the team for consistency, due to the potential loss of Fan Factor in each game."
       },{
-        key: "confusion",
-        name: "Confusion!",
-        cost: 50,
-        quantitiy: 2,
-        description: "Play this power before the draft occurs. This power switches the draft order, causing the team that was due to draft second to draft first instead. You may not play a Confusion! to counter an opponent's Confusion! Additionally, this power does not switch the order of power usage in a draft."
-      },{
-        key: "homefieldAdvantage",
-        name: "Home Field Advantage!",
-        cost: 50,
-        quantitiy: 2,
-        description: "Use this power after drafting is complete. Picking one matchup from your draft, your team will ALWAYS be the home team this round. Your opponent cannot play this power to affect the same matchup. IT IS YOUR COACH’S RESPONSIBILITY TO ENSURE THAT THE CLAN LEADER STARTING THE MATCH IS AWARE YOU NEED TO BE MANUALLY SEEDED AS THE HOME TEAM. It is the responsibility of the clan leader creating the match to include HFA at the start of the match name, and the responsibility of the clan leader that used HFA to validate that the name was given! Please note you get two charges of this power."
-      },{
-        key: "hatredOfPubliTransport",
-        name: "Hatred of Public Transport!",
-        cost: 50,
-        quantitiy: 2,
-        description: "Play this power before either clan has drafted. Pick one team from your opponent’s clan who refuses to be the \"Bus\"!  This team may not be “bused” (i.e. offered-up) by their clan leader when it’s that clan’s turn to nominate their first blindly offered team. Teams selected by this power then become immune to “Last Minute Switch” and their match may not be altered. Each Clan may only use this power once per draft. Please note you get two charges of this power."
-      },{
-        key: "draftDodgers",
-        name: "Draft Dodgers!",
-        cost: 50,
-        quantitiy: 2,
-        description: "Play this power at the beginning of a draft. Both coaches have turned up late to the draft! Roll 1D3 and determine that many matchups at random (assign numbers 1-5 to the teams in each clan and roll a D5 as many times as necessary to generate the required number of matchups) as the officials start making decisions on the coaches' behalf. The remaining matchups are decided in the usual fashion following the original order of the draft. Coaches affected by this power CAN still be affected by “Last Minute Switch” but CANNOT be affected by “Hatred of Public Transport”. If both clans play this power in the same draft, roll both D3 and take the highest result."
-      },{
-        key: "eldrilSidelined",
-        name: "Eldril: Sidelined!",
-        cost: 50,
-        quantitiy: 2,
-        description: "Play this power at the end of a draft. Pick a star player - you manage to convince them that the pitch is a particularly hostile environment this week and that it’s better for their health insurance premium if they don’t show up! This means that this star player cannot be hired by either clan this round (in any of the matches). This power can not be used on Deeproot Strongbranch, because he’s a goddamn TREE and your argument is invalid (Note: Deeproot insists that all stuntie teams are unable to be affected by this power and I’m not going to argue with him, for the previously stated reasons). He also crushed the first two enforcers sent to threaten him, so there have been issues finding willing insurance agents to approach him again. Please note this power comes with two charges."
-      },{
-        key: "nufflesWill",
-        name: "Nuffles Will!",
-        cost: 100,
-        quantitiy: 2,
-        description: "Use this power at the beginning of a draft to leave the choice of a power up to the fickle god that is Nuffle. Roll 1D14 using the discord dice bot and use the power associated with that number (counting down the power list) during this draft, you may not play any other powers during this draft phase, this power is unaffected by Miscommunication! If you roll this ability (a 14) you are truly blessed by Nuffle and may roll 2D13 and receive both associated powers! As noted in New Blood you DO NOT have to use that power if it is rolled, but you are not allowed to re-roll it if you select not to use it. Furthermore, you may use Emergency Intensive Care in the same round as this power is used (and can use ALL EIC’s if you roll extra via this power) but any EIC gained by this power may not be stockpiled for future rounds."
-      },{
-        key: "financialFraudAudit",
-        name: "Financial Fraud Audit!",
-        cost: 50,
-        quantitiy: 2,
-        description: `At the end of the draft, the clan leader buys off a Blood Bowl Bank Association official to conduct a 'random' financial fraud audit of the opposing clan's treasury. Depending on how many charges are used of this power, it has slightly different effects.
-
-        For 1 charge, the clan leader gently directs the auditor to have a look at target team in the opposing clan. During the inducement phase, the targeted team cannot use any bank cash to add to the petty cash (which is given based on the TV difference). The team is free to use the petty cash as they see fit, however.
-        
-        For 2 charges, the clan leader sets off a general fraud audit, which affects all match-ups for BOTH clans. During inducements, no team from either clan may use any bank cash to add to the petty cash (which is given based on the TV difference). The teams are free to use the petty cash as they see fit, however.
-        
-        The power may only be used ONCE every draft by the same clan (for the 1 charge version or the 2 charge version, i.e. not two 1 charge versions). However, if both clans use the 1 charge version, it automatically becomes the 2 charges version of the power instead! Please note you get two charges of this power for each 50k spent. `
-      },{
         key: "bloodSacrifice",
         name: "Blood Sacrifice!",
-        cost: 50,
+        cost: 0,
         quantitiy: 2,
-        description: `At the end of the draft, the clan leader may target one of the clan’s own teams. That team sacrifices one or two players to the God of Kash. If one player is sacrificed, the team gets an admin win game and receives the winnings. However, all SPP are placed on the sacrificed player who is killed in the process. If two players are targeted, the team gets an admin concede win (i.e. likely more Kash!) instead but all SPP is again put on the killed players. It is legal to sacrifice MNG players (we have the technology!). An admin game (concede loss) may be needed to reapply any (not sacrificed) MNG again`
+        description: `At the end of the draft, the clan leader may target one of the clan’s own teams. That team sacrifices one or two players to the God of Kash. If one player is sacrificed, the team gets an admin win game and receives the winnings. However, all SPP are placed on the sacrificed player who is killed in the process. If two players are targeted, the team gets an admin concede win (i.e. likely more Kash!) instead but all SPP is again put on the killed players. It is legal to sacrifice MNG players (we have the technology!). An admin game (concede loss) may be needed to reapply any (not sacrificed) MNG again. In addition, sacrificing a player will restore any MNG on other players - such is the power of Kash (and the fear of being next in line for sacrifices)!`
       },{
         key: "badInducementDeal",
         name: "Bad Inducement Deal!",

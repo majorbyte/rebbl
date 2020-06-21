@@ -23,7 +23,9 @@ block navigation
 block content
   div(class="container navcontainer" data-index="0" id="app")
     template(v-if="schedule !== null")
-      h1(class="u-no-text-transform u-verticalMargin--xx-small") Round {{schedule.round || ''}} - house {{schedule.house || ''}}
+      h1.u-no-text-transform.my-0 Round {{schedule.round || ''}} - house {{schedule.house || ''}}
+      template(v-if="schedule")
+        button.btn.mx-1.btn-sm.btn-success(@click="openDraft") draft
       div(class="row col-12 no-gutters")
         div(class="col-5")
           div(class="row col-12 border-bottom border-info pb-1")
@@ -176,6 +178,10 @@ block scripts
           let side = re.test(match.opponents[index].team.name) ? this.schedule.home: this.schedule.away;
           return side.clan.powers['emergencyIntensiveCare'] > 0;
         },
+        openDraft: function(){
+          const href=`/clandraft?division=${this.schedule.competition}&round=${this.schedule.round}&house=${this.schedule.house}`;
+          window.open(href, '_blank');
+        }
 
       },      
       async mounted() {
@@ -183,7 +189,7 @@ block scripts
           if (storage)    
             this.powers = JSON.parse(localStorage.getItem('powers')) || [];
 
-          if(this.powers.length === 0 || !this.powers.find(x=>x.key === "version2.1")){
+          if(this.powers.length === 0 || !this.powers.find(x=>x.key === "version3.0")){
             let response = await fetch("/api/v2/clan/powers");
             this.powers = await response.json();
             storage.setItem('powers', JSON.stringify(this.powers));    
