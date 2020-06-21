@@ -22,7 +22,7 @@ class Server{
         .setAutoDependencyCorrelation(true)
         .setAutoCollectRequests(true)
         .setAutoCollectPerformance(true)
-        .setAutoCollectExceptions(true)
+        .setAutoCollectExceptions(false)
         .setAutoCollectDependencies(true)
         .setAutoCollectConsole(true)
         .setUseDiskRetryCaching(false)
