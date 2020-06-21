@@ -22,7 +22,7 @@ class Server{
         .setAutoDependencyCorrelation(true)
         .setAutoCollectRequests(true)
         .setAutoCollectPerformance(true)
-        .setAutoCollectExceptions(false)
+        .setAutoCollectExceptions(true)
         .setAutoCollectDependencies(true)
         .setAutoCollectConsole(true)
         .setUseDiskRetryCaching(false)
@@ -146,7 +146,7 @@ class Server{
     const routes = require("./routes/routes.js");
     this.app.use('/', new routes().routesConfig());
 
-    this.app.use(function(req, res,err){
+    this.app.use(function(err, res){
       // log it
         if (!module.parent) console.error(err.stack);
 
