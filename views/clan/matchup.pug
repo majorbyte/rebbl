@@ -26,6 +26,10 @@ block content
       h1.u-no-text-transform.my-0 Round {{schedule.round || ''}} - house {{schedule.house || ''}}
       template(v-if="schedule")
         button.btn.mx-1.btn-sm.btn-success(@click="openDraft") draft
+
+        button.btn.mx-1.btn-sm.btn-success(@click="startGames") start games
+        template(v-if="message")
+          .mx-1 {{message}}
       div(class="row col-12 no-gutters")
         div(class="col-5")
           div(class="row col-12 border-bottom border-info pb-1")
@@ -166,7 +170,8 @@ block scripts
       // app initial state
       data: {
         schedule: null,
-        powers: []
+        powers: [],
+        message: null
       },
       methods:{
         reddit: function(clan, coach){
@@ -181,6 +186,14 @@ block scripts
         openDraft: function(){
           const href=`/clandraft?division=${this.schedule.competition}&round=${this.schedule.round}&house=${this.schedule.house}`;
           window.open(href, '_blank');
+        },
+        startGames: async function(){
+            let response = await fetch(`/api/v2/clan/start/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}`,{method:"PUT"});
+            if (response.ok){
+              this.message = "Games should be started.";
+            } else {
+              this.message  = await response.text();
+            }
         }
 
       },      
