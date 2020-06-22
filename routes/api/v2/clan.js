@@ -1,10 +1,14 @@
 'use strict';
+
+const { clan } = require('../../../lib/ConfigurationService.js');
+
 const express = require('express')
   , accountService = require("../../../lib/accountService.js")
   , cyanideService = require("../../../lib/CyanideService.js")
   , clanService = require("../../../lib/ClanService.js")
   , dataService = require("../../../lib/DataService.js").rebbl
   , draftApi = require("./draft.js")
+  , rateLimit = require("express-rate-limit")
   , util = require('../../../lib/util.js')
   , multer = require('multer')
   , inMemoryStorage = multer.memoryStorage()
@@ -109,6 +113,27 @@ class ClanApi{
       });
 
       res.json(schedules);
+    });
+
+    const apiRateLimiter = rateLimit({
+      windowMs: 60 * 1000, // 1 hour window
+      max: 1, // start blocking after 1 requests
+      message:
+        "Please don't spam this, wait 60 seconds",
+      keyGenerator: function(req){
+        return req.user.name;
+      }
+
+    });
+
+    this.router.put("/start/:division/:round/:house",util.ensureAuthenticated,apiRateLimiter, async function(req,res){
+      try{
+        await clanService.startCompetitions(req.user.name,req.params.division, Number(req.params.round), Number(req.params.house));
+        res.send();
+      }
+      catch(e){
+        res.status(400).send(e.message);
+      }
     });
 
     this.router.put("/eic/:matchId/:playerId",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
