@@ -24,12 +24,11 @@ block content
   div(class="container navcontainer" data-index="0" id="app")
     template(v-if="schedule !== null")
       h1.u-no-text-transform.my-0 Round {{schedule.round || ''}} - house {{schedule.house || ''}}
-      template(v-if="schedule")
-        button.btn.mx-1.btn-sm.btn-success(@click="openDraft") draft
-
-        button.btn.mx-1.btn-sm.btn-success(@click="startGames") start games
-        template(v-if="message")
-          .mx-1 {{message}}
+      button.btn.mx-1.btn-sm.btn-secundary(@click="openDraft" v-if="schedule.drafted") draft
+      button.btn.mx-1.btn-sm.btn-success(@click="openDraft" v-if="!schedule.drafted") draft
+      button.btn.mx-1.btn-sm.btn-success(v-if="schedule.drafted && schedule.unstarted && schedule.unstarted.length > 0" @click="startGames") start games
+      template(v-if="message")
+        .mx-1 {{message}}
       div(class="row col-12 no-gutters")
         div(class="col-5")
           div(class="row col-12 border-bottom border-info pb-1")
@@ -100,61 +99,89 @@ block content
                     span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
 
     template(v-if="schedule !== null && schedule.matches.length > 0")
-      div(class="row col-12 no-gutters justify-content-center")
-        div(class="col-12 row justify-content-center")
+      .row.col-12.no-gutters.justify-content-center
+        .col-12.row.justify-content-center
           h1 Used Powers
-          div(class="col-12 row justify-content-center")
-            div(class="col-5")
-              div(class="row btn-group-toggle" data-toggle="buttons")
+          .col-12.row.justify-content-center
+            .col-5
+              .row.btn-group-toggle(data-toggle="buttons")
                 template(v-if="schedule.home.usedPowers")
                   template(v-for="power in Object.keys(schedule.home.usedPowers)")
                     template(v-for="t in schedule.home.usedPowers[power]")
-                      div(class="p-1")
-                      button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                      .p-1
+                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                         | {{powers.find(function(x){return x.key == power}).name}} 
 
-            div(class="col")
-            div(class="col-5")
-              div(class="row btn-group-toggle" data-toggle="buttons")
+            .col
+            .col-5
+              .row.btn-group-toggle(data-toggle="buttons")
                 template(v-if="schedule.away.usedPowers")
                   template(v-for="power in Object.keys(schedule.away.usedPowers)")
                     template(v-for="t in schedule.away.usedPowers[power]")
-                      div(class="p-1")
-                      button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                      .p-1
+                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                         | {{powers.find(function(x){return x.key == power}).name}} 
-        div(class="col-12 row justify-content-center")
+        .col-12.row.justify-content-center
           h1 Matches
         template(v-for="match in schedule.matches")
-          a(class="col-8 MatchRow-contentWrapper MatchRow-contentWrapper--hover" v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
-            div(class="MatchRow-team")
-              div(class="TeamLabel TeamLabel--reverse" )
-                div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
-                div(class="TeamLabel-info TeamLabel-info--noScore")
-                  div(class="text-info") {{ match.opponents[0].team.name }}
-            div(class="MatchRow-status row")
-              div(class="MatchStatus MatchStatus--transparent col-12")
+          a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
+            .MatchRow-team
+              .TeamLabel.TeamLabel--reverse
+                div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" )
+                .TeamLabel-info.TeamLabel-info--noScore
+                  .text-info {{ match.opponents[0].team.name }}
+            .MatchRow-status.row
+              .MatchStatus.MatchStatus--transparent.col-12
                 span
                   template(v-if="match.opponents[0].team.score > match.opponents[1].team.score")
-                    span(class="MatchStatus-score is-winner") {{match.opponents[0].team.score}}
-                    span(class="MatchStatus-score") -
-                    span(class="MatchStatus-score") {{match.opponents[1].team.score}}
+                    span.MatchStatus-score.is-winner {{match.opponents[0].team.score}}
+                    span.MatchStatus-score -
+                    span.MatchStatus-score {{match.opponents[1].team.score}}
                   template(v-else-if="match.opponents[0].team.score < match.opponents[1].team.score")
-                    span(class="MatchStatus-score") {{match.opponents[0].team.score}}
-                    span(class="MatchStatus-score") -
-                    span(class="MatchStatus-score is-winner") {{match.opponents[1].team.score}}
+                    span.MatchStatus-score {{match.opponents[0].team.score}}
+                    span.MatchStatus-score -
+                    span.MatchStatus-score.is-winner {{match.opponents[1].team.score}}
                   template(v-else)
-                    span(class="MatchStatus-score") {{match.opponents[0].team.score}}
-                    span(class="MatchStatus-score") -
-                    span(class="MatchStatus-score") {{match.opponents[1].team.score}}
+                    span.MatchStatus-score {{match.opponents[0].team.score}}
+                    span.MatchStatus-score -
+                    span.MatchStatus-score {{match.opponents[1].team.score}}
               template(v-if="match.eic")
-                div(class="justify-content-center")
+                .justify-content-center
                   span.badge.badge-success= "EIC!"
 
-            div(class="MatchRow-team")
-              div(class="TeamLabel")
-                div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
-                div(class="TeamLabel-info TeamLabel-info--noScore")
-                  div(class="text-info ") {{  match.opponents[1].team.name  }}
+            .MatchRow-team
+              .TeamLabel
+                div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="")
+                .TeamLabel-info.TeamLabel-info--noScore
+                  .text-info {{  match.opponents[1].team.name  }}
+                  .TeamLabel-coach
+                      span {{ match.opponents[1].coach.name }}
+        template(v-if="schedule.unstarted && schedule.unstarted.length > 0")
+          .row.col-12.no-gutters.justify-content-center
+            .col-12.row.justify-content-center
+              h2 Not Started
+            template(v-for="match in schedule.unstarted")
+              .col-8.MatchRow-contentWrapper.MatchRow-contentWrapper
+                .MatchRow-team
+                  .TeamLabel.TeamLabel--reverse
+                    div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[0].logo.toLowerCase()}.png`" alt="")
+                    .TeamLabel-info.TeamLabel-info--noScore
+                      .text-info {{  match.coaches[0].teamName  }}
+                      .TeamLabel-coach
+                          span {{ match.coaches[0].coachName }}
+                .MatchRow-status.row
+                  .MatchStatus.MatchStatus--transparent.col-12
+                    span
+                      span.MatchStatus-score &nbsp;
+                      span.MatchStatus-score -
+                      span.MatchStatus-score &nbsp;
+                .MatchRow-team
+                  .TeamLabel
+                    div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="")
+                    .TeamLabel-info.TeamLabel-info--noScore
+                      .text-info {{  match.coaches[1].teamName  }}
+                      .TeamLabel-coach
+                          span {{ match.coaches[1].coachName }}
 
 
 
