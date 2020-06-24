@@ -98,7 +98,7 @@ block content
                     span(class="badge badge-warning") {{team.coach.name}}
                     span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
 
-    template(v-if="schedule !== null && schedule.matches.length > 0")
+    template(v-if="schedule !== null && schedule.matches.length > 0 || schedule.unstarted && schedule.unstarted.length > 0")
       .row.col-12.no-gutters.justify-content-center
         .col-12.row.justify-content-center
           h1 Used Powers
