@@ -93,8 +93,10 @@ router.post("/unstream/:contest_id", util.ensureAuthenticatedApi, async function
 router.get("/ongoing", util.cache(60), async function(req,res){
     let data = await apiService.ongoingGames();
 
+    if (!Array.isArray(data.ResponseGetWatchableGames.WatchableGames.WatchGameData))
+        data.ResponseGetWatchableGames.WatchableGames.WatchGameData = [data.ResponseGetWatchableGames.WatchableGames.WatchGameData];
+
     let games = data.ResponseGetWatchableGames.WatchableGames.WatchGameData
-        .filter(x => !["Coach-223805-fcf34d6c9c4a9da44c7f7364ac8a6abc", "Coach-7347-66aadca19a824db6e3460315b93c583f", "Coach-115814-1209f9b1791e5d035a28a849c1db4f8d"].includes(x.IdSession))
         .map(gamedata => {
             // eslint-disable-next-line no-unused-vars
             let {IdSession, Server, IdTeam1, IdTeam2, IsSSLWebsockets, ClientVersion, IsSSL,Port, ...game } = gamedata;
