@@ -50,7 +50,7 @@ block content
               div(class="media-body")
                 h1 
                   a(v-bind:href="`/clan/clan/${schedule.away.clan.name}`") {{schedule.away.clan.name}}          
-      template(v-if="schedule.matches.length === 0 && powers.length > 0")
+      template(v-if="!schedule.drafted && powers.length > 0")          
         div(class="col-12 row")
           div(class="col-12 row  justify-content-center")
             h1 Available Powers
@@ -69,7 +69,6 @@ block content
                     button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                       | {{powers.find(function(x){return x.key == power}).name}} 
                       span(class="badge badge-secondary") {{schedule.away.clan.powers[power]}}
-      template(v-if="schedule.matches.length === 0 && powers.length > 0")
         div(class="col-12 row justify-content-center")
           div(class="col-12 row justify-content-center")
             h1 Available Teams
@@ -98,90 +97,90 @@ block content
                     span(class="badge badge-warning") {{team.coach.name}}
                     span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
 
-    template(v-if="schedule !== null && schedule.matches.length > 0 || schedule.unstarted && schedule.unstarted.length > 0")
-      .row.col-12.no-gutters.justify-content-center
-        .col-12.row.justify-content-center
-          h1 Used Powers
+      template(v-if="schedule.drafted")
+        .row.col-12.no-gutters.justify-content-center
           .col-12.row.justify-content-center
-            .col-5
-              .row.btn-group-toggle(data-toggle="buttons")
-                template(v-if="schedule.home.usedPowers")
-                  template(v-for="power in Object.keys(schedule.home.usedPowers)")
-                    template(v-for="t in schedule.home.usedPowers[power]")
-                      .p-1
-                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
-                        | {{powers.find(function(x){return x.key == power}).name}} 
-
-            .col
-            .col-5
-              .row.btn-group-toggle(data-toggle="buttons")
-                template(v-if="schedule.away.usedPowers")
-                  template(v-for="power in Object.keys(schedule.away.usedPowers)")
-                    template(v-for="t in schedule.away.usedPowers[power]")
-                      .p-1
-                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
-                        | {{powers.find(function(x){return x.key == power}).name}} 
-        .col-12.row.justify-content-center
-          h1 Matches
-        template(v-for="match in schedule.matches")
-          a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
-            .MatchRow-team
-              .TeamLabel.TeamLabel--reverse
-                div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" )
-                .TeamLabel-info.TeamLabel-info--noScore
-                  .text-info {{ match.opponents[0].team.name }}
-            .MatchRow-status.row
-              .MatchStatus.MatchStatus--transparent.col-12
-                span
-                  template(v-if="match.opponents[0].team.score > match.opponents[1].team.score")
-                    span.MatchStatus-score.is-winner {{match.opponents[0].team.score}}
-                    span.MatchStatus-score -
-                    span.MatchStatus-score {{match.opponents[1].team.score}}
-                  template(v-else-if="match.opponents[0].team.score < match.opponents[1].team.score")
-                    span.MatchStatus-score {{match.opponents[0].team.score}}
-                    span.MatchStatus-score -
-                    span.MatchStatus-score.is-winner {{match.opponents[1].team.score}}
-                  template(v-else)
-                    span.MatchStatus-score {{match.opponents[0].team.score}}
-                    span.MatchStatus-score -
-                    span.MatchStatus-score {{match.opponents[1].team.score}}
-              template(v-if="match.eic")
-                .justify-content-center
-                  span.badge.badge-success= "EIC!"
-
-            .MatchRow-team
-              .TeamLabel
-                div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="")
-                .TeamLabel-info.TeamLabel-info--noScore
-                  .text-info {{  match.opponents[1].team.name  }}
-                  .TeamLabel-coach
-                      span {{ match.opponents[1].coach.name }}
-        template(v-if="schedule.unstarted && schedule.unstarted.length > 0")
-          .row.col-12.no-gutters.justify-content-center
+            h1 Used Powers
             .col-12.row.justify-content-center
-              h2 Not Started
-            template(v-for="match in schedule.unstarted")
-              .col-8.MatchRow-contentWrapper.MatchRow-contentWrapper
-                .MatchRow-team
-                  .TeamLabel.TeamLabel--reverse
-                    div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[0].logo.toLowerCase()}.png`" alt="")
-                    .TeamLabel-info.TeamLabel-info--noScore
-                      .text-info {{  match.coaches[0].teamName  }}
-                      .TeamLabel-coach
-                          span {{ match.coaches[0].coachName }}
-                .MatchRow-status.row
-                  .MatchStatus.MatchStatus--transparent.col-12
-                    span
-                      span.MatchStatus-score &nbsp;
+              .col-5
+                .row.btn-group-toggle(data-toggle="buttons")
+                  template(v-if="schedule.home.usedPowers")
+                    template(v-for="power in Object.keys(schedule.home.usedPowers)")
+                      template(v-for="t in schedule.home.usedPowers[power]")
+                        .p-1
+                        button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                          | {{powers.find(function(x){return x.key == power}).name}} 
+
+              .col
+              .col-5
+                .row.btn-group-toggle(data-toggle="buttons")
+                  template(v-if="schedule.away.usedPowers")
+                    template(v-for="power in Object.keys(schedule.away.usedPowers)")
+                      template(v-for="t in schedule.away.usedPowers[power]")
+                        .p-1
+                        button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                          | {{powers.find(function(x){return x.key == power}).name}} 
+          .col-12.row.justify-content-center
+            h1 Matches
+          template(v-for="match in schedule.matches")
+            a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
+              .MatchRow-team
+                .TeamLabel.TeamLabel--reverse
+                  div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" )
+                  .TeamLabel-info.TeamLabel-info--noScore
+                    .text-info {{ match.opponents[0].team.name }}
+              .MatchRow-status.row
+                .MatchStatus.MatchStatus--transparent.col-12
+                  span
+                    template(v-if="match.opponents[0].team.score > match.opponents[1].team.score")
+                      span.MatchStatus-score.is-winner {{match.opponents[0].team.score}}
                       span.MatchStatus-score -
-                      span.MatchStatus-score &nbsp;
-                .MatchRow-team
-                  .TeamLabel
-                    div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="")
-                    .TeamLabel-info.TeamLabel-info--noScore
-                      .text-info {{  match.coaches[1].teamName  }}
-                      .TeamLabel-coach
-                          span {{ match.coaches[1].coachName }}
+                      span.MatchStatus-score {{match.opponents[1].team.score}}
+                    template(v-else-if="match.opponents[0].team.score < match.opponents[1].team.score")
+                      span.MatchStatus-score {{match.opponents[0].team.score}}
+                      span.MatchStatus-score -
+                      span.MatchStatus-score.is-winner {{match.opponents[1].team.score}}
+                    template(v-else)
+                      span.MatchStatus-score {{match.opponents[0].team.score}}
+                      span.MatchStatus-score -
+                      span.MatchStatus-score {{match.opponents[1].team.score}}
+                template(v-if="match.eic")
+                  .justify-content-center
+                    span.badge.badge-success= "EIC!"
+
+              .MatchRow-team
+                .TeamLabel
+                  div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="")
+                  .TeamLabel-info.TeamLabel-info--noScore
+                    .text-info {{  match.opponents[1].team.name  }}
+                    .TeamLabel-coach
+                        span {{ match.opponents[1].coach.name }}
+          template(v-if="schedule.unstarted && schedule.unstarted.length > 0")
+            .row.col-12.no-gutters.justify-content-center
+              .col-12.row.justify-content-center
+                h2 Not Started
+              template(v-for="match in schedule.unstarted")
+                .col-8.MatchRow-contentWrapper.MatchRow-contentWrapper
+                  .MatchRow-team
+                    .TeamLabel.TeamLabel--reverse
+                      div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[0].logo.toLowerCase()}.png`" alt="")
+                      .TeamLabel-info.TeamLabel-info--noScore
+                        .text-info {{  match.coaches[0].teamName  }}
+                        .TeamLabel-coach
+                            span {{ match.coaches[0].coachName }}
+                  .MatchRow-status.row
+                    .MatchStatus.MatchStatus--transparent.col-12
+                      span
+                        span.MatchStatus-score &nbsp;
+                        span.MatchStatus-score -
+                        span.MatchStatus-score &nbsp;
+                  .MatchRow-team
+                    .TeamLabel
+                      div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="")
+                      .TeamLabel-info.TeamLabel-info--noScore
+                        .text-info {{  match.coaches[1].teamName  }}
+                        .TeamLabel-coach
+                            span {{ match.coaches[1].coachName }}
 
 
 
