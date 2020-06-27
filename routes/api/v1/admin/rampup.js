@@ -19,7 +19,8 @@ const express = require('express')
   router.post('/', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
         
-        req.body.map(createMatchup);
+        for(let matchup of req.body)
+          await createMatchup(matchup);
 
 
         res.status(200).send("All matchups successfully created.");
@@ -29,10 +30,10 @@ const express = require('express')
     }
   });
 
-  const createMatchup = function(matchup){
+  const createMatchup = async function(matchup){
     if (Object.keys(matchup.home).length === 0 || Object.keys(matchup.away).length === 0) return;
 
-    rampupService.createMatchup(matchup.league === "GMAN", [matchup.home, matchup.away], matchup.competitionName);
+    await rampupService.createMatchup(matchup.league === "GMAN", [matchup.home, matchup.away], matchup.competitionName);
   };
 
 
