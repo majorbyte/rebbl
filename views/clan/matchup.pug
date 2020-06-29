@@ -38,13 +38,13 @@ block content
                   a(v-bind:href="`/clan/clan/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
               img(v-bind:src="`https://cdn2.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
             div(class="col-2 text-right")
-              h1 {{schedule.home.score}}
+              h1 {{schedule.home.win}}
         div(class="col text-center")
-          h1 -
+          h1 -&nbsp;&nbsp;&nbsp; {{schedule.home.draw }} &nbsp;&nbsp;&nbsp;- 
         div(class="col-5")
           div(class="row col-12 border-bottom border-info pb-1 ")
             div(class="col-2 text-left")
-              h1  {{schedule.away.score}}
+              h1  {{schedule.away.win}}
             div(class="col-10 media text-center d-flex flex-wrap align-items-center")
               img(v-bind:src="`https://cdn2.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
               div(class="media-body")
