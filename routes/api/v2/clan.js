@@ -1,6 +1,7 @@
 'use strict';
 
-const { clan } = require('../../../lib/ConfigurationService.js');
+
+const loggingService = require('../../../lib/loggingService.js');
 
 const express = require('express')
   , accountService = require("../../../lib/accountService.js")
@@ -129,9 +130,10 @@ class ClanApi{
     this.router.put("/start/:division/:round/:house",util.ensureAuthenticated,apiRateLimiter, async function(req,res){
       try{
         await clanService.startCompetitions(req.user.name,req.params.division, Number(req.params.round), Number(req.params.house));
-        res.send();
+        res.status(200).send();
       }
       catch(e){
+        loggingService.error(e);
         res.status(400).send(e.message);
       }
     });
