@@ -27,6 +27,7 @@ block content
       button.btn.mx-1.btn-sm.btn-secundary(@click="openDraft" v-if="schedule.drafted") draft
       button.btn.mx-1.btn-sm.btn-success(@click="openDraft" v-if="!schedule.drafted") draft
       button.btn.mx-1.btn-sm.btn-success(v-if="schedule.drafted && schedule.unstarted && schedule.unstarted.length > 0" @click="startGames") start games
+      button.btn.mx-1.btn-sm.btn-success(v-if="schedule.redditLink" @click="openReddit") reddit
       template(v-if="message")
         .mx-1 {{message}}
       div(class="row col-12 no-gutters")
@@ -129,6 +130,8 @@ block content
                   div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" )
                   .TeamLabel-info.TeamLabel-info--noScore
                     .text-info {{ match.opponents[0].team.name }}
+                    .TeamLabel-coach
+                        span {{ match.opponents[0].coach.name }}
               .MatchRow-status.row
                 .MatchStatus.MatchStatus--transparent.col-12
                   span
@@ -220,6 +223,9 @@ block scripts
             } else {
               this.message  = await response.text();
             }
+        },
+        openReddit: function(){
+          window.open(this.schedule.redditLink, '_blank');
         }
 
       },      
