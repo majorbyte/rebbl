@@ -342,7 +342,7 @@ class ClanApi{
       });
     });
 
-    this.router.put("/:season/:division/:round/:house/:clan/score/:score", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
+    this.router.put("/:season/:division/:round/:house/:clan/score/:win/:draw/:loss", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
 
       let schedule = await dataService.getSchedule({
         league:"clan", 
@@ -355,11 +355,13 @@ class ClanApi{
       if(!schedule){
         res.status(500).json("schedule not found");
       } else{
-        let score = Number(req.params.score);
+        const win = Number(req.params.win);
+        const draw = Number(req.params.draw);
+        const loss = Number(req.params.loss);
         if(schedule.home.clan === req.params.clan)
-          await dataService.updateScheduleAsync({_id:schedule._id},{$set:{"home.score":score}});
+          await dataService.updateScheduleAsync({_id:schedule._id},{$set:{"home.win":win,"home.draw":draw,"home.loss":loss}});
         else 
-          await dataService.updateScheduleAsync({_id:schedule._id},{$set:{"away.score":score}});
+          await dataService.updateScheduleAsync({_id:schedule._id},{$set:{"away.win":win,"away.draw":draw,"away.loss":loss}});
         
         res.send(202).send();
       }
