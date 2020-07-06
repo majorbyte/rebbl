@@ -39,18 +39,24 @@ block content
                   .MatchRow-status
                     span.MatchStatus.MatchStatus--transparent
                       span
-                        template(v-if="_schedule(row,col).home.score > _schedule(row,col).away.score")
-                          span.MatchStatus-score.is-winner {{_schedule(row,col).home.score}}
+                        template(v-if="_schedule(row,col).home.win > _schedule(row,col).away.win")
+                          span.MatchStatus-score.is-winner {{_schedule(row,col).home.win}}
                           span.MatchStatus-score -
-                          span.MatchStatus-score {{_schedule(row,col).away.score}}
-                        template(v-else-if="_schedule(row,col).home.score < _schedule(row,col).away.score")
-                          span.MatchStatus-score {{_schedule(row,col).home.score}}
+                          span.MatchStatus-score {{_schedule(row,col).away.draw}}
                           span.MatchStatus-score -
-                          span.MatchStatus-score.is-winner {{_schedule(row,col).away.score}}
+                          span.MatchStatus-score {{_schedule(row,col).away.win}}
+                        template(v-else-if="_schedule(row,col).home.win < _schedule(row,col).away.win")
+                          span.MatchStatus-score {{_schedule(row,col).home.win}}
+                          span.MatchStatus-score -
+                          span.MatchStatus-score {{_schedule(row,col).away.draw}}
+                          span.MatchStatus-score -
+                          span.MatchStatus-score.is-winner {{_schedule(row,col).away.win}}
                         template(v-else)
-                          span.MatchStatus-score {{_schedule(row,col).home.score}}
+                          span.MatchStatus-score {{_schedule(row,col).home.win}}
                           span.MatchStatus-score -
-                          span.MatchStatus-score {{_schedule(row,col).away.score}}
+                          span.MatchStatus-score {{_schedule(row,col).away.draw}}
+                          span.MatchStatus-score -
+                          span.MatchStatus-score {{_schedule(row,col).away.win}}
                   .MatchRow-team
                     .TeamLabel
                       div: img(v-bind:src="'https://cdn2.rebbl.net/' + _schedule(row,col).away.logo" alt="" class="TeamLabel-logo" style="width:unset")
@@ -72,7 +78,7 @@ block content
                     a(v-bind:href="`/clan/clan/${schedule.home.clan.name}`" target="_blank") {{ schedule.home.clan.name }}
                 img(v-bind:src="`https://cdn2.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
               .col-2.text-right
-                h1 {{schedule.home.score}}
+                h1 {{schedule.home.win}}
             template(v-if="schedule.matches.length === 0")
               br
               .row
@@ -97,12 +103,12 @@ block content
                         span.badge.badge-info TV: {{team.team.nextMatchTV || team.team.value}}
 
           .col.text-center
-            h1 -
+            h1 - {{schedule.home.draw}} -
             button.btn.btn-primary.btn-sm(data-toggle="modal" data-target="#clanScore") Change score
           .col-5
             .row.col-12.border-bottom.border-info.pb-1
               .col-2.text-left
-                h1  {{schedule.away.score}}
+                h1  {{schedule.away.win}}
               .col-10.media.text-center.d-flex.flex-wrap.align-items-center
                 img(v-bind:src="`https://cdn2.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
                 .media-body
@@ -291,12 +297,28 @@ block content
               template(v-else-if="schedule")
                 .input-group.mb-3
                   .input-group-prepend
-                    span#home.input-group-text home score
-                  input.form-control(type='text' aria-describedby='home' v-model="schedule.home.score")
+                    span#home.input-group-text home wins
+                  input.form-control(type='text' aria-describedby='home' v-model="schedule.home.win")
                 .input-group.mb-3
                   .input-group-prepend
-                    span#away.input-group-text away score
-                  input.form-control(type='text' aria-describedby='away' v-model="schedule.away.score")
+                    span#homedraw.input-group-text home draws
+                  input.form-control(type='text' aria-describedby='homedraw' v-model="schedule.home.draw")
+                .input-group.mb-3
+                  .input-group-prepend
+                    span#homeloss.input-group-text home losses
+                  input.form-control(type='text' aria-describedby='homeloss' v-model="schedule.home.loss")
+                .input-group.mb-3
+                  .input-group-prepend
+                    span#away.input-group-text away wins
+                  input.form-control(type='text' aria-describedby='away' v-model="schedule.away.win")
+                .input-group.mb-3
+                  .input-group-prepend
+                    span#awaydraw.input-group-text away draws
+                  input.form-control(type='text' aria-describedby='awaydraw' v-model="schedule.away.draw")
+                .input-group.mb-3
+                  .input-group-prepend
+                    span#awayloss.input-group-text away losses
+                  input.form-control(type='text' aria-describedby='awayloss' v-model="schedule.away.loss")
 
             .modal-footer
               slot(name="footer")
@@ -383,8 +405,6 @@ block content
                 slot(name="footer")
                   button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
                   button.btn.btn-primary(type='button' @click="saveAssassination") Use    
-
-
 
       .modal.fade(tabindex='-1' role='dialog' id="newCoach")
         .modal-dialog.modal-dialog-centered(role='document')
@@ -525,10 +545,10 @@ block scripts
           return `btn btn-outline-info btn-sm ${this.powerUsed(side,power,i) ? 'active':''}`;   
         },
         saveClanScore:async function(){
-          await fetch(`/api/v2/clan/season 9/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.home.clan.name}/score/${this.schedule.home.score}`, {
+          await fetch(`/api/v2/clan/season 9/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.home.clan.name}/score/${this.schedule.home.win}/${this.schedule.home.draw}/${this.schedule.home.loss}`, {
             method: "PUT"
           });
-          await fetch(`/api/v2/clan/season 9/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.away.clan.name}/score/${this.schedule.away.score}`, {
+          await fetch(`/api/v2/clan/season 9/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.away.clan.name}/score/${this.schedule.away.win}/${this.schedule.away.draw}/${this.schedule.away.loss}`, {
             method: "PUT"
           });
           $('#clanScore').modal('hide');
