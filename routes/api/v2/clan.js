@@ -169,19 +169,19 @@ class ClanApi{
 
     this.router.get("/powers", function(req,res){
       res.json( [
-      {key:"version3.0",description:3.0},
+      {key:"version3.1",description:3.1},
       {
         key: "miscommunication",
         name: "Miscommunication!",
         cost: 100,
         quantitiy: 2,
-        description: "This power causes opponents to \"miscommunicate\" their intended draft day powers, acting as if those powers were never used at all! The use of this power must be stated to a clan admin (who is NOT in your clan) in a PM prior to the draft. Only notify the opposing Clan Leader AFTER the draft is complete of your diabolical ruse (unless they play Confusion!, in which case they must be told immediately)! Any clan powers used by your opponent failed to trigger, and remain available for future weeks. If BOTH clans attempted to use \"Miscommunication\", both clans use up one charge of this power. Additionally, if this power is used by a clan, then no other clan powers may be activated by this clan during the draft. However, powers such as Emergency Intensive Care which are not called during the draft are still ok to use."
+        description: "This power causes opponents to \"miscommunicate\" their intended draft day powers, acting as if those powers were never used at all! The use of this power must be stated to a clan admin (who is NOT in your clan) in a PM prior to the draft. Only notify the opposing Clan Leader AFTER the draft is complete of your diabolical ruse! Miscommunication! negates all other powers used by both clans for that draft. Such negated powers are still available for the next draft. Post-game powers are still ok to use even if Miscommunication! was called as they do not happen during the draft. If BOTH clans attempted to use Miscommunication!, both clans use up one charge of this power."
       },{
         key: "emergencyRnR",
         name: "Emergency R&R!",
         cost: 0,
         quantitiy: 3,
-        description: "At the start of a draft, the clan leader may choose a team from his own clan and award it a free resting match prior to their next competitive match. The team will concede to an admin team before playing their match and will thus regain all their MNGed players, and may lose 1 Fan Factor as an (uncontrolled by clan admin) bi-product."
+        description: "At the start of a draft, the clan leader may choose a team from his own clan and award it a free resting match prior to their next competitive match. The team will concede to an admin team before playing their match and will thus regain all their MNG players."
       },{
         key: "lastMinuteSwitch",
         name: "Last Minute Switch!",
@@ -217,23 +217,22 @@ class ClanApi{
         name: "Emergency Intensive Care!",
         cost: 0,
         quantitiy: 1,
-        description: `The player will be whisked away after the game into intensive care to recover from any lasting injury suffered during the game. This means if a player suffers a permanent injury (niggle, stat bust, death) during the game, the coach can decide to not confirm the game and ask his clan leader to use the power. The injury will be changed into MNG by a Clan League Admin instead. 
-
-        The power needs to be officially claimed by the clan leader (or their nominated vice captain, if the clan leader is otherwise unavailable) in the discord channel no later than 24 hours after the game has been played. The game cannot be confirmed in order to be used, so coaches are responsible for pressing “NO” when asked to confirm the game, if you intend to request this power or are considering using it. This power cannot be prevented by using miscommunication.
-
-        Additionally, the power can also be used any number of times at the start of the season to heal an old injury on a returning player, without applying the MNG. This will not count towards the available use of the power, but will cost 100k of the new season’s bank (i.e. NOT from the clan power budget). You need to note this on your “Clan Ledger” when you complete the team re-buy process and you can then purchase the affected player without the injury. This power is automatically added to every clan’s available power list, whether you buy it or not. It has traditionally crowded out other interesting powers, but adds a lot of value to the league so REBBL has decided to officially socialise healthcare!`
+        description: `Within 24 hours after the team played its last match (and before the next draft), the clan leader (or nominated deputy) may specify one target player that will be whisked away after the latest game to be placed into intensive care. This means if a player suffers a permanent injury (niggle, stat bust, death) during the game. 
+        The injury will then be changed into an MNG by a Clan League Admin instead. The game cannot be confirmed in order to be used, so coaches are responsible for pressing “NO” when asked to confirm the game, if you intend to request this power or are considering using it. This power cannot be prevented by using Miscommunication!. 
+        
+        In addition, it may be used any number of times at a cost of 100k/injury to heal an old battle scar on a returning player. This does not consume the power, as it happens between seasons. You need to note all perm removals on your clan ledger when you complete the team re-buy process.`
       },{
         key: "inspiration",
         name: "Inspiration!",
         cost: 100,
         quantitiy: 2,
-        description: "At the start of a draft nominate one player from one of your clan’s teams who is within 5 SPP of levelling. This player has been working hard on the training grounds between matches and has gained a level! The level up will be provided by setting up a game vs an admin team, which will be awarded as an admin concede loss to the clan team (which may result in a loss of Fan Factor). The player to level will receive pass/intercept/cas spp to gain the needed spp to level. A second concede admin game will be assigned after the first, to reissue any MNG injuries on the team. The second game will be applied even if there are no MNG on the team for consistency, due to the potential loss of Fan Factor in each game."
+        description: "At the start of a draft nominate one player from one of your clan’s teams who is within 5 SPP of levelling. This player has been working hard on the training grounds between matches and has gained a level! The level up will be provided by setting up a game vs an admin team, which will be awarded as an admin concede loss to the clan team. The player to level will receive pass/intercept/cas spp enough to gain the needed spp to level."
       },{
         key: "bloodSacrifice",
         name: "Blood Sacrifice!",
         cost: 0,
         quantitiy: 2,
-        description: `At the end of the draft, the clan leader may target one of the clan’s own teams. That team sacrifices one or two players to the God of Kash. If one player is sacrificed, the team gets an admin win game and receives the winnings. However, all SPP are placed on the sacrificed player who is killed in the process. If two players are targeted, the team gets an admin concede win (i.e. likely more Kash!) instead but all SPP is again put on the killed players. It is legal to sacrifice MNG players (we have the technology!). An admin game (concede loss) may be needed to reapply any (not sacrificed) MNG again. In addition, sacrificing a player will restore any MNG on other players - such is the power of Kash (and the fear of being next in line for sacrifices)!`
+        description: `At the end of the draft, the clan leader may target one of the clan’s own teams. That team sacrifices one or two players to the God of Kash (for a single use of the power). If one player is sacrificed, the team gets an admin win game and receives the winnings. However, all SPP are placed on the sacrificed player who is killed in the process. If two players are targeted, the team gets an admin concede win (i.e. likely more Kash!) instead but all SPP is again put on the killed players. It is legal to sacrifice MNG players (we have the technology!). In addition, sacrificing a player will restore any MNG on other players - such is the power of Kash (and the fear of being next in line for sacrifices)!`
       },{
         key: "badInducementDeal",
         name: "Bad Inducement Deal!",
