@@ -234,7 +234,7 @@ block scripts
           if (storage)    
             this.powers = JSON.parse(localStorage.getItem('powers')) || [];
 
-          if(this.powers.length === 0 || !this.powers.find(x=>x.key === "version3.0")){
+          if(this.powers.length === 0 || !this.powers.find(x=>x.key === "version3.1")){
             let response = await fetch("/api/v2/clan/powers");
             this.powers = await response.json();
             storage.setItem('powers', JSON.stringify(this.powers));    

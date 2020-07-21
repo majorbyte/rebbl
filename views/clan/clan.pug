@@ -1,9 +1,15 @@
 extends ../no-cache-sub-layout.pug
 include ../nav-link
 
+
+
 block vars
   - let options = {active: league, title: "REBBL SEASON 9", company:"clan"}
   - let company = "clan";
+
+block head  
+  style.
+    .popoverFix {z-index:10000 !important;}
 
 block navigation
   nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
@@ -87,7 +93,7 @@ block scripts
           if (storage)    
             this.powers = JSON.parse(localStorage.getItem('powers')) || [];
 
-          if(this.powers.length === 0|| !this.powers.find(x=>x.key === "version3.0")){
+          if(this.powers.length === 0|| !this.powers.find(x=>x.key === "version3.1")){
             let response = await fetch("/api/v2/clan/powers");
             this.powers = await response.json();
             storage.setItem('powers', JSON.stringify(this.powers));    
@@ -100,7 +106,7 @@ block scripts
           this.clanLeader = data.leader;
           this.me = data.me;
           $(function () {
-            $('[data-toggle="popover"]').popover()
+            $('[data-toggle="popover"]').popover({ template: '<div class="popover popoverFix" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'})
           });
         },
         onFileSelectedEvent : function(event){
