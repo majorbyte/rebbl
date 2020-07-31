@@ -262,15 +262,15 @@ class ClanApi{
 
       if (schedule.home.clan === clan.name){
         updatePowers(schedule.home, req.params.power);
-        await dataService.updateSchedule({_id:schedule._id},{$set:{"home.usedPowers":schedule.home.usedPowers}});
+        dataService.updateSchedule({_id:schedule._id},{$set:{"home.usedPowers":schedule.home.usedPowers}});
       }else{
         updatePowers(schedule.away, req.params.power);
-        await dataService.updateSchedule({_id:schedule._id},{$set:{"away.usedPowers":schedule.away.usedPowers}});
+        dataService.updateSchedule({_id:schedule._id},{$set:{"away.usedPowers":schedule.away.usedPowers}});
       }
 
       clan.powers[req.params.power]--;
       try{
-        await dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
+        dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
         res.status(202).send();
       }
       catch(ex){
