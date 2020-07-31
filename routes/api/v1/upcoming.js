@@ -10,7 +10,11 @@ const LeagueService = require("../../../lib/LeagueService.js")
 
 router.get("/", util.cache(10*60), async function(req, res){
     let n = await datingService.all();    
-    let dates = [...new Set(n.map(date=> date.id))];
+
+
+    const now = new Date(Date.now());
+
+    let dates = [...new Set(n.filter(a => new Date(a.date) > now ).map(date=> date.id))];
 
     let schedules = await LeagueService.searchLeagues({"contest_id":{$in:dates}});
 
