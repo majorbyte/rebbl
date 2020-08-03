@@ -169,7 +169,7 @@ class ClanApi{
 
     this.router.get("/powers", function(req,res){
       res.json( [
-      {key:"version3.1",description:3.1},
+      {key:"version3.2",description:3.2},
       {
         key: "miscommunication",
         name: "Miscommunication!",
@@ -196,12 +196,13 @@ class ClanApi{
         description: `Within 24 hours after the team played its last match (and before the next draft), the clan leader can nominate that team to be removed from the league permanently and replaced with a new team costing the same in gold as the original team did AT THE START OF THE SEASON.
 
         This new team follows the same rules for buying players and skills as any new team. The new team may be of a different race if so desired, but still must be unique to the clan. If the new team is the same race as the original team, a single player from the original roster may be kept as a legacy player. This legacy player costs the same in gold as he is listed as valued in-game. This legacy player counts towards the number of superstars on the new team (as the team’s first superstar, although his 10k superstar tax is considered part of the price paid for him already). The legacy player also counts towards the number of statistic increased players AND number of doubles players (if the legacy player has any stats or doubles). For instance, a legacy +ST and +AG dorf runner with dodge and sidestep would thus consume both the statistic and double quota of the new blood:ed Dorf team. He would still be legal, however, as he earned those stats and doubles the hard way! A second superstar on that Dorf team would cost 20k tax, a third 30k, etc, as per the rules on superstars.
-        
+
         Please use the ledger from the start of the season, and make sure you list the correct name on a legacy player and list the actual value of this player as cost. Please use the separate New Blood tab in the ledger, where the potential legacy player has a separate spot at the top for cost, rolls selected and skill-ups! After the ledger comes to the same price as the previous team, create the team in-game according to the new team rules. The new team ledger (and in-game team created) must be provided within 48 hours of the match being over to the admin team for review.
-        
-        NOTE: If either of the two deadlines is missed, then the power will be processed one round later than intended. If you are drafting before the New Blood! has been fully validated, then the power will not be processed until one round later than intended.
-        
-        You cannot switch tiers upwards when using this power, if you move downwards a tier you DO NOT receive any tax rebate associated with that tier. You cannot use this power on a team that started the season under 1100 TV. This power is not mandatory if rolled as part of Nuffle's Will! (see below).`
+
+        NOTE: If you miss the first deadline, the power use is not counted. If you miss the second deadline, then the power will be processed one round later than intended. If you are drafting before the New Blood! has been fully validated, then the power will not be processed until one round later than intended.
+
+        You cannot switch tiers upwards when using this power, if you move downwards a tier you DO NOT receive any tax rebate associated with that tier. You cannot use this power on a team that started the season under 1100 TV. 
+        `
       },{
         key: "assassination",
         name: "Assassination!",
