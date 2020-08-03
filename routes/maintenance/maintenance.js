@@ -5,6 +5,8 @@ const
   , clanService = require("../../lib/ClanService.js")
   , configurationService = require("../../lib/ConfigurationService.js")
   , cripple = require('../../lib/crippleService.js')
+  , ds = require("../../lib/DraftService.js")
+  , dataService = require("../../lib/DataService.js").rebbl
   , express = require('express')
   , hjmc = require("../../lib/TourneyService")
   , loggingService = require("../../lib/loggingService.js")
@@ -49,7 +51,18 @@ class Maintenance{
       try{
         //await perpetualService.getMatches();
         //await ts.checkTickets();
-        clanService.calculateStandings();
+        //clanService.calculateStandings();
+        //await maintenanceService.getContests(req.query.league);
+
+
+        const draft = await dataService.getDraft({
+          house: 1,
+          round: 3,
+          competition: "Division 2a",
+          season: "season 9"
+        });
+        ds.postToReddit(draft);
+      
       }
       catch(e){
         loggingService.error(e);
