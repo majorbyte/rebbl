@@ -68,6 +68,7 @@ class Routes{
 
 	routesConfig(){
 		this.router.use("/api", new api().routesConfig() );
+    this.router.get("/guides", (req,res) => res.render("guides"));
     this.router.use("/maintenance", new maintenance().routesConfig());
     this.router.use("/cripple", new cripple().routesConfig());
     this.router.get("/perpetual", util.cache(1), this._perpetual);
@@ -89,7 +90,9 @@ class Routes{
 
     this.router.use("/:company", new rebbl().routesConfig());
 
+
     this.router.get("/", util.cache(10*60), this._root);
+
   
     return this.router;
   }
