@@ -1,0 +1,56 @@
+include nav-item
+
+mixin nav(company)
+  case company
+    when "rebbl"
+      .navbar-nav.mr-auto
+        .nav-item.dropdown.mr-3
+          #navbarDropdown2.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown') Main
+          div
+            .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBL - Big O" ) Big O
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBL - GMan") GMan
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBL - REL" ) Rel
+              .dropdown-divider
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/rampup") Rampup
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/Stunty") Stunty
+        .nav-item.dropdown.mr-3
+          #navbarDropdown3.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+            | Side leagues
+          div
+            .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown3')
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBLL%20" ) Beer
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/XScessively Elfly League") Elfly
+        .nav-item.dropdown.mr-3
+          #navbarDropdown4.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+            | Offseason
+          div
+            .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown4')
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/REBBL Playoffs Season 13") Playoffs
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/Challenger's Cup XIII" ) Challenger Cup
+              .dropdown-divider
+              a.dropdown-item.d-inline-block.text-light(href="/rebbl/Greenhorn Cup") Greenhorn
+        block navigation
+    when "rebbrl"
+      .navbar-nav.mr-auto
+        +nav-item("Minors", "/rebbrl/ReBBRL Minors League")
+        +nav-item("College", "/rebbrl/ReBBRL College League")
+        +nav-item("Upstarts", "/rebbrl/ReBBRL Upstarts")
+        block navigation
+    when "frontpage"
+      .navbar-nav.mr-auto
+        +nav-item("Upcoming games", "/rebbl/upcoming")
+        +nav-item("Ongoing games", "/rebbl/ongoing")
+        //+nav-item("Summer Camp", "/rebbl/camping/summer")
+        +nav-item("Star Players", "/bloodbowl/starplayers")
+        +nav-item("Legendary players", "/bloodbowl/legendaryplayers")
+        +nav-item("Villey's Guides", "/guides",true)
+        block navigation
+    when "clan"
+      .navbar-nav.mr-auto  
+        +nav-item("Clan", "/clan/clan")
+        block navigation
+    default
+      .navbar-nav.mr-auto
+        block navigation
+

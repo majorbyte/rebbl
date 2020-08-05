@@ -43,7 +43,6 @@ block content
           legend Required
           div
             label(for="coach") Blood Bowl 2 coach name
-            -console.dir(user)
             - if (user.account)
               input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" readonly)
             - else

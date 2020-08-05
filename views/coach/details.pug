@@ -1,9 +1,5 @@
 extends .\coach.pug
 
-block append vars
-  - var activeSubMenu = "details"
-  - var options = {company:company}
-
 block scripts
   - if (process.env.NODE_ENV === 'production')
     script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
@@ -175,5 +171,5 @@ block content
                 td(data-bind="text:league")
                 td(data-bind="text:competition, title:season")
                 td
-                  a(data-bind="text:team,attr:{href:`/rebbl/team/${teamId}`}")
+                  a(data-bind="text:team,attr:{href:`/team/${teamId}`}")
               // /ko       

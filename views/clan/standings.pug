@@ -1,26 +1,18 @@
-extends ../no-cache-sub-layout.pug
-include ../nav-link
+extends ../no-cache-sub-relayout.pug
 
 block vars
   - let options = {active: league, title: "REBBL SEASON 8", company:"clan"}
   - let company = "clan";
 
-
 block navigation
-  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
-    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-      span(class="navbar-toggler-icon")
-    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#" data-bind="text: 'STANDINGS' + league" )
-    #rebblSubNav.collapse.navbar-collapse
-      ul(class="navbar-nav mr-auto")
-          li( class="nav-item active")
-            .nav-link DISPLAY 
-          li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bind="text:season" ) 
-            .dropdown-menu(aria-labelledby="dropdownSeason")
-              //ko foreach: seasons
-              a(class="dropdown-item " data-bind="text:$data,click:$root.loadSeason.bind($root)")
-              // /ko
+  .nav-item.dropdown.mr-3
+    #navbarSeason.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+      | Season
+    div
+      .dropdown-menu.bg-dark(aria-labelledby='navbarSeason')
+        //ko foreach: seasons
+        a(class="dropdown-item " data-bind="text:$data,click:$root.loadSeason.bind($root)")
+        // /ko              
 
 block content
   .container

@@ -13,7 +13,7 @@ class Coach{
 
   routesConfig(){
     this.router.get('/:coach_id', util.cache(10*60), async function(req, res){
-      res.redirect(`/${req.params.company}/coach/${req.params.coach_id}/details`);
+      res.redirect(`/coach/${req.params.coach_id}/details`);
     });
     
     this.router.get('/:coach_id/teams', util.cache(10*60), async function(req, res){
@@ -21,7 +21,7 @@ class Coach{
       if (data)
         data.teams = await teamService.getTeams(data.id);
       data.company = req.params.company;   
-      res.render('rebbl/coach/teams', data);
+      res.render('coach/teams', data);
     });
     
     this.router.get('/:coach_id/matches', util.cache(10*60), async function(req, res){
@@ -29,7 +29,7 @@ class Coach{
       if (data)
         data.matches = await db.getMatchesForCoach(data.id);
       data.company = req.params.company;   
-      res.render('rebbl/coach/matches', data);
+      res.render('coach/matches', data);
     });
     
     this.router.get('/:coach_id/trophies', util.cache(10*60), async function(req, res){
@@ -39,7 +39,7 @@ class Coach{
         data.renderExtra = true;
       }
       data.company = req.params.company;   
-      res.render('rebbl/coach/trophies', data);
+      res.render('coach/trophies', data);
     });
     
     this.router.get('/:coach_id/details', util.cache(10*60), async function(req, res){
@@ -59,7 +59,7 @@ class Coach{
       }
     
       data.company = req.params.company;   
-      res.render('rebbl/coach/details', data);
+      res.render('coach/details', data);
     });
     
 

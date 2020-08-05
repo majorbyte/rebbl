@@ -1,21 +1,4 @@
 extends ../sublayout.pug
-include ../../nav-link
-
-block navigation
-  nav.navbar.navbar-expand-md.fixed-top.navbar-dark.bg-dark(style="min-height:80px;top:80px;justify-content:unset")
-    button.navbar-toggler(type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-      .navbar-toggler-icon
-    a.navbar-brand.d-md-none.d-lg-none.d-xl-none(href="#")= "STANDINGS - " + league 
-    .collapse.navbar-collapse( id="rebblSubNav")
-      ul.navbar-nav(style="margin:0 auto")
-        +nav-link("Upcoming games", "/rebbl/upcoming")
-        +nav-link("Ongoing games", "/rebbl/ongoing")
-        +nav-link("Summer Camp", "/rebbl/camping/summer")
-        +nav-link("Star Players", "/bloodbowl/starplayers")
-        +nav-link("Legendary players", "/bloodbowl/legendaryplayers")
-        +nav-link("Villey's Guides", "/guides",true)
-        +nav-link("Account", "/account")
-
 
 block content
   style .btn-following-on {background-color:#4F4F4F}

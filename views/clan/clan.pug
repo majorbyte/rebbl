@@ -1,7 +1,4 @@
-extends ../no-cache-sub-layout.pug
-include ../nav-link
-
-
+extends ../no-cache-sub-relayout.pug
 
 block vars
   - let options = {active: league, title: "REBBL SEASON 9", company:"clan"}
@@ -11,15 +8,6 @@ block head
   style.
     .popoverFix {z-index:10000 !important;}
 
-block navigation
-  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
-    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-      span(class="navbar-toggler-icon")
-    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
-    div(class="collapse navbar-collapse" id="rebblSubNav")
-      -let style = company === "" ? "margin:0 auto" : ""
-      ul(class="navbar-nav" style=style)
-        +nav-link("Upcoming games", "/clan/upcoming")
 
 block content
   div(class=`container` id="app")
@@ -51,7 +39,7 @@ block content
       template(v-for="team in clan.ledger.teams")
         template(v-if="team.active")
           div(class="p-1")
-            a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/team/' + team.team.id" target="_blank" )
+            a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/team/' + team.team.id" target="_blank" )
               | {{team.team.name}}
               img(v-bind:src="'https://cdn2.rebbl.net/images/logo/logo_' + team.team.logo.toLowerCase() + '.png'")
     h3 Retired Teams (new Blood)
@@ -59,7 +47,7 @@ block content
       template(v-for="team in clan.ledger.teams")
         template(v-if="!team.active")
           div(class="p-1")
-            a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/team/' + team.team.id" target="_blank" )
+            a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/team/' + team.team.id" target="_blank" )
               | {{team.team.name}}
               img(v-bind:src="'https://cdn2.rebbl.net/images/logo/logo_' + team.team.logo.toLowerCase() + '.png'")
 

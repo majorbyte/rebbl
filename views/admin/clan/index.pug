@@ -93,7 +93,7 @@ block content
                 template(v-for="team in schedule.home.clan.teams")
                   template(v-if="team")
                     .p-1
-                      a.btn.btn-outline-info.btn-sm(v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
+                      a.btn.btn-outline-info.btn-sm(v-bind:href="`/team/${team.team.id}`" target="_blank")
                         img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                         span.text-info  {{team.team.name}}
                         img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
@@ -128,7 +128,7 @@ block content
                 template(v-for="team in schedule.away.clan.teams")
                   template(v-if="team")
                     .p-1
-                      a.btn.btn-outline-info.btn-sm(v-bind:href="`/clan/team/${team.team.id}`" target="_blank")
+                      a.btn.btn-outline-info.btn-sm(v-bind:href="`/team/${team.team.id}`" target="_blank")
                         img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                         span.text-info  {{team.team.name}}
                         img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")

@@ -195,7 +195,7 @@ block content
             span(data-bind="text: $data.coach" )
           .col-7(style=";overflow:hidden")
             //ko if: $data.teamExists
-            a(data-bind="attr:{href:`/rebbl/team/${$data.teamId}`}")
+            a(data-bind="attr:{href:`/team/${$data.teamId}`}")
               span(data-bind="text: $data.teamName(), style:{color: $data.teamColor()}")
             // /ko
             //ko ifnot: $data.teamExists

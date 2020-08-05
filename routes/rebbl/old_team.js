@@ -8,7 +8,7 @@ router.get('/:teamId', util.checkCache, async function(req, res){
   let data = await db.getTeamStats(req.params.teamId);
 
 
-  res.render('rebbl/team/oldteam', data);
+  res.render('team/oldteam', data);
 });
 
 module.exports = router;

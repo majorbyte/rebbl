@@ -1,0 +1,98 @@
+include nav-link
+include nav
+
+block head
+
+block vars
+
+- if (!active) { var active =  (options && options.active) ? options.active : "" }
+- let renderCompany = (options && options.company) ? options.company : "frontpage"
+-
+  let companyName = renderCompany
+  let logo = "skills/CardSet.png"
+  switch(renderCompany){
+    case "rebbl":
+      companyName = "ReBBL";
+      logo = "rebbl.png"
+      break;
+    case "rebbrl":
+      companyName = "ReBBL";
+      logo = "rebbrl.png"
+      break;
+    case "clan":
+      companyName = "Clan";
+      logo = "clan.png"
+      break;
+    case "frontpage":
+      companyName = "";
+      break;
+  }
+
+block body
+  nav.fixed-top.navbar.navbar-dark.navbar-expand-md.bg-dark.pl-0
+    .navbar-brand.dropdown.px-0(href='#')
+      img#navbarDropdown.px-1.d-inline-block.align-top.dropdown-toggle(src=`https://cdn2.rebbl.net/images/${logo}` height='30' alt='' role='button' data-toggle='dropdown')
+      a.d-inline-block.text-light.nav-item.px-1(href="/"+renderCompany)
+        span.pr-1= companyName
+      .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown')
+        a.px-1.dropdown-item(href="/rebbl")
+          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/rebbl.png')
+          .col.d-inline-block.text-light ReBBL
+        a.px-1.dropdown-item(href="/rebbrl")
+          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/rebbrl.png')
+          .col.d-inline-block.text-light ReBBRL
+        a.px-1.dropdown-item(href="/clan")
+          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/clan.png')
+          .col.d-inline-block.text-light Clan
+        a.px-1.dropdown-item(href="https://imperium.rebbl.net" target="_blank")
+          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/imperium.png' style="max-width:20px")
+          .col.d-inline-block.text-light Imperium
+        a.px-1.dropdown-item(href="https://bounties.rebbl.net" target="_blank")
+          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/donate.png' style="max-width:20px")
+          .col.d-inline-block.text-light Bounty Board
+    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+    #navbarSupportedContent.collapse.navbar-collapse.pl-1
+      +nav(renderCompany)
+
+      a.d-inline-block.text-light.nav-item(href="/account") Account
+  main(role="main")
+    block content  
+      div(class="jumbotron")
+        div(class="container")
+          h1(class="display-3") REBBL
+
+  footer(class="footer")
+    div( style="float:left;")
+      p(style="padding:10px") &nbsp; © majorbyte 2020 &nbsp; &nbsp; &nbsp;
+    div( style="float:right;")
+      span(class="margin-right:7px") Donate:
+      a(href="https://www.paypal.me/rebblnet" target="_blank")
+        img(src="https://cdn2.rebbl.net/images/donate.png" title="Donate")  
+      | &nbsp; &nbsp; &nbsp; 
+      a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
+    div( style="margin:0 auto;width:250px")
+      span(class="margin-right:7px") 
+      a(href="/rebbl" target="_blank" title="REBBL home")
+        img(src="https://cdn2.rebbl.net/images/rebbl.png" )  
+      a(href="/rebbrl" title="REBBRL home")
+        img(src="https://cdn2.rebbl.net/images/rebbrl.png" )  
+      a(href="https://imperium.rebbl.net" title="Imperium home")
+        img(src="https://cdn2.rebbl.net/images/imperium.png")  
+      a(href="/clan" ) 
+        img(src="https://cdn2.rebbl.net/images/clan.png" )  
+  - if (process.env.NODE_ENV === 'production')
+    - if ( fullJquery)
+      script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.full.min.js")
+    -else
+      script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/popper-1.14.7.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/bootstrap.min.js")        
+  -else
+    - if ( fullJquery)
+      script(src="/scripts/jquery-3.3.1.full.min.js")
+    -else
+      script(src="/scripts/jquery-3.3.1.slim.min.js")
+    script(src="/scripts/popper-1.14.7.min.js")
+    script(src="/scripts/bootstrap.min.js")        
+  block scripts

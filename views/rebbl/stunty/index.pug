@@ -1,5 +1,5 @@
 //- coachDetail.pug
-extends ../../no-cache-sub-layout.pug
+extends ../../no-cache-sub-relayout.pug
 block vars
   - var options = {active: "stunty", title: "Stunty Cup SEASON 9"}
 
@@ -29,9 +29,9 @@ block content
               each coach, y in standings
                 div(style="flex-grow:1;flex-basis:0")= y+1
                 div(style="flex-grow:6;flex-basis:0;overflow:hidden")
-                  a(href=`/rebbl/coach/${coach.id}` )= coach.name
+                  a(href=`/coach/${coach.id}` )= coach.name
                 div(style="flex-grow:6;flex-basis:0;overflow:hidden")
-                  a(href=`/rebbl/team/${coach.teamId}` )= coach.team
+                  a(href=`/team/${coach.teamId}` )= coach.team
                 div(style="flex-grow:6;flex-basis:0;overflow:hidden")= coach.race
                 div(style="flex-grow:2;flex-basis:0")= coach.points
                 div(style="flex-grow:2;flex-basis:0")= coach.win

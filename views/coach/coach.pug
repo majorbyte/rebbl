@@ -1,35 +1,12 @@
-extends ../account/sublayout.pug
+extends ../no-cache-sub-relayout.pug
 
-block append vars
-  - var activeSubMenu = "signups"
-
-block scripts
-  script.
-
-    $(document).ready(function(){
-
-      let input = document.getElementById("timezone");
-      $("#tz_info").text(moment().tz(input.value).format('YYYY-MM-DD HH:mm Z'));
-
-    });
-
-block content
-  div(class="container signup")
-    h2(style="text-transform: lowercase;" title="because Keji") reddit
-      span(class="highlight")= " /u/" + user.reddit
-    h3 Contact Data
-    div
-      label(for="coach") Blood Bowl 2 coach name
-      input(type="text" id="coach" name="coach" value=user.coach  disabled)
-    div
-      label(for="timezone") Timezone
-      input(id="timezone" name="timezone" disabled title="timezone" value=user.timezone)
-      label(id="tz_info")
-    div
-      label(for="discord") Discord
-      input(type="text" id="discord" name="discord" value=user.discord  disabled)
-    div
-      label(for="steam") Steam
-      input(type="text" id="steam" name="steam" value=user.steam disabled)
-    br
-    br
+block prepend vars
+  - let options = {active: "coach", title: " ",company:"Coach" }
+  
+block navigation
+  .navbar-nav.mr-auto
+    +nav-item("Details", "details")
+    - if (renderExtra || teams || matches)  
+      +nav-item("Teams", "teams")
+      +nav-item("Matches", "matches")
+      +nav-item("Trophies", "trophies")
