@@ -1,28 +1,14 @@
-extends ../../no-cache-sub-layout.pug
-include ../../nav-link
+extends ../no-cache-sub-relayout.pug
 
 block append vars
-  -let options = {company:company}
-
-block additionalMainNavigation  
-  +nav-link("TEAM","#")
-
-block navigation
-  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
-    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-      span(class="navbar-toggler-icon")
-    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#" data-bind="text: name.toUpperCase()")
-    a(class="navbar-brand d-xs-none " href="#" data-bind="text: coachname")
-    div(class="collapse navbar-collapse" id="rebblSubNav")
-      ul(class="navbar-nav mr-auto")
-        li(class="nav-item active")
-          a(data-bind="attr:{href:`/" + company +"/coach/${idcoach}/details`}" class="nav-link highlight") Details
+  -let options = {company:"Team"}
 
 block content
   div(class="container")
     div(class="row col-12 d-flex flex-wrap align-items-center")
       img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" class="align-top" style="height:100px")
       span(class="h1" data-bind="text: teamName(), style:{color: teamColor()}")
+
       div(class="col text-right")
         img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/races/${idraces}.png`}" class="align-top" style="height:100px")
         // ko if: apothecary > 0
@@ -36,6 +22,9 @@ block content
         // ko if: stadium()
         img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/stadium/${stadium().name.toLowerCase()}.png`,title:`${stadiumDescription()}`}" class="align-top")
         // /ko
+      div(class="row col-12")
+        h3(style="margin-top: 0px;")
+          a.highlight(data-bind="attr:{href:`/coach/${idcoach}/details`}, text: coachname")
       div(class="row col-12")
         h3(style="margin-top: 0px;")
           i(data-bind="text: leitmotiv") 

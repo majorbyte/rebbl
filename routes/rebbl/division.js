@@ -50,7 +50,7 @@ class Division{
       leagueRegex = new RegExp(`${league}$`, 'i');
       divRegex = new RegExp(`^${req.params.division}`, 'i');
       season = "season 14";
-    }
+    } 
     
     if (season !== "")
       data.matches = await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}, season:season});
@@ -63,8 +63,6 @@ class Division{
     }
   
     data.dates = await datingService.search({"id":{$in:ids}});
-  
-    data.divisions = await db.getDivisions(leagueRegex);
   
     if(league.toLowerCase() === "xscessively elfly league"){
       data.matches["1"] = await data.matches["1"].sort(function(a,b){
@@ -122,8 +120,6 @@ class Division{
     
       data.dates = await datingService.search({"id":{$in:ids}});
     
-  
-      data.divisions = await db.getDivisions(leagueRegex);
       data.weeks = await db.getWeeks(leagueRegex, divRegex);
   
       res.render('rebbl/division/round', data);

@@ -86,10 +86,10 @@ block content
             // ko foreach:{data: filteredUsers, as:'signup'}
             div(class="TableRow")
               div(style="white-space: nowrap;display: table-cell;width: 250px;")
-                a( data-bind="text:signup.coach, attr:{href:'/rebbl/coach/'+encodeURIComponent(signup.coach)+'/details'}")
+                a( data-bind="text:signup.coach, attr:{href:'/coach/'+encodeURIComponent(signup.coach)+'/details'}")
               div(style="white-space: nowrap;display: table-cell;width: 350px;")
                 //ko if: signup.teamId
-                a(href="" target="_blank" data-bind="{attr: {href : '/rebbl/team/' + signup.teamId}}") 
+                a(href="" target="_blank" data-bind="{attr: {href : '/team/' + signup.teamId}}") 
                   span(data-bind="text: $root.teamName(signup.team)")
                 // /ko
                 //ko ifnot: signup.teamId

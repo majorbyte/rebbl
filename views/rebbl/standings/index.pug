@@ -1,4 +1,4 @@
-extends ../../no-cache-sub-layout.pug
+extends ../../no-cache-sub-relayout.pug
 include ../../nav-link
 
 block vars
@@ -9,20 +9,14 @@ block head
     h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
 
 block navigation
-  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
-    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-      span(class="navbar-toggler-icon")
-    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#" data-bind="text: 'STANDINGS' + league" )
-    div(class="collapse navbar-collapse" id="rebblSubNav")
-      ul(class="navbar-nav mr-auto")
-          li( class="nav-item active")
-            div(class="nav-link") DISPLAY 
-          li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
-            div(class="dropdown-menu" aria-labelledby="dropdownSeason")
-              //ko foreach: seasons
-              a(class="dropdown-item " data-bind="text:$data,click:$root.loadSeason.bind($root)")
-              // /ko
+  .nav-item.dropdown.mr-3
+    #navbarSeason.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+      | Season
+    div
+      .dropdown-menu.bg-dark(aria-labelledby='navbarSeason')
+        //ko foreach: seasons
+        a(class="dropdown-item " data-bind="text:$data,click:$root.loadSeason.bind($root)")
+        // /ko
 
 block content
   div(class=`container`)
@@ -39,8 +33,8 @@ block content
       div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
         div(class="row col-6" style="font-size:1.25em")
           div(class="col-1" ) #
-          div(class="col-4" ) Coach
-          div(class="col-7" ) Team
+          div(class="col" ) Coach
+          div(class="col" ) Team
         div(class="col-2" style="font-size:1.25em") Race
         div(class="row col-4" style="font-size:1.25em")
           div(class="col-2" ) Pts.
@@ -65,7 +59,7 @@ block content
             // /ko
           // /ko
           div(class="col" style=";overflow:hidden") 
-            a(data-bind="text: name, attr:{href:`/rebbl/coach/${id}`}")
+            a(data-bind="text: name, attr:{href:`/coach/${id}`}")
             // ko if: $root.isDonator($data.name)
             | &nbsp; &nbsp; 
             img(src="/images/gold.png" style="width:25px;float:right;margin-top: 2px;" title="donator")
@@ -77,7 +71,7 @@ block content
             // /ko
             // /ko
           div(class="col" style=";overflow:hidden") 
-            a(data-bind="text: teamName(),attr:{href:`/rebbl/team/${teamId}`}")
+            a(data-bind="text: teamName(),attr:{href:`/team/${teamId}`}")
         div(class="col" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
         div(class="row col-4" )
           div(class="col-2" data-bind="text:points")
@@ -216,7 +210,7 @@ block scripts
       adminUrl(competitionId){
         const admin = this.admins.find(a => a.competition_id === competitionId);
         if (admin)
-          return `/!{company}/coach/${encodeURIComponent(admin.admin)}`;
+          return `/coach/${encodeURIComponent(admin.admin)}`;
 
         return "";
       };
@@ -308,7 +302,7 @@ block scripts
           }
         }
         const el = document.getElementById(division);
-        const y = el.getBoundingClientRect().top + window.pageYOffset -180 ;
+        const y = el.getBoundingClientRect().top + window.pageYOffset -70 ;
         window.scrollTo({top: y});
 
       }

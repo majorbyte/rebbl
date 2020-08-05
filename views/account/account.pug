@@ -62,7 +62,7 @@ block content
             input(type="text" id="coach" name="coach" value=user.coach  disabled)
             br
             span coach team &amp; stats: &nbsp;
-            a(href=`/rebbl/coach/${user.coach}`)= user.coach
+            a(href=`/coach/${user.coach}`)= user.coach
           div
             label(for="timezone") Timezone
             select(id="timezone" name="timezone" required title="timezone")

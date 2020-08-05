@@ -1,5 +1,5 @@
 'use strict';
-const coach = require(`./coach.js`),
+const 
     dataService = require("../../lib/DataService.js").rebbl
   , datingService = require("../../lib/DatingService.js")
   , division = require(`./division.js`)
@@ -83,14 +83,12 @@ class Rebbl{
 
   routesConfig(){
    
-    this.router.use('/coach', new coach().routesConfig());
     this.router.use('/counter', require(`./counter.js`));
     this.router.use('/match', require(`./match.js`));
     this.router.use('/stunty', require(`./stunty.js`));
     this.router.use('/ongoing', require(`./ongoing.js`));
     this.router.use('/upcoming', require(`./upcoming.js`));
     this.router.use('/standings', new standings().routesConfig());
-    this.router.use('/team', require(`./team.js`));
     this.router.use('/old_team', require(`./old_team.js`));
     this.router.use('/playoffs', require(`./playoffs.js`));
     this.router.get("/camping/winter", util.cache(10*60), (req, res) => res.render("rebbl/winter"));

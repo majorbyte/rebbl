@@ -1,0 +1,27 @@
+include nav-link
+doctype html
+html(lang="en")
+  head
+    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/font-awesome.css")
+    - if (process.env.NODE_ENV === 'production')
+      - if (user && user.useDark) 
+        link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.dark.min.css")
+        link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.dark.css")
+      - else
+        link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css")
+        link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.css")
+    - else
+      - if (user && user.useDark) 
+        link(rel="stylesheet" href="/styles/bootstrap.dark.min.css")
+        link(rel="stylesheet" href="/styles/style.dark.css")
+      - else
+        link(rel="stylesheet" href="/styles/bootstrap.min.css")
+        link(rel="stylesheet" href="/styles/style.css")
+    style.
+      body{padding-top: 3rem;padding-bottom: 0rem;}
+      main{min-height: calc(100% - 3rem)}
+      .navbar{padding: 0rem 1rem}
+    block head
+  block vars
+    
+  body !{data}

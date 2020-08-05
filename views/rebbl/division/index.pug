@@ -1,47 +1,22 @@
-extends ../../no-cache-sub-layout.pug
+extends ../../no-cache-sub-relayout.pug
 block scripts
   script.
     $(document).ready(function(){
-      $('.dropdown-item').click(function(){
-          let classes = this.className.split(' ');
-          let season = classes.find(function(e){return e.toLowerCase().indexOf("season")>-1;});
-          if (seasons.length > 0 && seasons[0] !== ""){
-            $('.Season').hide();
-            $('.'+season).show();
-            $("#"+$(this).parent().attr('aria-labelledby')).text($(this).text());
-            $(this).parent().parent().addClass('active');
-          }
-      });
       const el = $(".unplayed").first().prev(".unplayed-anchor").prevObject[0];
-      const y = el.getBoundingClientRect().top + window.pageYOffset -240 ;
+      const y = el.getBoundingClientRect().top + window.pageYOffset - 140 ;
       window.scrollTo({top: y});
     });
 block vars
   - var options = {active: league, title: league, company:company}
-  - let seasons = []
-  - if (league !== "Rebbl One Minute League")  
-    for div, x in divisions
-      - if(div !== null)
-        - let season = div.substr(0,9)
-        - if(seasons.indexOf(season) === -1) seasons.push(season)  
-  - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 block navigation
-  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
-    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-      span(class="navbar-toggler-icon")
-    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
-    div(class="collapse navbar-collapse" id="rebblSubNav")
-      ul(class="navbar-nav mr-auto")
-        li( class="nav-item active")
-          div(class="nav-link") SCROLL TO WEEK                  
-        li( class="nav-item dropdown")
-          a(class="nav-link dropdown-toggle" href="#" id="dropdowWeek" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") WEEK
-          div(class="dropdown-menu" aria-labelledby="dropdowWeek")
-            for week, x in matches
-              a(class=`dropdown-item Season ${season}`   href=`#${x}`)=  x
-
-
+  .nav-item.dropdown.mr-3
+    #dropdowWeek.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+      | Scroll to week
+    div
+      .dropdown-menu.bg-dark(aria-labelledby='dropdowWeek')
+        for week, x in matches
+          a(class=`dropdown-item`   href=`#${x}`)=  x
 
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")

@@ -1,23 +1,9 @@
-extends ../no-cache-sub-layout.pug
+extends ../no-cache-sub-relayout.pug
 include ../nav-link
 
 block vars
   - let options = {company:"rebbl"}
 
-
-block additionalMainNavigation
-  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
-    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-      span(class="navbar-toggler-icon")
-    div(class="collapse navbar-collapse" id="rebblSubNav")
-      ul(class="navbar-nav" style="margin:0 auto")
-        +nav-link("Upcoming games", "/rebbl/upcoming")
-        +nav-link("Challenger Cup", "/rebbl/playoffs/Challenger's Cup XIII")
-        +nav-link("Playoffs", "/rebbl/playoffs/REBBL Playoffs Season 13")
-        +nav-link("OSI", "/rebbl/Off Season International")
-        +nav-link("GREENHORN", "/rebbl/Greenhorn Cup")
-        +nav-link("RPL", "/perpetual")
-        +nav-link("CRIPPLE", "/cripple/standings")
 
 block content          
   .container

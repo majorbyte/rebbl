@@ -52,7 +52,7 @@ block content
         div(class="row col-5")
           div(class="col-1" data-bind="text:position")
           div(class="col-4" style=";overflow:hidden") 
-            a(data-bind="text: name, attr:{href:`/rebbl/coach/${id}`}")
+            a(data-bind="text: name, attr:{href:`/coach/${id}`}")
             // ko if: $root.isDonator($data.name)
             | &nbsp; &nbsp; 
             img(src="/images/gold.png" style="width:25px;float:right;margin-top: 2px;" title="donator")
@@ -64,7 +64,7 @@ block content
             // /ko
             // /ko
           div(class="col-7" style=";overflow:hidden") 
-            a(data-bind="text: teamName(),attr:{href:`/rebbl/team/${teamId}`}")
+            a(data-bind="text: teamName(),attr:{href:`/team/${teamId}`}")
         div(class="col-1" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
         div(class="row col-6" )
           div(class="col" data-bind="text:points")

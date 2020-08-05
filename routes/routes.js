@@ -1,6 +1,7 @@
 "use strict";
 const 
-    dataService = require("../lib/DataService.js").rebbl
+  coach = require(`./coach/coach.js`)
+  , dataService = require("../lib/DataService.js").rebbl
   , datingService = require("../lib/DatingService.js")
   , express = require("express")
   , util = require("../lib/util.js")
@@ -68,6 +69,7 @@ class Routes{
 
 	routesConfig(){
 		this.router.use("/api", new api().routesConfig() );
+    this.router.get("/test", (req,res) => res.render("relayout"));
     this.router.get("/guides", (req,res) => res.render("guides"));
     this.router.use("/maintenance", new maintenance().routesConfig());
     this.router.use("/cripple", new cripple().routesConfig());
@@ -87,6 +89,9 @@ class Routes{
     });
 
     this.router.use("/clan",new clan().routesConfig());
+
+    this.router.use('/coach', new coach().routesConfig());
+    this.router.use('/team', require(`./team/team.js`));
 
     this.router.use("/:company", new rebbl().routesConfig());
 

@@ -1,39 +1,17 @@
 //- round.pug
-extends ../../no-cache-sub-layout.pug
-block scripts
-  script.
-    $(document).ready(function(){
-      $('.dropdown-item').click(function(){
-          let classes = this.className.split(' ');
-          let season = classes.find(function(e){return e.toLowerCase().indexOf("season")>-1;});
-          $('.Season').hide();
-          $('.'+season).show();
-          $("#"+$(this).parent().attr('aria-labelledby')).text($(this).text());
-          $(this).parent().parent().addClass('active');
-      });
-      $("#dropdowWeek").text("!{week}");
-    });
+extends ../../no-cache-sub-relayout.pug
+
 block vars
   - var options = {active: league, title: "REBBL SEASON 8",company:company}
-  - let seasons = []
-  for div, x in divisions
-    - let season = div.substr(0,9)
-    - if(seasons.indexOf(season) === -1) seasons.push(season)  
-  - let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});    
 
 block navigation
-  nav(class="navbar navbar-expand-sm fixed-top navbar-dark bg-dark" style="top:80px;")
-    a(class="navbar-brand" href="#")= "STANDINGS - " + league 
-    div(class="collapse navbar-collapse")
-      ul(class="navbar-nav mr-auto")
-        li( class="nav-item active")
-          div(class="nav-link") NAVIGATE TO WEEK                  
-        li( class="nav-item dropdown")
-          a(class="nav-link dropdown-toggle" href="#" id="dropdowWeek" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") WEEK
-          div(class="dropdown-menu" aria-labelledby="dropdowWeek")
-            for w in weeks.sort(function(a,b){return a - b ;})
-             a(class=`dropdown-item Season ${season}`   href=`./${w}`)=  w
-
+  .nav-item.dropdown.mr-3
+    #dropdownWeek.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+      | Navigate to week
+    div
+      .dropdown-menu.bg-dark(aria-labelledby='dropdownWeek')
+        for w in weeks.sort(function(a,b){return a - b ;})
+          a(class=`dropdown-item`   href=`./${w}`)=  w
 
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")
