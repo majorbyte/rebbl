@@ -83,6 +83,10 @@ class Rebbl{
 
   routesConfig(){
    
+    //handle old routes
+    this.router.get('/team/*', (req,res) => res.redirect(301,`../../${req.url.split("/").splice(1).join("/") }`) );
+    this.router.get('/coach/*', (req,res) => res.redirect(301,`../../${req.url.split("/").splice(1).join("/") }`) );
+
     this.router.use('/counter', require(`./counter.js`));
     this.router.use('/match', require(`./match.js`));
     this.router.use('/stunty', require(`./stunty.js`));
