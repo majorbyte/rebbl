@@ -2,6 +2,13 @@ include nav-link
 include nav
 
 block head
+  style.
+    .dropdown-toggle::after {display: none}
+    .dropdown-toggle::before {display: inline-block;padding: 0.5rem;font: normal normal normal 12px/1 FontAwesome;content: "\f078";vertical-align:0.5em;}
+    .jiggle {-webkit-animation: jiggle 3s infinite;-moz-animation-duration: 3s;-moz-animation-name: jiggle;-moz-animation-iteration-count: infinite;-webkit-transform: rotate(0deg);-moz-transform: rotate(-0deg);}
+
+    @-moz-keyframes jiggle {80% {-moz-transform: rotate(0deg);}84% {-moz-transform: rotate(3deg);}88% {-moz-transform: rotate(-3deg);}92% {-moz-transform: rotate(3deg);}96% {-moz-transform: rotate(-3deg);}100% {-moz-transform: rotate(0deg);}}
+    @-webkit-keyframes jiggle {80% {-moz-transform: rotate(0deg);}84% {-moz-transform: rotate(3deg);}88% {-moz-transform: rotate(-3deg);}92% {-moz-transform: rotate(3deg);}96% {-moz-transform: rotate(-3deg);}100% {-moz-transform: rotate(0deg);}}
 
 block vars
 
@@ -10,31 +17,41 @@ block vars
 -
   let companyName = renderCompany
   let logo = "skills/CardSet.png"
+  let cls = ""
+  let ref = "#"
   switch(renderCompany){
     case "rebbl":
       companyName = "ReBBL";
       logo = "rebbl.png"
+      ref = `/${renderCompany}`;
       break;
     case "rebbrl":
       companyName = "ReBBL";
-      logo = "rebbrl.png"
+      logo = "rebbrl.png";
+      ref = `/${renderCompany}`;
       break;
     case "clan":
       companyName = "Clan";
       logo = "clan.png"
+      ref = `/${renderCompany}`;
       break;
     case "frontpage":
       companyName = "";
+      cls="jiggle";
       break;
   }
 
 block body
   nav.fixed-top.navbar.navbar-dark.navbar-expand-md.bg-dark.pl-0
     .navbar-brand.dropdown.px-0(href='#')
-      img#navbarDropdown.px-1.d-inline-block.align-top.dropdown-toggle(src=`https://cdn2.rebbl.net/images/${logo}` height='30' alt='' role='button' data-toggle='dropdown')
-      a.d-inline-block.text-light.nav-item.px-1(href="/"+renderCompany)
+      #navbarDropdown.px-1.d-inline-block.align-top.dropdown-toggle(src=`https://cdn2.rebbl.net/images/${logo}` height='30' alt='' class="" + cls role='button' data-toggle='dropdown' style="cursor: pointer;")
+        img(src=`https://cdn2.rebbl.net/images/${logo}` height='30'  )
+      a.d-inline-block.text-light.nav-item.px-1(href=ref)
         span.pr-1= companyName
       .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown')
+        a.px-1.dropdown-item(href="/")
+          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/skills/CardSet.png')
+          .col.d-inline-block.text-light Frontpage
         a.px-1.dropdown-item(href="/rebbl")
           img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/rebbl.png')
           .col.d-inline-block.text-light ReBBL
