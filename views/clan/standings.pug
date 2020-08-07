@@ -11,7 +11,7 @@ block navigation
     div
       .dropdown-menu.bg-dark(aria-labelledby='navbarSeason')
         //ko foreach: seasons
-        a(class="dropdown-item " data-bind="text:$data,click:$root.loadSeason.bind($root)")
+        a.dropdown-item.text-light(data-bind="text:$data,click:$root.loadSeason.bind($root)")
         // /ko              
 
 block content
