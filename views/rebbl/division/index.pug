@@ -16,7 +16,7 @@ block navigation
     div
       .dropdown-menu.bg-dark(aria-labelledby='dropdowWeek')
         for week, x in matches
-          a(class=`dropdown-item`   href=`#${x}`)=  x
+          a.dropdown-item.text-light(href=`#${x}`)=  x
 
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")

@@ -11,7 +11,7 @@ block navigation
     div
       .dropdown-menu.bg-dark(aria-labelledby='dropdownWeek')
         for w in weeks.sort(function(a,b){return a - b ;})
-          a(class=`dropdown-item`   href=`./${w}`)=  w
+          a.dropdown-item.text-light(href=`./${w}`)=  w
 
 block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")

@@ -4,7 +4,7 @@ mixin nav(company)
   case company
     when "rebbl"
       .navbar-nav.mr-auto
-        .nav-item.dropdown.mr-3
+        .nav-item.dropdown.mr-3(style="cursor: pointer;")
           #navbarDropdown2.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown') Main
           div
             .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
@@ -14,14 +14,14 @@ mixin nav(company)
               .dropdown-divider
               a.dropdown-item.d-inline-block.text-light(href="/rebbl/rampup") Rampup
               a.dropdown-item.d-inline-block.text-light(href="/rebbl/Stunty") Stunty
-        .nav-item.dropdown.mr-3
+        .nav-item.dropdown.mr-3(style="cursor: pointer;")
           #navbarDropdown3.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
             | Side leagues
           div
             .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown3')
               a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBLL%20" ) Beer
               a.dropdown-item.d-inline-block.text-light(href="/rebbl/XScessively Elfly League") Elfly
-        .nav-item.dropdown.mr-3
+        .nav-item.dropdown.mr-3(style="cursor: pointer;")
           #navbarDropdown4.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
             | Offseason
           div
