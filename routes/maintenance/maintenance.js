@@ -54,14 +54,14 @@ class Maintenance{
         //clanService.calculateStandings();
         //await maintenanceService.getContests(req.query.league);
 
-
+        await maintenanceService.getContests(req.query.league);/*
         const draft = await dataService.getDraft({
           house: 1,
           round: 3,
           competition: "Division 2a",
           season: "season 9"
         });
-        ds.postToReddit(draft);
+        ds.postToReddit(draft);*/
       
       }
       catch(e){

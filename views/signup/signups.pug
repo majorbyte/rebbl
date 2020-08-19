@@ -1,4 +1,4 @@
-extends ../no-cache-sub-layout.pug
+extends ../rebbl/sublayout.pug
 
 block append vars
   - var activeSubMenu = "signups"
@@ -10,17 +10,16 @@ block content
   div(class="Background u-bottomPadding--large u-topPadding--medium")
     div(class="/*TexturedBackground TexturedBackground--light-primary*/")
       div(class="container navcontainer" data-index="0")
-        h1(class="u-no-text-transform u-verticalMargin--xx-small") Current Signups - Season 14
-
-        div(style="float:left")
+        h1(class="u-no-text-transform u-verticalMargin--xx-small") Current Signups
+        div
           span Currently&nbsp;
             span(class="highlight" data-bind="text:$root.users().length" )
             span &nbsp;coaches have signed up.
-        br
-        br
+          p Not signed up? 
+            a(href="/signup") Here &nbsp;
+            | you go!
         div
           div(class="btn btn-outline-primary" id="greenhorn" data-bind="click: toggleGreenhorn, css: greenhorn() ? 'active':''") Greenhorn
-          div(class="btn btn-outline-primary" id="oi" data-bind="click: toggleOI, css: OI() ? 'active':''") Off-Season International
 
         - let races = ["Amazon","Bretonnia","Chaos","Chaos Dwarf","Dark Elf","Dwarf","Goblin","Halfling","High Elf","Human","Khemri","Kislev","Lizardman","Necromantic","Norse","Nurgle","Ogre","Orc","Pro Elf","Skaven","Undead","Underworld","Vampire","Wood Elf"]
         div(style="grid-template-columns: auto;display:grid;clear:both")
@@ -54,7 +53,6 @@ block content
             div(style="display: table-cell;width: 10px;;" class="Standings-header" data-bind="text:d")
             // /ko
             div(style="display: table-cell;width: 10px;;" class="Standings-header" ) GHC
-            div(style="display: table-cell;width: 10px;;" class="Standings-header" ) OSI
           // ko foreach: {data: leagues, as: 'league'}
           div(class="TableRow" )
             div(style="display: table-cell;width: 100px;" data-bind="text:league")
@@ -62,7 +60,6 @@ block content
             div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0)")
             // /ko
             div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text:$root.filteredUsers().reduce(function(p, c){ return c.league === league && c.greenHorn ? p+1 : p; }, 0)")
-            div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text:$root.filteredUsers().reduce(function(p, c){ return c.league === league && c.OI ? p+1 : p; }, 0)")
           // /ko
           div(class="TableRow")
             div(style="display: table-cell;width: 100px;") Total
@@ -70,7 +67,6 @@ block content
             div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.users().reduce(function(p, c){ return c.saveType === d ? p+1 : p; }, 0)")
             // /ko
             div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
-            div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.OI ? p+1 : p; }, 0)")            
         br
         br
         div(style="grid-template-columns: auto;clear:both")

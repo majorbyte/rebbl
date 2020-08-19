@@ -44,7 +44,7 @@ class League{
       let season = "";
       if(league === "off season international"){
         league = new RegExp(`^ReBBL Open Invitational`, 'i');
-        season = "season 14";
+        season = "season 15";
       } else if (league === "playins - s10"){
         league = new RegExp(`^ReBBL Playoffs`,'i');
         comp = "Play-Ins Qualifier";
