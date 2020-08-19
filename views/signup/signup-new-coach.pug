@@ -1,30 +1,11 @@
 extends ../account/sublayout.pug
 
+block title
+  title Signup ReBBL S15
+
 block append scripts
   script.
     $(document).ready(function(){
-      $("#timezone").on('change', function(e){
-        $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
-      });
-
-      let select = document.getElementById("timezone");
-      let guessed = moment.tz.guess();
-
-      guessed = "#{user.timezone || null}" || guessed;
-      let names = moment.tz.names();
-      let l = names.length;
-
-      for(let i = 0; i < l; i++){
-        let tz = names[i];
-        let option = document.createElement("option");
-        option.setAttribute("value", tz);
-        option.text = tz;
-        if (tz === guessed){
-          option.setAttribute("selected", "selected")
-        }
-        select.appendChild(option);
-      }
-      $("#tz_info").text(moment().tz(guessed).format('YYYY-MM-DD HH:mm ZZ'));
 
       $("#rebbrl").on("click", function(e){
         var xhr = new XMLHttpRequest();
@@ -37,6 +18,8 @@ block append scripts
           if(xhr.response && xhr.status === 200){   
             $("#team").val(xhr.response.team);   
             $("#race").val(xhr.response.race);
+          } else{
+            $("#error").toggle("hidden");
           }
         }
         xhr.send('');
@@ -48,30 +31,32 @@ block append scripts
 block content
   form(action="/signup/confirm-new" method="post" class="container signup")
     div
-      - if (user.reddit) {
-        h2 Currently you have signed up with
-          span(class="highlight")= " " + user.team
+        h3 The first thing what we would like you to do, is to read thoroughly through
+          a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " our rules"
+          span .
 
-        p Use the form below to make any changes
+        p Once you have done that, take you time to fill out the following:
 
         fieldset
           legend Required
           div
-            label(for="coach") Blood Bowl 2 coach name
-            - if (user.account)
-              input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
-            - else
-              input(type="text" id="coach" name="coach" value=user.coach required placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name")
-              - if (user.error && user.error.coach)
-                p(class="error")= user.error.coach
+            label(for="coach") Coach Name
+            input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
           div
             label(for="team") Team name
             input(type="text" id="team" name="team" value=user.team required placeholder="team name" title="team name")
+            - if (user.error && user.error.team)
+              p(class="error my-0")= user.error.team            
+
           div
             button(type="button" class="btn btn-default" id="rebbrl" name="rebbrl" ) Use my ReBBRL team
+            p#error.hidden.warning It appears you don't have a minors team
+          br
           div
             label(for="race") Team race
             select(id="race" name="race" required)
+              - if (user.race === "")
+                option(value="" disabled selected style="color: #9b959166;") Select race
               option(value="Amazon" selected=user.race==="Amazon" ) Amazon
               option(value="Bretonnia" selected=user.race==="Bretonnia") Bretonnia
               option(value="Chaos" selected=user.race==="Chaos") Chaos
@@ -96,77 +81,6 @@ block content
               option(value="Underworld" selected=user.race==="Underworld") Underworld
               option(value="Vampire" selected=user.race==="Vampire") Vampire
               option(value="Wood Elf" selected=user.race==="Wood Elf") Wood Elf
-            - if (user.error && user.error.race)
-              p(class="error")= user.error.race
-          div
-            label(for="timezone") Timezone
-            select(id="timezone" name="timezone" required title="timezone")
-            label(id="tz_info")
-        fieldset
-          legend Optional
-          div
-            label(for="discord") Discord
-            input(type="text" id="discord" name="discord" value=user.discord placeholder="discord name" title="discord")
-          div
-            label(for="steam") Steam
-            input(type="text" id="steam" name="steam" value=user.steam placeholder="steam name" title="steam")
-          div(style="clear:both")
-            h3 By pressing complete, you confirm that you have read and will abide by our rules
-              a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules")= " as described here"
-
-        button(type="submit" class="btn btn-primary") Complete
-      - } else {
-        h3 The first thing what we would like you to do, is to read thoroughly through
-          a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " our rules"
-          span .
-
-        p Once you have done that, take you time to fill out the following:
-
-        fieldset
-          legend Required
-          div
-            label(for="coach") Coach Name
-            - if (user.account)
-              input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
-            - else
-              input(type="text" id="coach" name="coach" value="" required placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name")
-              - if (user.error && user.error.coach)
-                p(class="error")= user.error.coach
-          div
-            label(for="team") Team name
-            input(type="text" id="team" name="team" value="" required placeholder="team name" title="team name")
-          div
-            button(type="button" class="btn btn-default" id="rebbrl" name="rebbrl" ) Use my ReBBRL team
-            
-          br
-          div
-            label(for="race") Team race
-            select(id="race" name="race" required)
-               option(value="" disabled selected style="color: #9b959166;") Select race
-                option(value="Amazon") Amazon
-                option(value="Bretonnia") Bretonnia
-                option(value="Chaos") Chaos
-                option(value="Chaos Dwarf") Chaos Dwarf
-                option(value="Dark Elf") Dark Elf
-                option(value="Dwarf") Dwarf
-                option(value="Goblin") Goblin
-                option(value="Human") Human
-                option(value="Halfling") Halfling
-                option(value="High Elf") High Elf
-                option(value="Khemri") Khemri
-                option(value="Kislev") Kislev
-                option(value="Lizardman") Lizardman
-                option(value="Necromantic") Necromantic
-                option(value="Norse") Norse
-                option(value="Nurgle") Nurgle
-                option(value="Ogre") Ogre
-                option(value="Orc") Orc
-                option(value="Pro Elf") Pro Elf
-                option(value="Skaven") Skaven
-                option(value="Undead") Undead
-                option(value="Underworld") Underworld
-                option(value="Vampire") Vampire
-                option(value="Wood Elf") Wood Elf
           div
             label(for="league") League
             select(name="league" id="league" required)
@@ -175,22 +89,9 @@ block content
               option(value="GMAN" selected=user.league==="GMAN") GMAN - the European region
               option(value="REL" selected=user.league==="REL") REL  - the Americas region (North America &amp; South America)
           div
-            label(for="timezone") Timezone
-            select(id="timezone" name="timezone" required title="timezone")
-            label(id="tz_info")
-        fieldset
-          legend Optional
-          div
-            label(for="discord") Discord
-            input(type="text" id="discord" name="discord" value="" placeholder="discord name" title="discord name")
-          div
-            label(for="steam") Steam
-            input(type="text" id="steam" name="steam" value="" placeholder="steam name" title="steam name")
-          div
             h3 By pressing complete, you confirm that you have read and will abide by our rules
               a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " as described here"
               span .
         button(type="submit" class="btn btn-primary") Complete
         br
         br
-      - }

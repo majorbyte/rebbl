@@ -1,50 +1,28 @@
 extends ../account/sublayout.pug
 
-block append scripts
-  script.
-    $(document).ready(function(){
-      $("#timezone").on('change', function(e){
-        $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
-      });
-
-      let select = document.getElementById("timezone");
-      let guessed = moment.tz.guess();
-
-      guessed = "#{user.timezone}" || guessed;
-      let names = moment.tz.names();
-      let l = names.length;
-
-      for(let i = 0; i < l; i++){
-        let tz = names[i];
-        let option = document.createElement("option");
-        option.setAttribute("value", tz);
-        option.text = tz;
-        if (tz === guessed){
-          option.setAttribute("selected", "selected")
-        }
-        select.appendChild(option);
-      }
-      $("#tz_info").text(moment().tz(guessed).format('YYYY-MM-DD HH:mm ZZ'));
-
-    });
-
-
-
 block content
   form(action="/signup/confirm-reroll" method="post" class="container signup")
     div
-      h1 Welcome back to season 14,
-        span(class="highlight")= " " +  user.coach
+      h1 Welcome back to Season 15,
+        - if (user.account)
+          span(class="highlight")= " " +  user.account.coach
+        - else 
+          span(class="highlight")= " " +  user.coach
         span !
     fieldset
       legend Required
       div
         div
           label(for="coach") Blood Bowl 2 coach name
-          input(type="text" id="coach" name="coach" value=user.coach  disabled title="Blood Bowl 2 coach name")
+          - if (user.account)
+            input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" readonly)
+          - else
+            input(type="text" id="coach" name="coach" value=user.coach  disabled title="Blood Bowl 2 coach name")
         div
           label(for="team") Team name
           input(type="text" id="team" name="team" value=user.team  required placeholder="team name" title="team name")
+          - if (user.error && user.error.team)
+            p(class="error my-0")= user.error.team            
         div
           label(for="race") Team race
           select(id="race" name="race" required)
@@ -83,19 +61,6 @@ block content
             option(value="GMAN" selected=user.league==="GMAN") GMAN
             option(value="REL" selected=user.league==="REL") REL
         div
-          label(for="timezone") Timezone
-          select(id="timezone" name="timezone" required title="timezone")
-          label(id="tz_info")
-    fieldset
-      legend Optional
-
-      div(style="")
-        div
-          label(for="discord") Discord
-          input(type="text" id="discord" name="discord" value=user.discord placeholder="discord" title="discord")
-        div
-          label(for="steam") Steam
-          input(type="text" id="steam" name="steam" value=user.steam placeholder="steam" title="steam")
     div(style="clear:both")
       h3 By pressing complete, you confirm that you have read and will abide by our rules
         a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules")= " as described here"

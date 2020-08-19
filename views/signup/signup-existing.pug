@@ -36,8 +36,8 @@ block content
       h2 Your current team is
        span(class="highlight")= " " + user.team
        span(style="font-size: 0.85em")= " [" + user.race +"]"
-      p If you wish to reroll, please
-        a(href="/signup/reroll")= " go here"
+      p I wish to &nbsp;
+        a(href="/signup/reroll" class="btn-sm btn-primary") Reroll
     fieldset
       legend Required
       div
@@ -46,18 +46,6 @@ block content
           option(value="BIG O" selected=user.league==="BIG O") BIG O
           option(value="GMAN" selected=user.league==="GMAN") GMAN
           option(value="REL" selected=user.league==="REL") REL
-      div
-        label(for="timezone") Timezone
-        select(id="timezone" name="timezone" required title="timezone")
-        label(id="tz_info")
-    fieldset
-      legend Optional
-      div
-        label(for="discord") Discord
-        input(type="text" id="discord" name="discord" value=user.discord placeholder="discord" title="discord")
-      div
-        label(for="discord") Steam
-        input(type="text" id="steam" name="steam" value=user.steam placeholder="steam" title="steam")
     div
       h3 By pressing complete, you confirm that you have read and will abide by our rules
         a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules")= " as described here"

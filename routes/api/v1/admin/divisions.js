@@ -15,7 +15,7 @@ const express = require("express")
     try{
       
       let data = await dataService.getSchedules({season:"season 14", round:1, league:{$in:["REBBL - GMan","REBBL - Big O", "REBBL - REL","REBBL - REL 2","REBBL - GMan 2"]}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
-      let upstarts = await dataService.getSchedules({season:"season 17", round:1, league:"ReBBRL Upstarts"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
+      let upstarts = await dataService.getSchedules({season:"season 19", round:1, league:"ReBBRL Upstarts"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
       let minors = await dataService.getSchedules({season:"season 8", round:1, league:"ReBBRL Minors League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
       let college = await dataService.getSchedules({season:"season 9", round:1, league:"ReBBRL College League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
       let playoffs = await dataService.getSchedules({season:"season 14", round:1, league:"ReBBL Playoffs",competition:{$in:['Challenger\'s Cup XIV','REBBL Playoffs Season 14']}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});

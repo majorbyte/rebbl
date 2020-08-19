@@ -40,13 +40,13 @@ class Signup{
   }
 
   routesConfig(){
-    
+    /*
     this.router.get('/', async function(req, res){
       res.render('signup/closed');
-    });
+    });*/
 
-/*
-    this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
+
+//    this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
 
     this.router.get('/', util.ensureLoggedIn, this._getStatus);
 
@@ -59,36 +59,35 @@ class Signup{
 
     this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
 
-    this.router.get('/signup-oi',util.ensureAuthenticated, this._signupOpenInvitational);
+    //this.router.get('/signup-oi',util.ensureAuthenticated, this._signupOpenInvitational);
 
     this.router.get('/signup-greenhorn',util.ensureAuthenticated, this._signupGreenhornCup);
 
-    this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll);
+    this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll.bind(this));
 
-    this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew);
+    this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew.bind(this));
 
     this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
 
-    this.router.post('/confirm-oi', util.ensureAuthenticated, this._confirmOpenInvitational);
+    //this.router.post('/confirm-oi', util.ensureAuthenticated, this._confirmOpenInvitational);
 
 
     this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
 
-    this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
+    //this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
 
     this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
-*/
+
 
     this.router.get('/signups', util.cache(10*60), function(req,res){res.render('signup/signups', {url: ""});});
 
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
 
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
-/*
+
     this.router.get('/rebbrl', util.ensureLoggedIn, this._rebbrl);
-    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl);
+    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
     this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
-*/
     return this.router;
   }
 
@@ -115,7 +114,7 @@ class Signup{
       if (signups.length === 0 && user) {
         user.signedUp = false;
       }
-      res.render('signup/overview', {signups:signups, user: signups.length > 0 ? signups[0] : user || {reddit: req.user.name, isNew :true} });
+      res.render('signup/overview', {signups:signups, user: user});
     } catch (err){
       console.log(err);
     }
@@ -127,19 +126,19 @@ class Signup{
       let account = await accountService.getAccount(req.user.name);
 
       // Disabled while during season
-      /*let user = await signupService.getExistingTeam(req.user.name);
+      let user = await signupService.getExistingTeam(req.user.name);
       if(!signup && user && user.team){
         res.render('signup/signup-existing', { user: user});
         return;
-      }*/
+      }
 
       if (!signup){
         if(account){
-          //res.render('signup/signup-new-coach', {user: {account: account}});
-          res.render('signup/signup-rampup', {user: {account: account}});
+          res.render('signup/signup-new-coach', {user: {account: account}, teamName : user.teamName});
+          //res.render('signup/signup-rampup', {user: {account: account}});
         } else {
-          //res.render('signup/signup-new-coach', {user: req.user.name});
-          res.render('signup/signup-rampup', {user: req.user.name});
+          res.render('signup/signup-new-coach', {user: req.user.name, teamName : user.teamName});
+          //res.render('signup/signup-rampup', {user: req.user.name});
         }
         return;
       }
@@ -218,11 +217,9 @@ class Signup{
 
       req.body.saveType = "existing";
       req.body.type="rebbl";
-      let user = await signupService.saveSignUp(req.user.name, req.body);
+      await signupService.saveSignUp(req.user.name, req.body);
 
-
-      res.render('signup/signup-confirmed-oi', {user: user});
-      //res.redirect('/signup');
+      res.redirect('/signup');
     } catch (err){
       console.log(err);
     }
@@ -231,18 +228,32 @@ class Signup{
   async _confirmReroll(req, res){
     try{
       //remove unwanted input
-      delete req.body.coach;
+      let signup = req.body;
 
-      req.body.saveType = "reroll";
-      req.body.type="rebbl";
-      let user = await signupService.saveSignUp(req.user.name, req.body);
+      delete signup.coach;
 
-      if (user.error){
-        res.render('signup/signup-reroll', {user: user});
-      } else {
-        res.render('signup/signup-confirmed-greenhorn', {user: user});
-        //res.redirect('/signup');
+      signup.saveType = "reroll";
+      signup.type="rebbl";
+
+      let account = await accountService.getAccount(req.user.name);
+      signup.coach = account.coach;
+
+      let coachRecord = await this.getTeam(signup, req.app.locals.cyanideEnabled);
+      coachRecord.account = account;
+
+      if (coachRecord.error){
+        res.render("signup/signup-reroll", {user:coachRecord} );
+      } else{
+        let user = await signupService.saveSignUp(req.user.name, req.body);
+
+        if (user.error){
+          res.render('signup/signup-reroll', {user: user});
+        } else {
+          //res.render('signup/signup-confirmed-greenhorn', {user: user});
+          res.redirect('/signup');
+        }
       }
+
     } catch (err){
       console.log(err);
     }
@@ -250,15 +261,29 @@ class Signup{
 
   async _confirmNew(req, res){
     try {
-      req.body.saveType = "new";
-      req.body.type="rebbl";
+      let signup = req.body;
+
+      signup.saveType = "new";
+      signup.type="rebbl";
+
+      let account = await accountService.getAccount(req.user.name);
+      signup.coach = account.coach;
+
+      let coachRecord = await this.getTeam(signup, req.app.locals.cyanideEnabled);
+      coachRecord.account = account;
+
+      if (coachRecord.error){
+        res.render("signup/signup-new-coach", {user:coachRecord} );
+        return;
+      }
+
       let user = await signupService.saveSignUp(req.user.name, req.body);
 
       if (user.error){
         res.render('signup/signup-new-coach', {user: user});
       } else {
-        res.render('signup/signup-confirmed-greenhorn', {user: user});
-        //res.redirect('/signup');
+        //res.render('signup/signup-confirmed-greenhorn', {user: user});
+        res.redirect('/signup');
       }
     } catch (err){
       console.log(err);
@@ -340,71 +365,27 @@ class Signup{
   /* rampup */  
   async _confirmRampup(req, res){
     try {
-      req.body.saveType = "rampup";
-      req.body.type ="rebbl";
 
-      let coach = await apiService.findCoach(req.body.coach);
-      let coachRecord = null;
-      let error = {};
-      if (coach.ResponseSearchCoach.Coaches !== ""){
-        if (!Array.isArray(coach.ResponseSearchCoach.Coaches.DataUser))
-          coach.ResponseSearchCoach.Coaches.DataUser =[coach.ResponseSearchCoach.Coaches.DataUser];
+      let signup = req.body;
 
-        coachRecord = coach.ResponseSearchCoach.Coaches.DataUser.find(x => x.User.localeCompare(req.body.coach,undefined,{sensitivity:"base"}) === 0);
-        if (!coachRecord) error.coach = `Coach ${req.body.coach} does not exist`;
-      } 
-      if (coach.ResponseSearchCoach.Coaches === "") error.coach = `Coach ${req.body.coach} does not exist`;
-      
-      let team;
-      if (req.app.locals.cyanideEnabled){
-        team = await cyanideService.team({platform:"pc",name:req.body.team});
+      signup.saveType = "rampup";
+      signup.type ="rebbl";
 
-        if (!team) error.team = `Team ${req.body.team} not found`;
+      let account = await accountService.getAccount(req.user.name);
+      signup.coach = account.coach;
 
-        if (team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${req.body.team} does not belong this coach`;
+      let coachRecord = await this.getTeam(signup, req.app.locals.cyanideEnabled);
+      coachRecord.account = account;
 
-        if (team){
-          req.body.teamCreated = team.team.created;
-          req.body.lastPlayed = team.team.datelastmatch;
-          req.body.race = this.races.find(x => x.id === team.team.idraces).name;
-        }
-      } else {
-        if (coachRecord){
-          const coach = await apiService.getCoachInfo(coachRecord.IdUser);
-
-          if (!Array.isArray(coach.ResponseGetCoachOverview.Teams.Team))
-            coach.ResponseGetCoachOverview.Teams.Team = [coach.ResponseGetCoachOverview.Teams.Team];
-
-          team = coach.ResponseGetCoachOverview.Teams.Team.find(team => team.Row.Name.localeCompare(req.body.team,undefined,{sensitivity:"base"}) === 0);
-          if (!team) error.team = `Team ${req.body.team} not found`;
-          else {
-            req.body.race = this.races.find(x => x.id === Number(team.Row.IdRaces)).name;
-
-            const matches = await apiService.getTeamMatches(team.Row.ID.Value.replace(/\D/g,""));
-
-
-            if (Number(matches.ResponseGetTeamMatchRecords.TotalRecords) === 0){
-              req.body.teamCreated = req.body.lastPlayed = "A";
-            } else {
-              req.body.teamCreated = "A";
-              req.body.lastPlayed = "B";
-            }
-          }
-        }
-      }
-
-
-      if (Object.keys(error).length !== 0){
-        let data = req.body;
-        data.error = {};
-        Object.assign(data.error,error);
-        res.render("signup/signup-rampup", {user:data} );
+      if (coachRecord.error){
+        res.render("signup/signup-rampup", {user:coachRecord} );
         return;
       }
-      req.body.coach = coachRecord.User;
+      
+      signup.coach = coachRecord.User;
 
 
-      let user = await signupService.saveSignUp(req.user.name, req.body);
+      let user = await signupService.saveSignUp(req.user.name, signup);
 
       if (user.error){
         res.render('signup/signup-rampup', {user: user});
@@ -415,6 +396,64 @@ class Signup{
       console.log(err);
     }
   }
+
+
+  async getTeam(signup, cyanideEnabled){
+    let coach = await apiService.findCoach(signup.coach);
+    let coachRecord = null;
+    let error = {};
+    if (coach.ResponseSearchCoach.Coaches !== ""){
+      if (!Array.isArray(coach.ResponseSearchCoach.Coaches.DataUser))
+        coach.ResponseSearchCoach.Coaches.DataUser =[coach.ResponseSearchCoach.Coaches.DataUser];
+
+      coachRecord = coach.ResponseSearchCoach.Coaches.DataUser.find(x => x.User.localeCompare(signup.coach,undefined,{sensitivity:"base"}) === 0);
+      if (!coachRecord) error.coach = `Coach ${signup.coach} does not exist`;
+    } 
+    if (coach.ResponseSearchCoach.Coaches === "") error.coach = `Coach ${signup.coach} does not exist`;
+    
+    let team;
+    if (cyanideEnabled){
+      team = await cyanideService.team({platform:"pc",name:signup.team});
+
+      if (!team) error.team = `Team ${signup.team} not found`;
+
+      if (team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${signup.team} does not belong this coach`;
+
+      if (team){
+        signup.teamCreated = team.team.created;
+        signup.lastPlayed = team.team.datelastmatch;
+        signup.race = this.races.find(x => x.id === team.team.idraces).name;
+      }
+    } else {
+      if (coachRecord){
+        const coach = await apiService.getCoachInfo(coachRecord.IdUser);
+
+        if (!Array.isArray(coach.ResponseGetCoachOverview.Teams.Team))
+          coach.ResponseGetCoachOverview.Teams.Team = [coach.ResponseGetCoachOverview.Teams.Team];
+
+        team = coach.ResponseGetCoachOverview.Teams.Team.find(team => team.Row.Name.localeCompare(signup.team,undefined,{sensitivity:"base"}) === 0);
+        if (!team) error.team = `Team ${signup.team} not found`;
+        else {
+          signup.race = this.races.find(x => x.id === Number(team.Row.IdRaces)).name;
+
+          const matches = await apiService.getTeamMatches(team.Row.ID.Value.replace(/\D/g,""));
+
+
+          if (Number(matches.ResponseGetTeamMatchRecords.TotalRecords) === 0){
+            signup.teamCreated = signup.lastPlayed = "A";
+          } else {
+            signup.teamCreated = "A";
+            signup.lastPlayed = "B";
+          }
+        }
+      }
+    }
+
+    if (error.team || error.coach) signup.error = error;
+
+    return signup;
+  }
+
 
   /* REBBRL */
   async _rebbrl(req, res){
@@ -443,8 +482,22 @@ class Signup{
 
   async _confirmRebbrl(req, res){
     try {
-      req.body.saveType = "new";
-      req.body.type ="rebbrl";
+      let signup = req.body;
+
+      signup.saveType = "new";
+      signup.type ="rebbrl";
+
+      let account = await accountService.getAccount(req.user.name);
+      signup.coach = account.coach;
+
+      let coachRecord = await this.getTeam(signup, req.app.locals.cyanideEnabled);
+      coachRecord.account = account;
+
+      if (coachRecord.error){
+        res.render("signup/signup-new-coach-rebbrl", {user:coachRecord} );
+        return;
+      }
+
       let user = await signupService.saveSignUp(req.user.name, req.body);
 
       if (user.error){

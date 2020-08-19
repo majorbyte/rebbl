@@ -53,7 +53,9 @@ router.get('/count', util.cache(10*60), async function(req, res){
 router.get('/rookie/:coach', async function(req, res){
   const data = await db.getRookieTeam(req.params.coach);
 
-  res.status(200).send(JSON.stringify({"team":data.team, race:data.race}));
+  if (data) res.status(200).send(JSON.stringify({"team":data.team, race:data.race}));
+
+  else res.status(400).send(JSON.stringify({message:"not found"}));
 });
 
 
