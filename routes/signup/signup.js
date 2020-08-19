@@ -48,7 +48,7 @@ class Signup{
 
 //    this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
 
-    this.router.get('/', util.ensureLoggedIn, this._getStatus);
+    this.router.get('/', util.ensureAuthenticated, this._getStatus);
 
     this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
 
