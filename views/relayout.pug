@@ -5,14 +5,14 @@ html(lang="en")
     block title
     link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/font-awesome.css")
     - if (process.env.NODE_ENV === 'production')
-      - if (user && user.useDark || user.account && user.account.useDark) 
+      - if (user && user.useDark || user && user.account && user.account.useDark) 
         link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.dark.min.css")
         link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.dark.css")
       - else
         link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css")
         link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.css")
     - else
-      - if (user && user.useDark || user.account && user.account.useDark) 
+      - if (user && user.useDark || user && user.account && user.account.useDark) 
         link(rel="stylesheet" href="/styles/bootstrap.dark.min.css")
         link(rel="stylesheet" href="/styles/style.dark.css")
       - else
