@@ -407,17 +407,17 @@ class Signup{
         coach.ResponseSearchCoach.Coaches.DataUser =[coach.ResponseSearchCoach.Coaches.DataUser];
 
       coachRecord = coach.ResponseSearchCoach.Coaches.DataUser.find(x => x.User.localeCompare(signup.coach,undefined,{sensitivity:"base"}) === 0);
-      if (!coachRecord) error.coach = `Coach ${signup.coach} does not exist`;
+      if (!coachRecord) error.coach = `Coach ${signup.coach} does not exist.`;
     } 
-    if (coach.ResponseSearchCoach.Coaches === "") error.coach = `Coach ${signup.coach} does not exist`;
+    if (coach.ResponseSearchCoach.Coaches === "") error.coach = `Coach ${signup.coach} does not exist.`;
     
     let team;
     if (cyanideEnabled){
       team = await cyanideService.team({platform:"pc",name:signup.team});
 
-      if (!team) error.team = `Team ${signup.team} not found`;
+      if (!team) error.team = `Team ${signup.team} not found.`;
 
-      if (team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${signup.team} does not belong to this coach`;
+      if (team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${signup.team} does not belong to this coach.`;
 
       if (team){
         signup.teamCreated = team.team.created;
@@ -432,7 +432,7 @@ class Signup{
           coach.ResponseGetCoachOverview.Teams.Team = [coach.ResponseGetCoachOverview.Teams.Team];
 
         team = coach.ResponseGetCoachOverview.Teams.Team.find(team => team.Row.Name.localeCompare(signup.team,undefined,{sensitivity:"base"}) === 0);
-        if (!team) error.team = `Team ${signup.team} not found`;
+        if (!team) error.team = `Team ${signup.team} not found.`;
         else {
           signup.race = this.races.find(x => x.id === Number(team.Row.IdRaces)).name;
 
