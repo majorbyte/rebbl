@@ -249,8 +249,8 @@ class Signup{
         if (user.error){
           res.render('signup/signup-reroll', {user: user});
         } else {
-          //res.render('signup/signup-confirmed-greenhorn', {user: user});
-          res.redirect('/signup');
+          res.render('signup/signup-confirmed-greenhorn', {user: user});
+          //res.redirect('/signup');
         }
       }
 
@@ -282,8 +282,8 @@ class Signup{
       if (user.error){
         res.render('signup/signup-new-coach', {user: user});
       } else {
-        //res.render('signup/signup-confirmed-greenhorn', {user: user});
-        res.redirect('/signup');
+        res.render('signup/signup-confirmed-greenhorn', {user: user});
+        //res.redirect('/signup');
       }
     } catch (err){
       console.log(err);
