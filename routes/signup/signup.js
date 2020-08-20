@@ -417,7 +417,7 @@ class Signup{
 
       if (!team) error.team = `Team ${signup.team} not found`;
 
-      if (team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${signup.team} does not belong this coach`;
+      if (team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${signup.team} does not belong to this coach`;
 
       if (team){
         signup.teamCreated = team.team.created;
