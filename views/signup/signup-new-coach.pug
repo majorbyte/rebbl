@@ -42,15 +42,18 @@ block content
           div
             label(for="coach") Coach Name
             input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
+            - if (user.error && user.error.coach)
+              p(class="alert-danger my-0")= user.error.coach
+              p(class="alert-info my-0") This is probably due to a typo in your coachname, contact an admin on our discord to have it corrected.
           div
             label(for="team") Team name
             input(type="text" id="team" name="team" value=user.team required placeholder="team name" title="team name")
             - if (user.error && user.error.team)
-              p(class="error my-0")= user.error.team            
+              p(class="alert-danger my-0")= user.error.team        
 
           div
             button(type="button" class="btn btn-default" id="rebbrl" name="rebbrl" ) Use my ReBBRL team
-            p#error.hidden.warning It appears you don't have a minors team
+            p#error.hidden.alert-danger It appears you don't have a minors team
           br
           div
             label(for="race") Team race
