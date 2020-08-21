@@ -4,7 +4,7 @@ include nav
 block head
   style.
     .dropdown-toggle::after {display: none}
-    .dropdown-toggle::before {display: inline-block;padding: 0.5rem;font: normal normal normal 12px/1 FontAwesome;content: "\f078";vertical-align:0.5em;}
+    .dropdown-toggle::before {display: inline-block;padding: 0rem 0.5rem;font: normal normal normal 12px/1 FontAwesome;content: "\f078";vertical-align:0.5em;}
     .jiggle {-webkit-animation: jiggle 3s infinite;-moz-animation-duration: 3s;-moz-animation-name: jiggle;-moz-animation-iteration-count: infinite;-webkit-transform: rotate(0deg);-moz-transform: rotate(-0deg);}
 
     @-moz-keyframes jiggle {80% {-moz-transform: rotate(0deg);}84% {-moz-transform: rotate(3deg);}88% {-moz-transform: rotate(-3deg);}92% {-moz-transform: rotate(3deg);}96% {-moz-transform: rotate(-3deg);}100% {-moz-transform: rotate(0deg);}}
@@ -42,37 +42,7 @@ block vars
   }
 
 block body
-  nav.fixed-top.navbar.navbar-dark.navbar-expand-md.bg-dark.pl-0
-    .navbar-brand.dropdown.px-0(href='#')
-      #navbarDropdown.px-1.d-inline-block.align-top.dropdown-toggle(src=`https://cdn2.rebbl.net/images/${logo}` height='30' alt='' class="" + cls role='button' data-toggle='dropdown' style="cursor: pointer;")
-        img(src=`https://cdn2.rebbl.net/images/${logo}` height='30'  )
-      a.d-inline-block.text-light.nav-item.px-1(href=ref)
-        span.pr-1= companyName
-      .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown')
-        a.px-1.dropdown-item(href="/")
-          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/skills/CardSet.png')
-          .col.d-inline-block.text-light Frontpage
-        a.px-1.dropdown-item(href="/rebbl")
-          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/rebbl.png')
-          .col.d-inline-block.text-light ReBBL
-        a.px-1.dropdown-item(href="/rebbrl")
-          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/rebbrl.png')
-          .col.d-inline-block.text-light ReBBRL
-        a.px-1.dropdown-item(href="/clan")
-          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/clan.png')
-          .col.d-inline-block.text-light Clan
-        a.px-1.dropdown-item(href="https://imperium.rebbl.net" target="_blank")
-          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/imperium.png' style="max-width:20px")
-          .col.d-inline-block.text-light Imperium
-        a.px-1.dropdown-item(href="https://bounties.rebbl.net" target="_blank")
-          img.col-2.p-0.d-inline-block.align-top(src='https://cdn2.rebbl.net/images/donate.png' style="max-width:20px")
-          .col.d-inline-block.text-light Bounty Board
-    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
-      span.navbar-toggler-icon
-    #navbarSupportedContent.collapse.navbar-collapse.pl-1
-      +nav(renderCompany)
-
-      a.d-inline-block.text-light.nav-item(href="/account") Account
+  +nav(renderCompany)
   main(role="main")
     block content  
       div(class="jumbotron")

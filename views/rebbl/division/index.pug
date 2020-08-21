@@ -10,8 +10,8 @@ block vars
   - var options = {active: league, title: league, company:company}
 
 block navigation
-  .nav-item.dropdown.mr-3
-    #dropdowWeek.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+  li.nav-item.dropdown.mr-3
+    a#dropdowWeek.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
       | Scroll to week
     div
       .dropdown-menu.bg-dark(aria-labelledby='dropdowWeek')
