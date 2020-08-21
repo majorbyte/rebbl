@@ -2,6 +2,7 @@ include nav-link
 doctype html
 html(lang="en")
   head
+    meta(name="viewport" content="width=device-width, manimum-scale=1.0, maximum-scale=1.0")
     link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/font-awesome.css")
     - if (process.env.NODE_ENV === 'production')
       - if (user && user.useDark) 
