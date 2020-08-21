@@ -5,8 +5,8 @@ block vars
   - var options = {active: league, title: "REBBL SEASON 8",company:company}
 
 block navigation
-  .nav-item.dropdown.mr-3
-    #dropdownWeek.d-inline-block.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+  li.nav-item.dropdown.mr-3
+    a#dropdownWeek.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
       | Navigate to week
     div
       .dropdown-menu.bg-dark(aria-labelledby='dropdownWeek')
