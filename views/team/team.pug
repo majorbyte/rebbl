@@ -83,51 +83,60 @@ block content
       div(class="col col-2")
         strong(data-bind="text:stats.nbsupporters/1000 + 'k'")
 
-    table(class="table table-striped") 
-      thead(class="headerText")
-        tr 
-          th
-          th tackles
-          th injuries
-          th stuns
-          th ko
-          th CAS
-          th dead
-          th running (m)
-          th passing (m)
-          th passes
-          th interc.
-          th touchdowns
-          th surfs
-      tbody
-        tr
-          td inflicted
-          td(data-bind="text:stats.inflictedtackles")
-          td(data-bind="text:stats.inflictedinjuries")
-          td(data-bind="text:stats.inflictedstuns")
-          td(data-bind="text:stats.inflictedko")
-          td(data-bind="text:stats.inflictedcasualties")
-          td(data-bind="text:stats.inflicteddead")
-          td(data-bind="text:stats.inflictedmetersrunning")
-          td(data-bind="text:stats.inflictedmeterspassing")
-          td(data-bind="text:stats.inflictedpasses")
-          td(data-bind="text:stats.inflictedinterceptions")
-          td(data-bind="text:stats.inflictedtouchdowns")
-          td(data-bind="text:stats.inflictedpushouts")
-        tr  
-          td sustained
-          td(data-bind="text:stats.sustainedtackles")
-          td(data-bind="text:stats.sustainedinjuries")
-          td(data-bind="text:stats.sustainedstuns")
-          td(data-bind="text:stats.sustainedko")
-          td(data-bind="text:stats.sustainedcasualties")
-          td(data-bind="text:stats.sustaineddead")
-          td(data-bind="text:stats.sustainedmetersrunning")
-          td(data-bind="text:stats.sustainedmeterspassing")
-          td(data-bind="text:stats.sustainedpasses")
-          td(data-bind="text:stats.sustainedinterceptions")
-          td(data-bind="text:stats.sustainedtouchdowns")
-          td(data-bind="text:stats.sustainedpushouts")
+    div(class="row" style="margin-left:0px")
+      div(class="col-12")
+        table(class="table table-striped") 
+          thead(class="headerText")
+            tr 
+              th
+              th(class="d-none d-md-block") tackles
+              th(class="d-md-none") Tckl
+              th(class="d-none d-md-block") injuries
+              th(class="d-md-none") Inj
+              th stuns
+              th ko
+              th CAS
+              th dead
+              th(class="d-none d-md-block") running (m)
+              th(class="d-md-none") Run (m)
+              th(class="d-none d-md-block") passing (m)
+              th(class="d-md-none") Pas (m)
+              th(class="d-none d-md-block") passes
+              th(class="d-md-none") Pas
+              th(class="d-none d-md-block") interc.
+              th(class="d-md-none") Int
+              th(class="d-none d-md-block") touchdowns
+              th(class="d-md-none") TDs
+              th surfs
+          tbody
+            tr
+              td inflicted
+              td(data-bind="text:stats.inflictedtackles")
+              td(data-bind="text:stats.inflictedinjuries")
+              td(data-bind="text:stats.inflictedstuns")
+              td(data-bind="text:stats.inflictedko")
+              td(data-bind="text:stats.inflictedcasualties")
+              td(data-bind="text:stats.inflicteddead")
+              td(data-bind="text:stats.inflictedmetersrunning")
+              td(data-bind="text:stats.inflictedmeterspassing")
+              td(data-bind="text:stats.inflictedpasses")
+              td(data-bind="text:stats.inflictedinterceptions")
+              td(data-bind="text:stats.inflictedtouchdowns")
+              td(data-bind="text:stats.inflictedpushouts")
+            tr  
+              td sustained
+              td(data-bind="text:stats.sustainedtackles")
+              td(data-bind="text:stats.sustainedinjuries")
+              td(data-bind="text:stats.sustainedstuns")
+              td(data-bind="text:stats.sustainedko")
+              td(data-bind="text:stats.sustainedcasualties")
+              td(data-bind="text:stats.sustaineddead")
+              td(data-bind="text:stats.sustainedmetersrunning")
+              td(data-bind="text:stats.sustainedmeterspassing")
+              td(data-bind="text:stats.sustainedpasses")
+              td(data-bind="text:stats.sustainedinterceptions")
+              td(data-bind="text:stats.sustainedtouchdowns")
+              td(data-bind="text:stats.sustainedpushouts")
 
     br
     nav
@@ -226,7 +235,7 @@ block content
         tr
           th(scope="col") #
           th(scope="col") name
-          th(scope="col") position
+          th(scope="col"  class="d-none d-md-block") position
           th(scope="col") MA
           th(scope="col") ST
           th(scope="col") AG
@@ -258,7 +267,7 @@ block content
           img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/starplayer.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
           // /ko
           div(class="match-stats-TeamLabel-name" data-bind="text: playerName(), style:{color: playerColor()}")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()")
+      td(class="d-none d-md-block" data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ma,attr:{class:maColor}")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.st,attr:{class:stColor}")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ag,attr:{class:agColor}")
