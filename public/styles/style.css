@@ -157,10 +157,6 @@ p {
   margin: 0 0 .5px
 }
 
-.nowrap {
-  white-space: nowrap;
-}
-
 .Container,.container {
   max-width: 1300px;
   width:100%;
