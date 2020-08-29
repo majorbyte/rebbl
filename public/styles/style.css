@@ -157,6 +157,9 @@ p {
   margin: 0 0 .5px
 }
 
+.nowrap {
+  white-space: nowrap;
+}
 
 .Container,.container {
   max-width: 1300px;
@@ -395,9 +398,9 @@ a:focus,a:hover {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  left: 50%;
-  right: 50%;
-  margin: 0 -50vw;
+  /*left: 50%;*/
+  /*right: 50%;*/
+  /*margin: 0 -50vw;*/
   background-color: #fff;
   border: 1px solid rgba(51,51,51,.2);
   border-top: none;
