@@ -31,81 +31,78 @@ block content
     br
     div(class="clearfix")
     div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Current TV
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:value")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Fan Factor
-      div(class="col col-1")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:popularity")
-      div(class="col col-3")
+      div(class="col-md-2 col-6")
         strong Stadium name
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:stadiumname")
-    div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Next match TV
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:nextMatchTV") 
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Rerolls
-      div(class="col col-1")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:rerolls") 
-      div(class="col col-3")
+      div(class="col-md-2 col-6")
         strong Total cash earned
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:stats.cashearned/1000 + 'k'")
-    div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Actual TV
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:actualTV")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Cheerleader
-      div(class="col col-1")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:cheerleaders")
-      div(class="col col-3")
+      div(class="col-md-2 col-6")
         strong Spiralling Expenses
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:stats.spirallingexpenses/1000  + 'k'")
-    div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Cash
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:cash/1000 + 'k'")  
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Assistant
-      div(class="col col-1")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:assistantcoaches")
-      div(class="col col-3")
+      div(class="col-md-2 col-6")
         strong Audience
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:stats.nbsupporters/1000 + 'k'")
 
     div(class="row" style="margin-left:0px")
-      div(class="col-12")
+      div(class="col-12 table-responsive-md")
         table(class="table table-striped") 
           thead(class="headerText")
             tr 
               th
-              th(class="d-none d-md-block") tackles
+              th(class="d-none d-md-table-cell") tackles
               th(class="d-md-none") Tckl
-              th(class="d-none d-md-block") injuries
+              th(class="d-none d-md-table-cell") injuries
               th(class="d-md-none") Inj
               th stuns
               th ko
               th CAS
               th dead
-              th(class="d-none d-md-block") running (m)
+              th(class="d-none d-md-table-cell") running (m)
               th(class="d-md-none") Run (m)
-              th(class="d-none d-md-block") passing (m)
+              th(class="d-none d-md-table-cell") passing (m)
               th(class="d-md-none") Pas (m)
-              th(class="d-none d-md-block") passes
+              th(class="d-none d-md-table-cell") passes
               th(class="d-md-none") Pas
-              th(class="d-none d-md-block") interc.
+              th(class="d-none d-md-table-cell") interc.
               th(class="d-md-none") Int
-              th(class="d-none d-md-block") touchdowns
+              th(class="d-none d-md-table-cell") touchdowns
               th(class="d-md-none") TDs
               th surfs
           tbody
@@ -139,7 +136,7 @@ block content
               td(data-bind="text:stats.sustainedpushouts")
 
     br
-    nav
+    nav(class="col-12")
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
         a(class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" data-bind="click:selectCurrent") Current &nbsp;
           //ko if: loadingCurrent
@@ -162,10 +159,10 @@ block content
           i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko          
     div(class="tab-content" id="tabContent")
-      div(class="tab-pane fade show active col col-12" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
+      div(class="tab-pane fade col-12 show active table-responsive-md" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
         // ko template: { name: 'playerList' }
         // /ko
-      div(class="tab-pane fade show col col-12" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab")
+      div(class="tab-pane fade col-12 show table-responsive-md" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab")
         table(class="table table-striped")
           thead(class="headerText")
             tr
@@ -187,7 +184,7 @@ block content
               td(data-bind="text:loss")
               td(data-bind="text:tddiff")
             // /ko
-      div(class="tab-pane fade show col col-12" id="nav-matches" role="tabpanel" aria-labelledby="nav-matches-tab")
+      div(class="tab-pane fade col-12 show table-responsive-md" id="nav-matches" role="tabpanel" aria-labelledby="nav-matches-tab")
         //ko foreach: matches.sort(function(a,b){return a.match.id < b.match.id ? 1 : -1;})
         //ko with: $data.match
         br
@@ -235,7 +232,7 @@ block content
         tr
           th(scope="col") #
           th(scope="col") name
-          th(scope="col"  class="d-none d-md-block") position
+          th(scope="col") position
           th(scope="col") MA
           th(scope="col") ST
           th(scope="col") AG
@@ -267,7 +264,7 @@ block content
           img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/starplayer.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
           // /ko
           div(class="match-stats-TeamLabel-name" data-bind="text: playerName(), style:{color: playerColor()}")
-      td(class="d-none d-md-block" data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()")
+      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ma,attr:{class:maColor}")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.st,attr:{class:stColor}")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ag,attr:{class:agColor}")
