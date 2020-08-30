@@ -10,7 +10,7 @@ block navigation
       | Season
     div
       .dropdown-menu.bg-dark(aria-labelledby='navbarSeason')
-        //ko foreach: seasons
+        //ko foreach: seasons.slice(0).reverse()
         a.dropdown-item.text-light(data-bind="text:$data,click:$root.loadSeason.bind($root)")
         // /ko              
 
@@ -22,50 +22,56 @@ block content
       h2
         i(data-bind="id:$data[0].division"  style="padding-top:180px;margin-top:-180px")
         a.highlight(data-bind="text:$data[0].division,attr:{href:`/clan/schedule/${$root.season}/${$data[0].division}`}")
-    table.table-striped.table-sm 
-      thead
-        th(scope="row") #
-        th(scope="row") Clan 
-        // ko if: $root.usePoints()
-        th.text-center(scope="row") Points
-        th.text-center(scope="row") Wins
-        th.text-center(scope="row") Draws
-        // /ko
-        // ko if: !$root.usePoints()
-        th.text-center(scope="row") Clan Wins
-        th.text-center(scope="row") Clan Losses
-        // /ko
-        th.text-center(scope="row") Match Wins
-        th.text-center(scope="row") Match Losses
-        th.text-center(scope="row") ΔMatch
-        th.text-center(scope="row") +TD 
-        th.text-center(scope="row") -TD
-        th.text-center(scope="row") ΔTD
-      tbody
-        //ko foreach: $data
-        tr
-          td(scope="row" data-bind="text:$index()+1")
-          td
-            // ko if: $data.hasOwnProperty("logo")
-            img(data-bind="attr:{src: `https://cdn2.rebbl.net/${logo}`}" style="width:32px;margin-right:15px")
-            // /ko
-            a(data-bind="text:clan,attr:{href:`/clan/clan/${clan}`}")
-          // ko if: $root.usePoints() && $data.hasOwnProperty("clanPoints")
-          td.text-center(data-bind="text:clanPoints")
-          td.text-center(data-bind="text:clanWins")
-          td.text-center(data-bind="text:clanDraws")
+    .table-responsive
+      table.table-striped.table-sm 
+        thead
+          th(scope="row") #
+          th(scope="row") Clan 
+          // ko if: $root.usePoints()
+          th.text-center(scope="row" class="d-none d-md-table-cell") Points
+          th.text-center(scope="row" class="d-md-none") P
+          th.text-center(scope="row" class="d-none d-md-table-cell") Wins
+          th.text-center(scope="row" class="d-md-none") W
+          th.text-center(scope="row" class="d-none d-md-table-cell") Draws
+          th.text-center(scope="row" class="d-md-none") D
           // /ko
           // ko if: !$root.usePoints()
-          td.text-center(data-bind="text:clanWins")
-          td.text-center(data-bind="text:clanLosses")
+          th.text-center(scope="row") Clan Wins
+          th.text-center(scope="row") Clan Losses
           // /ko
-          td.text-center(data-bind="text:matchWins")
-          td.text-center(data-bind="text:matchLosses")
-          td.text-center(data-bind="text:(matchWins - matchLosses)")
-          td.text-center(data-bind="text:tdFor")
-          td.text-center(data-bind="text:tdAgainst")
-          td.text-center(data-bind="text:tdDiff")
-        // /ko
+          th.text-center(scope="row" class="d-none d-md-table-cell") Match Wins
+          th.text-center(scope="row" class="d-md-none") MW
+          th.text-center(scope="row" class="d-none d-md-table-cell") Match Losses
+          th.text-center(scope="row" class="d-md-none") ML
+          th.text-center(scope="row") ΔMatch
+          th.text-center(scope="row") +TD 
+          th.text-center(scope="row") -TD
+          th.text-center(scope="row") ΔTD
+        tbody
+          //ko foreach: $data
+          tr
+            td(scope="row" data-bind="text:$index()+1")
+            td
+              // ko if: $data.hasOwnProperty("logo")
+              img(data-bind="attr:{src: `https://cdn2.rebbl.net/${logo}`}" style="width:32px;margin-right:15px")
+              // /ko
+              a(data-bind="text:clan,attr:{href:`/clan/clan/${clan}`}")
+            // ko if: $root.usePoints() && $data.hasOwnProperty("clanPoints")
+            td.text-center(data-bind="text:clanPoints")
+            td.text-center(data-bind="text:clanWins")
+            td.text-center(data-bind="text:clanDraws")
+            // /ko
+            // ko if: !$root.usePoints()
+            td.text-center(data-bind="text:clanWins")
+            td.text-center(data-bind="text:clanLosses")
+            // /ko
+            td.text-center(data-bind="text:matchWins")
+            td.text-center(data-bind="text:matchLosses")
+            td.text-center(data-bind="text:(matchWins - matchLosses)")
+            td.text-center(data-bind="text:tdFor")
+            td.text-center(data-bind="text:tdAgainst")
+            td.text-center(data-bind="text:tdDiff")
+          // /ko
     // /ko
     // /ko
 

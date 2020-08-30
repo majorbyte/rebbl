@@ -8,11 +8,11 @@ block append vars
 block content
   -let stadiumDescription = {"astrogranit":"+1 on Armour rolls when a player falls while going for it.", "bazar":"During the Inducements phase, both teams receive a Wizard at no cost", "elfturf":"-1 on Armour rolls when a player falls while going for it.", "foodarea":"The 'Throw a Rock' and 'Get the Ref' kick-off events are cancelled.","nuffle":"During the Inducements phase, Star Players cost 50k less","refereearea":"During the Inducements phase, both teams receive a Bribe at no cost.","refreshmentarea":"+1 on Injury rolls when a player is pushed off the pitch (crowdsurf)", "roof":"The weather always starts as 'Nice' and the 'Changing Weather' kick-off event is cancelled.","securityarea":"The 'Riot' and 'Pitch Invasion' Kick-off events are cancelled.","viparea":"Double all gains and losses of Fan Factor." }
   div(class=`container`)
-    div(class="row col-12")
-      div(class="ScheduleMatchList")
-        div(class="MatchSchedule")
-          div(class="MatchRow MatchRow-match MatchRow-header" )= `${match.leaguename} - ${match.competitionname} : ${match.started}`
-          div(class="MatchRow MatchRow-match" )
+    div(class="row")
+      div(class="ScheduleMatchList col-12")
+        div(class="MatchSchedule row")
+          div(class="MatchRow MatchRow-match MatchRow-header col-12" )= `${match.leaguename} - ${match.competitionname} : ${match.started}`
+          div(class="MatchRow MatchRow-match col-12" )
             div(class="MatchRow-team")
               div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                 - if (match.structstadium && match.structstadium.length > 0)
@@ -67,36 +67,38 @@ block content
                       a(href=`/coach/${match.coaches[1].idcoach}`)= match.coaches[1].coachname
                     div(class="TeamLabel-coach" title="cash earned: " + match.teams[1].cashearned + "; spiraling expenses: " +match.teams[1].spirallingexpenses)= "winnings: " + (match.teams[1].cashearned - match.teams[1].spirallingexpenses)
                     div(class="TeamLabel-coach ")= match.teams[1].popularitygain + " Fan Factor"
-          br
-          table(class="team-stats")
-            thead
-              tr
-                th Name
-                th TV
-                th(title="Spent on inducements") Idc
-                th Supporters
-                th Possession (%)
-                th Comp
-                th Pass (m)
-                th INT
-                th Rush (m)
-                th
-                th BLK
-                th AVBrk+
-                th AVBrk-
-                th KO+
-                th KO-
-                th CAS+
-                th CAS-
-                th Kill+
-                th Kill-
-                th Surf
-                th Expulsion
+          div(class="col-12")
+            br
+          div(class="table-responsive-xl col-12")
+            table(class="team-stats")
+              thead
+                tr
+                  th Name
+                  th TV
+                  th(title="Spent on inducements") Idc
+                  th Supporters
+                  th Possession (%)
+                  th Comp
+                  th Pass (m)
+                  th INT
+                  th Rush (m)
+                  th
+                  th BLK
+                  th AVBrk+
+                  th AVBrk-
+                  th KO+
+                  th KO-
+                  th CAS+
+                  th CAS-
+                  th Kill+
+                  th Kill-
+                  th Surf
+                  th Expulsion
 
 
-            tbody
-              each team, x in match.teams
-                include teamoverview.pug
+              tbody
+                each team, x in match.teams
+                  include teamoverview.pug
 
           each team in match.teams
             include team.pug

@@ -8,11 +8,12 @@ block content
     div(class="/*TexturedBackground TexturedBackground--light-primary*/")
       div(class="container navcontainer" data-index="0")
         div(class="ScheduleMatchList")
-          div(class="MatchSchedule")
+          div(class="MatchSchedule row")
             each match, index in matches.sort(function(a,b){return a.match_id < b.match_id ? 1 : -1;})
-              br
-              div(class="MatchRow MatchRow-match MatchRow-header" )= match.competition + ' - ' + match.round
-              div(class="MatchRow MatchRow-match" )
+              div(class="col-12")
+                br
+              div(class="MatchRow MatchRow-match MatchRow-header col-12" )= match.competition + ' - ' + match.round
+              div(class="MatchRow MatchRow-match col-12" )
 
                 - let url = match.match_uuid ? "/rebbl/match/" + match.match_uuid : "#"
                 a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")

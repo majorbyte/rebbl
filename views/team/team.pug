@@ -31,106 +31,112 @@ block content
     br
     div(class="clearfix")
     div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Current TV
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:value")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Fan Factor
-      div(class="col col-1")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:popularity")
-      div(class="col col-3")
+      div(class="col-md-2 col-6")
         strong Stadium name
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:stadiumname")
-    div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Next match TV
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:nextMatchTV") 
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Rerolls
-      div(class="col col-1")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:rerolls") 
-      div(class="col col-3")
+      div(class="col-md-2 col-6")
         strong Total cash earned
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:stats.cashearned/1000 + 'k'")
-    div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Actual TV
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:actualTV")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Cheerleader
-      div(class="col col-1")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:cheerleaders")
-      div(class="col col-3")
+      div(class="col-md-2 col-6")
         strong Spiralling Expenses
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:stats.spirallingexpenses/1000  + 'k'")
-    div(class="row" style="margin-left:0px")
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Cash
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:cash/1000 + 'k'")  
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong Assistant
-      div(class="col col-1")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:assistantcoaches")
-      div(class="col col-3")
+      div(class="col-md-2 col-6")
         strong Audience
-      div(class="col col-2")
+      div(class="col-md-2 col-6")
         strong(data-bind="text:stats.nbsupporters/1000 + 'k'")
 
-    table(class="table table-striped") 
-      thead(class="headerText")
-        tr 
-          th
-          th tackles
-          th injuries
-          th stuns
-          th ko
-          th CAS
-          th dead
-          th running (m)
-          th passing (m)
-          th passes
-          th interc.
-          th touchdowns
-          th surfs
-      tbody
-        tr
-          td inflicted
-          td(data-bind="text:stats.inflictedtackles")
-          td(data-bind="text:stats.inflictedinjuries")
-          td(data-bind="text:stats.inflictedstuns")
-          td(data-bind="text:stats.inflictedko")
-          td(data-bind="text:stats.inflictedcasualties")
-          td(data-bind="text:stats.inflicteddead")
-          td(data-bind="text:stats.inflictedmetersrunning")
-          td(data-bind="text:stats.inflictedmeterspassing")
-          td(data-bind="text:stats.inflictedpasses")
-          td(data-bind="text:stats.inflictedinterceptions")
-          td(data-bind="text:stats.inflictedtouchdowns")
-          td(data-bind="text:stats.inflictedpushouts")
-        tr  
-          td sustained
-          td(data-bind="text:stats.sustainedtackles")
-          td(data-bind="text:stats.sustainedinjuries")
-          td(data-bind="text:stats.sustainedstuns")
-          td(data-bind="text:stats.sustainedko")
-          td(data-bind="text:stats.sustainedcasualties")
-          td(data-bind="text:stats.sustaineddead")
-          td(data-bind="text:stats.sustainedmetersrunning")
-          td(data-bind="text:stats.sustainedmeterspassing")
-          td(data-bind="text:stats.sustainedpasses")
-          td(data-bind="text:stats.sustainedinterceptions")
-          td(data-bind="text:stats.sustainedtouchdowns")
-          td(data-bind="text:stats.sustainedpushouts")
+    div(class="row" style="margin-left:0px")
+      div(class="col-12 table-responsive-md")
+        table(class="table table-striped") 
+          thead(class="headerText")
+            tr 
+              th
+              th(class="d-none d-md-table-cell") tackles
+              th(class="d-md-none") Tckl
+              th(class="d-none d-md-table-cell") injuries
+              th(class="d-md-none") Inj
+              th stuns
+              th ko
+              th CAS
+              th dead
+              th(class="d-none d-md-table-cell") running (m)
+              th(class="d-md-none") Run (m)
+              th(class="d-none d-md-table-cell") passing (m)
+              th(class="d-md-none") Pas (m)
+              th(class="d-none d-md-table-cell") passes
+              th(class="d-md-none") Pas
+              th(class="d-none d-md-table-cell") interc.
+              th(class="d-md-none") Int
+              th(class="d-none d-md-table-cell") touchdowns
+              th(class="d-md-none") TDs
+              th surfs
+          tbody
+            tr
+              td inflicted
+              td(data-bind="text:stats.inflictedtackles")
+              td(data-bind="text:stats.inflictedinjuries")
+              td(data-bind="text:stats.inflictedstuns")
+              td(data-bind="text:stats.inflictedko")
+              td(data-bind="text:stats.inflictedcasualties")
+              td(data-bind="text:stats.inflicteddead")
+              td(data-bind="text:stats.inflictedmetersrunning")
+              td(data-bind="text:stats.inflictedmeterspassing")
+              td(data-bind="text:stats.inflictedpasses")
+              td(data-bind="text:stats.inflictedinterceptions")
+              td(data-bind="text:stats.inflictedtouchdowns")
+              td(data-bind="text:stats.inflictedpushouts")
+            tr  
+              td sustained
+              td(data-bind="text:stats.sustainedtackles")
+              td(data-bind="text:stats.sustainedinjuries")
+              td(data-bind="text:stats.sustainedstuns")
+              td(data-bind="text:stats.sustainedko")
+              td(data-bind="text:stats.sustainedcasualties")
+              td(data-bind="text:stats.sustaineddead")
+              td(data-bind="text:stats.sustainedmetersrunning")
+              td(data-bind="text:stats.sustainedmeterspassing")
+              td(data-bind="text:stats.sustainedpasses")
+              td(data-bind="text:stats.sustainedinterceptions")
+              td(data-bind="text:stats.sustainedtouchdowns")
+              td(data-bind="text:stats.sustainedpushouts")
 
     br
-    nav
+    nav(class="col-12")
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
         a(class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" data-bind="click:selectCurrent") Current &nbsp;
           //ko if: loadingCurrent
@@ -153,10 +159,10 @@ block content
           i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko          
     div(class="tab-content" id="tabContent")
-      div(class="tab-pane fade show active col col-12" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
+      div(class="tab-pane fade col-12 show active table-responsive-md" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
         // ko template: { name: 'playerList' }
         // /ko
-      div(class="tab-pane fade show col col-12" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab")
+      div(class="tab-pane fade col-12 show table-responsive-md" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab")
         table(class="table table-striped")
           thead(class="headerText")
             tr
@@ -178,7 +184,7 @@ block content
               td(data-bind="text:loss")
               td(data-bind="text:tddiff")
             // /ko
-      div(class="tab-pane fade show col col-12" id="nav-matches" role="tabpanel" aria-labelledby="nav-matches-tab")
+      div(class="tab-pane fade col-12 show table-responsive-md" id="nav-matches" role="tabpanel" aria-labelledby="nav-matches-tab")
         //ko foreach: matches.sort(function(a,b){return a.match.id < b.match.id ? 1 : -1;})
         //ko with: $data.match
         br
@@ -233,7 +239,7 @@ block content
           th(scope="col") AV
           th(scope="col" data-bind="click:$root.sortGamesPlayed" style="color:#ff8900;cursor:pointer") GP
           th(scope="col") MVP
-          th(scope="col") Skills
+          th(scope="col" style="min-width:160px") Skills
           th(scope="col") CAS
           th(scope="col" data-bind="click:$root.sortXp" style="color:#ff8900;cursor:pointer" ) SPP
           th(scope="col") Value
