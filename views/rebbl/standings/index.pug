@@ -14,7 +14,7 @@ block navigation
       | Season
     div
       .dropdown-menu.bg-dark(aria-labelledby='navbarSeason')
-        //ko foreach: seasons
+        //ko foreach: seasons.slice(0).reverse()
         a.dropdown-item.text-light(data-bind="text:$data,click:$root.loadSeason.bind($root)")
         // /ko
 
@@ -30,56 +30,60 @@ block content
       a(data-bind="text:$root.getAdmin($data[0].competitionId ? $data[0].competitionId:  0),attr:{href:$root.adminUrl($data[0].competitionId ? $data[0].competitionId : 0)}" class="highlight")
       // /ko
     div(class="season-table" style="margin-bottom:40px;")  
-      div(class="row col-12 " style="border-bottom: 3px solid #bdbcbccf;")
-        div(class="row col-6" style="font-size:1.25em")
-          div(class="col-1" ) #
-          div(class="col" ) Coach
-          div(class="col" ) Team
-        div(class="col-2" style="font-size:1.25em") Race
-        div(class="row col-4" style="font-size:1.25em")
-          div(class="col-2" ) Pts.
-          div(class="col-2") W  
-          div(class="col-2") D  
-          div(class="col-2") L
-          div(class="col-2") P
-          div(class="col-2 text-right") ΔTD
+      div(class="row" style="border-bottom: 3px solid #bdbcbccf;")
+        div(class="col-8 col-md-6" style="font-size:1.25em")
+          div(class="row")
+            div(class="col-1" ) #
+            div(class="col" ) Coach
+            div(class="col" ) Team
+        div(class="col-2 d-none d-md-block" style="font-size:1.25em") Race
+        div(class="col-4" style="font-size:1.25em")
+          div(class="row")
+            div(class="col-4 col-md-2" ) Pts.
+            div(class="col-2 d-none d-md-block") W  
+            div(class="col-2 d-none d-md-block") D  
+            div(class="col-2 d-none d-md-block") L
+            div(class="col-4 col-md-2") P
+            div(class="col-4 col-md-2 text-right") ΔTD
       //ko foreach: $data
-      div(class="row col-12 season-table-row")
-        div(class="row col-6")
-          // ko if: position > 0 
-          div(class="col-1" data-bind="text:position")
-          // /ko
-          // ko if: position === 0 
-          div(class="col-1")
-            // ko if: acceptedTicket
-            i(class="fa fa-thumbs-o-up" title="ticket accepted")
+      div(class="row season-table-row")
+        div(class="col-8 col-md-6")
+          div(class="row")
+            // ko if: position > 0 
+            div(class="col-1" data-bind="text:position")
             // /ko
-            // ko if: !acceptedTicket
-            i(class="fa fa-ticket" title="go accept your ticket!")
+            // ko if: position === 0 
+            div(class="col-1")
+              // ko if: acceptedTicket
+              i(class="fa fa-thumbs-o-up" title="ticket accepted")
+              // /ko
+              // ko if: !acceptedTicket
+              i(class="fa fa-ticket" title="go accept your ticket!")
+              // /ko
             // /ko
-          // /ko
-          div(class="col" style=";overflow:hidden") 
-            a(data-bind="text: name, attr:{href:`/coach/${id}`}")
-            // ko if: $root.isDonator($data.name)
-            | &nbsp; &nbsp; 
-            img(src="/images/gold.png" style="width:25px;float:right;margin-top: 2px;" title="donator")
-            // /ko
-            // ko with: $root.getTrophy($data.name)
-            // ko if:$data
-            | &nbsp; &nbsp; 
-            img(data-bind="attr:{src:`https://cdn2.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
-            // /ko
-            // /ko
-          div(class="col" style=";overflow:hidden") 
-            a(data-bind="text: teamName(),attr:{href:`/team/${teamId}`}")
-        div(class="col" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
-        div(class="row col-4" )
-          div(class="col-2" data-bind="text:points")
-          div(class="col-2" data-bind="text:win")
-          div(class="col-2" data-bind="text:draw")
-          div(class="col-2" data-bind="text:loss")
-          div(class="col-2" data-bind="text:games")
-          div(class="col-2 text-right" data-bind="text:tddiff")
+            div(class="col" style=";overflow:hidden") 
+              a(data-bind="text: name, attr:{href:`/coach/${id}`}")
+              // ko if: $root.isDonator($data.name)
+              | &nbsp; &nbsp; 
+              img(src="/images/gold.png" style="width:25px;float:right;margin-top: 2px;" title="donator")
+              // /ko
+              // ko with: $root.getTrophy($data.name)
+              // ko if:$data
+              | &nbsp; &nbsp; 
+              img(data-bind="attr:{src:`https://cdn2.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
+              // /ko
+              // /ko
+            div(class="col" style=";overflow:hidden") 
+              a(data-bind="text: teamName(),attr:{href:`/team/${teamId}`}")
+        div(class="col-2 d-none d-md-block" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
+        div(class="col-4" )
+          div(class="row")
+            div(class="col-4 col-md-2" data-bind="text:points")
+            div(class="col-2 d-none d-md-block" data-bind="text:win")
+            div(class="col-2 d-none d-md-block" data-bind="text:draw")
+            div(class="col-2 d-none d-md-block" data-bind="text:loss")
+            div(class="col-4 col-md-2" data-bind="text:games")
+            div(class="col-4 col-md-2 text-right" data-bind="text:tddiff")
       // ko if: $index()+1 === $root.tickets[$parentContext.$index()]
       div(class="row col-12 season-table-row" style="padding:0.5em 0")
         div(class="col-1 Standings-divider--flex")

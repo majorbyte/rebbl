@@ -189,6 +189,13 @@ p {
   }
 }
 
+@media (max-width: 768px) {
+  .navbar-collapse {
+    max-height: calc(100vh - 40px);
+    overflow-y:auto;
+  }
+}
+
 .row {
   margin-left: 0px;
   margin-right: 0px;
@@ -1252,7 +1259,7 @@ main {
 @media (max-height: 768px) {
   .dropdown-menu{
     max-height:450px;
-    /* overflow-y: scroll; */
+    overflow-y: scroll;
  }
 }
 
