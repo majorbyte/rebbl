@@ -18,7 +18,7 @@ block navigation
           li( class="nav-item dropdown")
             a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
             div(class="dropdown-menu" aria-labelledby="dropdownSeason")
-              //ko foreach: seasons
+              //ko foreach: seasons.slice(0).reverse()
               a(class="dropdown-item " data-bind="text:$data,click:$root.loadSeason.bind($root)")
               // /ko
 

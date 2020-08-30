@@ -5,36 +5,37 @@
   h2= team.teamname
 
 hr
-table(class="match-stats-table" style="width:100%")
-  colgroup
-    col(span="4")
-    col(class="odd")
-    col(class="even")
-    col(class="odd")
-    col(class="even")
-    col(class="odd")
-    col(class="even")
-    col(class="odd")
-  thead
-    tr
-      th(class="align-center" style="width:50px;") #
-      th(class="align-left") Player
-      th(class="align-left") Position
-      th(class="align-left") Skills
-      th(class="align-center" style="width:55px") INJ
-      th(class="align-center") Comp
-      th(class="align-center") TD
-      th(class="align-center") INT
-      th(class="align-center") CAS
-      th(class="align-center") MVP
-      th(class="align-center") SPP
-      th(class="align-center") Σ SPP
-  - let index = 0
-  tbody
-    - let isAdminned = team.mvp != 1
-    - let pageSkills = []
-    each player in team.roster
-      -if (player.type)
-        - let playerName = (player.number === 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : player.name) + ""
-        - let playerPos  = player.number > 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
-        include player.pug
+div(class="col-12 table-responsive-md")
+  table(class="match-stats-table" style="width:100%")
+    colgroup
+      col(span="4")
+      col(class="odd")
+      col(class="even")
+      col(class="odd")
+      col(class="even")
+      col(class="odd")
+      col(class="even")
+      col(class="odd")
+    thead
+      tr
+        th(class="align-center" style="width:50px;") #
+        th(class="align-left") Player
+        th(class="align-left") Position
+        th(class="align-left" style="min-width:160px") Skills
+        th(class="align-center" style="width:55px") INJ
+        th(class="align-center") Comp
+        th(class="align-center") TD
+        th(class="align-center") INT
+        th(class="align-center") CAS
+        th(class="align-center") MVP
+        th(class="align-center") SPP
+        th(class="align-center") Σ SPP
+    - let index = 0
+    tbody
+      - let isAdminned = team.mvp != 1
+      - let pageSkills = []
+      each player in team.roster
+        -if (player.type)
+          - let playerName = (player.number === 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : player.name) + ""
+          - let playerPos  = player.number > 0 ? player.type.split('_')[1].replace(/([A-Z])/g, ' $1') : ""
+          include player.pug
