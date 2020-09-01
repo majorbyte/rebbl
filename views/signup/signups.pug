@@ -22,57 +22,54 @@ block content
           div(class="btn btn-outline-primary" id="greenhorn" data-bind="click: toggleGreenhorn, css: greenhorn() ? 'active':''") Greenhorn
 
         - let races = ["Amazon","Bretonnia","Chaos","Chaos Dwarf","Dark Elf","Dwarf","Goblin","Halfling","High Elf","Human","Khemri","Kislev","Lizardman","Necromantic","Norse","Nurgle","Ogre","Orc","Pro Elf","Skaven","Undead","Underworld","Vampire","Wood Elf"]
-        div(style="grid-template-columns: auto;display:grid;clear:both")
+        div(style="grid-template-columns: auto;display:grid;clear:both;" class="table-responsive mb-3")
           div(class="table-striped TeamLabel-info")
             div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
-              div(style="display: table-cell;width: 100px;" class="Standings-header") League
+              div(style="display: table-cell;min-width:120px" class="Standings-header sticky_column") League
               for race in races
-                div(style="display: table-cell" class="Standings-header" title=race)
+                div(style="display: table-cell" class="Standings-header text-center" title=race)
                   img.raceIcon(src=`https://cdn2.rebbl.net/images/races/${raceIds.indexOf(race)}.png`) 
             // ko foreach: {data: leagues, as: 'league'}
             div(class="TableRow")
-              div(style="display: table-cell;width: 100px;" )
+              div(style="display: table-cell;min-width:120px" class="sticky_column" )
                 span(class="highlight" data-bind="text: league") 
                 span(class="highlight" style="float:right;margin-right:15px" data-bind="text: $root.getTotal(league)") 
               // ko foreach: {data: $root.races, as: 'race'}
-              div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.getRaceCount(league, race) ")
+              div(style="white-space: nowrap;display: table-cell"  class="text-center" data-bind="text: $root.getRaceCount(league, race) ")
               // /ko
             // /ko
             div(class="TableRow")
-              div(style="display: table-cell;width: 100px;") Total
+              div(style="display: table-cell;min-width:120px" class="sticky_column") Total
                 span(class="highlight" style="float:right;margin-right:15px" data-bind="text: $root.filteredUsers().length" )
               // ko foreach: {data: $root.races, as: 'race'}
-              div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.race.trim() === race.trim() ? p + 1 : p; }, 0)")
+              div(style="white-space: nowrap;display: table-cell" class="text-center" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.race.trim() === race.trim() ? p + 1 : p; }, 0)")
               // /ko
-        br
-        div(style="grid-template-columns: auto;display:grid;clear:both;width:640px;")
-        div(class="table-striped TeamLabel-info" style="width:640px")
-          div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
-            div(style=";display: table-cell;width: 100px;" class="Standings-header") League
-            // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
-            div(style="display: table-cell;width: 10px;;" class="Standings-header" data-bind="text:d")
+        div(style="grid-template-columns: auto;display:grid;clear:both" class="table-responsive mb-3")
+          div(class="table-striped TeamLabel-info" style="width:640px" )
+            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
+              div(style=";display: table-cell;min-width:110px" class="Standings-header sticky_column") League
+              // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
+              div(style="display: table-cell;" class="Standings-header" data-bind="text:d")
+              // /ko
+              div(style="display: table-cell;" class="Standings-header" ) GHC
+            // ko foreach: {data: leagues, as: 'league'}
+            div(class="TableRow" )
+              div(style="display: table-cell;min-width:110px" data-bind="text:league" class="sticky_column")
+              // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
+              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0)")
+              // /ko
+              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.filteredUsers().reduce(function(p, c){ return c.league === league && c.greenHorn ? p+1 : p; }, 0)")
             // /ko
-            div(style="display: table-cell;width: 10px;;" class="Standings-header" ) GHC
-          // ko foreach: {data: leagues, as: 'league'}
-          div(class="TableRow" )
-            div(style="display: table-cell;width: 100px;" data-bind="text:league")
-            // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
-            div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0)")
-            // /ko
-            div(style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text:$root.filteredUsers().reduce(function(p, c){ return c.league === league && c.greenHorn ? p+1 : p; }, 0)")
-          // /ko
-          div(class="TableRow")
-            div(style="display: table-cell;width: 100px;") Total
-            // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
-            div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.users().reduce(function(p, c){ return c.saveType === d ? p+1 : p; }, 0)")
-            // /ko
-            div(class="highlight" style="white-space: nowrap;display: table-cell;width: 10px;" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
-        br
-        br
-        div(style="grid-template-columns: auto;clear:both")
+            div(class="TableRow")
+              div(style="display: table-cell;min-width:110px" class="sticky_column") Total
+              // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
+              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.saveType === d ? p+1 : p; }, 0)")
+              // /ko
+              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
+        div(style="grid-template-columns: auto;clear:both" class="table-responsive mb-3")
           div(class="table-striped TeamLabel-info")
             div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
-              div(style="white-space: nowrap;display: table-cell;width: 250px;" class="Standings-header") Coach
+              div(style="white-space: nowrap;display: table-cell;width: 250px;" class="Standings-header sticky_column") Coach
               div(style="white-space: nowrap;display: table-cell;width: 350px;" class="Standings-header") Team
               div(style="white-space: nowrap;display: table-cell;width: 160px;" class="Standings-header") TV
               div(style="white-space: nowrap;display: table-cell;width: 160px;" class="Standings-header") Race
@@ -81,7 +78,7 @@ block content
               div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") Timezone
             // ko foreach:{data: filteredUsers, as:'signup'}
             div(class="TableRow")
-              div(style="white-space: nowrap;display: table-cell;width: 250px;")
+              div(style="white-space: nowrap;display: table-cell;width: 250px;" class="sticky_column")
                 a( data-bind="text:signup.coach, attr:{href:'/coach/'+encodeURIComponent(signup.coach)+'/details'}")
               div(style="white-space: nowrap;display: table-cell;width: 350px;")
                 //ko if: signup.teamId
