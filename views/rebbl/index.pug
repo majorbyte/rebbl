@@ -278,17 +278,17 @@ block content
             - for(var x=0; x<4;x++)
               div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" )
                 for match,index in data.rebbl.slice(x*5,5*x + 5)
-                  div(class="col-12 matchDiv")    
+                  div(class="col-12 matchDiv p-1")    
                     -let url=`/${urlMain}/match/${match.match_uuid}`
                     a(href=url class="MatchRow-contentWrapper" target="_blank")
                       div(class="row col-12 no-gutters" style="margin: 0 auto;")
                         div(class="col-md-1 d-none d-md-block no-gutters" style="text-align:center") 
                           img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
-                        div(class="col-md-3 col-4  no-gutters")
+                        div(class="col-md-3 col-4 no-gutters")
                           div(class="col-md-12 no-gutters" style="font-size:16px")
-                            span(class="pull-left")= match.opponents[0].team.name
-                            br
-                            span(class="TeamLabel-coach pull-left")= match.opponents[0].coach.name
+                            div(class="row")
+                              div(class="col-12")= match.opponents[0].team.name
+                              div(class="col-12 TeamLabel-coach")= match.opponents[0].coach.name
                         div(class="col-4 no-gutters")
                           div(class="col-5 row no-gutters"  style="margin:0 auto;text-align:center")
                             div(class="col-5" style="font-size:1.25rem;text-align:center") 
@@ -304,12 +304,12 @@ block content
                                 span= match.opponents[1].team.score
                         div(class="col-md-3 col-4 no-gutters")
                             div(class="col-md-12 no-gutters" style="font-size:16px")
-                              span(class="pull-right" )= match.opponents[1].team.name
-                              br
-                              span(class="TeamLabel-coach pull-right")= match.opponents[1].coach.name        
+                              div(class="row")
+                                div(class="col-12 text-right" )= match.opponents[1].team.name
+                                div(class="col-12 TeamLabel-coach text-right")= match.opponents[1].coach.name        
                         div(class="col-md-1 d-none d-md-block no-gutters" style="text-align:center")
                           img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)        
-                    div(class="divSlider left row")
+                    div(class="divSlider left row p-1")
                       -let league = match.league
                       div(class="col-2")
                         -if (match.league.toLowerCase() === 'rebbl - big o')
@@ -352,7 +352,7 @@ block content
             - for(var x=0; x<4;x++)
               div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" )
                 for match,index in data.sides.slice(x*5,5*x + 5)
-                  div(class="col-12 matchDiv")    
+                  div(class="col-12 matchDiv p-1")    
                     -let url=`/${urlMain}/match/${match.match_uuid}`
                     a(href=url class="MatchRow-contentWrapper" target="_blank")
                       div(class="row col-md-12 no-gutters" style="margin: 0 auto;")
@@ -360,9 +360,9 @@ block content
                           img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
                         div(class="col-md-3 col-4  no-gutters")
                           div(class="col-md-12 no-gutters" style="font-size:16px")
-                            span(class="pull-left")= match.opponents[0].team.name
-                            br
-                            span(class="TeamLabel-coach pull-left")= match.opponents[0].coach.name
+                            div(class="row")
+                              div(class="col-12")= match.opponents[0].team.name
+                              div(class="TeamLabel-coach col-12")= match.opponents[0].coach.name
                         div(class="col-4 no-gutters")
                           div(class="col-5 row no-gutters"  style="margin:0 auto;text-align:center")
                             div(class="col-5" style="font-size:1.25rem;text-align:center") 
@@ -378,12 +378,12 @@ block content
                                 span= match.opponents[1].team.score
                         div(class="col-md-3 col-4 no-gutters")
                             div(class="col-md-12 no-gutters" style="font-size:16px")
-                              span(class="pull-right" )= match.opponents[1].team.name
-                              br
-                              span(class="TeamLabel-coach pull-right")= match.opponents[1].coach.name        
+                              div(class="row")
+                                div(class="col-12 text-right" )= match.opponents[1].team.name
+                                div(class="col-12 TeamLabel-coach text-right")= match.opponents[1].coach.name        
                         div(class="col-md-1 d-none d-md-block no-gutters" style="text-align:center")
                           img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`)   
-                    div(class="divSlider right row")
+                    div(class="divSlider right row p-1")
                       -let league = match.league
                       div(class="col-9")
                         div
@@ -433,15 +433,15 @@ block content
               - for(var x=0; x<l;x++)
                 div(class="carousel-item " + (x === 0 ? "active" : "") style="background-color:unset" )
                   for match,index in data.upcoming.slice(x*5,5*x + 5)      
-                    div(class="col-12")    
+                    div(class="col-12 p-1")    
                       -let url=`/${company === "" ? "rebbl" : company}/match/unplayed/${match.contest_id}`
                       div(class="row col-md-12 no-gutters" style="margin: 0 auto;")
                         a(href=url class="col-md-11 MatchRow-contentWrapper" target="_blank")
                           div(class="col-4  no-gutters")
                             div(class="col-md-12 no-gutters" style="font-size:16px")
-                              span(class="pull-left")= match.opponents[0].team.name
-                              br
-                              span(class="TeamLabel-coach pull-left")= match.opponents[0].coach.name
+                              div(class="row")
+                                div(class="col-12")= match.opponents[0].team.name
+                                div(class="col-12 TeamLabel-coach")= match.opponents[0].coach.name
                           div(class="row col-4 no-gutters")
                             div(class="col-md-2 d-none d-md-block" style="font-size:1rem;text-align:center") 
                               img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`)
@@ -451,9 +451,9 @@ block content
                               img(src=`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`) 
                           div(class="col-4 no-gutters")
                               div(class="col-md-12 no-gutters" style="font-size:16px")
-                                span(class="pull-right" )= match.opponents[1].team.name
-                                br
-                                span(class="TeamLabel-coach pull-right")= match.opponents[1].coach.name        
+                                div(class="row")
+                                  div(class="col-12 text-right" )= match.opponents[1].team.name
+                                  div(class="col-12 TeamLabel-coach text-right")= match.opponents[1].coach.name        
                         div(class="col-md-1 no-gutters")
                           -if (match.stream)
                             a(target="_blank" href=match.stream.url title=match.stream.name)
