@@ -50,24 +50,24 @@ block body
           h1(class="display-3") REBBL
 
   footer(class="footer")
-    div( style="float:left;")
-      p(style="padding:10px") &nbsp; © majorbyte 2020 &nbsp; &nbsp; &nbsp;
-    div( style="float:right;")
-      span(class="margin-right:7px") Donate:
-      a(href="https://www.paypal.me/rebblnet" target="_blank")
-        img(src="https://cdn2.rebbl.net/images/donate.png" title="Donate")  
-      | &nbsp; &nbsp; &nbsp; 
-      a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
-    div( style="margin:0 auto;width:250px")
-      span(class="margin-right:7px") 
-      a(href="/rebbl" target="_blank" title="REBBL home")
-        img(src="https://cdn2.rebbl.net/images/rebbl.png" )  
-      a(href="/rebbrl" title="REBBRL home")
-        img(src="https://cdn2.rebbl.net/images/rebbrl.png" )  
-      a(href="https://imperium.rebbl.net" title="Imperium home")
-        img(src="https://cdn2.rebbl.net/images/imperium.png")  
-      a(href="/clan" ) 
-        img(src="https://cdn2.rebbl.net/images/clan.png" )  
+    div(class="container-fluid")
+      div(class="row")
+        div(class="col-sm text-center text-sm-left m-2")
+          p(class="p-2") © majorbyte 2020
+        div(class="col-sm text-center m-2")
+          a(class="m-1" href="/rebbl" target="_blank" title="REBBL home")
+            img(src="https://cdn2.rebbl.net/images/rebbl.png" )  
+          a(class="m-1" href="/rebbrl" title="REBBRL home")
+            img(src="https://cdn2.rebbl.net/images/rebbrl.png" )  
+          a(class="m-1" href="https://imperium.rebbl.net" title="Imperium home")
+            img(src="https://cdn2.rebbl.net/images/imperium.png")  
+          a(class="m-1" href="/clan" ) 
+            img(src="https://cdn2.rebbl.net/images/clan.png" )  
+        div(class="col-sm text-center text-sm-right m-2")
+          span(class="p-2") Donate:
+          a(href="https://www.paypal.me/rebblnet" target="_blank")
+            img(src="https://cdn2.rebbl.net/images/donate.png" title="Donate")  
+          a(class="p-2" href="https://github.com/majorbyte/rebbl" ) source
   - if (process.env.NODE_ENV === 'production')
     - if ( fullJquery)
       script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.full.min.js")
