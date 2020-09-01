@@ -936,8 +936,21 @@ a:focus,a:hover {
 }
 
 .table-striped>*:nth-child(even) {
-  background-color:#4443419c;
+  background-color:#393a3b;
   width:100%;
+}
+
+.sticky_column {
+  position: sticky;
+  left:-2px;
+}
+
+.table-striped>*:nth-child(even) .sticky_column {
+  background-color: #393a3b;
+}
+
+.table-striped>*:nth-child(odd) .sticky_column {
+  background-color: #272b30;
 }
 
 .Standings table>tbody>tr>td {
