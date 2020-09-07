@@ -185,6 +185,63 @@ block content
               td(data-bind="text:tddiff")
             // /ko
       div(class="tab-pane fade col-12 show table-responsive-md" id="nav-matches" role="tabpanel" aria-labelledby="nav-matches-tab")
+        .row.mt-4
+          div(class="col-12 col-md") &nbsp;
+          div(class="col-4 col-md-2 text-center") 
+            b Wins
+          div(class="col-4 col-md-2 text-center") 
+            b Draws
+          div(class="col-4 col-md-2 text-center") 
+            b Losses
+          div(class="col d-none d-md-block") &nbsp;
+          div(class="w-100")
+          div(class="col-12 col-md") Total
+          div(class="col-4 col-md-2 text-center mb-2")
+            b(data-bind="text:model.stats.win_loss.win")
+            b 
+              |(
+              span(data-bind="text:model.stats.win_loss.ratio('win')")
+              |%)
+          div(class="col-4 col-md-2 text-center mb-2")
+            b(data-bind="text:model.stats.win_loss.draw")
+            b 
+              |(
+              span(data-bind="text:model.stats.win_loss.ratio('draw')")
+              |%)
+          div(class="col-4 col-md-2 text-center mb-2")
+            b(data-bind="text:model.stats.win_loss.loss")
+            b 
+              |(
+              span(data-bind="text:model.stats.win_loss.ratio('loss')")
+              |%)
+          div(class="col d-none d-md-block mb-2") &nbsp;
+
+        div(class="col-12")
+          button(class="btn btn-primary btn-sm mb-2" type="button" data-toggle="collapse" data-target="#race_win_details" aria-expanded="false" aria-controls="race_win_details") Race Details
+        
+        div(data-bind="foreach: races" class="collapse" id="race_win_details")
+          div(class="row mb-2")
+            div(class="col-12 col-md" data-bind="text: name")
+            div(class="col-4 col-md-2 text-center")
+              b(data-bind="text:model.stats.win_loss.get_race(id).win")
+              b 
+                |(
+                span(data-bind="text:model.stats.win_loss.get_race(id).ratio('win')")
+                |%)
+            div(class="col-4 col-md-2 text-center")
+              b(data-bind="text:model.stats.win_loss.get_race(id).draw")
+              b 
+                |(
+                span(data-bind="text:model.stats.win_loss.get_race(id).ratio('draw')")
+                |%)
+            div(class="col-4 col-md-2 text-center")
+              b(data-bind="text:model.stats.win_loss.get_race(id).loss")
+              b 
+                |(
+                span(data-bind="text:model.stats.win_loss.get_race(id).ratio('loss')")
+                |%)
+            div(class="col d-none d-md-block") &nbsp;
+
         //ko foreach: matches.sort(function(a,b){return a.match.id < b.match.id ? 1 : -1;})
         //ko with: $data.match
         br
@@ -545,6 +602,49 @@ block scripts
       }
     }
 
+    function WinLossCounter() {
+      const counter = {
+        races: {},
+        win: ko.observable(0),
+        draw: ko.observable(0),
+        loss: ko.observable(0),
+      };
+      counter.get_race = function(id) {
+        this.races[id] = this.races[id] || WinLossCounter();
+        return this.races[id];
+      }
+
+      counter.all = ko.computed(function() {
+          return this.win() +  this.draw() + this.loss();
+      }, counter);
+      
+      counter.ratio = function(result) {
+        return ko.computed(function() {
+            if (this.all() > 0) {
+              return ((this[result]() * 100) / this.all()).toFixed(1);
+            }
+            return 0;
+          }, counter);
+        }
+      
+      counter.addWin = function(raceid) {
+        this.races[raceid] = this.races[raceid] || WinLossCounter();
+        this.races[raceid].win(this.races[raceid].win() + 1);
+        this.win(this.win() + 1);
+      };
+      counter.addLoss = function(raceid) {
+        this.races[raceid] = this.races[raceid] || WinLossCounter();
+        this.races[raceid].loss(this.races[raceid].loss() + 1);
+        this.loss(this.loss() + 1);
+      };
+      counter.addDraw = function(raceid) {
+        this.races[raceid] = this.races[raceid] || WinLossCounter();
+        this.races[raceid].draw(this.races[raceid].draw() + 1);
+        this.draw(this.draw() + 1);
+      };
+      return counter;
+    }
+
     class StatsModel{
       constructor(data){
         this.map(data);
@@ -584,6 +684,9 @@ block scripts
           this.sustainedstuns = data.sustainedstuns || 0;
           this.sustainedtackles = data.sustainedtackles || 0;
           this.sustainedtouchdowns = data.sustainedtouchdowns || 0;
+
+          // win/loss stats
+          this.win_loss = WinLossCounter();
          } 
       }
     }
@@ -801,6 +904,7 @@ block scripts
 
       xhr.onload  = function() {//Call a function when the state changes.
         model.matches =xhr.response;
+        countWinsAndLosses();
       }
 
       xhr.send();
@@ -922,7 +1026,54 @@ block scripts
       xhr.send();
     }
 
+    function countWinsAndLosses(){
+      model.matches.forEach((match) => {
+        let team, opponent;
+        match = match.match;
+        if (match.teams[0].teamname === model.name) {
+          team = match.teams[0];
+          opponent = match.teams[1];
+        } else {
+          team = match.teams[1];
+          opponent = match.teams[0];
+        }
+        const race = opponent.idraces;
+        if (team.score > opponent.score) {
+          model.stats.win_loss.addWin(race);
+        } else if (team.score < opponent.score) {
+          model.stats.win_loss.addLoss(race);
+        } else {
+          model.stats.win_loss.addDraw(race);
+        }
+      });
+    };
     let model = new TeamModel({});
+    let races = [
+      {id:13,name:"Amazon"}
+      ,{id:24,name:"Bretonnian"}
+      ,{id:8,name:"Chaos"}
+      ,{id:21,name:"Chaos Dwarf"}
+      ,{id:9,name:"Dark Elf"}
+      ,{id:2,name:"Dwarf"}
+      ,{id:14,name:"Elven Union"}
+      ,{id:6,name:"Goblin"}
+      ,{id:11,name:"Halfling"}
+      ,{id:15,name:"High Elf"}
+      ,{id:1,name:"Human"}
+      ,{id:16,name:"Khemri"}
+      ,{id:25,name:"Kislev"}
+      ,{id:5,name:"Lizardman"}
+      ,{id:17,name:"Necromantic"}
+      ,{id:12,name:"Norse"}
+      ,{id:18,name:"Nurgle"}
+      ,{id:4,name:"Orc"}
+      ,{id:19,name:"Ogre"}
+      ,{id:3,name:"Skaven"}
+      ,{id:10,name:"Undead"}
+      ,{id:22,name:"Underworld Denizens"}
+      ,{id:20,name:"Vampire"}
+      ,{id:7,name:"Wood Elf"}
+    ];
     ko.applyBindings(model);
     $(document).ready(function(){
 
