@@ -13,15 +13,15 @@ class Signup{
     this.router = express.Router();
     this.races = [
       {id:13,name:"Amazon"}
-      ,{id:24,name:"Bretonnian"}
+      ,{id:24,name:"Bretonnia"}
       ,{id:8,name:"Chaos"}
-      ,{id:21,name:"Chaos Dwarf"}
-      ,{id:9,name:"Dark Elf"}
+      ,{id:21,name:"ChaosDwarf"}
+      ,{id:9,name:"DarkElf"}
       ,{id:2,name:"Dwarf"}
-      ,{id:14,name:"Elven Union"}
+      ,{id:14,name:"ProElf"}
       ,{id:6,name:"Goblin"}
       ,{id:11,name:"Halfling"}
-      ,{id:15,name:"High Elf"}
+      ,{id:15,name:"HighElf"}
       ,{id:1,name:"Human"}
       ,{id:16,name:"Khemri"}
       ,{id:25,name:"Kislev"}
@@ -33,9 +33,9 @@ class Signup{
       ,{id:19,name:"Ogre"}
       ,{id:3,name:"Skaven"}
       ,{id:10,name:"Undead"}
-      ,{id:22,name:"Underworld Denizens"}
+      ,{id:22,name:"UnderworldDenizens"}
       ,{id:20,name:"Vampire"}
-      ,{id:7,name:"Wood Elf"}
+      ,{id:7,name:"WoodElf"}
     ];
   }
 
