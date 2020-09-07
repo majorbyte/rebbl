@@ -14,7 +14,7 @@ class CampingApi{
     });
 
     this.router.get('/summer', util.cache(10*60), async function(req, res){
-      res.json(await dataService.getStandings({competition:"REBBL Summer Camp"}));
+      res.json(await dataService.getStandings({competition:"REBBL Summer Camp",season:"season 2"}));
     });
 
 
