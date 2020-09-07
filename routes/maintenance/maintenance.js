@@ -53,8 +53,10 @@ class Maintenance{
         //await ts.checkTickets();
         //clanService.calculateStandings();
         //await maintenanceService.getContests(req.query.league);
+        await maintenanceService.getRebblData(req.query.league);
 
-        await maintenanceService.getContests(req.query.league);/*
+        //await maintenanceService.getContests(req.query.league);
+        /*
         const draft = await dataService.getDraft({
           house: 1,
           round: 3,
@@ -71,7 +73,7 @@ class Maintenance{
     });
 
     this.router.get('/update/cripple/calculate', util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) cripple.calculateStandings("REBBL Cripple Ladder - Season 4");
+      if (req.app.locals.cyanideEnabled) cripple.calculateStandings("REBBL Cripple Ladder - Season 5");
       res.redirect('/');
     });
 
