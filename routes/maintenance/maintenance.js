@@ -15,7 +15,7 @@ const
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , standingsService = require("../../lib/StandingsService.js")
-  //, ts = require("../../lib/TicketService.js")
+  , ts = require("../../lib/TicketService.js")
   , util = require('../../lib/util.js')
   , reddit = require("../../lib/RedditService.js");
 
@@ -50,10 +50,10 @@ class Maintenance{
       //cracker.fixRebuilders();
       try{
         //await perpetualService.getMatches();
-        //await ts.checkTickets();
+        await ts.checkTickets();
         //clanService.calculateStandings();
         //await maintenanceService.getContests(req.query.league);
-        await maintenanceService.getRebblData(req.query.league);
+        //await maintenanceService.getRebblData(req.query.league);
 
         //await maintenanceService.getContests(req.query.league);
         /*
@@ -93,7 +93,7 @@ class Maintenance{
       if (req.app.locals.cyanideEnabled){
         try{
           await maintenanceService.getRebblData(req.query.league);
-         // await ts.checkTickets();
+          await ts.checkTickets();
         }
         catch(e){
           loggingService.error(e);
