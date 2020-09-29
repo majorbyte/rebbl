@@ -33,7 +33,7 @@ block content
                 button(type="submit") Confirm
             - if (signup.type==="rebbl")
               h3= "REBBL Season 15 - " + signup.league
-              form(action="/signup/resign" method="post" )
+              //form(action="/signup/resign" method="post" )
                 br
                 button(type="submit"  class="btn btn-primary") Resign
             - else
@@ -41,7 +41,7 @@ block content
               form(action="/signup/resign-rebbrl" method="post")
                 br
                 button(type="submit"  class="btn btn-primary") Resign
-
+        //
           -if (signup.greenHorn)
             div
               h3 THE GREENHORN CUP
@@ -68,10 +68,17 @@ block content
             a(href="/signup/signups" class="highlighted-rules") here
             span &nbsp;to view all current signups
     - if (signups.length === 0)
-        h2= "Welcome back to REBBL, "
-          span(class="highlight")= user.coach
-          span !
-
+      h2= "Welcome back to REBBL, "
+        span(class="highlight")= user.coach
+        span !
+      .jumbotron
+        h1.display-4 REBBL SEASON 15 - RAMPUP
+        p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 15!
+        hr.my-2
+        p 
+          a(href="https://www.reddit.com/r/ReBBl/comments/j267w5/rebbl_rampup_season_15" class="highlighted-rules") Read more here about our Rampup system for Season 15
+        a.btn.btn-primary.btn-lg(href="/signup/change" role="button") Sign up
+      //
         .jumbotron
           h1.display-4 REBBL SEASON 15
           p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 15!
