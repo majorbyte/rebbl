@@ -82,7 +82,7 @@ block scripts
         matchups: [],
         played:[],
         selectedLeague: "",
-        round: (new Date(Date.now())).getWeek() -20
+        round: (new Date(Date.now())).getWeek() -39
       },
       computed: {
         availableCoaches(){
@@ -105,7 +105,7 @@ block scripts
 
         },
         addMatchup: function(){
-          const name = `${this.selectedLeague} S14 W${this.round} GAME ${this.matchups.filter(x => x.league === this.selectedLeague).length+1}`
+          const name = `${this.selectedLeague} S15 W${this.round} GAME ${this.matchups.filter(x => x.league === this.selectedLeague).length+1}`
           this.matchups.push({home:{},away:{},league:this.selectedLeague, competitionName:name});
         },
         removeMatchup: function(matchup){
