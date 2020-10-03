@@ -92,9 +92,9 @@ class DivisionApi{
 
     this.router.post('/unsaved', util.verifyMaintenanceToken,async function(req,res){
       
-      dataService.updateMatch({"match.id":req.body.id},{$set:{saved:true, filename:req.body.filename}});
+      dataService.updateMatch({"match.id":Number(req.body.id)},{$set:{saved:true, filename:req.body.filename}});
       
-      res.status(200).send();
+      res.json({result:"success"});
     });
 
 
