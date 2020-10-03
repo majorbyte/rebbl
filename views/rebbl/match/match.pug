@@ -67,6 +67,9 @@ block content
                       a(href=`/coach/${match.coaches[1].idcoach}`)= match.coaches[1].coachname
                     div(class="TeamLabel-coach" title="cash earned: " + match.teams[1].cashearned + "; spiraling expenses: " +match.teams[1].spirallingexpenses)= "winnings: " + (match.teams[1].cashearned - match.teams[1].spirallingexpenses)
                     div(class="TeamLabel-coach ")= match.teams[1].popularitygain + " Fan Factor"
+                              - if (match.filename)
+                a(href=`https://replays.rebbl.net/${match.filename}`)
+                  img(src=`https://cdn2.rebbl.net/images/replay.png`)
           div(class="col-12")
             br
           div(class="table-responsive-xl col-12")
