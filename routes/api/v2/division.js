@@ -72,7 +72,6 @@ class DivisionApi{
       }
     }); 
 
-
     this.router.get('/:league/:season/:division/:round', util.cache(600), async function(req, res){
       try {
         let {league,season, division, round} = req.params;
@@ -85,6 +84,19 @@ class DivisionApi{
         res.status(500).send('Something something error');
       }
     });  
+
+    this.router.get('/unsaved',async function(req,res){
+      let data = await dataService.getMatches({uuid:{$gt:"1000857000"}, saved:{$exists:0}},{projection:{"match.id":1, "match.idcompetition":1, _id:0}});
+      res.json(data.map(x => {return {id: x.match.id, competitionId: x.match.idcompetition}; }));
+    });
+
+    this.router.post('/unsaved', util.verifyMaintenanceToken,async function(req,res){
+      
+      dataService.updateMatch({"match.id":req.body.id},{$set:{saved:true, filename:req.body.filename}});
+      
+      res.status(200).send();
+    });
+
 
     return this.router;
   }
