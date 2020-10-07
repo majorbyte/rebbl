@@ -57,7 +57,7 @@ block scripts
             $(timezones[zone]).find(".time").text(moment().tz($(timezones[zone]).text()).format('YYYY-MM-DD HH:mm ZZ'));
         });
 
-        $(".btn").on("click", function(event){
+        $(".btn-date").on("click", function(event){
           let id = event.currentTarget.getAttribute("data-contestid");
           let target =event.currentTarget.getAttribute("data-target");
           
@@ -111,6 +111,25 @@ block scripts
           })  
         });
 
+        $(".stream").on("click", async function(event){
+          let id = event.currentTarget.getAttribute("data-contestid");
+          let result = await fetch(`/api/v1/upcoming/stream/${id}`,{method:"POST"});
+
+          if (result.ok){
+            $(event.currentTarget).addClass("hidden");
+            $(`#unstream-${id}`).removeClass("hidden");
+          } 
+        });
+        $(".unstream").on("click", async  function(event){
+          let id = event.currentTarget.getAttribute("data-contestid");
+          let result = await fetch(`/api/v1/upcoming/unstream/${id}`,{method:"POST"});
+
+          if (result.ok){
+            $(event.currentTarget).addClass("hidden");
+            $(`#stream-${id}`).removeClass("hidden");
+          } 
+        });
+
         setCalendarDatetime();
       });  
   - if (!user)
@@ -142,11 +161,15 @@ block content
             - if(user)
               span Enter match date in your own local time
               div(class="row col-12 justify-content-center") 
-                div(class="col-3 col-sm-6 col-md-4 col-xl-3")
+                div(class="col-3 col-sm-4 col-md-4 col-xl-3")
                   input(type="text" class="form-control datetimepicker-input" id=`datetimepicker-${match.contest_id}` data-target=`#datetimepicker-${match.contest_id}` data-toggle="datetimepicker" value=(match.date ? match.date.date : null) data-btn=`#btn-${match.contest_id}`  )
-                div(class="col-3 col-sm-6 col-md-4 col-xl-3" style="padding:0;")
-                  button(class="btn btn-secondary btn-block" disabled data-contestid= match.contest_id data-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
+                div(class="col-3 col-sm-4 col-md-4 col-xl-3" style="padding:0;")
+                  button(class="btn btn-secondary btn-block btn-date" disabled data-contestid= match.contest_id data-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
                   a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.opponents[0].team.name data-team-away=match.opponents[1].team.name class="calendar-add") Add to Google Calendar
+                -if (user.twitch)                  
+                  div(class="col-1")
+                    btn(class="hidden btn btn-danger unstream"  id=`unstream-${match.contest_id}` data-contestid=match.contest_id) unstream
+                    btn(class="btn btn-success stream" id=`stream-${match.contest_id}` data-contestid=match.contest_id)  stream
             - if(!user && match.date)
               p planned match start:&nbsp;
                 span(id="matchTime")= match.date.date
