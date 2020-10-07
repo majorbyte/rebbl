@@ -25,7 +25,15 @@ const express = require('express')
 
         res.status(200).send("All matchups successfully created.");
     } catch(err){
-      console.log(err);
+      res.status(500).send("Something went wrong, check ingame for which comps were not created");
+    }
+  });
+
+  router.delete('/:coach', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+    try{
+      rampupService.excluceCoach(req.params.coach);
+      res.status(200).send("coach removed succesfully.");
+    } catch(err){
       res.status(500).send("Something went wrong, check ingame for which comps were not created");
     }
   });

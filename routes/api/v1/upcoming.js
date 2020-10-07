@@ -66,7 +66,7 @@ router.post("/stream/:contest_id", util.ensureAuthenticatedApi, async function(r
 
         if(date && !date.stream){
             date.stream = {name: req.user.name, url:res.locals.user.twitch};
-            datingService.update(date.id, date);
+            datingService.update(date.id, date,{upsert:true});
             res.status(200).send(date);
         } else {
             res.status(403).send();
@@ -82,8 +82,7 @@ router.post("/unstream/:contest_id", util.ensureAuthenticatedApi, async function
         let date = await datingService.getDate(Number(req.params.contest_id));
 
         if(date && date.stream){
-            delete date.stream;
-            datingService.update(date.id, date);
+            datingService.update(date.id, {$unset:{stream:""}});
             res.status(200).json(date);
         } else {
             res.status(403).json();

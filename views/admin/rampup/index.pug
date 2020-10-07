@@ -37,7 +37,17 @@ block content
 
       .col.my-1
         .btn.btn-primary(@click="create") Create competitions
-      
+    
+      template(v-if="selectedLeague !== ''")
+        h2 manage coaches for {{selectedLeague}} Rampup
+        template(v-for="coach of availableCoaches")
+          .row.col-12
+            .col {{coach.coach}}
+            .col {{coach.team}}
+            .col {{coach.signupDate}}
+            .col
+              button(@click="excludeCoach(coach.coach)" class="btn btn-small btn-success" style="margin:0px 10px")
+                i(class="fa fa-gavel") 
 
 
 
@@ -116,12 +126,22 @@ block scripts
         },
         create: async function(){
           let response = await fetch("/api/v1/admin/rampup", {
-              method:"POST",
-              headers:{
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(this.matchups)
-            });
+            method:"POST",
+            headers:{
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.matchups)
+          });
+        },
+        excludeCoach: async function(coach){
+          let response = await fetch(`/api/v1/admin/rampup/${encodeURIComponent(coach)}`, {
+            method:"DELETE"
+          });
+          this.loadCoaches();
+        },
+        loadCoaches: async function(){
+          let response = await fetch("/api/v1/admin/rampup");
+          this.coaches = await response.json();
         }
       },
       watch:{
@@ -136,7 +156,6 @@ block scripts
       async mounted() {
         let response = await fetch("/api/v1/admin/rampup");
         this.coaches = await response.json();
-        
       }
     });
 
