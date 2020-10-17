@@ -50,20 +50,20 @@ class Maintenance{
       //cracker.fixRebuilders();
       try{
         //await perpetualService.getMatches();
-        await ts.checkTickets();
+        //await ts.checkTickets();
         //clanService.calculateStandings();
         //await maintenanceService.getContests(req.query.league);
         //await maintenanceService.getRebblData(req.query.league);
 
         //await maintenanceService.getContests(req.query.league);
-        /*
+        
         const draft = await dataService.getDraft({
-          house: 1,
-          round: 3,
+          house: 3,
+          round: 9,
           competition: "Division 2a",
           season: "season 9"
         });
-        ds.postToReddit(draft);*/
+        ds.confirmDraft("minorbyte",draft);
       
       }
       catch(e){
@@ -93,7 +93,7 @@ class Maintenance{
       if (req.app.locals.cyanideEnabled){
         try{
           await maintenanceService.getRebblData(req.query.league);
-          await ts.checkTickets();
+          //await ts.checkTickets();
         }
         catch(e){
           loggingService.error(e);
