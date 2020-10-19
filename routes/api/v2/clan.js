@@ -243,6 +243,56 @@ class ClanApi{
       }]);
     });
 
+    this.router.get("/data", util.ensureAuthenticated, util.hasRole("admin"),async (req,res) => {
+      
+      const schedules = await dataService.getSchedules({league:"clan", season:"season 9"});
+      
+      const data = [];
+
+      const parseMatch = (race, match) => {
+        if (/\[admin\]/i.test(match.opponents[0].team.name) || /\[admin\]/i.test(match.opponents[1].team.name)) return;
+        
+        if (!match.winner) race.draw++;
+        else if (match.opponents[match.winner.index].team.race === race.race) race.win++;
+        else race.loss++;
+      };
+
+      const getRace = (match, index) =>{
+        let d = data.find(x => x.race === match.opponents[index].team.race);
+        if (d) return d;
+
+        d = {
+          race : match.opponents[index].team.race,
+          win: 0,
+          draw: 0,
+          loss: 0
+        };
+        data.push(d);
+        return d;
+      };
+
+      for(let schedule of schedules)
+      for(let match of schedule.matches)
+      for(let x of [0,1]){
+        let race = getRace(match,x);
+        parseMatch(race,match);
+      }
+
+      const getCSV = (race) => Object.keys(race).map(x => `${JSON.stringify(race[x])}` ).join(",");
+     
+      const csv = data.map(row =>getCSV(row)).join("\r\n");
+    
+      res.setHeader("content-type", "text/csv");
+      res.set('Content-Type', 'application/octet-stream');
+      res.attachment(`clan-races.csv`);
+      res.send(`"race","win","draw","loss"\r\n${csv}`);
+    });
+
+    this.router.get("/:clan", async function(req, res){
+      const clan = await clanService.getClanByName(req.params.clan); 
+      res.json({ clan:clan, leader:false} );
+    });
+
     this.router.put("/:season/:division/:round/:house/:clan/usepower/:power", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
       let schedule = await dataService.getSchedule({
         league:"clan", 
@@ -311,10 +361,6 @@ class ClanApi{
       }
     });
     
-    this.router.get("/:clan", async function(req, res){
-      const clan = await clanService.getClanByName(req.params.clan); 
-      res.json({ clan:clan, leader:false} );
-    });
       
     this.router.post('/:clan/upload', util.ensureAuthenticated, util.hasRole("clanleader"), uploadStrategy, async (req, res) => {
 
@@ -431,6 +477,7 @@ class ClanApi{
       res.status(200).send();
     });
 
+    
   
     return this.router;
   }
