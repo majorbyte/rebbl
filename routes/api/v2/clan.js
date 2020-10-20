@@ -122,12 +122,15 @@ class ClanApi{
       message:
         "Please don't spam this, wait 60 seconds",
       keyGenerator: function(req){
-        return req.user.name;
+        return req.user ? req.user.name : "NotLoggedIn";
       }
 
     });
 
-    this.router.put("/start/:division/:round/:house",util.ensureAuthenticated,apiRateLimiter, async function(req,res){
+    this.router.put("/start/:division/:round/:house",apiRateLimiter, async function(req,res){
+      if (!req.user || !req.user.name){
+        return res.status(400).send("You need to be logged in.");
+      }
       try{
         await clanService.startCompetitions(req.user.name,req.params.division, Number(req.params.round), Number(req.params.house));
         res.status(200).send();
