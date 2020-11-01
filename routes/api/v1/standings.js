@@ -135,7 +135,7 @@ router.get('/csv/:league/:filter', util.ensureAuthenticated, util.hasRole("admin
 router.get('/:league', util.cache(10*60), async function(req, res){
   let league = req.params.league;
   let filter= null;
-  if (league.toLowerCase().indexOf("eurogamer") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "xscessively elfly league" ){
+  if (league.toLowerCase().indexOf("eurogamer") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "rebbll " && league.toLowerCase() !== "xscessively elfly league" ){
     league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
     filter= "Season 15";
   } else {
