@@ -896,6 +896,7 @@ block scripts
 
   
     function loadMatches(id){
+      if (model.matches.length > 0) return;
       let xhr = new XMLHttpRequest();
 
       xhr.open("GET", `/api/v2/team/${id}/matches`  ,true)
@@ -1012,6 +1013,7 @@ block scripts
     }
 
     function loadHistory(id){
+      if (model.standings.length > 0) return;
       let xhr = new XMLHttpRequest();
 
       xhr.open("GET", "/api/v2/standings/"+id  ,true)
