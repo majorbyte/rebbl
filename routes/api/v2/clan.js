@@ -87,8 +87,8 @@ class ClanApi{
       });
       let clans = await dataService.getClans({name:{$in:[schedule.home.clan,schedule.away.clan]},season:req.params.season});
 
-      schedule.home.clan = clans.find(c => c.name === schedule.home.clan);
-      schedule.away.clan = clans.find(c => c.name === schedule.away.clan);
+      schedule.home.clan = clans.find(c => c.name.localeCompare(schedule.home.clan,undefined,{sensitivity:"base"}) === 0);
+      schedule.away.clan = clans.find(c => c.name.localeCompare(schedule.away.clan,undefined,{sensitivity:"base"}) === 0);
 
       let teams = await dataService.getTeams({"team.id":{$in:schedule.home.clan.ledger.teams.filter(x => x.active).map(team=> team.team.id).concat(schedule.away.clan.ledger.teams.filter(x => x.active).map(team=> team.team.id))}});
 
@@ -109,8 +109,8 @@ class ClanApi{
       let clans = await dataService.getClans({division:new RegExp(req.params.division,"i"), season:req.params.season});
 
       schedules.map(x =>{
-        x.home.logo = clans.find(c => c.name === x.home.clan).logo;
-        x.away.logo = clans.find(c => c.name === x.away.clan).logo;
+        x.home.logo = clans.find(c => c.name.localeCompare(x.home.clan,undefined,{sensitivity:"base"}) === 0).logo;
+        x.away.logo = clans.find(c => c.name.localeCompare(x.away.clan,undefined,{sensitivity:"base"}) === 0).logo;
       });
 
       res.json(schedules);
