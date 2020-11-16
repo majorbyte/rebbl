@@ -61,7 +61,7 @@ class Maintenance{
           house: 3,
           round: 9,
           competition: "Division 2a",
-          season: "season 9"
+          season: "season 10"
         });
         ds.confirmDraft("minorbyte",draft);
       

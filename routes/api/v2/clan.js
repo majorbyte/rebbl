@@ -172,7 +172,7 @@ class ClanApi{
 
     this.router.get("/powers", function(req,res){
       res.json( [
-      {key:"version3.2",description:3.2},
+      {key:"version4.0",description:4.0},
       {
         key: "miscommunication",
         name: "Miscommunication!",
@@ -243,12 +243,24 @@ class ClanApi{
         cost: 50,
         quantitiy: 2,
         description: `At the start of the draft, the clan leader may pick any one inducement and one opposing team. During that team’s match for the round, this inducement may not be bought during the inducement phase. The team may take any other inducement as normal, however. Note that stadiums that e.g. give wizards or bribes still do so, and may be used during game. Similarly, if a kick-off event gives for instance bribes, these are free to use even if Bribe was the inducement picked in a Bad Inducement Deal! as it is only PURCHASES DURING INDUCEMENT that is prohibited. If a coach forgets or otherwise violates this, ask for the game to be reset by an admin. `
+      },{
+        key:"confusion",
+        name:"Confusion!",
+        cost:50,
+        quantitiy:2,
+        description:"At the start of the draft, play this power to switch the draft order, causing the team that was due to draft second to draft first instead. You may not play a Confusion! to counter an opponent's Confusion! Additionally, this power does not switch the order of power usage in a draft, so any powers already used when Confusion! is played remain called."
+      },{
+        key:"hatredOfPublicTransport",
+        name:"Hatred of Public Transport!",
+        cost:20,
+        quantitiy:5,
+        description:"At the start of the draft, pick one team from your opponent’s clan. This team refuses to be bussed (i.e. offered-up) by their clan leader when it’s that clan’s turn to offer up their FIRST team to the opposing clan leader. Teams selected by this power also become immune to Last Minute Switch! Each Clan may only use this power once per draft. "
       }]);
     });
 
     this.router.get("/data", util.ensureAuthenticated, util.hasRole("admin"),async (req,res) => {
       
-      const schedules = await dataService.getSchedules({league:"clan", season:"season 9"});
+      const schedules = await dataService.getSchedules({league:"clan", season:"season 10"});
       
       const data = [];
 

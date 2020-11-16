@@ -1,7 +1,7 @@
 extends ../no-cache-sub-relayout.pug
 
 block vars
-  - let options = {active: league, title: "REBBL SEASON 9", company:"clan"}
+  - let options = {active: league, title: "REBBL SEASON 10", company:"clan"}
   - let company = "clan";
 
 block head  
@@ -81,7 +81,7 @@ block scripts
           if (storage)    
             this.powers = JSON.parse(localStorage.getItem('powers')) || [];
 
-          if(this.powers.length === 0|| !this.powers.find(x=>x.key === "version3.2")){
+          if(this.powers.length === 0|| !this.powers.find(x=>x.key === "version4.0")){
             let response = await fetch("/api/v2/clan/powers");
             this.powers = await response.json();
             storage.setItem('powers', JSON.stringify(this.powers));    
