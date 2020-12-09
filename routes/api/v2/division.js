@@ -86,7 +86,14 @@ class DivisionApi{
     });  
 
     this.router.get('/unsaved',async function(req,res){
-      let data = await dataService.getMatches({uuid:{$gt:"1000857000"}, saved:{$exists:0}},{projection:{"match.id":1, "match.idcompetition":1, _id:0}});
+
+      let now = new Date(Date.now());
+      now.setHours(now.getHours() - 7*24);
+
+      let data = await dataService.getMatches({uuid:{$gt:"1000857000"},"match.finished":{$gt: now.toJSON()}, saved:{$exists:0}},{projection:{"match.id":1, "match.idcompetition":1,"match.started":1,"match.finished":1, _id:0}});
+
+      data = data.filter(x => x.match.started !== x.match.finished);
+
       res.json(data.map(x => {return {id: x.match.id, competitionId: x.match.idcompetition}; }));
     });
 
