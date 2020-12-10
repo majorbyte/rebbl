@@ -31,7 +31,8 @@ class ClanApi{
   routesConfig(){
     this.router.get("/", util.ensureAuthenticated, async function(req, res){
       const account = await accountService.getAccount(req.user.name);
-      const clan = await clanService.getClanByUser(account.coach); 
+      let clan = await clanService.getClanByUser(account.coach); 
+      if (!clan) clan = await clanService.getClanByLeader(account.coach);
       const leader = await accountService.hasRole(req.user.name, "clanleader");
       res.json({ clan:clan, leader:leader && account.coach.toLowerCase() === clan.leader.toLowerCase() } );
     });
