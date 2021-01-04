@@ -2,8 +2,8 @@ include nav-item
 
 mixin nav(company)
   nav.fixed-top.navbar.navbar-dark.navbar-expand-md.bg-dark.pl-0
-    .navbar-brand.px-0(href='#')
-      .px-1.d-inline-block.align-top(src=`https://cdn2.rebbl.net/images/${logo}` height='30' alt='' class="" + cls role='button' data-toggle='dropdown' style="cursor: pointer;")
+    .navbar-brand.px-1
+      a(href="/")
         img(src=`https://cdn2.rebbl.net/images/${logo}` height='30'  )
     button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
       span.navbar-toggler-icon
@@ -55,8 +55,8 @@ mixin nav(company)
                   | Offseason
                 div
                   .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown4')
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/REBBL Playoffs Season 14") Playoffs
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/Challenger's Cup XIV" ) Challenger Cup
+                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/REBBL Playoffs Season 15") Playoffs
+                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/Challenger's Cup XV" ) Challenger Cup
                     .dropdown-divider
                     a.dropdown-item.d-inline-block.text-light(href="/rebbl/Greenhorn Cup") Greenhorn
                     .dropdown-divider
@@ -68,14 +68,22 @@ mixin nav(company)
               +nav-item("Upstarts", "/rebbrl/ReBBRL Upstarts")
               block navigation
           when "frontpage"
-              +nav-item("Signups", "/signup/signups")
-              +nav-item("Upcoming games", "/rebbl/upcoming")
-              +nav-item("Ongoing games", "/rebbl/ongoing")
-              //+nav-item("Summer Camp", "/rebbl/camping/summer")
-              +nav-item("Star Players", "/bloodbowl/starplayers")
-              +nav-item("Legendary players", "/bloodbowl/legendaryplayers")
-              +nav-item("Villey's Guides", "/guides",true)
-              block navigation
+            li.nav-item.dropdown.mr-3(style="cursor: pointer;")
+              a#navbarDropdown2.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown') Signup
+              div
+                .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
+                  a.dropdown-item.d-inline-block.text-light(href="/signup" ) Signup
+                  a.dropdown-item.d-inline-block.text-light(href="/signup/signups") Signups overview
+            +nav-item("Upcoming games", "/rebbl/upcoming")
+            +nav-item("Ongoing games", "/rebbl/ongoing")
+            li.nav-item.dropdown.mr-3(style="cursor: pointer;")
+              a#navbarDropdown2.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown') Misc.
+              div
+                .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
+                  a.dropdown-item.d-inline-block.text-light(href="/bloodbowl/starplayers" ) Star Players
+                  a.dropdown-item.d-inline-block.text-light(href="/bloodbowl/legendaryplayers") Legendary Players
+                  a.dropdown-item.d-inline-block.text-light(href="/guides" target="blank") Villey's Guides
+            block navigation
           when "clan"
               +nav-item("Clan", "/clan/clan")
               block navigation
