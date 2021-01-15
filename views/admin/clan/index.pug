@@ -141,6 +141,13 @@ block content
 
         .row.col-12.no-gutters.justify-content-center
           .col-12.row.justify-content-center
+            h1 Apply failed Draft Step
+          .col-12.row.justify-content-center
+            a(v-bind:href="`https://rebbl.net/clandraft/?division=${schedule.competition}&round=${schedule.round}&house=${schedule.house}`" target="_blank") draft result
+            button.btn.btn-primary.btn-sm.mx-2(data-toggle="button" @click="doDraftProcess(schedule,'powers')") Powers
+            button.btn.btn-primary.btn-sm.mx-2(data-toggle="button" @click="doDraftProcess(schedule,'matches')") Matches
+            button.btn.btn-primary.btn-sm.mx-2(data-toggle="button" @click="doDraftProcess(schedule,'post')") Reddit Post
+          .col-12.row.justify-content-center
             h1 Register Powers Used
             .col-12.row.justify-content-center
               .col-5
@@ -540,6 +547,11 @@ block scripts
         powerUsed:function(side,power,i){
           if(!side.usedPowers || ((side.usedPowers[power] || 0) === 0)) return false;
           return (side.usedPowers[power] || 0) >= i;
+        },
+        doDraftProcess:async function(schedule,part){
+          await fetch(`/api/v2/clan/draft/season 10/${schedule.competition}/${schedule.round}/${schedule.house}/${part}`, {
+            method: "PUT"
+          });
         },
         getClass:function(side,power,i){
           return `btn btn-outline-info btn-sm ${this.powerUsed(side,power,i) ? 'active':''}`;   
