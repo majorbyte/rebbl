@@ -38,6 +38,9 @@ block content
                         .text-info {{ _schedule(row,col).home.clan }}
                   .MatchRow-status
                     span.MatchStatus.MatchStatus--transparent
+                      template(v-if="0 < _schedule(row,col).home.win + _schedule(row,col).away.draw + _schedule(row,col).away.win && _schedule(row,col).home.win + _schedule(row,col).away.draw + _schedule(row,col).away.win < 5")
+                        span.text-danger Incomplete
+                        br
                       span
                         template(v-if="_schedule(row,col).home.win > _schedule(row,col).away.win")
                           span.MatchStatus-score.is-winner {{_schedule(row,col).home.win}}
@@ -715,6 +718,3 @@ block scripts
 
     // mount
     app.$mount('#app')
-
-
-              
