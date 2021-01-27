@@ -86,7 +86,8 @@ class Signup{
     this.router.get('/signups', function(req,res){res.render('signup/signups', {url: ""});});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
     
-    this.router.get('/rebbrl', util.ensureLoggedIn, this._rebbrl);
+    this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
+    this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
     this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
     this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
     return this.router;
@@ -457,14 +458,22 @@ class Signup{
 
 
   /* REBBRL */
-  async _rebbrl(req, res){
+  async _college(req, res){
+    await this._rebbrl(req, res, "College");
+  }
+
+  async _minors(req, res){
+    await this._rebbrl(req, res, "Minors");
+  }
+
+  async _rebbrl(req, res, league){
     try {
       let signup = await signupService.getSignUp(req.user.name,"rebbrl");
       let account = await accountService.getAccount(req.user.name);
 
       if (!signup){
         if(account){
-          res.render('signup/signup-new-coach-rebbrl', {user: {account: account}});
+          res.render('signup/signup-new-coach-rebbrl', {user: {account: account, league: league}});
         } else {
           res.render('signup/signup-new-coach-rebbrl', {user: req.user.name});
         }
@@ -473,6 +482,7 @@ class Signup{
 
       if(account){
         signup.account = account;
+        signup.league = league;
       }
       res.render('signup/signup-new-coach-rebbrl', {user: signup});
 
