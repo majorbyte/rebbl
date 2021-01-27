@@ -87,6 +87,7 @@ class Signup{
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
     
     this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
+    this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
     this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
     this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
     this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
@@ -462,6 +463,11 @@ class Signup{
     await this._rebbrl(req, res, "College");
   }
 
+  async _collegeReserve(req, res){
+    req.reserve = true;
+    await this._rebbrl(req, res, "College");
+  }
+
   async _minors(req, res){
     await this._rebbrl(req, res, "Minors");
   }
@@ -473,7 +479,7 @@ class Signup{
 
       if (!signup){
         if(account){
-          res.render('signup/signup-new-coach-rebbrl', {user: {account: account, league: league}});
+          res.render('signup/signup-new-coach-rebbrl', {user: {account: account, league: league}, reserve: req.reserve});
         } else {
           res.render('signup/signup-new-coach-rebbrl', {user: req.user.name});
         }
@@ -484,7 +490,7 @@ class Signup{
         signup.account = account;
         signup.league = league;
       }
-      res.render('signup/signup-new-coach-rebbrl', {user: signup});
+      res.render('signup/signup-new-coach-rebbrl', {user: signup, reserve: req.reserve});
 
     } catch (err){
       console.log(err);
@@ -495,7 +501,11 @@ class Signup{
     try {
       let signup = req.body;
 
-      signup.saveType = "new";
+      if (signup.reserve === "on") {
+        signup.saveType = "reserve";
+      } else {
+        signup.saveType = "new";
+      }
       signup.type ="rebbrl";
 
       let account = await accountService.getAccount(req.user.name);

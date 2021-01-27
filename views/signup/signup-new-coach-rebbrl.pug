@@ -36,9 +36,10 @@ block content
 
       fieldset
         legend Required
+        input(type="radio" id="reserve" name="reserve" checked=reserve hidden)
         div
           label(for="league") League
-          input(type="text" id="league" name="league" value=user.league disabled)
+          input(type="text" id="league" name="league" value=user.league readonly)
         div
           label(for="coach") Coach Name
           input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
