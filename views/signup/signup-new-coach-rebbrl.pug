@@ -1,7 +1,7 @@
 extends ../account/sublayout.pug
 
 block title
-  title Signup Rookies
+  title= "Signup " + user.league
 
 block append scripts
   script.
@@ -36,12 +36,16 @@ block content
 
       fieldset
         legend Required
+        input(type="radio" id="reserve" name="reserve" checked=reserve hidden)
+        div
+          label(for="league") League
+          input(type="text" id="league" name="league" value=user.league readonly)
         div
           label(for="coach") Coach Name
-            input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
-            - if (user.error && user.error.coach)
-              p(class="alert-danger my-0")= user.error.coach
-              p(class="alert-info my-0") This is probably due to a typo in your coachname, contact an admin on our discord to have it corrected.
+          input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 2 coach name" title="Blood Bowl 2 coach name" disabled)
+          - if (user.error && user.error.coach)
+            p(class="alert-danger my-0")= user.error.coach
+            p(class="alert-info my-0") This is probably due to a typo in your coachname, contact an admin on our discord to have it corrected.
         div
           label(for="steam") Steam ID
           input(type="text" id="steam" name="steam" value=user.account.steam required placeholder="steam ID" title="steam ID")        
@@ -67,9 +71,11 @@ block content
             option(value="Chaos Dwarf" selected=user.race==="Chaos Dwarf") Chaos Dwarf
             option(value="Dark Elf" selected=user.race==="Dark Elf") Dark Elf
             option(value="Dwarf" selected=user.race==="Dwarf") Dwarf
-            option(value="Goblin" selected=user.race==="Goblin") Goblin
+            - if (user.league.toLowerCase() === "minors")
+              option(value="Goblin" selected=user.race==="Goblin") Goblin
             option(value="Human" selected=user.race==="Human") Human
-            option(value="Halfling" selected=user.race==="Halfling") Halfling
+            - if (user.league.toLowerCase() === "minors")
+              option(value="Halfling" selected=user.race==="Halfling") Halfling
             option(value="High Elf" selected=user.race==="High Elf") High Elf
             option(value="Khemri" selected=user.race==="Khemri") Khemri
             option(value="Kislev" selected=user.race==="Kislev") Kislev
@@ -77,20 +83,16 @@ block content
             option(value="Necromantic" selected=user.race==="Necromantic") Necromantic
             option(value="Norse" selected=user.race==="Norse") Norse
             option(value="Nurgle" selected=user.race==="Nurgle") Nurgle
-            option(value="Ogre" selected=user.race==="Ogre") Ogre
+            - if (user.league.toLowerCase() === "minors")
+              option(value="Ogre" selected=user.race==="Ogre") Ogre
             option(value="Orc" selected=user.race==="Orc") Orc
             option(value="Pro Elf" selected=user.race==="Pro Elf") Pro Elf
             option(value="Skaven" selected=user.race==="Skaven") Skaven
             option(value="Undead" selected=user.race==="Undead") Undead
-            option(value="Underworld" selected=user.race==="Underworld") Underworld
-            option(value="Vampire" selected=user.race==="Vampire") Vampire
+            - if (user.league.toLowerCase() === "minors")
+              option(value="Underworld" selected=user.race==="Underworld") Underworld
+              option(value="Vampire" selected=user.race==="Vampire") Vampire
             option(value="Wood Elf" selected=user.race==="Wood Elf") Wood Elf
-        div
-          label(for="league") League
-          select(name="league" id="league" required)
-            option(value="" disabled selected style="color: #9b959166;") Select your league
-            option(value="College" selected=user.league==="College") College
-            option(value="Minors" selected=user.league==="Minors") Minors
       br
       div
         h3 By pressing complete, you confirm that you have read and will abide by our rules
