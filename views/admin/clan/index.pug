@@ -37,11 +37,11 @@ block content
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{ _schedule(row,col).home.clan }}
                   .MatchRow-status
-                    span.MatchStatus.MatchStatus--transparent
-                      template(v-if="0 < _schedule(row,col).home.win + _schedule(row,col).away.draw + _schedule(row,col).away.win && _schedule(row,col).home.win + _schedule(row,col).away.draw + _schedule(row,col).away.win < 5")
-                        span.text-danger Incomplete
-                        br
-                      span
+                    div.MatchStatus.MatchStatus--transparent(style="display:block")
+                      template(v-if="isIncomplete(_schedule(row,col))")
+                        .text-danger Incomplete
+                          br
+                      div
                         template(v-if="_schedule(row,col).home.win > _schedule(row,col).away.win")
                           span.MatchStatus-score.is-winner {{_schedule(row,col).home.win}}
                           span.MatchStatus-score -
@@ -486,6 +486,10 @@ block scripts
       methods:{
         _schedule: function(r,c){
           return this.schedules[(r - 1) * 5 + (c - 1)];
+        },
+        isIncomplete: function(schedule){
+          const l = schedule.matches.filter(x => x.status === 'played').length;
+          return 0 < l && l < 5;
         },
         async load(division){
           this.schedule = null;
