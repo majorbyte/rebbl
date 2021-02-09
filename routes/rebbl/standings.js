@@ -14,8 +14,8 @@ class Standings{
       let data = {company:req.params.company};
       if(data.company ==="hjmc")
         res.render('rebbl/standings/hjmc', data);
-      if(req.params.league === "Rebbl One Minute League")
-        res.render('rebbl/standings/hjmc', data);
+      //if(req.params.league === "Rebbl One Minute League")
+      //  res.render('rebbl/standings/hjmc', data);
       else
         res.render('rebbl/standings/index', data);
     });

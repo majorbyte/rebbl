@@ -178,6 +178,7 @@ class Maintenance{
       seasons = seasons.concat(configurationService.getActiveMinorsSeason());          
       seasons = seasons.concat(configurationService.getActiveCollegeSeason());          
       seasons = seasons.concat(configurationService.getActiveBeerSeason());          
+      seasons = seasons.concat(configurationService.getActiveOneMinuteSeason());          
 
       seasons.map(season => {
         season.leagues.map(league =>{
@@ -191,8 +192,6 @@ class Maintenance{
         });
       });
 
-      seasons = [configurationService.getActiveOneMinuteSeason()];
-      seasons.map(season => hjmc.calculateStandingsHJMC(season.leagues[0].name,season.name,season.leagues[0].name));
       res.redirect('/');
     });
 
