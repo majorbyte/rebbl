@@ -26,7 +26,7 @@ class Routes{
   async _root(req, res) {
     let data = {};
     data.announcements = await dataService.getAnnouncements({});
-    let c = new RegExp(`^(^Season 15)|(^REL Rampup)|(^GMAN Rampup)`, "i");
+    let c = new RegExp(`^(^Season 16)|(^REL Rampup)|(^GMAN Rampup)`, "i");
     let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
 
     let docs = await dataService.getSchedulesChain({ "league":{"$regex":l}, "competition":{"$regex":c} }).sort({ match_uuid: -1 }).limit(20).toArray();

@@ -14,11 +14,11 @@ const express = require("express")
   router.get("/", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
-      let data = await dataService.getSchedules({season:"season 15", round:1, league:{$in:["REBBL - GMan","REBBL - Big O", "REBBL - REL","REBBL - REL 2","REBBL - GMan 2"]}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
-      let upstarts = await dataService.getSchedules({season:/season 20/i, round:1, league:"ReBBRL Upstarts"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
-      let minors = await dataService.getSchedules({season:/season 11/i, round:1, league:"ReBBRL Minors League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
-      let college = await dataService.getSchedules({season:/season 12/i, round:1, league:"ReBBRL College League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
-      let playoffs = await dataService.getSchedules({season:"season 15", round:1, league:"ReBBL Playoffs",competition:{$in:['Challenger\'s Cup XIV','REBBL Playoffs Season 15']}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
+      let data = await dataService.getSchedules({season:"season 16", round:1, league:{$in:["REBBL - GMan","REBBL - Big O", "REBBL - REL","REBBL - REL 2","REBBL - GMan 2"]}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
+      let upstarts = await dataService.getSchedules({season:/season 22/i, round:1, league:"ReBBRL Upstarts"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
+      let minors = await dataService.getSchedules({season:/season 12/i, round:1, league:"ReBBRL Minors League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
+      let college = await dataService.getSchedules({season:/season 13/i, round:1, league:"ReBBRL College League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
+      let playoffs = await dataService.getSchedules({season:"season 16", round:1, league:"ReBBL Playoffs",competition:{$in:['Challenger\'s Cup XVI','REBBL Playoffs Season 16']}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
 
       data = data.concat(upstarts,minors,college,playoffs);
 
@@ -87,7 +87,7 @@ const express = require("express")
         competitions = data.competitions;
         if (req.params.league === "ReBBL Playoffs"){
           //search.competition = 
-          competitions = competitions.filter(x => ["Challenger's Cup XV","REBBL Playoffs Season 15"].indexOf(x.name)>-1);
+          competitions = competitions.filter(x => ["Challenger's Cup XV","REBBL Playoffs Season 16"].indexOf(x.name)>-1);
         } cache.put(cacheKey, competitions,10*60*1000);
       }
 

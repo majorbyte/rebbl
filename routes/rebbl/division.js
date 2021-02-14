@@ -24,10 +24,7 @@ class Division{
     let league = req.params.league;
     let divRegex = new RegExp(`^${req.params.division}$`, 'i');
     let season = "";
-    if(league.toLowerCase() === "off season international"){
-      leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
-      season = "season 15";
-    } else if(league.toLowerCase() === "rebbl one minute league"){
+    if (league.toLowerCase() === "rebbl one minute league"){
       leagueRegex = new RegExp(`^Rebbl One Minute League`, 'i');  
     } else if(league.toLowerCase() === "greenhorn cup") {
       leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
@@ -49,7 +46,7 @@ class Division{
     if( req.params.league.toLowerCase() === "rampup"){
       leagueRegex = new RegExp(`${league}$`, 'i');
       divRegex = new RegExp(`^${req.params.division}`, 'i');
-      season = "season 15";
+      season = "season 16";
     } 
     
     if (season !== "")
@@ -81,10 +78,7 @@ class Division{
       let leagueRegex;
       let league = req.params.league;
       let season = "";
-      if(league.toLowerCase() === "off season international"){
-        leagueRegex = new RegExp(`^ReBBL Open Invitational`, 'i');
-        season = "season 15";
-      } else if(league.toLowerCase() === "rebbl one minute league"){
+      if(league.toLowerCase() === "rebbl one minute league"){
         leagueRegex = new RegExp(`^Rebbl One Minute League`, 'i');  
       } else if(league.toLowerCase() === "greenhorn cup") {
         leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
@@ -107,7 +101,7 @@ class Division{
       if( req.params.league.toLowerCase() === "rampup"){
         leagueRegex = new RegExp(`${league}$`, 'i');
         divRegex = new RegExp(`^${req.params.division}`, 'i');
-        season = "season 15";
+        season = "season 16";
       }
 
       if(season !== "")
