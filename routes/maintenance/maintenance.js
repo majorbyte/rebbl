@@ -50,13 +50,13 @@ class Maintenance{
       //cracker.fixRebuilders();
       try{
         //await perpetualService.getMatches();
-        //await ts.checkTickets();
+        await ts.checkTickets();
         //clanService.calculateStandings();
         //await maintenanceService.getContests(req.query.league);
         //await maintenanceService.getRebblData(req.query.league);
 
         //await maintenanceService.getContests(req.query.league);
-        
+        /*
         const draft = await dataService.getDraft({
           house: 3,
           round: 9,
@@ -64,7 +64,7 @@ class Maintenance{
           season: "season 10"
         });
         ds.confirmDraft("minorbyte",draft);
-      
+      */
       }
       catch(e){
         loggingService.error(e);
@@ -93,7 +93,7 @@ class Maintenance{
       if (req.app.locals.cyanideEnabled){
         try{
           await maintenanceService.getRebblData(req.query.league);
-          //await ts.checkTickets();
+          await ts.checkTickets();
         }
         catch(e){
           loggingService.error(e);

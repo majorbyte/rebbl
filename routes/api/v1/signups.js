@@ -37,7 +37,8 @@ router.get('/page', util.cache(10*60), async function(req, res){
       TV: row.currentTV,
       league: row.league,
       OI: row.OI,
-      greenHorn: row.greenHorn
+      greenHorn: row.greenHorn,
+      signupDate: row.signupDate
     };
 
   });

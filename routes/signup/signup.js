@@ -40,8 +40,8 @@ class Signup{
   }
 
   routesConfig(){
-/*    
-    this.router.get('/', async function(req, res){
+    
+/*    this.router.get('/', async function(req, res){
       res.render('signup/closed');
     });
 */
@@ -50,7 +50,7 @@ class Signup{
 */
     this.router.get('/', util.ensureAuthenticated, this._getStatus);
 
-    this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
+/*    this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
 
 
     this.router.post('/resign', util.ensureAuthenticated, this._resign);
@@ -82,15 +82,15 @@ class Signup{
     
     
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
-    
+    */
     this.router.get('/signups', function(req,res){res.render('signup/signups', {url: ""});});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
     
-    this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
+//    this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
     this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
-    this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
-    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
-    this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
+//    this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
+//    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
+//    this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
     return this.router;
   }
 
