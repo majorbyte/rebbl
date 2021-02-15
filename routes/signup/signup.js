@@ -45,9 +45,9 @@ class Signup{
       res.render('signup/closed');
     });
 */
-/*
+
     this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
-*/
+
     this.router.get('/', util.ensureAuthenticated, this._getStatus);
 
 /*    this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
@@ -129,19 +129,19 @@ class Signup{
       let account = await accountService.getAccount(req.user.name);
 
       // Disabled while during season
-      let user = await signupService.getExistingTeam(req.user.name);
+      /*let user = await signupService.getExistingTeam(req.user.name);
       if(!signup && user && user.team){
         res.render('signup/signup-existing', { user: user});
         return;
-      }
+      }*/
 
       if (!signup){
         if(account){
-          res.render('signup/signup-new-coach', {user: {account: account}, teamName : user.teamName});
-          //res.render('signup/signup-rampup', {user: {account: account}});
+          //res.render('signup/signup-new-coach', {user: {account: account}, teamName : user.teamName});
+          res.render('signup/signup-rampup', {user: {account: account}});
         } else {
-          res.render('signup/signup-new-coach', {user: req.user.name, teamName : user.teamName});
-          //res.render('signup/signup-rampup', {user: req.user.name});
+          //res.render('signup/signup-new-coach', {user: req.user.name, teamName : user.teamName});
+          res.render('signup/signup-rampup', {user: req.user.name});
         }
         return;
       }
