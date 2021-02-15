@@ -50,10 +50,10 @@ class Signup{
 
     this.router.get('/', util.ensureAuthenticated, this._getStatus);
 
-/*    this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
+    this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
 
 
-    this.router.post('/resign', util.ensureAuthenticated, this._resign);
+/*    this.router.post('/resign', util.ensureAuthenticated, this._resign);
 
   
     this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
