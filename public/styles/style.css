@@ -653,6 +653,36 @@ a:focus,a:hover {
   }
 }
 
+.ReplayLinks {
+  position: relative;width: 6em;
+}
+
+.ReplayLinks-outer {
+  padding-top: 100%;
+  height: 0;
+  width: 100%;
+  position: relative;
+}
+
+.ReplayLinks-inner {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.ReplayLinks-download {
+  height: 50%;
+  position: relative;
+}
+
+.ReplayLinks-view {
+  height: 50%;
+  position: relative;
+  top: 50%;
+  width: 50%;
+}
 
 .Tabs {
   overflow: hidden;
