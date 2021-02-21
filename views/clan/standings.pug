@@ -155,7 +155,7 @@ block scripts
         xhr.send();
       }
       usePoints(){
-        return this.season > "season 8";
+        return Number(this.season.replace(/\D/g,'')) > 8;
       }
 
 
