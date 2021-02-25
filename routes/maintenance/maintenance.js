@@ -50,7 +50,7 @@ class Maintenance{
       //cracker.fixRebuilders();
       try{
         //await perpetualService.getMatches();
-        await ts.checkTickets();
+        await maintenanceService.getRebblData(req.query.league);
         //clanService.calculateStandings();
         //await maintenanceService.getContests(req.query.league);
         //await maintenanceService.getRebblData(req.query.league);
