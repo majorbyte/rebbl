@@ -68,8 +68,13 @@ block content
                     div(class="TeamLabel-coach" title="cash earned: " + match.teams[1].cashearned + "; spiraling expenses: " +match.teams[1].spirallingexpenses)= "winnings: " + (match.teams[1].cashearned - match.teams[1].spirallingexpenses)
                     div(class="TeamLabel-coach ")= match.teams[1].popularitygain + " Fan Factor"
                 - if (match.filename)
-                  a(href=`https://replays.rebbl.net/${match.filename}`)
-                    img(src=`https://cdn2.rebbl.net/images/replay.png`)
+                  div(class="ReplayLinks")
+                    div(class="ReplayLinks-outer")
+                      div(class="ReplayLinks-inner")
+                        a(href=`https://replays.rebbl.net/${match.filename}`)
+                          img(src=`https://cdn2.rebbl.net/images/replay.png` class="ReplayLinks-download" alt="Download replay" title="Download replay")
+                        a(href=`https://dicedornot.vengefulpickle.com/?rebbl=${match.uuid}`)
+                          img(src=`https://cdn2.rebbl.net/images/dicedornot-logo.svg` class="ReplayLinks-view" alt="View replay" title="View replay on DicedOrNot")
           div(class="col-12")
             br
           div(class="table-responsive-xl col-12")
