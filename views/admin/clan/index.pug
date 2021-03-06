@@ -21,8 +21,38 @@ block content
             label.btn.btn-outline-primary(style="margin-right: 15px" @click="load(division)")
               input(type="radio" checked autocomplete="off")       
               span {{division}}
+          label.btn.btn-outline-primary(style="margin-right: 15px" @click="loadCoaches()")
+            input(type="radio" checked autocomplete="off")       
+            span Coaches
       br
-      template(v-if="!schedule && schedules.length > 0")
+      template(v-if="showCoaches")
+        .row.col-12
+          .col-2 Clan
+          .col-2 Coach
+          .col-2 Discord
+          .col-2 Reddit
+        .row.col-12
+          .col-2
+            label(style="float: left; margin-left: -75px;") search
+            input(v-model="searchClan")
+          .col-2
+            input(v-model="searchCoach")
+          .col-2
+            input(v-model="searchDiscord")
+          .col-2
+            input(v-model="searchReddit")
+        template(v-for="coach in filteredCoaches")   
+          .row.col-12
+            .col-2
+              a(target="_blank" v-bind:href="`/clan/clan/${coach.clan}`") {{coach.clan}}
+            .col-2 
+              a(target="_blank" v-bind:href="`/clan/coach/${coach.coachId}`") {{coach.coach}}
+            .col-2 {{coach.discord}}
+            .col-2
+              a(target="_blank" v-bind:href="`https://old.reddit.com/u/${coach.reddit}`") {{coach.reddit}}
+
+
+      template(v-if="!showCoaches && !schedule && schedules.length > 0")
         .row
           template(v-for="row in numberOfRows")
             br
@@ -66,7 +96,7 @@ block content
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{ _schedule(row,col).away.clan }}
 
-      template(v-if="schedule")
+      template(v-if="!showCoaches && schedule")
         .row.col-12.no-gutters
           .col.text-left
             button.btn.btn-sm.btn-primary(@click="selectedSide=schedule.home" data-toggle="modal" data-target="#newCoach") Substitute coach
@@ -473,7 +503,13 @@ block scripts
         selectedPlayer:null,
         eicPlayers:[],
         assPlayers:[],
-        loadingMissingGames:false
+        loadingMissingGames:false,
+        coaches:[],
+        showCoaches:false,
+        searchClan: "",
+        searchCoach: "",
+        searchDiscord: "",
+        searchReddit: ""
       },
       computed: {
         numberOfRows() {
@@ -481,6 +517,19 @@ block scripts
         },
         sortedMatches(){
           return this.schedule.matches.sort(function(a,b){return a.competition > b.competition;})
+        },
+        filteredCoaches(){
+          return this.coaches
+            .filter(c => this.searchClan.length > 0 ? c.clan.toLowerCase().indexOf(this.searchClan) > -1 : true )
+            .filter(c => this.searchCoach.length > 0 ? c.coach.toLowerCase().indexOf(this.searchCoach) > -1 : true )
+            .filter(c => this.searchDiscord.length > 0 ? c.discord.toLowerCase().indexOf(this.searchDiscord) > -1 : true )
+            .filter(c => this.searchReddit.length > 0 ? c.reddit.toLowerCase().indexOf(this.searchReddit) > -1 : true )
+            .sort((a,b) => {
+              var r = a.clan.localeCompare(b.clan, undefined,{sensitivity:"base"});
+              if (r !== 0) return r;
+              return a.coach.localeCompare(b.coach, undefined,{sensitivity:"base"});
+            });
+
         }
       },
       methods:{
@@ -493,6 +542,7 @@ block scripts
         },
         async load(division){
           this.schedule = null;
+          this.showCoaches = false;
           this.missingGames =[];
           let response = await fetch(`/api/v2/clan/schedule/season 10/${division}`);
           let data = await response.json();
@@ -518,6 +568,13 @@ block scripts
           let response = await fetch(`/api/v2/clan/competition/${division}/${round}/${house}`);
           this.loadingMissingGames = false;
           this.missingGames = await response.json();
+        },
+        loadCoaches: async function(){
+          if (this.coaches.length === 0) {
+            let response = await fetch(`/api/v2/clan/coaches`);
+            this.coaches = await response.json();
+          }
+          this.showCoaches = true;
         },
         reddit: function(clan, coach){
           let account = clan.members.find(function(x){return x.coach.toLowerCase() === coach.toLowerCase()});

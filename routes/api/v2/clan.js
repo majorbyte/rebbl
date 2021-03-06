@@ -303,6 +303,11 @@ class ClanApi{
       res.attachment(`clan-races.csv`);
       res.send(`"race","win","draw","loss"\r\n${csv}`);
     });
+    
+    this.router.get("/coaches",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
+      const coaches = await clanService.getCoaches();
+      res.json(coaches);
+    });
 
     this.router.get("/:clan", async function(req, res){
       const clan = await clanService.getClanByName(req.params.clan); 
@@ -492,8 +497,6 @@ class ClanApi{
 
       res.status(200).send();
     });
-
-    
   
     return this.router;
   }
