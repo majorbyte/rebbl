@@ -5,7 +5,7 @@
 You need NodeJS and MongoDB to run this locally
 
 1. [Download rebbl.net dump](https://cdn2.rebbl.net/rebbl.net/rebbl.archive) 
-2. Run the following command: `mongorestore -h <host> -d rebbl --gzip --archive=<path>/rebbl.archive --drop`
+2. Run the following command: `mongorestore -h localhost -d rebbl --gzip --archive=<path>/rebbl.archive --drop`
 3. Make sure you have the following environment variables availables:
     ```javascript
     NODE_ENV :"development"  // setting the env to development makes your local instance use local js/css files
