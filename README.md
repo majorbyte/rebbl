@@ -4,8 +4,8 @@
 
 You need NodeJS and MongoDB to run this locally
 
-1. [Download rebbl.net dump](https://cdn2.rebbl.net/rebbl.net/rebbl.tar.gz) and unpack it (just the .tar.gz) to `<path>`, so you end up with `<path>/rebbl`
-2. Run the following command: `mongorestore --gzip --dir <path>`
+1. [Download rebbl.net dump](https://cdn2.rebbl.net/rebbl.net/rebbl.archive) 
+2. Run the following command: `mongorestore -h <host> -d rebbl --gzip --archive=<path>/rebbl.archive --drop`
 3. Make sure you have the following environment variables availables:
     ```javascript
     NODE_ENV :"development"  // setting the env to development makes your local instance use local js/css files
@@ -39,6 +39,6 @@ You need NodeJS and MongoDB to run this locally
 ⚠️**Important:** Windows 10 hosts must use [Linux containers](https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers).
 
 1. Install [Docker](https://www.docker.com/get-started)
-2. Download the [Rebbel.net dump](https://cdn2.rebbl.net/rebbl.net/rebbl.tar.gz) and store it on this folder as `rebbl.tar.gz`
+2. Download the [Rebbel.net dump](https://cdn2.rebbl.net/rebbl.net/rebbl.archive) and store it on this folder as `rebbl.archive`
 3. Run `docker-compose build`
 4. Run `docker-compose up`. This is the only step you need to follow on subsequent runs.
