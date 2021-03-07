@@ -1,6 +1,7 @@
 "use strict";
 const LeagueService = require("../../../lib/LeagueService.js")
   , apiService = require("../../../lib/apiService.js")
+  , dataService = require("../../../lib/DataService.js").rebbl
   , datingService = require("../../../lib/DatingService.js")
   , teamService = require("../../../lib/teamservice.js")
   , util = require("../../../lib/util.js")
@@ -19,15 +20,51 @@ router.get("/", util.cache(10*60), async function(req, res){
     let schedules = await LeagueService.searchLeagues({"contest_id":{$in:dates}});
 
     let clanSchedules = await LeagueService.searchLeagues({"matches.contest_id":{$in:dates}},{projection:{"matches.$":1}} );
+    let unstartedSchedules = await LeagueService.searchLeagues({"unstarted.competitionId":{$in:dates}},{projection:{"unstarted.$":1}} );
+
 
     if(clanSchedules.length > 0){
         clanSchedules.map(x => x.matches.map(m => schedules.push(m)));
     }
+    if(unstartedSchedules.length > 0){
+      let u = unstartedSchedules[0].unstarted[0];
+      schedules.push({
+        league:"Clan",
+        clan:true,
+        contest_id:u.competitionId,
+        competition:u.competitionName,
+        competition_id:u.competitionId,
+        round:u.competitionName.replace(/\D/g,"")[1],
+        opponents:[{
+          coach:{
+            id:u.coaches[0].coachId,
+            name:u.coaches[0].coachName
+          },
+          team:{
+            id:u.coaches[0].teamId,
+            name:u.coaches[0].teamName,
+            logo:u.coaches[0].logo
+          }
+        },{
+          coach:{
+            id:u.coaches[1].coachId,
+            name:u.coaches[1].coachName
+          },
+          team:{
+            id:u.coaches[1].teamId,
+            name:u.coaches[1].teamName,
+            logo:u.coaches[1].logo
+          }
+        }]
+      });
+  }
 
     let data = [];
-
+    let races =  await dataService.getRaces();
+    
     await Promise.all(schedules.map(async function(match) {
         let date = n.find(s => s.id === match.contest_id);
+
         let homeTeam = await teamService.getTeamById(match.opponents[0].team.id);
         let awayTeam = await teamService.getTeamById(match.opponents[1].team.id);
         
@@ -39,12 +76,12 @@ router.get("/", util.cache(10*60), async function(req, res){
             homeCoach: match.opponents[0].coach.name,
             homeTeam: match.opponents[0].team.name,
             homeTeamValue: homeTeam ? homeTeam.team.nextMatchTV || homeTeam.team.value : match.opponents[0].team.value,
-            homeTeamRace: match.opponents[0].team.race,
+            homeTeamRace: match.opponents[0].team.race || races.find(x => x.id === homeTeam.team.idraces).name,
             homeTeamLogo: match.opponents[0].team.logo,
             awayCoach: match.opponents[1].coach.name,
             awayTeam: match.opponents[1].team.name,
             awayTeamValue: awayTeam ? awayTeam.team.nextMatchTV || awayTeam.team.value : match.opponents[1].team.value,
-            awayTeamRace: match.opponents[1].team.race,
+            awayTeamRace: match.opponents[1].team.race || races.find(x => x.id === awayTeam.team.idraces).name ,
             awayTeamLogo: match.opponents[1].team.logo,
             match_uuid : match.match_uuid,
             contest_id: match.contest_id,
