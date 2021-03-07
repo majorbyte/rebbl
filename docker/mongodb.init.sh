@@ -4,7 +4,7 @@ if test -f "$INIT_CHECK_FILE"; then
   echo "Skipping init db"
 else
   mongod --fork --logpath /var/log/mongodb.log
-  mongorestore --gzip --dir /usr/src/rebbl
+  mongorestore -h localhost -d rebbl --gzip --archive=/usr/src/rebbl.archive --drop
   mongod --shutdown
   touch "$INIT_CHECK_FILE"
 fi

@@ -72,7 +72,6 @@ class Account{
     }
   }
 
-
   async _getMatch(req, res){
     try{
       let match = await leagueService.getUpcomingMatch(req.user.name);
@@ -113,14 +112,22 @@ class Account{
 
   async _scheduleMatch(req, res){
     try{
-      let contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")} });
-      if (contest.length === 0) contest = await leagueService.searchLeagues({matches:{$elemMatch:{contest_id:Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")}}} });
+      let contest = [];
+      if (req.params.match_id == 0){
+        contest = await leagueService.searchLeagues({"unstarted.competitionId":Number(req.body.competitionId), "unstarted.coaches.coachName": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")} });
+      } else if (req.body.clan) {
+        contest = await leagueService.searchLeagues({"matches.contest_id":Number(req.params.match_id), "matches.opponents.coach.name": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")} });      
+      } else {
+        contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")} });
+        if (contest.length === 0) contest = await leagueService.searchLeagues({matches:{$elemMatch:{contest_id:Number(req.params.match_id), "opponents.coach.name": {$regex: new RegExp(`^${res.locals.user.coach}$`, "i")}}} });
+      }
+      
 
       if(contest.length > 0){
         if (req.body.date.length === 16)
-          datingService.updateDate(Number(req.params.match_id), req.body.date);
+          datingService.updateDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id), req.body.date);
         else 
-          datingService.removeDate(Number(req.params.match_id));
+          datingService.removeDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id));
         res.send("ok");
       } else {
         res.status(403).send();

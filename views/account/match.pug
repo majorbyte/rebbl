@@ -59,10 +59,12 @@ block scripts
 
         $(".btn-date").on("click", function(event){
           let id = event.currentTarget.getAttribute("data-contestid");
+          let competitionId = event.currentTarget.getAttribute("data-competitionid");
+          let clan = event.currentTarget.getAttribute("data-clan");
           let target =event.currentTarget.getAttribute("data-target");
           
           var xhr = new XMLHttpRequest();
-          xhr.open("PUT", "/account/unplayed/"+id, true)
+          xhr.open("PUT", "/account/unplayed/"+ id, true)
           xhr.setRequestHeader("Content-Type", "application/json");
 
           let timezone = "#{user.timezone}" || moment.tz.guess();
@@ -91,7 +93,7 @@ block scripts
 
           setCalendarDatetime();
            
-          xhr.send(JSON.stringify({date: date}));
+          xhr.send(JSON.stringify({date, clan, competitionId}));
 
         });
         
@@ -164,12 +166,12 @@ block content
                 div(class="col-3 col-sm-4 col-md-4 col-xl-3")
                   input(type="text" class="form-control datetimepicker-input" id=`datetimepicker-${match.contest_id}` data-target=`#datetimepicker-${match.contest_id}` data-toggle="datetimepicker" value=(match.date ? match.date.date : null) data-btn=`#btn-${match.contest_id}`  )
                 div(class="col-3 col-sm-4 col-md-4 col-xl-3" style="padding:0;")
-                  button(class="btn btn-secondary btn-block btn-date" disabled data-contestid= match.contest_id data-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
+                  button(class="btn btn-secondary btn-block btn-date" disabled data-clan=match.clan data-contestid=match.contest_id data-competitionid=match.competition_id data-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
                   a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.opponents[0].team.name data-team-away=match.opponents[1].team.name class="calendar-add") Add to Google Calendar
                 -if (user.twitch)                  
                   div(class="col-1")
-                    btn(class="hidden btn btn-danger unstream"  id=`unstream-${match.contest_id}` data-contestid=match.contest_id) unstream
-                    btn(class="btn btn-success stream" id=`stream-${match.contest_id}` data-contestid=match.contest_id)  stream
+                    btn(class="hidden btn btn-danger unstream"  id=`unstream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
+                    btn(class="btn btn-success stream" id=`stream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
             - if(!user && match.date)
               p planned match start:&nbsp;
                 span(id="matchTime")= match.date.date
