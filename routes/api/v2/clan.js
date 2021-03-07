@@ -16,7 +16,7 @@ const express = require('express')
   , uploadStrategy = multer({ storage: inMemoryStorage }).single('image')
 
   , azureStorage = require('azure-storage')
-  , blobService = azureStorage.createBlobService(process.env.storage)
+  , blobService = process.env.storage && azureStorage.createBlobService(process.env.storage)
 
   , getStream = require('into-stream')
   , containerName = 'rebbl';
