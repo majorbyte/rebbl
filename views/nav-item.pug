@@ -1,5 +1,0 @@
-mixin nav-item(name, link, blank)
-
-  - if (!link) link = "/rebbl/" + name
-  li.nav-item.mr-3
-    a.nav-link.text-light(href=link target=(blank ? "_blank": ""))= name

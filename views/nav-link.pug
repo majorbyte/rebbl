@@ -1,7 +1,0 @@
-mixin nav-link(name, link, blank)
-
-  - if (!link) link = "/rebbl/" + name
-
-
-  li(class="nav-item " + (active.toUpperCase() === name.toUpperCase() ? "active" : ""))
-    a(href= link class="nav-link" + (active.toUpperCase() === name.toUpperCase() ? " highlight" : "") target=(blank ? "_blank": ""))= name.toUpperCase()

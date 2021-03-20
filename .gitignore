@@ -100,5 +100,7 @@ public/clandraft
 
 #VS Code
 .vscode/
+.vs/
+
 grunk.js
 temp.js
