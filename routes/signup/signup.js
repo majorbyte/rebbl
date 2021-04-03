@@ -41,11 +41,11 @@ class Signup{
 
   routesConfig(){
     
-/*    this.router.get('/', async function(req, res){
+    this.router.get('/', async function(req, res){
       res.render('signup/closed');
     });
-*/
 
+/*
     this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
 
     this.router.get('/', util.ensureAuthenticated, this._getStatus);
@@ -87,9 +87,9 @@ class Signup{
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
     
 //    this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
-    this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
+//    this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
 //    this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
-   this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
+//   this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
 //    this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
     return this.router;
   }
