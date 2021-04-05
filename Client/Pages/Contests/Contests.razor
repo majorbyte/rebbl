@@ -1,0 +1,53 @@
+﻿@page "/contests"
+@inject IHttpClientFactory ClientFactory
+
+
+@if (contests != null && contests.Any())
+{
+    <h1> @contests.First().Competition.Name</h1>
+
+    @foreach (var round in contests.Select(x => x.Round).Distinct().OrderBy(x => x))
+    {
+        <div class="row col-4 col-sm-12 col-md-5 col-lg-6">
+            <h2 class="col-12">@round</h2>
+            @foreach (var contest in contests.Where(x => x.Round == round))
+            {
+                <div class="row col-12">
+                    <div class="col">
+                        @contest.HomeTeamId  (@contest.HomeCoachId)
+
+                        <div class="TeamLabel TeamLabel--reverse">
+                            <div class="TeamLabel-block">
+                                <img class="TeamLabel-logo" src="https://cdn2.rebbl.net/images/logo/logo_orc_07.png" alt="" />
+                            </div>
+                            <div class="TeamLabel-info TeamLabel-info--noScore">
+                                <div class="TeamLabel-name ">Disn'Orc</div>
+                                <div class="TeamLabel-coach ">DestructionDarb</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        @contest.HomeScore - @contest.AwayScore
+                    </div>
+                    <div class="col">
+                        @contest.AwayTeamId  (@contest.AwayCoachId)
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+
+
+@code{
+
+private IEnumerable<ContestModel> contests;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = ClientFactory.CreateClient("ServerAPI.NoAuthenticationClient");
+        contests = await client.GetFromJsonAsync<ContestModel[]>("api/contests/116137");
+    }
+
+}

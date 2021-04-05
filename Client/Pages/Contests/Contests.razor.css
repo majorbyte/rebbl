@@ -1,0 +1,68 @@
+﻿.TeamLabel--reverse {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    -ms-flex-direction: row-reverse;
+    flex-direction: row-reverse;
+}
+
+.TeamLabel {
+    font-size: 1rem;
+    line-height: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 100%;
+    margin: 5px 0px;
+}
+
+.TeamLabel-block {
+    width: 48px;
+    height: 48px;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+}
+
+.TeamLabel-logo {
+    width: 48px;
+    height: 48px;
+    fill: rgba(51,51,51,.4);
+}
+
+.TeamLabel--reverse .TeamLabel-info {
+    padding-left: 0;
+    padding-right: 8px;
+}
+
+.TeamLabel--reverse .TeamLabel-info--noScore {
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: flex-end;
+}
+
+.TeamLabel--reverse .TeamLabel-info {
+    text-align: right;
+}
+
+.TeamLabel--reverse .TeamLabel-name {
+    text-align: right;
+}
+
+.TeamLabel-name, .TeamLabel-coach {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+}
+
+.TeamLabel-name, .TeamLabel-coach {
+    position: relative;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+}
