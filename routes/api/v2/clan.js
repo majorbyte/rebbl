@@ -177,8 +177,8 @@ class ClanApi{
       {
         key: "miscommunication",
         name: "Miscommunication!",
-        cost: 100,
-        quantitiy: 2,
+        cost: 150,
+        quantitiy: 1,
         description: "This power causes opponents to \"miscommunicate\" their intended draft day powers, acting as if those powers were never used at all! The use of this power must be stated to a clan admin (who is NOT in your clan) in a PM prior to the draft. Only notify the opposing Clan Leader AFTER the draft is complete of your diabolical ruse! Miscommunication! negates all other powers used by both clans for that draft. Such negated powers are still available for the next draft. Post-game powers are still ok to use even if Miscommunication! was called as they do not happen during the draft. If BOTH clans attempted to use Miscommunication!, both clans use up one charge of this power."
       },{
         key: "emergencyRnR",
@@ -197,7 +197,11 @@ class ClanApi{
         name: "New Blood!",
         cost: 0,
         quantitiy: 1,
-        description: `Within 24 hours after the team played its last match (and before the next draft), the clan leader can nominate that team to be removed from the league permanently and replaced with a new team costing the same in gold as the original team did AT THE START OF THE SEASON.
+        description: `Deadlines:
+        Call power: Within 24 hours of game ending
+        Submit ledger: Within 48 hours of game ending, and before next draft.
+        
+        Within 24 hours after the team played its last match (and before the next draft), the clan leader can nominate that team to be removed from the league permanently and replaced with a new team costing the same in gold as the original team did AT THE START OF THE SEASON.
 
         This new team follows the same rules for buying players and skills as any new team. The new team may be of a different race if so desired, but still must be unique to the clan. If the new team is the same race as the original team, a single player from the original roster may be kept as a legacy player. This legacy player costs the same in gold as he is listed as valued in-game. This legacy player counts towards the number of superstars on the new team (as the team’s first superstar, although his 10k superstar tax is considered part of the price paid for him already). The legacy player also counts towards the number of statistic increased players AND number of doubles players (if the legacy player has any stats or doubles). For instance, a legacy +ST and +AG dorf runner with dodge and sidestep would thus consume both the statistic and double quota of the new blood:ed Dorf team. He would still be legal, however, as he earned those stats and doubles the hard way! A second superstar on that Dorf team would cost 20k tax, a third 30k, etc, as per the rules on superstars.
 
@@ -212,17 +216,19 @@ class ClanApi{
         name: "Assassination!",
         cost: 100,
         quantitiy: 2,
-        description: `At the end of a draft you may nominate 1 player from any of the teams in the opposing clan and have a hitman attempt to assassinate their player. Roll a d6 using the discord dice bot. On a roll of a 2+ the assigned player is injured during the assassination attempt and must miss the next match! Sadly, the quality of assassins (or the toughness of Blood Bowl players!) these days mean they leave no permanent injury. This is handled by an admin game being used to apply an MNG injury to the player in question. 
+        description: `At the end of a draft you may nominate 1 player from any of the teams in the opposing clan and have a hitman attempt to assassinate their player. Sadly, the quality of assassins (or the toughness of Blood Bowl players!) these days mean they leave no permanent injury. This is handled by an admin game being used to apply an MNG injury to the player in question. 
 
-        If you roll a 1, the assassin is interrupted during his task by a random player on the opposing team and attacks them instead! Randomly determine a player on the opposing team WHO WAS NOT THE ORIGINAL TARGET to receive an MNG instead. 
-
-        This power cannot be used to target a player that has already been a target of assassination (either directly, or indirectly) earlier in the season. Assassin’s have too much professional pride to take sloppy seconds! Granted, if the same team is targeted and a 1 is rolled, the same player could accidentally be assassinated instead of the targeted teammate if they are unlucky enough.`
+        This power cannot be used to target a player that has already been a target of assassination (either directly, or indirectly) earlier in the season. Assassin’s have too much professional pride to take sloppy seconds!`
       },{
         key: "emergencyIntensiveCare",
         name: "Emergency Intensive Care!",
         cost: 0,
         quantitiy: 1,
-        description: `Within 24 hours after the team played its last match (and before the next draft), the clan leader (or nominated deputy) may specify one target player that will be whisked away after the latest game to be placed into intensive care. This means if a player suffers a permanent injury (niggle, stat bust, death) during the game. 
+        description: `Deadline:
+        Call power: With 24 hours of game ending.
+        
+        Within 24 hours after the team played its last match (and before the next draft), the clan leader (or nominated deputy) may specify one target player that will be whisked away after the latest game to be placed into intensive care. This means if a player suffers a permanent injury (niggle, stat bust, death) during the game. 
+        
         The injury will then be changed into an MNG by a Clan League Admin instead. The game cannot be confirmed in order to be used, so coaches are responsible for pressing “NO” when asked to confirm the game, if you intend to request this power or are considering using it. This power cannot be prevented by using Miscommunication!. 
         
         In addition, it may be used any number of times at a cost of 100k/injury to heal an old battle scar on a returning player. This does not consume the power, as it happens between seasons. You need to note all perm removals on your clan ledger when you complete the team re-buy process.`
@@ -243,7 +249,13 @@ class ClanApi{
         name: "Bad Inducement Deal!",
         cost: 50,
         quantitiy: 2,
-        description: `At the start of the draft, the clan leader may pick any one inducement and one opposing team. During that team’s match for the round, this inducement may not be bought during the inducement phase. The team may take any other inducement as normal, however. Note that stadiums that e.g. give wizards or bribes still do so, and may be used during game. Similarly, if a kick-off event gives for instance bribes, these are free to use even if Bribe was the inducement picked in a Bad Inducement Deal! as it is only PURCHASES DURING INDUCEMENT that is prohibited. If a coach forgets or otherwise violates this, ask for the game to be reset by an admin. `
+        description: `At the end of the draft, the clan leader may pick any one inducement and one opposing team. During that team’s match for the round, this inducement may not be bought during the inducement phase. 
+
+        The team may take any other inducement as normal, however. Note that if a kick-off event e.g. gives bribes, these are free to use even if Bribe was the inducement picked in a Bad Inducement Deal as it is only PURCHASES DURING INDUCEMENT that is prohibited. 
+        
+        If a coach forgets or otherwise violates this, ask for the game to be reset by an admin. Both coaches have a responsibility to ensure the power does not get purchased during inducement, and that the game is reset right away. 
+        
+        If the game has progressed from kick-off, any mistakes will be allowed for that game. Coaches that make the mistake to buy a banned power more than once will face disciplinary action, and the clan that called the BID that did not get adhered to will get the use back. `
       },{
         key:"confusion",
         name:"Confusion!",
