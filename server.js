@@ -32,6 +32,11 @@ class Server{
 
     this.port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
     this.app = express();
+    this.app.use(function(req, res, next) {
+      res.setHeader('Permissions-Policy', 'interest-cohort=()');
+      next();
+    });
+    
     this.app.locals.cyanideEnabled = true;
   }
 
