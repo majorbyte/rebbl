@@ -173,7 +173,7 @@ class ClanApi{
 
     this.router.get("/powers", function(req,res){
       res.json( [
-      {key:"version4.0",description:4.0},
+      {key:"version11.0",description:11.0},
       {
         key: "miscommunication",
         name: "Miscommunication!",
@@ -268,7 +268,48 @@ class ClanApi{
         cost:20,
         quantitiy:5,
         description:"At the start of the draft, pick one team from your opponent’s clan. This team refuses to be bussed (i.e. offered-up) by their clan leader when it’s that clan’s turn to offer up their FIRST team to the opposing clan leader. Teams selected by this power also become immune to Last Minute Switch! Each Clan may only use this power once per draft. "
-      }]);
+      }
+      ,{
+        key: "stuntyLastMinuteSwitch",
+        name: "Last Minute Switch! (stunty)",
+        cost: 150,
+        quantitiy: 1,
+        description: "At the end of the draft, the clan leader may pick two teams from his clan - one of which is a stunty team - and switch up their matches. Coach A will thus face the opponent of Coach B instead, while Coach B faces the opponent of Coach A. Once a Last Minute Switch is played, the opposing clan may not use a Last Minute Switch that would affect any of the 4 coaches involved in the first switch."
+      }
+      ,{
+        key: "stuntyAssassination",
+        name: "Assassination! (stunty)",
+        cost: 100,
+        quantitiy: 2,
+        description: `At the end of a draft you may nominate 1 player from any of the teams in the opposing clan that plays against one of your stunty teams. That opponent team have a hitman attempt to assassinate their player. That player must miss the next match! Sadly, the quality of assassins (or the toughness of Blood Bowl players!) these days mean they leave no permanent injury. This is handled by an admin game being used to apply an MNG injury to the player in question.
+        This power cannot be used to target a player that has already been a target of assassination (either directly, or indirectly) earlier in the season. Assassin’s have too much professional pride to take sloppy seconds! 
+        `
+      },{
+        key: "stuntyInspiration",
+        name: "Inspiration! (stunty)",
+        cost: 100,
+        quantitiy: 2,
+        description: "At the start of a draft nominate one player from one of your clan’s stunty teams who is within 5 SPP of levelling. This player has been working hard on the training grounds between matches and has gained a level! The level up will be provided by setting up a game vs an admin team, which will be awarded as an admin concede loss to the clan team. The player to level will receive pass/intercept/cas spp enough to gain the needed spp to level. "
+      },{
+        key: "stuntyBadInducementDeal",
+        name: "Bad Inducement Deal! (stunty)",
+        cost: 50,
+        quantitiy: 2,
+        description: `At the end of the draft, the clan leader may pick any one inducement and one opposing team playing against your stunty coach. During that team’s match for the round, this inducement may not be bought during the inducement phase. The team may take any other inducement as normal, however. Note that if a kick-off event e.g. gives bribes, these are free to use even if Bribe was the inducement picked in a Bad Inducement Deal as it is only PURCHASES DURING INDUCEMENT that is prohibited. If a coach forgets or otherwise violates this, ask for the game to be reset by an admin. Both coaches have a responsibility to ensure the power does not get purchased during inducement, and that the game is reset right away. If the game has progressed from kick-off, any mistakes will be allowed for that game. Coaches that make the mistake to buy a banned power more than once will face disciplinary action, and the clan that called the BID that did not get adhered to will get the use back.`
+      },{
+        key:"stuntyConfusion",
+        name:"Confusion! (stunty)",
+        cost:50,
+        quantitiy:2,
+        description:"At the start of the draft, play this power to switch the draft order, causing the team that was due to draft second to draft first instead. You may not play a Confusion! to counter an opponent's Confusion! Additionally, this power does not switch the order of power usage in a draft, so any powers already used when Confusion! is played remain called."
+      },{
+        key:"stuntyHatredOfPublicTransport",
+        name:"Hatred of Public Transport! (stunty)",
+        cost:20,
+        quantitiy:5,
+        description:"At the start of the draft, pick one team from your opponent’s clan. This team refuses to be bussed (i.e. offered-up) by their clan leader when it’s that clan’s turn to offer up their FIRST team to the opposing clan leader. Teams selected by this power also become immune to Last Minute Switch! Each Clan may only use this power once per draft. "
+      }
+    ]);
     });
 
     this.router.get("/data", util.ensureAuthenticated, util.hasRole("admin"),async (req,res) => {
