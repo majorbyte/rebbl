@@ -314,7 +314,7 @@ class ClanApi{
 
     this.router.get("/data", util.ensureAuthenticated, util.hasRole("admin"),async (req,res) => {
       
-      const schedules = await dataService.getSchedules({league:"clan", season:"season 10"});
+      const schedules = await dataService.getSchedules({league:"clan", season:"season 11"});
       
       const data = [];
 
