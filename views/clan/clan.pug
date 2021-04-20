@@ -13,7 +13,8 @@ block content
   div(class=`container` id="app")
     img(v-if="clan.logo != null" :src="'https://cdn2.rebbl.net/' + clan.logo" style="float:right;width:128px")
     h2(style="text-transform:none") {{clan.name}}
-    h2(style="text-transform:none") Leader: {{clan.leader}}
+    h2(style="text-transform:none") Leader:&nbsp;
+      a(:href="'/coach/' + clan.leader" target="_blank") {{clan.leader}}
     template(v-if="clanLeader == true")
       div(v-if="clan.logo == null || clan.logo == 'images/clanlogos/clan.png'")
         input( @change="onFileSelectedEvent" type="file" accept="image/*" class="fileChooser")
