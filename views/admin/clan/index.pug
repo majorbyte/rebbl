@@ -518,7 +518,7 @@ block scripts
         numberOfRows() {
           const numberOfRounds = this.schedules.length % 5 === 0 ? 5 : 4;
           return Math.ceil(this.schedules.length / numberOfRounds );
-        }
+        },
         sortedMatches(){
           return this.schedule.matches.sort(function(a,b){return a.competition > b.competition;})
         },

@@ -55,7 +55,7 @@ class DraftApi{
         await draftService.registerPowers(draft);
         break;
       case "matches":
-        const unstarted = await draftService.createGames(draft,data);
+        const unstarted = await draftService.createGames(draft,query);
 
         dataService.updateSchedule(query, {$set:{unstarted: unstarted, drafted:true}});
         break;
