@@ -1,7 +1,7 @@
 extends ../no-cache-sub-relayout.pug
 
 block vars
-  - let options = {active: league, title: "REBBL SEASON 10", company:"clan"}
+  - let options = {active: league, title: "REBBL 11", company:"clan"}
   - let fullJquery = true
   - if (!active) { var active =  (options && options.active) ? options.active : "" }
   - let company = "clan";
@@ -20,7 +20,7 @@ block content
           div(class="col-12 col-lg-6 col-xl-4 col-md-6 mx-auto table-striped" style="width:unset;display:unset" )
             div(class="col-12 TableHeader col-md-11 col-xl-12 col-lg-12 col-sm-12" style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
               div(title="" class="Standings-details Standings-header highlight" ) Round {{row}}
-            template(v-for="col in 5")
+            template(v-for="col in numberOfRounds")
               a(class="row col-12 no-gutters col-md-11 col-xl-12 col-lg-12 col-sm-12" v-bind:href="'/clan/'+ schedule(row,col).season + '/' + schedule(row,col).competition + '/' + schedule(row,col).round + '/' + schedule(row,col).house" )
                 .col.row.no-gutters
                   .col.text-left
@@ -64,13 +64,18 @@ block scripts
         schedules: []
       },
       computed: {
+        numberOfRounds() {
+          return this.schedules.length % 5 === 0 ? 5 : 4;
+        },
         numberOfRows() {
-          return Math.ceil(this.schedules.length / 5);
+          const numberOfRounds = this.schedules.length % 5 === 0 ? 5 : 4;
+          return Math.ceil(this.schedules.length / numberOfRounds );
         }
       },
       methods:{
         schedule: function(r,c){
-          return this.schedules[(r - 1) * 5 + (c - 1)];
+          const numberOfRounds = this.schedules.length % 5 === 0 ? 5 : 4;
+          return this.schedules[(r - 1) * numberOfRounds + (c - 1)];
         }
       },
       // methods that implement data logic.
