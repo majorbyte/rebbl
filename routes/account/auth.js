@@ -80,7 +80,7 @@ class Authentication{
         const json = await response.json();
         const accessToken = json.access_token;
   
-        res.redirect(`/account/update/discord?token=${json.access_token}`);
+        res.redirect(`/account/discord/update?token=${json.access_token}`);
       } catch (ex) {
         console.log(ex.message);
         console.log(ex.stack);
