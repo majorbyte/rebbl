@@ -27,6 +27,7 @@ class Account{
     this.router.post('/trophies/hide',util.checkAuthenticated, util.ensureAuthenticated, this._hideTrophy);
     this.router.post('/trophies/show',util.checkAuthenticated, util.ensureAuthenticated, this._showTrophy);
     this.router.post('/update', util.checkAuthenticated, util.ensureAuthenticated, this._updateAccount);
+    this.router.post('/account//update/discord', util.checkAuthenticated, util.ensureAuthenticated, this._updateAccountDiscord);
 
     this.router.put('/unplayed/:match_id', util.checkAuthenticated, util.ensureAuthenticated, this._scheduleMatch);
 
@@ -132,6 +133,33 @@ class Account{
       } else {
         res.status(403).send();
       }
+    } catch(err){
+      console.log(err);
+    }
+  }
+
+  async _updateAccountDiscord(req, res) {
+    try{
+      const token = req.query.token;
+
+      const response = await fetch(`https://discord.com/api/oauth2/@me`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+
+      const json = await response.json();
+      const discordUser = json.user;
+
+      let account = res.locals.user;
+      account.discordId = discordUser.id;
+      account.discord = discordUser.username;
+
+      await accountService.updateAccount(account);
+      res.redirect('/account');
     } catch(err){
       console.log(err);
     }
