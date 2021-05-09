@@ -72,9 +72,9 @@ block content
             label(for="discord") Discord
             input(type="text" id="discord" name="discord" value=user.discord disabled)
             -if (user.discordId != undefined)
-              a.btn.btn-primary.btn-sm.pull-right(type="button" href="/account/discord/delete") Disconnect
+              a.btn.btn-primary.btn-sm(type="button" href="/account/discord/delete") Disconnect
             -else
-              a.btn.btn-primary.btn-sm.pull-right(type="button" href="/auth/discord") Connect
+              a.btn.btn-primary.btn-sm(type="button" href="/auth/discord") Connect
           div
             label(for="steam") Steam
             input(type="text" id="steam" name="steam" value=user.steam )
