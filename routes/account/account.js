@@ -24,7 +24,6 @@ class Account{
     this.router.get('/', util.checkAuthenticated, util.ensureAuthenticated, this._getAccount);
     this.router.get('/match',util.checkAuthenticated, util.ensureAuthenticated, this._getMatch);
     this.router.get('/trophies',util.checkAuthenticated, util.ensureAuthenticated, this._getTrophies);
-    this.router.get('/discord/update', util.checkAuthenticated, util.ensureAuthenticated, this._updateDiscord);
     this.router.get('/discord/delete', util.checkAuthenticated, util.ensureAuthenticated, this._removeDiscord);
 
     this.router.post('/trophies/hide',util.checkAuthenticated, util.ensureAuthenticated, this._hideTrophy);
@@ -136,43 +135,6 @@ class Account{
         res.status(403).send();
       }
     } catch(err){
-      console.log(err);
-    }
-  }
-
-  async _updateDiscord(req, res) {
-    try {
-      const token = req.query.token;
-      if (!token) {
-        res.status(403).send();
-        return;
-      }
-
-      const response = await fetch(`https://discord.com/api/oauth2/@me`,
-        {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-        }
-      );
-
-      const json = await response.json();
-      const discordUser = json.user;
-      
-      if (!discordUser) {
-        console.log(response);
-        res.status(403).send();
-        return;
-      }
-
-      let account = res.locals.user;
-      account.discordId = discordUser.id;
-      account.discord = discordUser.username;
-
-      await accountService.updateAccount(account);
-      res.redirect('/account');
-    } catch(err) {
       console.log(err);
     }
   }
