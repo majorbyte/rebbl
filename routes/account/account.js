@@ -5,6 +5,7 @@ const accountService = require("../../lib/accountService.js")
   , dataService = require("../../lib/DataService.js").rebbl
   , express = require('express')
   , leagueService = require("../../lib/LeagueService.js")
+  , fetch = require('node-fetch')
   , util = require('../../lib/util.js');
 
 class Account{
@@ -23,6 +24,7 @@ class Account{
     this.router.get('/', util.checkAuthenticated, util.ensureAuthenticated, this._getAccount);
     this.router.get('/match',util.checkAuthenticated, util.ensureAuthenticated, this._getMatch);
     this.router.get('/trophies',util.checkAuthenticated, util.ensureAuthenticated, this._getTrophies);
+    this.router.get('/discord/delete', util.checkAuthenticated, util.ensureAuthenticated, this._removeDiscord);
 
     this.router.post('/trophies/hide',util.checkAuthenticated, util.ensureAuthenticated, this._hideTrophy);
     this.router.post('/trophies/show',util.checkAuthenticated, util.ensureAuthenticated, this._showTrophy);
@@ -133,6 +135,18 @@ class Account{
         res.status(403).send();
       }
     } catch(err){
+      console.log(err);
+    }
+  }
+
+  async _removeDiscord(req, res) {
+    try {
+      let account = res.locals.user;
+      account.discordId = undefined;
+      account.discord = undefined;
+      await accountService.updateAccount(account);
+      res.redirect('/account');
+    } catch(err) {
       console.log(err);
     }
   }
