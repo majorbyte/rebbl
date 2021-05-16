@@ -3,10 +3,14 @@
 const accountService = require("../../lib/accountService.js") 
   , crypto = require('crypto')
   , express = require('express')
-  , fetch = require('node-fetch')
+  , axios = require('axios')
   , passport = require('passport')
   , { URLSearchParams } = require('url');
 
+
+  const CLIENT_ID = process.env['discord.clientId'];
+  const CLIENT_SECRET = process.env['discord.clientSecret'];
+  const REDIRECT_URI = process.env['discord.callbackURL'];
 
 class Authentication{
 	constructor(){
@@ -44,9 +48,7 @@ class Authentication{
 
 
     this.router.get('/discord', function(req, res, next){
-      if (process.env['discordKey']) {
-        var CLIENT_ID = process.env['discordKey'];
-        var REDIRECT_URI = process.env['discordcallbackURL'];
+      if (CLIENT_ID) {
         res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${REDIRECT_URI}`);
       }
     });
@@ -62,10 +64,8 @@ class Authentication{
         return
       }
 
-      var CLIENT_ID = process.env['discordKey'];
-      var CLIENT_SECRET = process.env['discordSecret'];
-      var REDIRECT_URI = process.env['discordcallbackURL'];
-      var code = req.query.code;
+
+      const code = req.query.code;
 
       const params = new URLSearchParams();
       params.append('client_id', CLIENT_ID);
@@ -75,15 +75,19 @@ class Authentication{
       params.append('redirect_uri', REDIRECT_URI);
       params.append('scope', 'identify');
 
-      const response = await fetch(`https://discord.com/api/oauth2/token`,
-        {
-          method: 'POST',
-          body: params,
-        }
-      );
 
-      const json = await response.json();
-      const token = json.access_token;
+      const options = {
+        baseURL: 'https://discord.com',
+        url: '/api/oauth2/token',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        data:params
+      }
+
+      const response = await axios(options);
+      const token = response.data.access_token;
       if (!token) {
         res.status(403).send();
         return;
@@ -97,7 +101,7 @@ class Authentication{
   }
 
   static async _updateDiscord(token, res) {
-    const response = await fetch(`https://discord.com/api/oauth2/@me`,
+    const response = await axios(`https://discord.com/api/oauth2/@me`,
       {
         method: 'GET',
         headers: {
@@ -106,8 +110,7 @@ class Authentication{
       }
     );
 
-    const json = await response.json();
-    const discordUser = json.user;
+    const discordUser = response.data.user;
     
     if (!discordUser) {
       console.log(response);

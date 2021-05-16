@@ -5,7 +5,6 @@ const accountService = require("../../lib/accountService.js")
   , dataService = require("../../lib/DataService.js").rebbl
   , express = require('express')
   , leagueService = require("../../lib/LeagueService.js")
-  , fetch = require('node-fetch')
   , util = require('../../lib/util.js');
 
 class Account{
