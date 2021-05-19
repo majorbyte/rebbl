@@ -4,6 +4,21 @@ block content
   div(class="container")
     h2= "Thanks for signing up " + user.coach + "!"
 
+    - if (!account.discordId && !account.discordOptedOut)
+      .alert.alert-primary
+        h2
+          span(class="highlight")= user.coach
+
+          p In order to help with the administration of the league, please link your Discord account with rebbl.net. 
+          p This is optional but recommended as we use Discord for the majority of our daily communication.&nbsp;
+          p Our server can be found here: 
+            a(href="https://discord.gg/UbmBd4c" target="_blank") https://discord.gg/UbmBd4c
+
+          div
+            a.btn.btn-primary.btn-sm(type="button" href="/signup/discord") Connect
+
+            a.btn.btn-light.btn-sm.pull-right(type="button" href="/signup/nodiscord") No thanks
+
     p You can always change your signup information at a later stage
       a(href="/signup/" class="highlighted-rules")= " here"
       span .

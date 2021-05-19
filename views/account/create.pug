@@ -38,7 +38,7 @@ block content
         span(class="highlight")= user || account.reddit
 
       p To be able to play in ReBBL you we would like to know your Blood Bowl 2 coach name and your timezone.
-      p Discord, Steam and Twitch is optional
+      p Steam and Twitch is optional
 
       h3 Your data
 
@@ -54,7 +54,7 @@ block content
           label(for="timezone") Timezone
           select(id="timezone" name="timezone" required title="timezone" value=account.timezone)
           label(id="tz_info")
-        div
+        //div
           label(for="discord") Discord
           input(type="text" id="discord" name="discord" value=account.discord )
         div
@@ -74,7 +74,7 @@ block content
           label(for="timezone") Timezone
           select(id="timezone" name="timezone" required title="timezone")
           label(id="tz_info")
-        div
+        //div
           label(for="discord") Discord
           input(type="text" id="discord" name="discord")
         div

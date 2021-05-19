@@ -7,8 +7,22 @@ block content
   div(class="container")
     each signup in signups
       - if(signup.hasOwnProperty('signedUp'))
+        - if (!user.discordId && !user.discordOptedOut)
+          .alert.alert-primary
+            h2
+              span(class="highlight")= user.coach
+
+              p In order to help with the administration of the league, please link your Discord account with rebbl.net. 
+              p This is optional but recommended as we use Discord for the majority of our daily communication.&nbsp;
+              p Our server can be found here: 
+                a(href="https://discord.gg/UbmBd4c" target="_blank") https://discord.gg/UbmBd4c
+
+              div
+                a.btn.btn-primary.btn-sm(type="button" href="/signup/discord") Connect
+
+                a.btn.btn-light.btn-sm.pull-right(type="button" href="/signup/nodiscord") No thanks
         - if (signup.type ==="rebbl")
-          h2= "Welcome back to REBBL Season 16, "
+          h2= "Welcome back to REBBL Season 17, "
             span(class="highlight")= signup.coach
             span !
         - else 
@@ -22,18 +36,9 @@ block content
             span(style="font-size:0.75em" )= " (" + signup.race + ")"
             span= " to the following:"
           div
-            //- if(!signup.teamExist)
-              div(class="warning")
-                p Your team is either misspelled or not yet existing
-              br
-            //- form(action="/signup/confirm" method="post" )
-              -if(signup.confirmed)
-                span Thank you for confirming!
-              -else
-                button(type="submit") Confirm
             - if (signup.type==="rebbl")
-              h3= "REBBL Season 16 - " + signup.league
-              //form(action="/signup/resign" method="post" )
+              h3= "REBBL Season 17 - " + signup.league
+              form(action="/signup/resign" method="post" )
                 br
                 button(type="submit"  class="btn btn-primary") Resign
             - else
@@ -41,32 +46,20 @@ block content
                 h3= "REBBRL " + signup.league + " (Reserve)"
               - else
                 h3= "REBBRL " + signup.league
-              //form(action="/signup/resign-rebbrl" method="post")
+              form(action="/signup/resign-rebbrl" method="post")
                 br
                 button(type="submit"  class="btn btn-primary") Resign
         
           -if (signup.greenHorn)
             div
               h3 THE GREENHORN CUP
-          //  form(action="/signup/resign-greenhorn" method="post" )
+            form(action="/signup/resign-greenhorn" method="post" )
               br
               button(type="submit"  class="btn btn-primary") Resign
-          //-else if(signup.type === "rebbl" && signup.saveType !== "existing")
+          -else if(signup.type === "rebbl" && signup.saveType !== "existing")
             div
               h3 You can still sign up for THE GREENHORN CUP
               a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
-
-          //- -if (signup.OI)
-          //-   div
-          //-     h3 THE OFF-SEASON INTERNATIONAL
-          //-   form(action="/signup/resign-oi" method="post" )
-          //-     br
-          //-     button(type="submit"  class="btn btn-primary") Resign
-          //- -else if(signup.saveType === "existing")
-          //-   div
-          //-     h3 You can still sign up for THE OFF-SEASON INTERNATIONAL
-          //-     a(href="/signup/signup-oi") Sign me up for OSI
-
           p Nagivate 
             a(href="/signup/signups" class="highlighted-rules") here
             span &nbsp;to view all current signups
@@ -75,55 +68,55 @@ block content
         span(class="highlight")= user.coach
         span !
       //.jumbotron
-        h1.display-4 REBBL SEASON 16
-        p.lead Signups for REBBL Season 16 are closed. Rampup signups will open up on Thursday.
+        h1.display-4 REBBL SEASON 17
+        p.lead Signups for REBBL Season 17 are closed. Rampup signups will open up on Thursday.
 
-      .jumbotron
-        h1.display-4 REBBL SEASON 16 - RAMPUP
-        p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 16!
+      //.jumbotron
+        h1.display-4 REBBL SEASON 17 - RAMPUP
+        p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 17!
         hr.my-2
         p 
-          a(href="https://www.reddit.com/r/ReBBl/comments/lkokc7/rebbl_rampup_season_16/" class="highlighted-rules") Read more here about our Rampup system for Season 16
+          a(href="https://www.reddit.com/r/ReBBl/comments/lkokc7/rebbl_rampup_season_16/" class="highlighted-rules") Read more here about our Rampup system for Season 17
         a.btn.btn-primary.btn-lg(href="/signup/change" role="button") Continue
       
-      //.jumbotron
-        h1.display-4 REBBL SEASON 16
-        p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 16!
+      .jumbotron
+        h1.display-4 REBBL SEASON 17
+        p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 17!
         hr.my-2
         p 
-          a(href="https://www.reddit.com/r/ReBBl/comments/kq98rd/signups_rebbl_s16_minors_s12_college_s13/" class="highlighted-rules") Read more here about Season 16
+          a(href="https://www.reddit.com/r/ReBBl/comments/nfk3j4/signups_rebbl_s17_minors_s13_college_s14/" class="highlighted-rules") Read more here about Season 17
           | , look for the header: &nbsp; 
-          span(class="text-info") REBBL SEASON 16
+          span(class="text-info") REBBL SEASON 17
         a.btn.btn-primary.btn-lg(href="/signup/change" role="button") Continue
 
-      //.jumbotron
-        h1.display-4 MINORS SEASON 12
+      .jumbotron
+        h1.display-4 MINORS SEASON 13
         p.lead If you played in our College League last season and want to continue in the Minors Leauge, look no further!
         hr.my-2
         p Go  
-          a(href="https://www.reddit.com/r/ReBBl/comments/kq98rd/signups_rebbl_s16_minors_s12_college_s13/" class="highlighted-rules") here 
+          a(href="https://www.reddit.com/r/ReBBl/comments/nfk3j4/signups_rebbl_s17_minors_s13_college_s14/" class="highlighted-rules") here 
           | for more information, look for the header: &nbsp; 
-          span(class="text-info") REBBRL Minors Season 12     
+          span(class="text-info") REBBRL MINORS SEASON 13     
         a.btn.btn-primary.btn-lg(href="/signup/rebbrl/minors" role="button") Continue
 
-      //.jumbotron
-        h1.display-4 COLLEGE SEASON 13
+      .jumbotron
+        h1.display-4 COLLEGE SEASON 14
         p.lead Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 13?
         hr.my-2
         p Read more about what the College League is about 
-          a(href="https://www.reddit.com/r/ReBBl/comments/kq98rd/signups_rebbl_s16_minors_s12_college_s13/" class="highlighted-rules") here
+          a(href="https://www.reddit.com/r/ReBBl/comments/nfk3j4/signups_rebbl_s17_minors_s13_college_s14/" class="highlighted-rules") here
           | , scroll down to the header: &nbsp;
-          span(class="text-info") REBBL COLLEGE LEAGUE SEASON 13  
+          span(class="text-info") REBBL COLLEGE LEAGUE SEASON 14
         a.btn.btn-primary.btn-lg(href="/signup/rebbrl/college" role="button") Continue
 
-      .jumbotron
-        h1.display-4 COLLEGE SEASON 13 - Reserves
+      //.jumbotron
+        h1.display-4 COLLEGE SEASON 14 - Reserves
         p.lead Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 13? You just missed signups but
           |  we are accepting reserves to fill spaces that become available.
         p.text-info NOTE: This is not a guarantee, but an opportunity in case there is space and will be slotted into the league as spots open on a first come first served basis.
         hr.my-2
         p Read more about what the College League is about
-          a(href="https://www.reddit.com/r/ReBBl/comments/kq98rd/signups_rebbl_s16_minors_s12_college_s13/" class="highlighted-rules")  here
+          a(href="https://www.reddit.com/r/ReBBl/comments/nfk3j4/signups_rebbl_s17_minors_s13_college_s14/" class="highlighted-rules")  here
           | , scroll down to the header: &nbsp;
-          span(class="text-info") REBBL COLLEGE LEAGUE SEASON 13
+          span(class="text-info") REBBL COLLEGE LEAGUE SEASON 14
         a.btn.btn-primary.btn-lg(href="/signup/rebbrl/college-reserves" role="button") Continue

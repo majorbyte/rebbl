@@ -21,6 +21,10 @@ class Account{
     this.router.post('/create', util.ensureLoggedIn, this._createAccount);
 
     this.router.get('/', util.checkAuthenticated, util.ensureAuthenticated, this._getAccount);
+    
+    this.router.get('/discord', util.checkAuthenticated, util.ensureAuthenticated, this._discord);
+    this.router.get('/nodiscord', util.checkAuthenticated, util.ensureAuthenticated, this._noDiscord);
+
     this.router.get('/match',util.checkAuthenticated, util.ensureAuthenticated, this._getMatch);
     this.router.get('/trophies',util.checkAuthenticated, util.ensureAuthenticated, this._getTrophies);
     this.router.get('/discord/delete', util.checkAuthenticated, util.ensureAuthenticated, this._removeDiscord);
@@ -143,6 +147,33 @@ class Account{
       let account = res.locals.user;
       account.discordId = undefined;
       account.discord = undefined;
+      account.discordOptedOut = true;
+      await accountService.updateAccount(account);
+      res.redirect('/account');
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  async _discord(req, res) {
+    try{
+      if (!res.locals.user){
+        res.redirect('/signup');
+      } else {
+        let account = res.locals.user;
+        res.render('account/discord', { user: account });
+      }
+    } catch(err){
+      console.log(err);
+    }
+  }
+
+  async _noDiscord(req, res) {
+    try {
+      let account = res.locals.user;
+      account.discordId = undefined;
+      account.discord = undefined;
+      account.discordOptedOut = true;
       await accountService.updateAccount(account);
       res.redirect('/account');
     } catch(err) {
@@ -178,7 +209,7 @@ class Account{
 
       try{
         await accountService.createAccount(account);
-        res.redirect('/account');
+        res.redirect('/account/discord');
       } catch(err){
         account.err = err;
         res.render('account/create', { account:account});
