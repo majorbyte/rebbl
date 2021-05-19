@@ -184,7 +184,6 @@ class Account{
   async _updateAccount(req, res){
     try{
       let account = { reddit: req.user.name
-        , discord:  req.body.discord
         , steam: req.body.steam
         , timezone: req.body.timezone
         , twitch: req.body.twitch

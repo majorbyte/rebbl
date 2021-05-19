@@ -43,7 +43,6 @@ router.post('/update', util.hasRole("admin"), async function(req, res){
   try{
     let account = { reddit: req.body.reddit
       , coach: req.body.coach      
-      , discord:  req.body.discord
       , steam: req.body.steam
       , timezone: req.body.timezone
       , twitch: req.body.twitch
@@ -63,7 +62,6 @@ router.post('/new', util.hasRole("admin"), async function(req, res){
   try{
     let account = { reddit: req.body.reddit
       , coach: req.body.coach      
-      , discord:  req.body.discord
       , steam: req.body.steam
       , timezone: req.body.timezone
       , twitch: req.body.twitch
