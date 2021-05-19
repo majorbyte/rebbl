@@ -1,0 +1,19 @@
+extends sublayout.pug
+
+block content
+  div(class="container")
+    h2
+      span(class="highlight")= user.reddit
+
+    p In order to help with the administration of the league, please link your Discord account with rebbl.net. 
+    p This is optional but recommended as we use Discord for the majority of our daily communication.&nbsp;
+    p Our server can be found here: 
+      a(href="https://discord.gg/UbmBd4c" target="_blank") https://discord.gg/UbmBd4c
+
+    div
+      a.btn.btn-primary.btn-sm(type="button" href="/auth/discord") Connect
+
+      a.btn.btn-light.btn-sm.pull-right(type="button" href="/account/nodiscord") No thanks
+
+
+        

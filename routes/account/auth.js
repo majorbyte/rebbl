@@ -1,6 +1,7 @@
 'use strict';
 
-const accountService = require("../../lib/accountService.js") 
+const accountService = require("../../lib/accountService.js")
+  , discordService = require("../../lib/DiscordService.js")
   , crypto = require('crypto')
   , express = require('express')
   , axios = require('axios')
@@ -16,7 +17,6 @@ class Authentication{
 	constructor(){
 		this.router = express.Router();
 	}
-
   
   routesConfig(){
     this.router.get('/reddit', function(req, res, next){
@@ -58,71 +58,18 @@ class Authentication{
   }
 
   async _authDiscordCallback(req, res, next) {
-    try {
-      if (!req.query.code) {
-        next( new Error(403) );
-        return
-      }
-
-
-      const code = req.query.code;
-
-      const params = new URLSearchParams();
-      params.append('client_id', CLIENT_ID);
-      params.append('client_secret', CLIENT_SECRET);
-      params.append('grant_type', 'authorization_code');
-      params.append('code', code);
-      params.append('redirect_uri', REDIRECT_URI);
-      params.append('scope', 'identify');
-
-
-      const options = {
-        baseURL: 'https://discord.com',
-        url: '/api/oauth2/token',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        data:params
-      }
-
-      const response = await axios(options);
-      const token = response.data.access_token;
-      if (!token) {
-        res.status(403).send();
-        return;
-      }
-      await Authentication._updateDiscord(token, res);
-      res.redirect('/account');
-    } catch (ex) {
-      console.log(ex.message);
-      console.log(ex.stack);
-    }
-  }
-
-  static async _updateDiscord(token, res) {
-    const response = await axios(`https://discord.com/api/oauth2/@me`,
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-      }
-    );
-
-    const discordUser = response.data.user;
-    
-    if (!discordUser) {
-      console.log(response);
+    const token = await discordService.authDiscordCallback(req.query.code, REDIRECT_URI);
+    if (!token) {
       res.status(403).send();
       return;
     }
 
-    let account = res.locals.user;
-    account.discordId = discordUser.id;
-    account.discord = discordUser.username;
-
-    await accountService.updateAccount(account);
+    const result = await discordService.updateDiscord(token, res.locals.user);
+    if (!result){
+      res.status(403).send();
+      return;
+    }
+    res.redirect('/account');
   }
 }  
 

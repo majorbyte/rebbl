@@ -1,11 +1,15 @@
 'use strict';
 
 const accountService = require('../../lib/accountService.js')
+  , discordService = require('../../lib/DiscordService.js')
   , apiService = require('../../lib/apiService.js')
   , cyanideService = require('../../lib/CyanideService.js')
   , express = require('express')
   , util = require('../../lib/util.js')
   , signupService = require('../../lib/signupService.js');
+
+const CLIENT_ID = process.env['discord.clientId'];
+const REDIRECT_URI = process.env['discord.signupCallbackURL'];
 
 
 class Signup{
@@ -41,26 +45,26 @@ class Signup{
 
   routesConfig(){
     
-    this.router.get('/', async function(req, res){
+/*    this.router.get('/', async function(req, res){
       res.render('signup/closed');
     });
-
-/*
-    this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
-
+*/
     this.router.get('/', util.ensureAuthenticated, this._getStatus);
+
+    this.router.get('/discord', util.ensureAuthenticated, this._authDiscord);
+    this.router.get('/nodiscord', util.ensureAuthenticated, this._noDiscord);
+
+    this.router.get('/discord/callback', this._authDiscordCallback);
+    
+    this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
 
     this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
 
-
-/*    this.router.post('/resign', util.ensureAuthenticated, this._resign);
-
+    this.router.post('/resign', util.ensureAuthenticated, this._resign);
   
     this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
 
     this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
-
-    //this.router.get('/signup-oi',util.ensureAuthenticated, this._signupOpenInvitational);
 
     this.router.get('/signup-greenhorn',util.ensureAuthenticated, this._signupGreenhornCup);
 
@@ -70,27 +74,18 @@ class Signup{
 
     this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
 
-    //this.router.post('/confirm-oi', util.ensureAuthenticated, this._confirmOpenInvitational);
-
-
     this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
 
-    //this.router.post('/resign-oi', util.ensureAuthenticated, this._resignOpenInvitational);
-
-    this.router.post('/confirm', util.ensureAuthenticated, this._checkConfirmation);
-
-    
-    
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
-    */
+    
     this.router.get('/signups', function(req,res){res.render('signup/signups', {url: ""});});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
     
-//    this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
+    this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
 //    this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
-//    this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
-//   this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
-//    this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
+    this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
+    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
+    this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
     return this.router;
   }
 
@@ -129,19 +124,19 @@ class Signup{
       let account = await accountService.getAccount(req.user.name);
 
       // Disabled while during season
-      /*let user = await signupService.getExistingTeam(req.user.name);
+      let user = await signupService.getExistingTeam(req.user.name);
       if(!signup && user && user.team){
         res.render('signup/signup-existing', { user: user});
         return;
-      }*/
+      }
 
       if (!signup){
         if(account){
-          //res.render('signup/signup-new-coach', {user: {account: account}, teamName : user.teamName});
-          res.render('signup/signup-rampup', {user: {account: account}});
+          res.render('signup/signup-new-coach', {user: {account: account}, teamName : user.teamName});
+          //res.render('signup/signup-rampup', {user: {account: account}});
         } else {
-          //res.render('signup/signup-new-coach', {user: req.user.name, teamName : user.teamName});
-          res.render('signup/signup-rampup', {user: req.user.name});
+          res.render('signup/signup-new-coach', {user: req.user.name, teamName : user.teamName});
+          //res.render('signup/signup-rampup', {user: req.user.name});
         }
         return;
       }
@@ -173,16 +168,6 @@ class Signup{
       console.log(err);
     }
   }
-
-  async _checkConfirmation(req,res){
-    try{
-      await signupService.confirm(req.user.name);
-      res.redirect('/signup');
-    } catch (err){
-      console.log(err);
-    }
-  }
-
 
   /* seasonal */
   async _reroll(req, res){
@@ -252,8 +237,8 @@ class Signup{
         if (user.error){
           res.render('signup/signup-reroll', {user: user});
         } else {
-          res.render('signup/signup-confirmed-greenhorn', {user: user});
-          //res.redirect('/signup');
+          //res.render('signup/signup-confirmed-greenhorn', {user: user});
+          res.redirect('/signup');
         }
       }
 
@@ -285,8 +270,8 @@ class Signup{
       if (user.error){
         res.render('signup/signup-new-coach', {user: user});
       } else {
-        res.render('signup/signup-confirmed-greenhorn', {user: user});
-        //res.redirect('/signup');
+        //res.render('signup/signup-confirmed-greenhorn', {user: user});
+        res.redirect('/signup');
       }
     } catch (err){
       console.log(err);
@@ -363,7 +348,6 @@ class Signup{
       console.log(err);
     }
   }
-
   
   /* rampup */  
   async _confirmRampup(req, res){
@@ -522,9 +506,9 @@ class Signup{
       let user = await signupService.saveSignUp(req.user.name, req.body);
 
       if (user.error){
-        res.render('signup/signup-new-coach-rebbrl', {user: user});
+        res.render('signup/signup-new-coach-rebbrl', {user});
       } else {
-        res.render('signup/signup-confirmed-rebbrl', {user: user});
+        res.render('signup/signup-confirmed-rebbrl', {user,account});
       }
     } catch (err){
       console.log(err);
@@ -538,6 +522,40 @@ class Signup{
     } catch (err){
       console.log(err);
     }    
+  }
+
+  async _authDiscord(req, res, next){
+    if (CLIENT_ID) {
+      res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${REDIRECT_URI}`);
+    }
+  }
+
+  async _authDiscordCallback(req,res){
+    const token = await discordService.authDiscordCallback(req.query.code, REDIRECT_URI);
+    if (!token) {
+      res.status(403).send();
+      return;
+    }
+
+    const result = await discordService.updateDiscord(token, res.locals.user);
+    if (!result){
+      res.status(403).send();
+      return;
+    }
+    res.redirect('/signup');
+  }
+
+  async _noDiscord(req, res) {
+    try {
+      let account = res.locals.user;
+      account.discordId = undefined;
+      account.discord = undefined;
+      account.discordOptedOut = true;
+      await accountService.updateAccount(account);
+      res.redirect('/signup');
+    } catch(err) {
+      console.log(err);
+    }
   }
 
 }
