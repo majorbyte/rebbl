@@ -1,5 +1,5 @@
 'use strict';
-const dataService = require("../../../lib/DataService.js").cripple
+const dataService = require("../../../lib/DataService.js").rebbl
   , express = require('express')
   , util = require('../../../lib/util.js');
 
