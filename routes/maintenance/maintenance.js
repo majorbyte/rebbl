@@ -100,7 +100,6 @@ class Maintenance{
           loggingService.error(e);
         }
         try{
-          await maintenanceService.getImperiumMatches();
           await perpetualService.getMatches();
         }
         catch(e){
