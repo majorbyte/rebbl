@@ -43,7 +43,6 @@ class Server{
   async appConfig(){
     await dataService.rebbl.init("rebbl");
     configurationService.init();
-    await dataService.cripple.init("rebbl");
 
     this.sessionStore = new MongoDBStore({
       uri: process.env["mongoDBUri"],

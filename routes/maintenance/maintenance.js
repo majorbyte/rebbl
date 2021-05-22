@@ -4,7 +4,7 @@ const
   , campingService = require("../../lib/CampingService.js")
   , clanService = require("../../lib/ClanService.js")
   , configurationService = require("../../lib/ConfigurationService.js")
-  , cripple = require('../../lib/crippleService.js')
+  , offseasonService = require('../../lib/OffseasonService.js')
   , ds = require("../../lib/DraftService.js")
   , dataService = require("../../lib/DataService.js").rebbl
   , express = require('express')
@@ -27,10 +27,10 @@ class Maintenance{
 
 
   routesConfig(){
-    this.router.get('/update/cripple', util.verifyMaintenanceToken, async function(req, res){
+    this.router.get('/update/offseason', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled) {
         try{
-          cripple.getMatches();
+          offseasonService.getMatches();
         }
         catch(e){
           loggingService.error(e);
@@ -71,12 +71,6 @@ class Maintenance{
       }
       res.redirect('/');
     });
-
-    this.router.get('/update/cripple/calculate', util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) cripple.calculateStandings("REBBL Cripple Ladder - Season 5");
-      res.redirect('/');
-    });
-
 
     this.router.get('/updateleague/init', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled) maintenanceService.initRebblData(req.query.league, req.query.comp);
