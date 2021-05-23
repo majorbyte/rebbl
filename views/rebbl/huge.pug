@@ -1,0 +1,112 @@
+extends ../no-cache-sub-relayout.pug
+block prepend vars
+  - let options = {company:"rebbl"}
+
+
+block content          
+  .container 
+    //ko if: top
+    .row.col-12.no-gutters.justify-content-center
+      div
+        img(data-bind="attr:{src: `/images/portraits/${top.player.type}.gif`}" style="height:150px;")
+      div.mx-1
+        .row(style="font-size:1.5em;color: rgb(24, 119, 162);")
+          span(data-bind="{text:top.player.name}" style="font-weight:700")
+        .row(style="font-size:1.25em")
+          span(data-bind="{text:`${top.points} points`}") 
+        .row(style="font-size:.75em")
+          span(data-bind="{text: `${top.bigGuy.spp} * (3 * ${top.win} wins + ${top.draw} draws)`}" style="font-weight:500")
+        .row
+          a(data-bind="{text: top.team, attr:{href: `/rebbl/team/${top.teamId}`}}") 
+          span( style="font-weight:200") &nbsp;-&nbsp;
+          a(data-bind="{text: top.name, attr:{href: `/rebbl/coach/${top.id}`}}") 
+        .row
+          span(data-bind="{text: ``}")
+
+      .row.col-12
+        .col &nbsp;
+      .row.col-12
+        .col
+          span 
+        .col
+          span(style="font-weight:700") big guy
+        .col
+          span team
+        .col
+          span coach
+        .col
+          span pts
+        .col 
+          span spp 
+        .col 
+          span win
+        .col 
+          span draw
+      //ko foreach: coaches.filter(x => x.position > 1)
+      .row.col-12
+        .col
+          span(data-bind="text: `#${$data.position}`")
+        .col
+          // ko if: $data.player
+          span(data-bind="{text:$data.player.name}" style="font-weight:700")
+          // /ko
+          // ko ifnot: $data.player
+          span(style="font-weight:700") ---
+          // /ko
+
+        .col
+          a(data-bind="{text: $data.team, attr:{href: `/rebbl/team/${top.teamId}`}}") 
+        .col
+          a(data-bind="{text: $data.name, attr:{href: `/rebbl/coach/${top.id}`}}") 
+        .col
+          span(data-bind="{text: $data.points}" style="font-weight:500")
+        .col 
+          // ko if: $data.bigGuy
+          span(data-bind="{text: $data.bigGuy.spp}" style="font-weight:500")
+          // /ko
+          // ko ifnot: $data.bigGuy
+          span(style="font-weight:500") 0
+          // /ko
+        .col 
+          span(data-bind="{text: $data.win}" style="font-weight:500")
+        .col 
+          span(data-bind="{text: $data.draw}" style="font-weight:500")
+          
+      // /ko
+    // /ko
+
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+    class ViewModel{
+      constructor(data){
+        this.coaches = [];
+        this.top = null
+        ko.track(this);
+      }
+
+      async loadBadges(){
+        let response = await fetch(`/api/v2/standings/huge/ladder/season 1`);
+        if (response.ok){
+          this.coaches = await response.json();
+          this.top = this.coaches.find(x => x.position === 1);
+        }
+      }
+    }
+
+    let model = new ViewModel({});
+
+    $(document).ready(function(){
+      ko.applyBindings(model);
+      model.loadBadges();
+    });
+    
