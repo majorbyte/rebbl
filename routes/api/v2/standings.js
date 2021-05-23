@@ -37,6 +37,27 @@ class StandingsApi{
     
     });
 
+    this.router.get('/huge/ladder/:season',/* util.cache(300),*/ async function(req, res){
+      let standings = await dataService.getStandings({
+        "type":'hjmcl', 
+        "season":req.params.season
+      });
+      for(let standing of standings){
+        if(standing.bigGuy){
+          standing.player = await dataService.getPlayer({id: standing.bigGuy.id});
+        }
+      }
+
+      standings =standings.sort((a,b) => {
+        if (a.competition > b.competition) return 1;
+        if (a.competition < b.competition) return -1;
+        if (a.position > b.position) return 1;
+        if (a.position < b.position) return -1;
+        return 0;
+      });
+      res.json(standings);
+    });
+
     this.router.get('/:league/:season/', util.cache(300), async function(req, res){
       let standings = await dataService.getStandings({
         "league":new RegExp(`^${req.params.league}$`,"i"), 

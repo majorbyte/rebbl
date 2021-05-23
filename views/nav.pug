@@ -25,9 +25,6 @@ mixin nav(company)
               a.px-1.dropdown-item(href="/clan")
                 img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn2.rebbl.net/images/clan.png')
                 .col.d-inline-block.text-light Clan
-              a.px-1.dropdown-item(href="https://imperium.rebbl.net" target="_blank")
-                img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn2.rebbl.net/images/imperium.png' style="max-width:20px")
-                .col.d-inline-block.text-light Imperium
               a.px-1.dropdown-item(href="https://bounties.rebbl.net" target="_blank")
                 img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn2.rebbl.net/images/donate.png' style="max-width:20px")
                 .col.d-inline-block.text-light Bounty Board
@@ -62,7 +59,7 @@ mixin nav(company)
                     a.dropdown-item.d-inline-block.text-light(href="/rebbl/Greenhorn Cup") Greenhorn
                     .dropdown-divider
                     a.dropdown-item.d-inline-block.text-light(href="/rebbl/camping/summer") Summer Camp
-                    //a.dropdown-item.d-inline-block.text-light(href="/rebbl/huge/ladder") HJ Memorial Ladder
+                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/huge/ladder") HJ Memorial Ladder
                     a.dropdown-item.d-inline-block.text-light(href="/rebbl/camping/winter") Winter Camp
               block navigation
           when "rebbrl"
