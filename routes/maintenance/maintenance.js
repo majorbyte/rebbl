@@ -15,6 +15,7 @@ const
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , standingsService = require("../../lib/StandingsService.js")
+  , signupService = require("../../lib/signupService.js")
   , ts = require("../../lib/TicketService.js")
   , util = require('../../lib/util.js')
   , reddit = require("../../lib/RedditService.js");
@@ -136,6 +137,13 @@ class Maintenance{
         catch(e){
           loggingService.error(e);
         }
+        try{
+          signupService.checkTeams();
+        }
+        catch(e){
+          loggingService.error(e);
+        }        
+        
       }
     };
 
