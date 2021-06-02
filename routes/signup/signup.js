@@ -409,7 +409,9 @@ class Signup{
       if (team){
         signup.teamCreated = team.team.created;
         signup.lastPlayed = team.team.datelastmatch;
-        signup.race = this.races.find(x => x.id === team.team.idraces).name;
+        const race = this.races.find(x => x.id === team.team.idraces);
+        if (race) signup.race = race.name;
+        else error.race = "No mixed race teams";
       }
     } else {
       if (coachRecord){
@@ -436,7 +438,7 @@ class Signup{
       }
     }
 
-    if (error.team || error.coach) signup.error = error;
+    if (error.team || error.coach || error.race) signup.error = error;
 
     return signup;
   }
