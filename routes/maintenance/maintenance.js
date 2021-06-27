@@ -52,7 +52,7 @@ class Maintenance{
       try{
         //await perpetualService.getMatches();
         //await maintenanceService.getRebblData(req.query.league);
-        clanService.calculateStandings();
+        //clanService.calculateStandings();
         //await maintenanceService.getContests(req.query.league);
         //await maintenanceService.getRebblData(req.query.league);
 
@@ -66,6 +66,21 @@ class Maintenance{
         });
         ds.confirmDraft("minorbyte",draft);
       */
+      /*  let seasons = [configurationService.getActiveBeerSeason()];
+        seasons.map(season => {
+          season.leagues.map(league =>{
+            league.divisions.map(division => standingsService.updateStandings(league.name,division));
+  
+            cache.keys().map(key => {
+              if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
+                cache.del(key);
+              }
+            });
+          });
+        });
+      */
+        await ts.checkTickets();
+
       }
       catch(e){
         loggingService.error(e);
@@ -88,7 +103,7 @@ class Maintenance{
       if (req.app.locals.cyanideEnabled){
         try{
           await maintenanceService.getRebblData(req.query.league);
-          //await ts.checkTickets();
+          await ts.checkTickets();
         }
         catch(e){
           loggingService.error(e);
