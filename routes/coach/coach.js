@@ -53,9 +53,9 @@ class Coach{
         data.renderExtra = true;
       } else {
         data = {};
-        data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${req.params.coach_id}$`,"i")}});
+        data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${req.params.coach_id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i")}});
         if (!data.coachDetails)
-          data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${req.params.coach_id}`,"i")}});
+          data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${req.params.coach_id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`,"i")}});
     
         data.renderExtra = false;
       }
