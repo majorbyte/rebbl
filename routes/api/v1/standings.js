@@ -137,7 +137,7 @@ router.get('/:league', util.cache(10*60), async function(req, res){
   let filter= null;
   if (league.toLowerCase().indexOf("eurogamer") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "rebbll " && league.toLowerCase() !== "xscessively elfly league" ){
     league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
-    filter= "Season 16";
+    filter= "Season 17";
   } else {
     league = new RegExp(`^${league}`, 'i');
   }
