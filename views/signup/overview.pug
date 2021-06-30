@@ -50,13 +50,13 @@ block content
                 br
                 button(type="submit"  class="btn btn-primary") Resign
         
-          -if (signup.greenHorn)
+          //-if (signup.greenHorn)
             div
               h3 THE GREENHORN CUP
             form(action="/signup/resign-greenhorn" method="post" )
               br
               button(type="submit"  class="btn btn-primary") Resign
-          -else if(signup.type === "rebbl" && signup.saveType !== "existing")
+          //-else if(signup.type === "rebbl" && signup.saveType !== "existing")
             div
               h3 You can still sign up for THE GREENHORN CUP
               a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
@@ -71,15 +71,15 @@ block content
         h1.display-4 REBBL SEASON 17
         p.lead Signups for REBBL Season 17 are closed. Rampup signups will open up on Thursday.
 
-      //.jumbotron
+      .jumbotron
         h1.display-4 REBBL SEASON 17 - RAMPUP
         p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 17!
         hr.my-2
         p 
-          a(href="https://www.reddit.com/r/ReBBl/comments/lkokc7/rebbl_rampup_season_16/" class="highlighted-rules") Read more here about our Rampup system for Season 17
+          a(href="https://www.reddit.com/r/ReBBl/comments/ob3hsw/rebbl_rampup_season_17/" class="highlighted-rules") Read more here about our Rampup system for Season 17
         a.btn.btn-primary.btn-lg(href="/signup/change" role="button") Continue
       
-      .jumbotron
+      //.jumbotron
         h1.display-4 REBBL SEASON 17
         p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 17!
         hr.my-2
@@ -89,7 +89,7 @@ block content
           span(class="text-info") REBBL SEASON 17
         a.btn.btn-primary.btn-lg(href="/signup/change" role="button") Continue
 
-      .jumbotron
+      //.jumbotron
         h1.display-4 MINORS SEASON 13
         p.lead If you played in our College League last season and want to continue in the Minors Leauge, look no further!
         hr.my-2
@@ -99,7 +99,7 @@ block content
           span(class="text-info") REBBRL MINORS SEASON 13     
         a.btn.btn-primary.btn-lg(href="/signup/rebbrl/minors" role="button") Continue
 
-      .jumbotron
+      //.jumbotron
         h1.display-4 COLLEGE SEASON 14
         p.lead Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 13?
         hr.my-2
@@ -109,7 +109,7 @@ block content
           span(class="text-info") REBBL COLLEGE LEAGUE SEASON 14
         a.btn.btn-primary.btn-lg(href="/signup/rebbrl/college" role="button") Continue
 
-      //.jumbotron
+      .jumbotron
         h1.display-4 COLLEGE SEASON 14 - Reserves
         p.lead Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 13? You just missed signups but
           |  we are accepting reserves to fill spaces that become available.
