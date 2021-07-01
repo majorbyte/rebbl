@@ -11,6 +11,7 @@ const express = require("express")
   , divisionApi = require("./division.js") 
   , leagueApi = require("./league.js")
   , matchApi = require("./match.js")
+  , playoffsApi = require("./playoffs.js")
   , standingsApi = require("./standings.js")
   , teamApi = require("./team.js")
   , trophiesApi = require("./trophies.js");
@@ -45,6 +46,8 @@ class ApiV2{
     this.router.use("/cracker", new crackerApi().routesConfig());
 
     this.router.use("/coach", new coachApi().routesConfig());
+
+    this.router.use("/playoffs", new playoffsApi().routesConfig());
 
     return this.router;
   }
