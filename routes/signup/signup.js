@@ -84,7 +84,7 @@ class Signup{
 //    this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
     this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
 //    this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
-//    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
+    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
  //   this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
     return this.router;
   }
