@@ -111,7 +111,7 @@ class PlayoffsApi{
       }
 
       const coach = function(c) {
-        if (c.league) return {"id":c.id,"name":c.name,"twitch":null,"youtube":null,"country":"","lang":""};
+        if (c.league) return {"id":c.id,"name":c.name,"twitch":null,"youtube":null,"country":"","lang":"", league:c.league.toUpperCase(), division: c.competition, position:c.position};
         return {"id":0,"name":c.placeholder || `${c.special}-${c.position}`,"twitch":null,"youtube":null,"country":"","lang":""};
       }
 
@@ -131,38 +131,13 @@ class PlayoffsApi{
             }
         ]}
       }
-
-      let missing = ['2','3','4','5','6'];
-      let sizes = [32,16,8,4,2,1];
-      const dummy = {"opponents":[{
-        "coach":{"id":null,"name":"","twitch":null,"youtube":null,"country":"","lang":""},
-        "team":{"id":null,"name":"","logo":"","value":null,"motto":"","score":null,"death":null,"race":""}
-        },{
-          "coach":{"id":null,"name":"","twitch":null,"youtube":null,"country":"","lang":""},
-          "team":{"id":null,"name":"","logo":"","value":null,"motto":"","score":null,"death":null,"race":""}
-        }
-      ]};
-    
-      const data = {round:1, matches:{'1':[]}};
+      const matches = [];
 
       for(let i = 0; i < 64;i+=2){
-        data.matches['1'].push(match(result[i],result[i+1]));
+        matches.push(match(result[i],result[i+1]));
       }
-
-    
-      missing.map(m=>{
-    
-        if (!data.matches[m]){
-          let x = sizes[parseInt(m) -1]; 
-          data.matches[m] = [];
-          while (x) {
-            data.matches[m].push(dummy);
-            x--;
-          }
-        }
-      });
-      
-      res.json(data);
+     
+      res.json(matches);
     }
     catch (ex){
       console.error(ex);
