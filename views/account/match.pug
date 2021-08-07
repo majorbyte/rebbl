@@ -100,7 +100,7 @@ block scripts
         let timezone = "#{user.timezone}" || moment.tz.guess();  
         $(".datetimepicker-input").each(function() {
           if($(this).val())
-            $(this).datetimepicker({format: "YYYY-MM-DD HH:mm", date: moment.tz($(this).val(),"UTC").tz(moment.tz.guess()), useCurrent:false});
+            $(this).datetimepicker({format: "YYYY-MM-DD HH:mm", date: moment.tz(this.defaultValue,"UTC").tz(moment.tz.guess()), useCurrent:false});
           else
             $(this).datetimepicker({format: "YYYY-MM-DD HH:mm", useCurrent:true});
 
