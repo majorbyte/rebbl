@@ -96,7 +96,7 @@ datastore
 # ignore stuff
 # =========================
 grunk
-public/clandraft
+
 
 #VS Code
 .vscode/
