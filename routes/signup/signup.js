@@ -8,8 +8,8 @@ const accountService = require('../../lib/accountService.js')
   , util = require('../../lib/util.js')
   , signupService = require('../../lib/signupService.js');
 
-const CLIENT_ID = process.env['discord.clientId'];
-const REDIRECT_URI = process.env['discord.signupCallbackURL'];
+const CLIENT_ID = process.env['discordClientId'];
+const REDIRECT_URI = process.env['discordSignupCallbackURL'];
 
 
 class Signup{
