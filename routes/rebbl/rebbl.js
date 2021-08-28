@@ -71,9 +71,12 @@ class Rebbl{
         }));
     
         data.upcoming = data.upcoming.filter(a => a.league.toLowerCase().indexOf("rebbrl") > -1) .sort((a,b) => a.date < b.date ? -1 : 1);
-      break;
-
-
+        break;
+      default:
+        data.rebbl = [];
+        data.sides = [];
+        data.upcoming = [];
+        break;
     }
 
 

@@ -14,6 +14,8 @@ const express = require('express')
   , dataService = require("./lib/DataService.js")
   , configurationService = require("./lib/ConfigurationService.js");
 
+const { v4: uuidv4 } = require('uuid');
+
 class Server{
   constructor(){
     if (process.env.NODE_ENV === 'production'){
@@ -53,7 +55,8 @@ class Server{
 
     this.sessionObject = {
       secret: 'keyboard cat'
-      , cookie: {maxAge:180*24*60*60*1000} // Let's start with half a year
+      , cookie: {maxAge:180*24*60*60*1000} // Let's start with half a year,
+      , genid: uuidv4
       , resave: false
       , saveUninitialized: false
       , store: this.sessionStore
@@ -93,15 +96,7 @@ class Server{
           callbackURL: process.env['redditcallbackURL']
         },
         function(accessToken, refreshToken, profile, done) {
-          // asynchronous verification, for effect...
-          process.nextTick(function () {
-
-            // To keep the example simple, the user's Reddit profile is returned to
-            // represent the logged-in user.  In a typical application, you would want
-            // to associate the Reddit account with a user record in your database,
-            // and return that user instead.
-            return done(null, profile);
-          });
+          return done(null, profile);
         }
       ));
     }
