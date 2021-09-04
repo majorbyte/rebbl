@@ -335,11 +335,11 @@ block append scripts
     UserModel.prototype.toggleClanAdmin = function(data,event){
       $(event.currentTarget || event.target ).toggleClass("btn-secondary");
       $(event.currentTarget || event.target ).toggleClass("btn-success");
-      if(this.roles.indexOf("clanAdmin") > -1 ){
-        this.roles.splice(this.roles.indexOf("clanAdmin"),1);
+      if(this.roles.indexOf("clanadmin") > -1 ){
+        this.roles.splice(this.roles.indexOf("clanadmin"),1);
         this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"clanadmin", action:"remove"});
       } else {
-        this.roles.push("clanAdmin")
+        this.roles.push("clanadmin")
         this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"clanadmin", action:"add"});
       }
     }
