@@ -101,13 +101,13 @@ class Maintenance{
 
     const doUpdates = async function(req){
       if (req.app.locals.cyanideEnabled){
-        try{
+        /*try{
           await maintenanceService.getRebblData(req.query.league);
           //await ts.checkTickets();
         }
         catch(e){
           loggingService.error(e);
-        }
+        }*/
         try{
           await maintenanceService.getNewRebblData(req.query.league);
           await maintenanceService.getContests(req.query.league);
@@ -115,12 +115,12 @@ class Maintenance{
         catch(e){
           loggingService.error(e);
         }
-        try{
+        /*try{
           await perpetualService.getMatches();
         }
         catch(e){
           loggingService.error(e);
-        }
+        }*/
         try{
           await clanService.getContestData();
         }
@@ -152,12 +152,12 @@ class Maintenance{
         catch(e){
           loggingService.error(e);
         }
-        try{
+        /*try{
           signupService.checkTeams();
         }
         catch(e){
           loggingService.error(e);
-        }        
+        } */       
         
       }
     };
