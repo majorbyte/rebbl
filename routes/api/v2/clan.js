@@ -308,6 +308,12 @@ class ClanApi{
         cost:20,
         quantitiy:5,
         description:"At the start of the draft, pick one team from your opponent’s clan. This team refuses to be bussed (i.e. offered-up) by their clan leader when it’s that clan’s turn to offer up their FIRST team to the opposing clan leader. Teams selected by this power also become immune to Last Minute Switch! Each Clan may only use this power once per draft. "
+      },{
+        key:"",
+        name:"Financial Fair Play",
+        cost:0,
+        quantitiy:2,
+        description:"The underdog coach cannot spend more than 40k GP from their own bank on inducements. In cases where the coaches are even on TV, then the coach going second in inducements may still not spend more than 40k. The power does not apply to Stunty (Tier 7) underdog coaches."
       }
     ]);
     });
