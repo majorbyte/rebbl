@@ -92,15 +92,26 @@ block append scripts
 
     let model;
 
-    $(document).ready(async function(){
-
-      var result = await fetch(`/api/v2/playoffs/playoffs`);
-      if (result.ok){
-          model = new PlayoffModel(); 
-          model.matches(await result.json());
-          ko.applyBindings(model);
-      }
-    });
+  - if (playoffs)
+    script.
+      $(document).ready(async function(){
+        const result = await fetch(`/api/v2/playoffs/playoffs`);
+        if (result.ok){
+            model = new PlayoffModel(); 
+            model.matches(await result.json());
+            ko.applyBindings(model);
+        }
+      });
+  - else
+    script.
+      $(document).ready(async function(){
+        const result = await fetch(`/api/v2/playoffs/challengers`);
+        if (result.ok){
+            model = new PlayoffModel(); 
+            model.matches(await result.json());
+            ko.applyBindings(model);
+        }
+      });
 
 
 block vars

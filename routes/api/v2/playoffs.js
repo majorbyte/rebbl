@@ -87,10 +87,78 @@ class PlayoffsApi{
       {league:'Big O', division:'Season 17 Division 4A', position:1},
       {league:'Big O', division:'Season 17 Division 4B', position:1},
     ];    
+
+    this.cc = [
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4B', position:3},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4F', position:3},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4A', position:3},
+      {league:'REBBL - GMan', division:'Season 17 - Division 3B', position:4},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4B', position:2},
+      {league:'REBBL - Big O', division: 'Season 17 Div 5 Play-Ins', position:2},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4D', position:3},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4D', position:3},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4E', position:3},
+      {league:'REBBL - GMan', division:'Season 17 - Division 3A', position:3},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4C', position:2},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4F', position:2},
+      {league:'REBBL - Big O', division: 'Season 17 Div 3 Play-Ins', position:4},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4E', position:2},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4C', position:3},
+      {league:'REBBL - REL', division: 'Season 17 - Playins B', position: 2},
+      {placeholder:'STUNTY CHAMP'},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4A', position:2},
+      {league:'REBBL - REL', division:'Season 17 - Division 3B', position:4},
+      {league:'REBBL - GMan', division:'Season 17 - Division 3C', position:4},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4A', position:3},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4B', position:3},
+      {league:'REBBL - REL', division:'Season 17 - Division 3B', position:3},
+      {league:'REBBL - GMan', division:'Season 17 - Division 3B', position:3},
+      {special:'REL TG', position:3},
+      {league:'REBBL - GMan', division: 'Season 17 - Playins B', position: 2},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4C', position:2},
+      {league:'REBBL - REL', division:'Season 17 - Division 3A', position:4},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4F', position:2},
+      {special:'GMan TG',position:1},
+      {special:'GMan TG',position:2},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4A', position:2},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4G', position:2},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4G', position:3},
+      {league:'REBBL - GMan', division:'Season 17 - Division 3A', position:4},
+      {special:'REL TG',position:2},
+      {league:'REBBL - REL', division: 'Season 17 - Playins A', position: 2},
+      {special:'REL Div 4-4th', position:3},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4G', position:2},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4H', position:2},
+      {special:'GMan Div 4-4th', position:1},
+      {league:'REBBL - REL', division:'Season 17 - Division 3C', position:3},
+      {league:'REBBL - GMan', division: 'Season 17 - Playins A', position: 2},
+      {league:'REBBL - GMan', division:'Season 17 - Division 3C', position:3},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4F', position:3},
+      {special:'REL Div 4-4th', position:1},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4D', position:2},
+      {special:'REL Div 4-4th', position:2},
+      {special:'GMan Div 4-4th', position:2},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4H', position:3},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4C', position:3},
+      {placeholder:'MINORS CHAMP'},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4D', position:2},
+      {special:'GMan Div 4-4th', position:3},
+      {league:'REBBL - Big O', division:'Big O Div 5 Swiss', position:1},
+      {special:'REL TG',position:1},
+      {special:'GMan TG',position:3},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4E', position:2},
+      {league:'REBBL - Big O', division: 'Season 17 Div 3 Play-Ins', position:3},
+      {league:'REBBL - REL', division:'Season 17 - Division 3A', position:3},
+      {league:'REBBL - REL', division: 'Season 17 - Division 4G', position:3},
+      {league:'REBBL - REL', division:'Season 17 - Division 3C', position:4},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4B', position:2},
+      {league:'REBBL - GMan', division: 'Season 17 - Division 4E', position:3},
+    ];
   }
   routesConfig(){
     
-    this.router.get("/playoffs",/*util.cache(600),*/ this.getPlayoffPredictions.bind(this));
+    this.router.get("/playoffs",util.cache(600), this.getPlayoffPredictions.bind(this));
+    this.router.get("/challengers",/*util.cache(600),*/ this.getChallengerPredictions.bind(this));
 
     return this.router;
   }
@@ -101,6 +169,56 @@ class PlayoffsApi{
       let result = [];
       for(let i = 0; i<64;i++){
         let m = this.bracket[i];
+
+        if (m.league){
+          let r = standings.find(x => x.league.localeCompare(m.league,undefined,{ sensitivity: 'base' }) === 0 && x.competition.localeCompare(m.division,undefined,{ sensitivity: 'base' }) === 0 && x.position === m.position);
+          result.push(r);
+        } else {
+          result.push(m);
+        }
+      }
+
+      const coach = function(c) {
+        if (c.league) return {"id":c.id,"name":c.name,"twitch":null,"youtube":null,"country":"","lang":"", league:c.league.toUpperCase(), division: c.competition, position:c.position};
+        return {"id":0,"name":c.placeholder || `${c.special}-${c.position}`,"twitch":null,"youtube":null,"country":"","lang":""};
+      }
+
+      const team = function(t) {
+        if (t.league) return {"id":t.teamId,"name":t.team,"logo":t.logo,"value":null,"motto":"","score":null,"death":null,"race":t.race};
+        return {"id":0,"name":t.placeholder || `${t.special}-${t.position}`,"logo":"fist_01","value":null,"motto":"","score":null,"death":null,"race":"Human"};
+        
+      }
+
+      const match = function(home, away){
+        return {"opponents":[{
+          "coach":coach(home),
+          "team":team(home)
+          },{
+            "coach":coach(away),
+            "team":team(away)
+            }
+        ]}
+      }
+      const matches = [];
+
+      for(let i = 0; i < 64;i+=2){
+        matches.push(match(result[i],result[i+1]));
+      }
+     
+      res.json(matches);
+    }
+    catch (ex){
+      console.error(ex);
+      res.status(500).send('Something something error');
+    }
+  }
+
+  async getChallengerPredictions(req,res){
+    try {
+      let standings = await dataService.getStandings({season:"season 17", league:/rebbl/i});
+      let result = [];
+      for(let i = 0; i<64;i++){
+        let m = this.cc[i];
 
         if (m.league){
           let r = standings.find(x => x.league.localeCompare(m.league,undefined,{ sensitivity: 'base' }) === 0 && x.competition.localeCompare(m.division,undefined,{ sensitivity: 'base' }) === 0 && x.position === m.position);
