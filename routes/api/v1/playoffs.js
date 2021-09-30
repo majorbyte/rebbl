@@ -23,8 +23,10 @@ router.get('/:division', util.cache(10*60), async function(req,res) {
       "team":{"id":null,"name":"","logo":"","value":null,"motto":"","score":null,"death":null,"race":""}
     }
   ]};
-
-  data.round = await db.getRound("ReBBL Playoffs", req.params.division);
+  if (req.app.locals.cyanideEnabled)
+    data.round = await db.getRound("ReBBL Playoffs", req.params.division);
+  else 
+    data.round = 0;
 
   missing.map(m=>{
 
