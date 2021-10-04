@@ -173,7 +173,7 @@ class ClanApi{
 
     this.router.get("/powers", function(req,res){
       res.json( [
-      {key:"version11.0",description:11.0},
+      {key:"version12.0",description:12.0},
       {
         key: "miscommunication",
         name: "Miscommunication!",
@@ -309,7 +309,7 @@ class ClanApi{
         quantitiy:5,
         description:"At the start of the draft, pick one team from your opponent’s clan. This team refuses to be bussed (i.e. offered-up) by their clan leader when it’s that clan’s turn to offer up their FIRST team to the opposing clan leader. Teams selected by this power also become immune to Last Minute Switch! Each Clan may only use this power once per draft. "
       },{
-        key:"",
+        key:"financialFairPlay",
         name:"Financial Fair Play",
         cost:0,
         quantitiy:2,
@@ -320,7 +320,7 @@ class ClanApi{
 
     this.router.get("/data", util.ensureAuthenticated, util.hasRole("admin"),async (req,res) => {
       
-      const schedules = await dataService.getSchedules({league:"clan", season:"season 11"});
+      const schedules = await dataService.getSchedules({league:"clan", season:"season 12"});
       
       const data = [];
 
