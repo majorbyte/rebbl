@@ -98,16 +98,36 @@ class Maintenance{
       res.redirect('/');
     });
 
+    const updateClan = async function(req){
+      try{
+        await clanService.getContestData();
+      }
+      catch(e){
+        loggingService.error(e);
+      }
+      try{
+        await clanService.getMatchData();
+      } 
+      catch(e){
+        loggingService.error(e);
+      }  
+      try{
+        clanService.calculateStandings();
+      }
+      catch(e){
+        loggingService.error(e);
+      }            
+    };
 
     const doUpdates = async function(req){
       if (req.app.locals.cyanideEnabled){
-        /*try{
+        try{
           await maintenanceService.getRebblData(req.query.league);
           //await ts.checkTickets();
         }
         catch(e){
           loggingService.error(e);
-        }*/
+        }
         try{
           await maintenanceService.getNewRebblData(req.query.league);
           await maintenanceService.getContests(req.query.league);
@@ -152,18 +172,23 @@ class Maintenance{
         catch(e){
           loggingService.error(e);
         }
-        /*try{
+        try{
           signupService.checkTeams();
         }
         catch(e){
           loggingService.error(e);
-        } */       
+        }  
         
       }
     };
 
     this.router.get('/updateleague', util.verifyMaintenanceToken, async function(req,res){
       doUpdates(req);
+      res.redirect('/');
+    });
+
+    this.router.get('/updateclan', util.verifyMaintenanceToken, async function(req,res){
+      updateClan(req);
       res.redirect('/');
     });
 
