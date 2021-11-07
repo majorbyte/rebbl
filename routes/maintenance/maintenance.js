@@ -123,7 +123,7 @@ class Maintenance{
       if (req.app.locals.cyanideEnabled){
         try{
           await maintenanceService.getRebblData(req.query.league);
-          //await ts.checkTickets();
+          await ts.checkTickets();
         }
         catch(e){
           loggingService.error(e);
