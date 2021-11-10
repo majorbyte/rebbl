@@ -125,11 +125,11 @@ class Signup{
 
       // Disabled while during season/
       
-      let user = await signupService.getExistingTeam(req.user.name);
+      /*let user = await signupService.getExistingTeam(req.user.name);
       if(!signup && user && user.team){
         res.render('signup/signup-existing', { user: user});
         return;
-      }
+      }*/
 
       if (!signup){
         if(account){
