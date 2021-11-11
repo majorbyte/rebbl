@@ -239,8 +239,8 @@ block scripts
             context.imageSmoothingEnabled = true;
       
             let img = new Image;
+            img.crossOrigin = 'anonymous'; 
             img.src = src;
-            img.setAttribute('crossOrigin', ''); 
 
             img.onload = () => {
                 context.drawImage(img, 0, 0, 1, 1);

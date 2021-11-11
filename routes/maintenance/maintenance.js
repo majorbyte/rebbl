@@ -66,7 +66,7 @@ class Maintenance{
         });
         ds.confirmDraft("minorbyte",draft);
       */
-      /*  let seasons = [configurationService.getActiveBeerSeason()];
+        /*let seasons = [configurationService.getActiveSeason()];
         seasons.map(season => {
           season.leagues.map(league =>{
             league.divisions.map(division => standingsService.updateStandings(league.name,division));
@@ -79,7 +79,7 @@ class Maintenance{
           });
         });
       */
-        await ts.checkTickets();
+        //await ts.checkTickets();
 
       }
       catch(e){
@@ -123,7 +123,7 @@ class Maintenance{
       if (req.app.locals.cyanideEnabled){
         try{
           await maintenanceService.getRebblData(req.query.league);
-          await ts.checkTickets();
+          //await ts.checkTickets();
         }
         catch(e){
           loggingService.error(e);
