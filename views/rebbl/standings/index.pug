@@ -25,6 +25,8 @@ block content
     div
       h2(data-bind="attr:{id:$data[0].competition}")
         a(data-bind="text:$data[0].competition,attr:{href:$root.competitionUrl($data)}" class="highlight")
+        a(data-bind="attr:{href:$root.casterUrl($data)}" class="highlight") &nbsp; 
+          img(src="/images/obs.png" style="width: 25px;margin-top: -17px;")
       //ko if:$root.getAdmin($data[0].competitionId ? $data[0].competitionId:  0) !== ""
       span division admin:&nbsp;
       a(data-bind="text:$root.getAdmin($data[0].competitionId ? $data[0].competitionId:  0),attr:{href:$root.adminUrl($data[0].competitionId ? $data[0].competitionId : 0)}" class="highlight")
@@ -209,6 +211,9 @@ block scripts
 
       competitionUrl(comp){
         return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
+      };
+      casterUrl(comp){
+        return `/caster/standings/${this.league}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
       };
 
       adminUrl(competitionId){

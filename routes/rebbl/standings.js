@@ -19,6 +19,13 @@ class Standings{
       else
         res.render('rebbl/standings/index', data);
     });
+    this.router.get('/:league/:competition', util.cache(1), async function(req, res){
+      let data = {company:req.params.company, league:req.params.league, competition:req.params.competition};
+      if(data.company ==="caster")
+        res.render('rebbl/standings/caster', data);
+      else
+        res.render('rebbl/standings/index', data);
+    });
     return this.router;
   }
 }  
