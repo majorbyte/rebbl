@@ -102,6 +102,12 @@ class StandingsApi{
       res.json(tickets.find(t => t.name === req.params.season));
     });
 
+    this.router.get('/:league/:season/:competition/tickets', util.cache(300), async function(req, res){
+      let tickets = configurationService.getCompetitionTickets(req.params.league, req.params.competition);
+    
+      res.json(tickets);
+    });
+
 
     this.router.get('/:league/:season/:division', util.cache(300), async function(req, res){
       let standings = await dataService.getStandings({
