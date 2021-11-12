@@ -93,6 +93,7 @@ class Rebbl{
     this.router.use('/counter', require(`./counter.js`));
     this.router.use('/match', require(`./match.js`));
     this.router.use('/stunty', require(`./stunty.js`));
+    this.router.use('/ongoing', require(`./ongoing.js`));
     this.router.use('/upcoming', require(`./upcoming.js`));
     this.router.use('/standings', new standings().routesConfig());
     this.router.use('/old_team', require(`./old_team.js`));

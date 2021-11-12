@@ -1,5 +1,6 @@
 "use strict";
 const LeagueService = require("../../../lib/LeagueService.js")
+  , apiService = require("../../../lib/apiService.js")
   , dataService = require("../../../lib/DataService.js").rebbl
   , datingService = require("../../../lib/DatingService.js")
   , teamService = require("../../../lib/teamservice.js")
@@ -128,5 +129,26 @@ router.post("/unstream/:contest_id", util.ensureAuthenticatedApi, async function
         res.status(500).json();
     }
 });
+
+router.get("/ongoing", util.cache(60), async function(req,res){
+    let data = await apiService.ongoingGames();
+
+    if (data.ResponseGetWatchableGames.WatchableGames === ''){
+      res.json([]);
+    } else {
+      if (!Array.isArray(data.ResponseGetWatchableGames.WatchableGames.WatchGameData))
+        data.ResponseGetWatchableGames.WatchableGames.WatchGameData = [data.ResponseGetWatchableGames.WatchableGames.WatchGameData];
+
+      let games = data.ResponseGetWatchableGames.WatchableGames.WatchGameData
+          .map(gamedata => {
+              // eslint-disable-next-line no-unused-vars
+              let {IdSession, Server, IdTeam1, IdTeam2, IsSSLWebsockets, ClientVersion, IsSSL,Port, ...game } = gamedata;
+              return game;
+          });
+
+      res.json(games);
+    }
+});
+
 
 module.exports = router;
