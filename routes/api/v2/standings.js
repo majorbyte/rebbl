@@ -12,7 +12,6 @@ class StandingsApi{
   routesConfig(){
     this.router.get('/coach/:id', util.cache(600), async function(req, res){
       let standings = await dataService.getStandings({id:Number(req.params.id),$or:[{admin:{$exists:false}},{admin:false}]});
-    
       res.json(standings);
     });
 
@@ -96,15 +95,11 @@ class StandingsApi{
 
     this.router.get('/:league/:season/tickets', util.cache(300), async function(req, res){
       let tickets = configurationService.getPlayoffTickets(req.params.league);
-
-      
-    
       res.json(tickets.find(t => t.name === req.params.season));
     });
 
     this.router.get('/:league/:season/:competition/tickets', util.cache(300), async function(req, res){
       let tickets = configurationService.getCompetitionTickets(req.params.league, req.params.competition);
-    
       res.json(tickets || {playoffs:0, challenger:0});
     });
 
