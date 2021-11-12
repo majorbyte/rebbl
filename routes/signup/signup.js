@@ -77,10 +77,10 @@ class Signup{
     this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
 
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
-    *
+    */
     this.router.get('/signups', function(req,res){res.render('signup/signups', {url: ""});});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
-/* 
+/*
     this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));*/
     this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
     /*this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
