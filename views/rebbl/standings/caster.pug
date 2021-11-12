@@ -206,24 +206,21 @@ block scripts
       };
 
       async loadTickets(){
-        let response = await fetch(`/api/v2/standings/!{league}/season 18/!{competition}/tickets`);
+        let response = await fetch(`/api/v2/standings/!{league}/!{season}/!{competition}/tickets`);
         if (response.ok){
-          let data = await response.json()
-          this.challenger = data.challenger;
-          this.playoffs = data.playoffs;
+          let data = await response.json();
+          this.challenger = data?.challenger ||0;
+          this.playoffs = data?.playoffs ||0;
         } else {
           this.playoffs = 0;
           this.challenger = 0;
         }
-
-
       }
 
       async loadSeason(){
         this.standings={};
-        
 
-        let response = await fetch(`/api/v2/standings/!{league}/season 18/!{competition}`);
+        let response = await fetch(`/api/v2/standings/!{league}/!{season}/!{competition}`);
         if (response.ok){
           let data  = await response.json();
           data = data.map(x => new StandingsModel(x));

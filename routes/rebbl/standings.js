@@ -19,8 +19,8 @@ class Standings{
       else
         res.render('rebbl/standings/index', data);
     });
-    this.router.get('/:league/:competition', async function(req, res){
-      let data = {company:req.params.company, league:req.params.league, competition:req.params.competition};
+    this.router.get('/:league/:season/:competition', async function(req, res){
+      let data = {company:req.params.company, league:req.params.league, competition:req.params.competition, season:req.params.season};
       if(data.company ==="caster")
         res.render('rebbl/standings/caster', data);
       else

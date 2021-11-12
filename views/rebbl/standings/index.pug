@@ -213,7 +213,7 @@ block scripts
         return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
       };
       casterUrl(comp){
-        return `/caster/standings/${this.league}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
+        return `/caster/standings/${this.league}/${this.season}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
       };
 
       adminUrl(competitionId){
