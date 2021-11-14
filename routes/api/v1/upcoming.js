@@ -14,7 +14,7 @@ router.get("/", util.cache(10*60), async function(req, res){
 
 
     const now = new Date(Date.now());
-
+    now.setHours(now.getHours()-4);
     let dates = [...new Set(n.filter(a => new Date(a.date) > now ).map(date=> date.id))];
 
     let schedules = await LeagueService.searchLeagues({"contest_id":{$in:dates}});
