@@ -551,7 +551,7 @@ class Standings{
           data.standings[x] = standings.filter((n,i) => i >= x*Math.floor(standings.length/2) && i < Math.floor(standings.length/2) + x*Math.floor(standings.length/2));
 
         data.styles = styles;
-        res.render('rebbl/standings/caster', data);
+        res.render('rebbl/text/standings', data);
       }
       else
         res.render('rebbl/standings/index', data);
