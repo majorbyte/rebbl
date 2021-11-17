@@ -81,6 +81,8 @@ class Maintenance{
       */
         //await ts.checkTickets();
 
+        team.updateTeam(2959172);
+
       }
       catch(e){
         loggingService.error(e);
