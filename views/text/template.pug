@@ -3,6 +3,9 @@ html
   head 
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" id="viewport" name="viewport">  
     style.
+      @media (hover: hover) {
+        html{pointer-events: none;}
+      }
       @font-face{font-family:'Ubuntu Mono';font-style:normal;font-weight:400;src:url(https://fonts.gstatic.com/s/ubuntumono/v10/KFOjCneDtsqEr0keqCMhbCc6CsE.ttf) format('truetype');font-display:swap}@font-face{font-family:'Ubuntu Mono';font-style:normal;font-weight:700;src:url(https://fonts.gstatic.com/s/ubuntumono/v10/KFO-CneDtsqEr0keqCMhbC-BL9H1tYg.ttf) format('truetype');font-display:swap}.clearfix:before,.clearfix:after{content:"";display:table}.clearfix:after{clear:both}.clearfix{*zoom:1}body{color:black;min-height:460px;background-color:#333;background-color:#141c2a;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}body,pre,ul,dl,p,input,button{margin:0;padding:0;line-height:100%}body,pre,span{font-weight:normal;font-family:"Ubuntu Mono",Courier,monospace}body,pre{font-size:13.5px}h1,h2{font-size:100%;display:inline}.hidden{display:none !important}ul{list-style-type:none}.borderbox{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}.controls{z-index:1;position:fixed;top:0;left:0;width:100%;color:#aaa;font-family:"Helvetica Neue",Arial,sans-serif;line-height:1;font-size:11px;border-bottom:1px solid rgba(170, 170, 170, 0.5)}.controls
       @font-face{font-family:'Ubuntu Mono';font-style:normal;font-weight:400;src:url(https://fonts.gstatic.com/s/ubuntumono/v10/KFOjCneDtsqEr0keqCMhbCc6CsE.ttf) format('truetype');font-display:swap}@font-face{font-family:'Ubuntu Mono';font-style:normal;font-weight:700;src:url(https://fonts.gstatic.com/s/ubuntumono/v10/KFO-CneDtsqEr0keqCMhbC-BL9H1tYg.ttf) format('truetype');font-display:swap}.clearfix:before,.clearfix:after{content:"";display:table}.clearfix:after{clear:both}.clearfix{*zoom:1}body{color:black;min-height:460px;background-color:#333;background-color:#141c2a;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}body,pre,ul,dl,p,input,button{margin:0;padding:0;line-height:100%}body,pre,span{font-weight:normal;font-family:"Ubuntu Mono",Courier,monospace}body,pre{font-size:13.5px}h1,h2{font-size:100%;display:inline}.hidden{display:none !important}ul{list-style-type:none}.borderbox{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}.controls{z-index:1;position:fixed;top:0;left:0;width:100%;color:#aaa;font-family:"Helvetica Neue",Arial,sans-serif;line-height:1;font-size:11px;border-bottom:1px solid rgba(170, 170, 170, 0.5)}.controls
       a{text-decoration:none;color:#aaa}.controls a:hover{color:#eee}.controls a:active{color:#eee}.controls
@@ -160,5 +163,15 @@ html
       .bgB{background-color:#00f}.TextTVPage
       .bgBl{background-color:black}  
 
+    script(type="text/javascript" defer).
+      let page = '';
+      document.addEventListener('keyup', (e) => {
+        let elm = document.getElementsByClassName("inputNumber")[0];
 
+        if (isNaN(e.key)) return;
+        page += e.key;
+        elm.innerText = page.padEnd(3,'.')+' ';
+        if (page.length === 3) window.location = `/${page}`;
+      });
   block body
+

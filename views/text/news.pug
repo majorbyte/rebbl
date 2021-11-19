@@ -7,7 +7,7 @@ block body
     section#pages
       ul
         - for(let pc = 0; pc < pageCount; pc++)
-          <li class="one-page TextTVPage" id="page-#{pc}" style="display:none"><ul class="inpage-pages  subpage-count-1"><li><div class="root"><span class="line toprow"><span class="bgBl">   </span><span class="bgBl W">#{number} </span><span class="bgBl Y">REBBL Text </span><span class="bgBl W">Wednesday 17 nov 2021     </span></span>
+          <li class="one-page TextTVPage" id="page-#{pc}" style="display:none"><ul class="inpage-pages  subpage-count-1"><li><div class="root"><span class="line toprow"><span class="bgBl">   </span><span class="bgBl W inputNumber">#{number} </span><span class="bgBl Y">REBBL Text </span><span class="bgBl W">Wednesday 17 nov 2021     </span></span>
           <span class="line"><span class="bgBl"> </span><span class="bgB"> </span><span class="bgB W">#{`${announcement.title.substr(0,32)}`.padEnd(32,' ')}  #{pc+1}/#{pageCount} </span></span>
           <span class="line"><span class="bgBl">                                        </span></span><br/>
           - let rowCount = 0;
