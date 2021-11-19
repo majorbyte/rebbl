@@ -118,6 +118,17 @@ class Server{
     this.app.use(this.passport.session());
   }
 
+  subdomain(subdomain, fn){
+
+    return function(req,res,next){
+
+      const match = req.subdomains[0] === subdomain;
+
+      if (match) return fn(req,res,next);
+      next();
+    }
+  }
+
   includeRoutes(){
     //new routes(this.app).routesConfig();
     // serve static files
@@ -142,7 +153,9 @@ class Server{
 
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+    const textRoutes = require('./routes/text/routes.js');
     const routes = require("./routes/routes.js");
+    this.app.use(this.subdomain('text', new textRoutes().routesConfig()));
     this.app.use('/', new routes().routesConfig());
 
     this.app.use(function(err, res){
