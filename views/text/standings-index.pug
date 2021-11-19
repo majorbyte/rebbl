@@ -8,10 +8,10 @@ block body
         <span class="line"><span class="bgBl"> </span><span class="bgB">  </span><span class="bgB W">#{page.league.padEnd(36,' ')} </span></span>
         <span class="line"><span class="bgBl">                                        </span></span><br/>
         - let rowCount = 1;
-        each x,index in pages.filter(x => x.pages)
+        each x,index in pages.filter(x => x.pages && x.number >200 && x.number <300)
           - rowCount++
           <span class="line"><span class="bgBl">  </span><span class="#{cls}">#{x.league.substr(0,17).padEnd(17,' ')} <a href='#{x.pages[0].number}'>#{(x.pages[0].number + '').padStart(3,' ')}</a> - <a href='#{x.pages[x.pages.length-1].number}'>#{(x.pages[x.pages.length-1].number + '').padStart(3,' ')}</a></span></span><br/>
         
         - for(var x = 21-rowCount; x > 0; x--)
           <span class="line"><span class="bgBl">                                        </span></span><br/>
-        <span class="line"><span class="bgBl"> </span><span class="bgB">        </span><span class="bgB W">Continue to next page <a href='#{(page.number+1)}'>#{(page.number+1)}</a>      </span></span></div></li></ul></li>
+        <span class="line"><span class="bgBl"> </span><span class="bgB">     </span><span class="bgB W">Continue to next page <a href='#{(page.number+1)}'>#{(page.number+1)}</a>         </span></span></div></li></ul></li>

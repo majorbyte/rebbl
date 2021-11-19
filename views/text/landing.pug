@@ -12,6 +12,11 @@ block body
           - rowCount++
           <span class="line"><span class="bgBl">  </span><span class="#{cls}">#{page.announcement.title.substr(0,30).padEnd(30,' ')} <a href='#{page.number}'>#{(page.number + '').padStart(3,' ')}</a></span></span><br/>
         
-        - for(var x = 21-rowCount; x > 0; x--)
-          <span class="line"><span class="bgBl">                                        </span></span><br/>
-        <span class="line"><span class="bgBl"> </span><span class="bgB">        </span><span class="bgB W">Continue to next page <a href='#{(number+1)}'>#{(number+1)}</a>      </span></span></div></li></ul></li>
+        <span class="line"><span class="bgBl">                                        </span></span><br/>
+         - rowCount++
+        <span class="line"><span class="bgBl C">       ReBBL Standings     <a href='200'>200</a>          </span></span><br/>
+         - rowCount++
+        <br/>
+          - for(var x = 21-rowCount; x > 0; x--)
+            <span class="line"><span class="bgBl">                                        </span></span><br/>
+        <span class="line"><span class="bgBl"> </span><span class="bgB">     </span><span class="bgB W">Continue to next page <a href='#{(number+1)}'>#{(number+1)}</a>         </span></span></div></li></ul></li>

@@ -1,21 +1,35 @@
 extends ./template.pug
 
 block body
+  - let pageSize = 20
+  - let pageCount = Math.ceil(announcement.processed.length/pageSize)
   div#wrap.wrap.clearfix
     section#pages
       ul
-        <li class="one-page TextTVPage"><ul class="inpage-pages  subpage-count-1"><li><div class="root"><span class="line toprow"><span class="bgBl">   </span><span class="bgBl W">#{number} </span><span class="bgBl Y">REBBL Text </span><span class="bgBl W">Wednesday 17 nov 2021     </span></span>
-        <span class="line"><span class="bgBl"> </span><span class="bgB"> </span><span class="bgB W">#{`${announcement.title.substr(0,36)}`.padEnd(36, ' ')}  </span></span>
-        <span class="line"><span class="bgBl">                                        </span></span><br/>
-        - let rowCount = 1;
-        - let renderBreak = false
-        each chunk in announcement.processed
-          - rowCount++
-          - renderBreak = chunk.indexOf('\n\n') > -1
-          if (renderBreak === true)
-            <br/><br/>
-          <span class="line"><span class="bgBl">  </span><span class="#{cls}">#{chunk.replace(/\n\n/g, '').trimStart().padEnd(37, ' ')}</span></span><br/>
-            
-        - for(var x = 21-rowCount; x > 0; x--)
+        - for(let pc = 0; pc < pageCount; pc++)
+          <li class="one-page TextTVPage" id="page-#{pc}" style="display:none"><ul class="inpage-pages  subpage-count-1"><li><div class="root"><span class="line toprow"><span class="bgBl">   </span><span class="bgBl W">#{number} </span><span class="bgBl Y">REBBL Text </span><span class="bgBl W">Wednesday 17 nov 2021     </span></span>
+          <span class="line"><span class="bgBl"> </span><span class="bgB"> </span><span class="bgB W">#{`${announcement.title.substr(0,32)}`.padEnd(32,' ')}  #{pc+1}/#{pageCount} </span></span>
           <span class="line"><span class="bgBl">                                        </span></span><br/>
-        <span class="line"><span class="bgBl"> </span><span class="bgB">        </span><span class="bgB W">Continue to next page <a href='#{(number+1)}'>#{(number+1)}</a>      </span></span></div></li></ul></li>
+          - let rowCount = 0;
+          - let renderBreak = false
+          each chunk in announcement.processed.slice(pc * pageSize,(pc+1) * pageSize)
+            <span class="line"><span class="bgBl">  </span><span class="#{cls}">#{chunk.replace(/\n\n/g, '').trimStart().padEnd(37, ' ')}</span></span><br/>
+            - rowCount++            
+          - for(var x = 21-rowCount; x > 0; x--)
+            <span class="line"><span class="bgBl">                                        </span></span><br/>
+          <span class="line"><span class="bgBl"> </span><span class="bgB">     </span><span class="bgB W">Continue to next page <a href='#{(number+1)}'>#{(number+1)}</a>         </span></span></div></li></ul></li>
+  script(type="text/javascript" defer).
+    let startPage = Math.random() < 0.8 ? 0 : Math.floor(!{pageCount}*Math.random());
+    let e = document.getElementById(`page-${startPage}`);
+    e.style['display'] = 'block';
+    function nextPage(){
+      let e = document.getElementById(`page-${startPage}`);
+      e.style['display'] = 'none';
+      startPage++
+      if(startPage > !{(pageCount-1)}) startPage = 0;
+      e = document.getElementById(`page-${startPage}`);
+      e.style['display'] = 'block';
+      setTimeout(nextPage,25*1000);  
+    }
+
+    setTimeout(nextPage,25*1000);

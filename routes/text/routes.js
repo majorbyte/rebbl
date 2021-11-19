@@ -61,7 +61,17 @@ class TextRoutes{
   }
   async newsPage(res, number){
     let page = this.pages.find(x => x.number === number);
-    page.announcement.processed = this._splitIntoLines(page.announcement.text, 36);
+    if (!page){
+      res.render('text/standings-index', {pages:this.pages, page:{number:200, league:'ReBBL',division:''} });
+      return;
+    }
+    const sections = page.announcement.text.split('\n\n');
+    page.announcement.processed = [];
+    for(const section of sections){
+      page.announcement.processed = page.announcement.processed.concat(this._splitIntoLines(section, 36));
+      page.announcement.processed.push(''.padEnd(36,''));
+    }
+
     res.render('text/news', page);
   }
 
