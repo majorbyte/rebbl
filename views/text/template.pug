@@ -162,16 +162,48 @@ html
       .bgY{background-color:rgb(252, 254, 1)}.TextTVPage
       .bgB{background-color:#00f}.TextTVPage
       .bgBl{background-color:black}  
+      .Bl{color:black}
 
     script(type="text/javascript" defer).
       let page = '';
+      let currentPage = 0;
       document.addEventListener('keyup', (e) => {
         let elm = document.getElementsByClassName("inputNumber")[0];
 
-        if (isNaN(e.key)) return;
-        page += e.key;
-        elm.innerText = page.padEnd(3,'.')+' ';
-        if (page.length === 3) window.location = `/${page}`;
+        if (isNaN(e.key) && '<-+>'.indexOf(e.key) === -1 ) return;
+
+        switch (e.key){
+          case '<':
+            window.location = `/100`;
+            break;
+          case '-':
+            window.location = `/${--currentPage}`;
+            break;
+          case '+':
+            window.location = `/${++currentPage}`;
+            break;
+          case '>':
+            window.location = `/200`;
+            break;
+          default:
+            page += e.key;
+            elm.innerText = page.padEnd(3,'.')+' ';
+            if (page.length === 3) window.location = `/${page}`;
+            break;
+        }
+
       });
+      
+      setTimeout(() => {
+        const elm = document.getElementsByClassName("inputNumber")[0];
+        currentPage = Number(elm.innerText);
+
+        const n = document.getElementsByClassName('date');
+        const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+        const format = new Intl.DateTimeFormat('en-GB', options);
+        for(const e of n){
+          e.innerText =  format.format(new Date()).padEnd(26,' ');      
+        }
+      },10);
   block body
 

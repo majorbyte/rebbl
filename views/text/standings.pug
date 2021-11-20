@@ -4,16 +4,17 @@ block body
   div#wrap.wrap.clearfix
     section#pages
       ul
-        <li class="one-page TextTVPage"><ul class="inpage-pages  subpage-count-1"><li><div class="root"><span class="line toprow"><span class="bgBl">   </span><span class="bgBl W inputNumber">#{page.number} </span><span class="bgBl Y">REBBL Text </span><span class="bgBl W">Wednesday 17 nov 2021     </span></span>
-        <span class="line"><span class="bgBl"> </span><span class="bgB"> </span><span class="bgB W">#{`${page.league} - ${page.division}`.padEnd(36, ' ')}  </span></span>
+        <li class="one-page TextTVPage"><ul class="inpage-pages  subpage-count-1"><li><div class="root"><span class="line toprow"><span class="bgBl">   </span><span class="bgBl W inputNumber">#{page.number} </span><span class="bgBl Y">REBBL Text </span><span class="bgBl W date"> </span></span>
+        <span class="line"><span class="bgBl"> </span><span class="bgB"> </span><span class="bgB W">#{`${page.league} - ${page.division}`.padEnd(36, ' ')}   </span></span>
         <span class="line"><span class="bgBl">                                        </span></span><br/>
         - let all = standings[0].concat(standings[1])
         - let rowCount = 1;
         each x,index in all
-          - let cls = `bgBl ${index < 5 ? 'G' : ''}`;
+          - let cls = `bgBl ${index < tickets.playoffs ? 'G' : index < tickets.challenger  ? 'Y' :''}`;
           - rowCount++;
           <span class="line"><span class="bgBl">  </span><span class="#{cls}">#{(index + 1 + '').padStart(2,' ')} #{x.team.substr(0,17).padEnd(17,' ')} #{(x.games + '').padStart(2,' ')} #{(x.win + '').padStart(2,' ')} #{(x.draw + '').padStart(2,' ')} #{(x.loss + '').padStart(2,' ')} #{(x.tddiff + '').padStart(2,' ')} #{(x.points + '').padStart(2,' ')}</span></span><br/>
         
         - for(var x = 21-rowCount; x > 0; x--)
           <span class="line"><span class="bgBl">                                        </span></span><br/>
-        <span class="line"><span class="bgBl"> </span><span class="bgB">     </span><span class="bgB W">Continue to next page <a href='#{(page.number+1)}'>#{(page.number+1)}</a>         </span></span></div></li></ul></li>
+        <span class="line"><span class="bgBl"> </span><span class="bgB">     </span><span class="bgB W">Continue to next page <a href='#{(page.number+1)}'>#{(page.number+1)}</a>          </span></span>
+        <span class="line"><span class="bgBl"> </span><span class="bgR Bl">    &lt;     </span><span class="bgG Bl">    -     </span><span class="bgY Bl">    +     </span></span><span class="bgB Bl">     &gt;    </span></span></div></li></ul></li>
