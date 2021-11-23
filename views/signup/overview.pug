@@ -38,7 +38,7 @@ block content
           div
             - if (signup.type==="rebbl")
               h3= "REBBL Season 18 - " + signup.league
-              form(action="/signup/resign" method="post" )
+              //form(action="/signup/resign" method="post" )
                 br
                 button(type="submit"  class="btn btn-primary") Resign
             - else
@@ -46,7 +46,7 @@ block content
                 h3= "REBBRL " + signup.league + " (Reserve)"
               - else
                 h3= "REBBRL " + signup.league
-              form(action="/signup/resign-rebbrl" method="post")
+              //form(action="/signup/resign-rebbrl" method="post")
                 br
                 button(type="submit"  class="btn btn-primary") Resign
         
