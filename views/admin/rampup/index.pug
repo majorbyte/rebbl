@@ -106,9 +106,14 @@ block scripts
       },
       methods:{
         checkMatchup: function(matchup){
+          if (!matchup.home.coach || !matchup.away.coach) return false;
           let game = this.played.find(x =>{
-            let found = matchup.home.coach === x.homeCoachName && matchup.away.coach === x.awayCoachName;
-            return found || matchup.home.coach === x.awayCoachName && matchup.away.coach === x.homeCoachName;
+            let found =  matchup.home.coach.localeCompare(x.homeCoachName, undefined, { sensitivity: 'base' }) === 0;
+            found = found || matchup.away.coach.localeCompare(x.awayCoachName, undefined, { sensitivity: 'base' }) === 0;
+            found = found || matchup.home.coach.localeCompare(x.awayCoachName, undefined, { sensitivity: 'base' }) === 0;
+            found = found || matchup.away.coach.localeCompare(x.homeCoachName, undefined, { sensitivity: 'base' }) === 0;
+
+            return found;
           });
 
           return game ? true: false;

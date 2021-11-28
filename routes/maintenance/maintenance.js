@@ -12,6 +12,7 @@ const
   , loggingService = require("../../lib/loggingService.js")
   , maintenanceService = require('../../lib/MaintenanceService.js')
   , perpetualService = require('../../lib/PerpetualService.js')
+  , rampupService = require("../../lib/Rampup.js")
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , standingsService = require("../../lib/StandingsService.js")
@@ -19,6 +20,7 @@ const
   , ts = require("../../lib/TicketService.js")
   , util = require('../../lib/util.js')
   , reddit = require("../../lib/RedditService.js");
+
 
 
 class Maintenance{
@@ -81,13 +83,19 @@ class Maintenance{
       */
         //await ts.checkTickets();
 
-        team.updateTeam(4919441);
 
+        const coachId = await rampupService.getCoachId('Dustins');
+        
+        const x = await rampupService.getTeamId(coachId, 'Dwarves with Claws');
+        
+        res.json(x);
+
+        //res.redirect('/');
       }
       catch(e){
         loggingService.error(e);
       }
-      res.redirect('/');
+      
     });
 
     this.router.get('/updateleague/init', util.verifyMaintenanceToken, async function(req, res){

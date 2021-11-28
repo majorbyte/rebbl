@@ -28,7 +28,7 @@ class DivisionApi{
       try {
         let {league,season, division} = req.params;
 
-        let data = await dataService.getSchedules({league:league,season:season,competition:division});
+        let data = await dataService.getSchedules({league:new RegExp(league,'i'),season:season,competition:new RegExp(division,'i')});
         res.json(data);
       }
       catch (ex){
@@ -41,7 +41,7 @@ class DivisionApi{
       try {
         let {league,season, division} = req.params;
 
-        let data = await dataService.getSchedules({league:league,season:season,competition:division});
+        let data = await dataService.getSchedules({league:new RegExp(league,'i'),season:season,competition:new RegExp(division,'i')});
 
         let ret = data.map(m => {
           let match_uuid = m.match_uuid;
