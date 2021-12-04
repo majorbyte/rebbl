@@ -65,8 +65,14 @@ class StandingsApi{
       if (standings.every(x => x.competition)){
         standings.map(x => {
           if (/s\d+/i.test(x.competition)){ 
-            x.competitionUrl = x.competition; 
             x.competition = x.competition.replace(/s(\d+)/i,'Season $1');
+          }
+          if (x.competition.indexOf('/') > -1){
+            x.competitionUrl =  x.competitionId;
+          } else
+          {
+            x.competitionUrl = x.competition;
+            
           }
         });
         standings =standings.sort((a,b) => {

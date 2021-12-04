@@ -22,7 +22,15 @@ class Division{
     
     let leagueRegex;
     let league = req.params.league;
-    let divRegex = new RegExp(`^${req.params.division}$`, 'i');
+    let divRegex = null;
+    let divId = null;
+
+    if (isNaN(Number(req.params.division))){
+      divRegex = new RegExp(`^${req.params.division}$`, 'i');
+    } else {
+      divId = Number(req.params.division);
+    }
+
     let season = "";
     if (league.toLowerCase() === "rebbl one minute league"){
       leagueRegex = new RegExp(`^Rebbl One Minute League`, 'i');  
@@ -41,7 +49,6 @@ class Division{
       }
       leagueRegex = new RegExp(`^${league}`, 'i');
     }
-  
     
     if( req.params.league.toLowerCase() === "rampup"){
       leagueRegex = new RegExp(`${league}$`, 'i');
@@ -50,9 +57,13 @@ class Division{
     } 
     
     if (season !== "")
-      data.matches = await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}, season:season});
+      data.matches = divId === null 
+        ? await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}, season:season})
+        : await db.getLeagues({league: {"$regex": leagueRegex}, competition_id: divId, season:season});
     else 
-      data.matches = await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
+      data.matches = divId === null 
+        ? await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}})
+        : await db.getLeagues({league: {"$regex": leagueRegex}, competition_id: divId});
 
     let ids = [];
     for(var prop in data.matches){
@@ -96,7 +107,14 @@ class Division{
           leagueRegex = new RegExp(`^${league}`, 'i');
       }
         
-      let divRegex = new RegExp(`^${req.params.division}$`, 'i');
+      let divRegex = null;
+      let divId = null;
+  
+      if (isNaN(Number(req.params.division))){
+        divRegex = new RegExp(`^${req.params.division}$`, 'i');
+      } else {
+        divId = Number(req.params.division);
+      }
 
       if( req.params.league.toLowerCase() === "rampup"){
         leagueRegex = new RegExp(`${league}$`, 'i');
@@ -104,17 +122,21 @@ class Division{
         season = "season 18";
       }
 
-      if(season !== "")
-        data.matches = await db.getLeagues({round: week, league: {"$regex": leagueRegex}, competition: {"$regex": divRegex},season:season});
-      else
-        data.matches = await db.getLeagues({round: week, league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
+      if (season !== "")
+        data.matches = divId === null 
+          ? await db.getLeagues({round:week, league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}, season:season})
+          : await db.getLeagues({round:week, league: {"$regex": leagueRegex}, competition_id: divId, season:season});
+      else 
+        data.matches = divId === null 
+          ? await db.getLeagues({round:week, league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}})
+          : await db.getLeagues({round:week, league: {"$regex": leagueRegex}, competition_id: divId});
   
       let ids = [];
       data.matches.map(m => ids.push(m.contest_id));
     
       data.dates = await datingService.search({"id":{$in:ids}});
     
-      data.weeks = await db.getWeeks(leagueRegex, divRegex);
+      data.weeks = await db.getWeeks(leagueRegex, divRegex, divId);
   
       res.render('rebbl/division/round', data);
     } else {
