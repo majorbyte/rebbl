@@ -32,8 +32,8 @@ class Division{
     }
 
     let season = "";
-    if (league.toLowerCase() === "rebbl one minute league"){
-      leagueRegex = new RegExp(`^Rebbl One Minute League`, 'i');  
+    if (league.toLowerCase().endsWith("one minute league")){
+      leagueRegex = new RegExp(`One Minute League$`, 'i');  
     } else if(league.toLowerCase() === "greenhorn cup") {
       leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
       season = "season 18";
@@ -89,8 +89,8 @@ class Division{
       let leagueRegex;
       let league = req.params.league;
       let season = "";
-      if(league.toLowerCase() === "rebbl one minute league"){
-        leagueRegex = new RegExp(`^Rebbl One Minute League`, 'i');  
+      if (league.toLowerCase().endsWith("one minute league")){
+        leagueRegex = new RegExp(`One Minute League$`, 'i');  
       } else if(league.toLowerCase() === "greenhorn cup") {
         leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
         season = "season 18";

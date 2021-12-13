@@ -20,7 +20,7 @@ class StandingsApi{
       let league = req.params.league;
       let filter = req.params.filter.replace('*','');
     
-      let standings = await dataService.getStandings({league:new RegExp(`${league}`,'i'), season:filter});
+      let standings = await dataService.getStandings({league:new RegExp(`${league.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`,'i'), season:filter});
     
       const csv = standings.map(function(row){
         return `${JSON.stringify(row.competition || "")},${JSON.stringify(row.name)},${JSON.stringify(row.team)},${JSON.stringify(row.points)},${JSON.stringify(row.games)},${JSON.stringify(row.win)},${JSON.stringify(row.draw)},${JSON.stringify(row.loss)},${JSON.stringify(row.tddiff)}`;
@@ -59,7 +59,7 @@ class StandingsApi{
 
     this.router.get('/:league/:season/', util.cache(300), async function(req, res){
       let standings = await dataService.getStandings({
-        "league":new RegExp(`^${req.params.league}$`,"i"), 
+        "league":new RegExp(`^${req.params.league.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i"), 
         "season":new RegExp(`^${req.params.season}$`,"i")
       });
       if (standings.every(x => x.competition)){
@@ -88,7 +88,7 @@ class StandingsApi{
 
     this.router.get('/:league/:season/admins', util.cache(300), async function(req, res){
       let standings = await dataService.getStandings({
-        "league":new RegExp(`^${req.params.league}$`,"i"), 
+        "league":new RegExp(`^${req.params.league.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i"), 
         "season":new RegExp(`^${req.params.season}$`,"i")
       });
 
@@ -112,7 +112,7 @@ class StandingsApi{
 
     this.router.get('/:league/:season/:division', util.cache(300), async function(req, res){
       let standings = await dataService.getStandings({
-        "league":new RegExp(`^${req.params.league}`,"i"), 
+        "league":new RegExp(`^${req.params.league.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`,"i"), 
         "season":new RegExp(`^${req.params.season}`,"i"), 
         "competition":new RegExp(`^${req.params.division}`,"i")
       });

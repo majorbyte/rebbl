@@ -224,12 +224,12 @@ class Maintenance{
 
     this.router.get('/calculate', util.verifyMaintenanceToken, async function(req,res){
 
-      let seasons = [configurationService.getActiveSeason()];
+      /*let seasons = [configurationService.getActiveSeason()];
       seasons = seasons.concat(configurationService.getActiveUpstartSeason());          
       seasons = seasons.concat(configurationService.getActiveMinorsSeason());          
       seasons = seasons.concat(configurationService.getActiveCollegeSeason());          
-      seasons = seasons.concat(configurationService.getActiveBeerSeason());          
-      seasons = seasons.concat(configurationService.getActiveOneMinuteSeason());          
+      seasons = seasons.concat(configurationService.getActiveBeerSeason());          */
+      let seasons = [configurationService.getActiveOneMinuteSeason()];          
 
       seasons.map(season => {
         season.leagues.map(league =>{
