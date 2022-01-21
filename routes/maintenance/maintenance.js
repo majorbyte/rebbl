@@ -83,14 +83,10 @@ class Maintenance{
       */
         //await ts.checkTickets();
 
+        reddit.check();
 
-        const coachId = await rampupService.getCoachId('Dustins');
-        
-        const x = await rampupService.getTeamId(coachId, 'Dwarves with Claws');
-        
-        res.json(x);
 
-        //res.redirect('/');
+        res.redirect('/');
       }
       catch(e){
         loggingService.error(e);
@@ -224,12 +220,12 @@ class Maintenance{
 
     this.router.get('/calculate', util.verifyMaintenanceToken, async function(req,res){
 
-      /*let seasons = [configurationService.getActiveSeason()];
+      let seasons = [configurationService.getActiveSeason()];
       seasons = seasons.concat(configurationService.getActiveUpstartSeason());          
       seasons = seasons.concat(configurationService.getActiveMinorsSeason());          
       seasons = seasons.concat(configurationService.getActiveCollegeSeason());          
-      seasons = seasons.concat(configurationService.getActiveBeerSeason());          */
-      let seasons = [configurationService.getActiveOneMinuteSeason()];          
+      seasons = seasons.concat(configurationService.getActiveBeerSeason());          
+      //let seasons = [configurationService.getActiveOneMinuteSeason()];          
 
       seasons.map(season => {
         season.leagues.map(league =>{
