@@ -6,7 +6,10 @@ block content
       tbody
         // ko foreach: skillDescriptions
         tr
-          td(data-bind="text: name")
+          td
+            span(data-bind="text: name")
+          td
+            img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${name.replace(/ |&/g,'')}.png`}" alt="" title="" )
           td(data-bind="text: description")
         // /ko
 
