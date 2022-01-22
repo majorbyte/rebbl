@@ -1,0 +1,68 @@
+extends ../no-cache-sub-relayout.pug
+
+block vars
+  - let options = {active: league, title: "REBBL season 12", company:"clan"}
+  - let company = "clan";
+
+block head  
+  style.
+    .popoverFix {z-index:10000 !important;}
+
+
+block content
+  div(class=`container` id="app")
+  
+
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
+  - else
+    script(src="/scripts/vue-2.6.10.min.js")
+
+  script.
+
+        // app Vue instance
+    var app = new Vue({
+      // app initial state
+      data: {
+        clan: "",
+        new:true,
+        name: "",
+        coach:"",
+        reddit:"",
+        roster:[]
+      },
+
+      // methods that implement data logic.
+      // note there's no DOM manipulation here at all.
+      methods: {
+        getCoach: async function () {
+          let response = await fetch(`/api/v2/clan/build/coach/${coach}`);
+        },
+        load: async function () {
+          let response = await fetch(`/api/v2/clan/build/#{clan}/team/#{team}`);
+        }
+      },
+      created: async function () { this.load();}
+    })
+
+    // mount
+    app.$mount('#app')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
