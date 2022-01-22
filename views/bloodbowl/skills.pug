@@ -1,10 +1,20 @@
 extends ../relayout.pug
 
 block content
-  div(class="container")
+  div(class="container" )
+    label(for="category" style="display:inline-block;margin-right:5px") Category
+    select(data-bind="value:filter" id="category")
+      option(value="all") All
+      option(value="General") General
+      option(value="Agility") Agility
+      option(value="Passing") Passing
+      option(value="Strength") Strength
+      option(value="Mutation") Mutation
+      option(value="Extraordinary") Extraordinary
+
     table(class="table table-striped")
       tbody
-        // ko foreach: skillDescriptions
+        // ko foreach: skills()
         tr
           td
             span(data-bind="text: name")
@@ -24,46 +34,25 @@ block scripts
     script(src="/scripts/knockout-es5.js")
 
   script.
-    const SKILLDESCRIPTIONS = "skillDescriptions.v2";
-    function loadSkillDescriptions(){
-      const storage = window.localStorage;
-      let skills = null;
-  
-      if (storage)    
-        skills = localStorage.getItem(SKILLDESCRIPTIONS);
-
-      if(!skills){
-        let xhr = new XMLHttpRequest();
-        let path = window.location.pathname.split('/');
-
-        xhr.open("GET", "/api/v2/bloodbowl/skillDescriptions"  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {//Call a function when the state changes.
-          model.skillDescriptions =xhr.response;
-          const storage = window.localStorage;
-      
-          if (storage)
-            storage.setItem(SKILLDESCRIPTIONS, JSON.stringify(xhr.response));    
-        }
-
-        xhr.send();
-      } else {
-        model.skillDescriptions = JSON.parse(skills);
-      }
+    async function loadSkillDescriptions(){
+      let result = await fetch("/api/v2/bloodbowl/skillDescriptions");
+      model.skillDescriptions  = await result.json()
     }
 
     class ViewModel{
       constructor(){
         this.skillDescriptions = [];
+        this.filter = "all";
         ko.track(this);
+      }
+
+      skills(){
+        return this.filter !== "all" ? this.skillDescriptions.filter(x => x.category === this.filter) : this.skillDescriptions;
       }
     }
 
     let model = new ViewModel({});
     ko.applyBindings(model);
     $(document).ready(function(){
-
       loadSkillDescriptions();
     });
