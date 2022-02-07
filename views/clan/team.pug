@@ -7,62 +7,493 @@ block vars
 block head  
   style.
     .popoverFix {z-index:10000 !important;}
-
+    .tables {width: 100%;overflow: auto;display: flex;flex-wrap: wrap;margin-top: 1em;align-items: flex-start;}
+    .table {width:unset !important; margin-block-end: 1em;margin-right: 1em;flex-grow:1}
+    .data {text-align: right}
+    .table th {border-top:unset !important;}   
+    .btn:focus, .btn.primary:focus {box-shadow:unset !important}
+    .skill{width: 2em;border-radius: 4px;margin-left:1px;}
+    .bg-double{background-color:#ff8900}
 
 block content
-  div(class=`container` id="app")
-  
+  div(class=`` id="app")
+    table(style="width:100%")
+      thead
+        tr.table-info
+          td(colspan='1' title='Name') Name 
+          td(colspan='1' title='Position') Position 
+          td(colspan='1' title='Movement Allowance') MA 
+          td(colspan='1' title='Strength') ST 
+          td(colspan='1' title='Agility') AG 
+          td(colspan='1' title='Armour Value') AV 
+          td(colspan='1' title='Skills') Skills 
+          td(colspan='1' title='Hiring Fee') Hiring Fee 
+          td.data(colspan='1' title='Current Value') Player Cost 
+          td.data(colspan='1' title='Superstar Tax') Skill Tax 
+          td(colspan='1' title='Controls')  
+      tbody(data-bind="template: { name: 'playerTemplate', foreach: roster, as: 'player' }")
+      tfoot
+        // ko template: {name : 'playerSubtotals'}
+        // /ko
+        // ko template: { name: 'addNewPlayerTemplate' }
+        // /ko
+    .tables
+      // ko template: { name: 'rerollsTable' }
+      // /ko
+      // ko template: { name: 'costTable' }
+      // /ko
+      // ko template: { name: 'teamTable' }
+      // /ko
 
+
+  script(type="text/html" id="rerollsTable")
+    table.table.table-striped.table-sm 
+      tr
+        th.table-info rerolls
+        td.w-25
+          input.w-50(type="number" data-bind="textInput:rerolls" min="0" max="8")
+        td(data-bind="text: new Intl.NumberFormat('en-US').format(rerollCost())")
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(rerolls * rerollCost())")
+      tr
+        th.table-info fan factor
+        td 
+          input.w-50(type="number" data-bind="textInput:fanfactor" min="5" max="16")
+        td 10,000
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format((fanfactor-5) * 10000)")
+      tr
+        th.table-info assistant coaches
+        td
+          input.w-50(type="number" data-bind="textInput:coaches" min="0" max="16")
+          td 10,000
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(coaches * 10000)")
+      tr
+        th.table-info cheerleaders
+        td
+          input.w-50(type="number" data-bind="textInput:cheerleaders" min="0" max="16")
+        td 10,000
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(cheerleaders * 10000)")
+
+      tr
+        th.table-info apothecary
+        td 
+            button.btn.btn-sm(data-bind="{text: apothecary ? 'yes' : 'no', click:toggleApo, css: apothecary ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary'}")
+        td 50,000
+        td.data(data-bind="text: apothecary ? '50,000' : '0'")
+      tr
+        td
+        th.table-info(colspan="2" style="text-align:right") management cost
+        th.table-info.data(style="border-top:1px solid black !important" data-bind="text: new Intl.NumberFormat('en-US').format(subTotalRerolls())")
+
+  script(type="text/html" id="costTable")
+    table.table.table-striped.table-sm 
+      tr
+        th.table-info player cost
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost())")
+      tr
+        th.table-info skill tax
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())")
+      tr
+        th.table-info management cost
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(subTotalRerolls())")
+      tr
+        th.table-info team cost
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(teamCost())")
+      tr
+        th.table-info tier tax
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(teamTax())")
+      tr
+        th.table-info Total
+        th.table-info.data(style="border-top:1px solid black !important") 
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(teamTotal())")
+  
+  script(type="text/html" id="teamTable")
+    table.table.table-striped.table-sm 
+      tr
+        th.table-info coach name
+        td
+          input(type="text")
+      tr
+        th.table-info team name
+        td
+          input(type="text")
+      tr
+        th.table-info race
+        td 
+          select(data-bind="options: races, optionsText: 'name', value: race,optionsCaption: 'Choose...', enable: roster.length == 0")
+      tr 
+        th.table-info tier 
+        td(data-bind="text: teamTier()")
+      tr
+        th.table-info team value
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(teamValue())")
+
+
+  script(type="text/html" id="playerTemplate")
+        tr
+          td.left-align
+            span(data-bind='text:name')
+          td.left-align
+            span(data-bind="text:playerType.displayName") 
+          td
+            span(data-bind="text:playerType.st")
+          td
+            span(data-bind="text:playerType.ma")
+          td
+            span(data-bind="text:playerType.ag")
+          td
+            span(data-bind="text:playerType.av")
+          td.left-align
+            // ko foreach: fixedSkills
+            img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+            // /ko
+            // ko if: skill1
+            img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${skill1.replace(/ /g,'')}.png`,title:skill1.replace(/([A-Z])/g, ' $1').trim()}")
+            // /ko
+            // ko if: skill2
+            img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${skill2.replace(/ /g,'')}.png`,title:skill2.replace(/([A-Z])/g, ' $1').trim()}")
+            // /ko
+          td
+            span(data-bind="text: new Intl.NumberFormat('en-US').format(playerType.cost)")
+          td.data
+            span(data-bind="text: new Intl.NumberFormat('en-US').format(cost())")
+          td.data
+            // ko if: isSuperstar()
+            span(data-bind="text: new Intl.NumberFormat('en-US').format($root.superstarPlayerTax(player))")
+            // /ko
+          td.left-align
+            .flex-container
+              button.btn.btn-sm.btn-info(data-bind="click: player.toggleEdit")
+                i.fa.fa-pencil-square-o
+              button.btn.btn-danger.btn-sm(title='Remove player')
+                i.fa.fa-times-rectangle-o(data-bind="click: $parent.removePlayer.bind($parent)")       
+
+        tr(data-bind="visible: player.visible")
+          td.left-align
+            input(placeholder='Player Name' data-bind="textInput: player.name")
+          td
+            span skills
+          td(colspan='8')
+            div(style="display:flex")
+              select(aria-labelledby='' data-bind="options:player.getSkills1(), value:skill1, optionsCaption:'choose ..',optionsAfterRender: setClass.bind(player)")
+              // ko if: !hasDoubleOrIncrease()
+              select(aria-labelledby='' data-bind="options:player.getSkills2(), value:skill2, optionsCaption:'choose ..'")
+              // /ko
+  
+  script(type="text/html" id="addNewPlayerTemplate")
+    // ko if: race
+    tr.add-player-row
+      td &nbsp;
+    tr.add-player-row
+      td.left-align
+        input(placeholder='Player Name' data-bind="textInput: newPlayer.name")
+      td.left-align
+        select(aria-labelledby='position-header' data-bind="options: positions(),optionsText: 'displayName', value:newPlayer.playerType")
+      td
+        span(data-bind="text:newPlayer.playerType?.st")
+      td
+        span(data-bind="text:newPlayer.playerType?.ma")
+      td
+        span(data-bind="text:newPlayer.playerType?.ag")
+      td
+        span(data-bind="text:newPlayer.playerType?.av")
+      td.left-align
+        span.skills  
+      td 
+        span(data-bind="text:newPlayer.playerType?.cost")
+      td.left-align
+        .flex-container
+          button.btn.btn-sm.btn-success(title='add player' data-bind="click:addPlayer")
+            i.fa.fa-plus-square
+    // /ko
+
+  script(type="text/html" id="playerSubtotals")
+    // ko if: race
+    tr.add-player-row
+      tr
+        td
+        td
+        td
+        td
+        td
+        td
+        td
+        th.table-info subtotals
+        th.data.table-info(style="border-top:1px solid black !important" data-bind="text: new Intl.NumberFormat('en-US').format(playerCost())")
+        th.data.table-info(style="border-top:1px solid black !important" data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())")
+    // /ko
 
 block scripts
-  - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
-  - else
-    script(src="/scripts/vue-2.6.10.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
 
   script.
+    let SkillDescriptions = [];
 
-        // app Vue instance
-    var app = new Vue({
-      // app initial state
-      data: {
-        clan: "",
-        new:true,
-        name: "",
-        coach:"",
-        reddit:"",
-        roster:[]
-      },
+    const TierTax = [
+      {race:'Chaos Dwarf', tier:	2, rebate: 100000},
+      {race:'Lizardman', tier:	1, rebate: 150000},
+      {race:'Undead', tier:	3, rebate: 50000},
+      {race:'Necromantic', tier:	2, rebate: 100000},
+      {race:'Wood Elf', tier:	3, rebate: 50000},
+      {race:'Dark Elf', tier:	2, rebate: 100000},
+      {race:'Dwarf', tier:	2, rebate: 100000},
+      {race:'Orc', tier:	1, rebate: 150000},
+      {race:'Chaos', tier:	2, rebate: 100000},
+      {race:'Skaven', tier:	1, rebate: 150000},
+      {race:'Norse', tier:	5, rebate: -50000},
+      {race:'High Elf', tier:	5, rebate: -50000},
+      {race:'Khemri', tier:	3, rebate: 50000},
+      {race:'Amazon', tier:	3, rebate: 50000},
+      {race:'Elven Union', tier:	5, rebate: -50000},
+      {race:'Nurgle', tier:	3, rebate: 50000},
+      {race:'Bretonnian', tier:	4, rebate: 0},
+      {race:'Human', tier:	5, rebate: -50000},
+      {race:'Underworld Denizens', tier:	6, rebate: -100000},
+      {race:'Kislev', tier:	6, rebate: -100000},
+      {race:'Ogre', tier:	6, rebate: -100000},
+      {race:'Vampire', tier:	6, rebate: -100000},
+      {race:'Goblin', tier:	7, rebate: 0},
+      {race:'Halfling', tier:	7, rebate: 0},
+    ]
 
-      // methods that implement data logic.
-      // note there's no DOM manipulation here at all.
-      methods: {
-        getCoach: async function () {
-          let response = await fetch(`/api/v2/clan/build/coach/${coach}`);
-        },
-        load: async function () {
-          let response = await fetch(`/api/v2/clan/build/#{clan}/team/#{team}`);
+    class SkillModel{
+      constructor(data){
+        this.map(data || {});
+        ko.track(this);
+      }
+      map(data){
+        this.increaseStats = data.increaseStats || 0;
+        this.doubleAgilitySkills = data.doubleAgilitySkills || [];
+        this.doublePassingSkills = data.doublePassingSkills || [];
+        this.doubleStrengthSkills = data.doubleStrengthSkills || [];
+        this.doubleMutationSkills = data.doubleMutationSkills || [];
+      }
+
+    }
+
+    class PlayerModel{
+      constructor(data){
+        this.map(data || {});
+        ko.track(this);
+
+        ko.getObservable(this, 'skill1').subscribe(this.updateSkillModel.bind(this));
+        ko.getObservable(this, 'skill1').subscribe(this.removeSkillModel.bind(this),null, "beforeChange");
+      }
+      map(data){
+        this.id = data.id || 0;
+        this.playerType = data.playerType || '';
+        this.name = data.name || '';
+        this.skill1 = data.skill1;
+        this.skill2 = data.skill2;
+        this.fixedSkills = data.fixedSkills || [];
+        this.injuries = data.injuries || [];
+        this.visible = false;
+        this.tier = data.tier || 1;
+        this.skillModel = data.skillModel || new SkillModel();
+      }
+      toggleEdit(){
+        this.visible = !this.visible;
+      }
+      updateSkillModel(skill){
+        if (!this.isDouble(skill) && !this.isIncrease(skill)) return;
+        if (this.isDouble(skill)) this.skillModel.doubleSkills++;
+        switch(this.getCategory(skill)){
+          case 'Increase':
+            this.skillModel.increaseStats++;
+            break;
+          case 'Agility':
+            this.skillModel.doubleAgilitySkills.push(skill);
+            break;
+          case 'Passing':
+            this.skillModel.doublePassingSkills.push(skill);
+            break;
+          case 'Strength':
+            this.skillModel.doubleStrengthSkills.push(skill);
+            break;
+          case 'Mutation':
+            this.skillModel.doubleMutationSkills.push(skill);
+            break;
         }
-      },
-      created: async function () { this.load();}
-    })
+      }
+      removeSkillModel(oldValue){
+        if (!oldValue) return;
+        switch(this.getCategory(oldValue)){
+          case 'Increase':
+            this.skillModel.increaseStats--;
+            break;
+          case 'Agility':
+            this.skillModel.doubleAgilitySkills.splice(this.skillModel.doubleAgilitySkills.indexOf(oldValue),1);
+            break;
+          case 'Passing':
+            this.skillModel.doublePassingSkills.splice(this.skillModel.doublePassingSkills.indexOf(oldValue),1);
+            break;
+          case 'Strength':
+            this.skillModel.doubleStrengthSkills.splice(this.skillModel.doubleStrengthSkills.indexOf(oldValue),1);
+            break;
+          case 'Mutation':
+            this.skillModel.doubleMutationSkills.splice(this.skillModel.doubleMutationSkills.indexOf(oldValue),1);
+            break;
+        }
+      }
 
-    // mount
-    app.$mount('#app')
+      getCategory = (skill) => SkillDescriptions.find(x => x.name === skill).category;
+      hasDouble = () => SkillDescriptions.filter(x => this.skill1 === x.name).some(x => this.playerType.doubles.includes(x.category));
+      hasDoubleOrIncrease = () => this.hasDouble() || this.hasIncrease();
+      hasIncrease = () => this.increases().includes(this.skill1);
+      isDouble = (skill) => this.playerType.doubles.includes(SkillDescriptions.find(x => x.name === skill)?.category ||'');
+      isIncrease = (skill) => this.increases().includes(skill);
+      isSuperstar = () => this.skill1 && this.skill2;
 
+      normals = () => SkillDescriptions.filter(x => this.playerType.normal.includes(x.category)).map(x => x.name);
+      increases = () => SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.tier > 2 || x.name !== 'Increase Strength').map(x => x.name);
+      
+      accessibleSkills(){
+        const increases = this.skillModel.increaseStats === 0 || this.hasIncrease() ? this.increases() : [];
+        let doubles = SkillDescriptions.filter(x => this.playerType.doubles.includes(x.category));
+        if (this.skillModel.doubleAgilitySkills.length >= 2) doubles = doubles.filter(x => x.category !== 'Agility' || x.name === this.skill1);
+        else doubles = doubles.filter(x => !this.skillModel.doubleAgilitySkills.includes(x.name) || x.name === this.skill1);
 
+        if (this.skillModel.doublePassingSkills.length >= 2) doubles = doubles.filter(x => x.category !== 'Passing' || x.name === this.skill1);
+        else doubles = doubles.filter(x => !this.skillModel.doublePassingSkills.includes(x.name) || x.name === this.skill1);
 
+        if (this.skillModel.doubleStrengthSkills.length >= 2) doubles = doubles.filter(x => x.category !== 'Strength' || x.name === this.skill1);
+        else doubles = doubles.filter(x => !this.skillModel.doubleStrengthSkills.includes(x.name) || x.name === this.skill1);
 
+        if (this.skillModel.doubleMutationSkills.length >= 2) doubles = doubles.filter(x => x.category !== 'Mutation' || x.name === this.skill1);          
+        else doubles = doubles.filter(x => !this.skillModel.doubleMutationSkills.includes(x.name) || x.name === this.skill1);
 
+        return this.normals().concat(doubles.map(x => x.name)).concat(increases).sort();
+      } 
 
+      getSkills1 = () => this.accessibleSkills().filter(x => x !== this.skill2);
+      getSkills2 = () => this.hasDoubleOrIncrease() ? [] : this.normals().filter(x => x !== this.skill1);
 
+      cost = () => this.playerType.cost + (this.isDouble(this.skill1) ? 30000 : this.skill1 ? 20000 : 0 ) + (this.skill2 ? 20000 : 0 );
+      setClass(option, skill) {
+        if (this.isDouble(skill) || this.isIncrease(skill)) $(option).addClass('bg-double');
+      }
+    }
 
+    class TeamModel{
+      constructor(data){
+        this.map(data || {});
+        this.newPlayer = new PlayerModel();
+        this.skillModel = new SkillModel();
+        ko.track(this);
+      }
+      map(data){
+        this.roster = data.roster || [];
+        this.fanfactor = data.fanfactor || 5;
+        this.rerolls = data.rerolls || 0;
+        this.coaches = data.coaches || 0;
+        this.cheerleaders = data.cheerleaders || 0;
+        this.apothecary = data.apothecary || true;
+        this.name = data.name || '';
+        this.race = data.race || '';
+        this.coach = data.coach || '';
+        this.value = data.value || 0;
+        this.cost = data.cost || 0;
+        this.tier = data.tier || 0;
 
+        this.races = [];
+        this.skills = [];
+        this.playerTypes = [];
 
+      }
+      
+      toggleApo = () => this.apothecary = !this.apothecary;
+      subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + Number(this.fanfactor) - 5) * 10000 + (this.apothecary ? 50000 : 0);
+      rerollCost = () => this.race ? this.race.reroll : 50000;
+      playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
+      positions = () => this.race ? this.playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b)  : [];
+      teamValue = () => this.playerCost() + this.subTotalRerolls() + 50000 ; // 5 FF
+      teamCost = () => this.playerCost() + this.subTotalRerolls() + this.superstarTax();
+      teamTax = () => TierTax.find(x => x.race === this.race?.name)?.rebate || 0;
+      teamTier = () => TierTax.find(x => x.race === this.race?.name)?.tier;
+      teamTotal = () => this.teamCost() + this.teamTax();
+      superstarTax = () => this.roster.filter(x => x.isSuperstar()).reduce((p,c,i) => p + 10*(i+1), 0) * 1000;
 
+      superstarPlayerTax(player) {
+        return (1 + this.roster.filter(x => x.isSuperstar()).indexOf(player)) * 10000;
+      }
 
+      statIncreaseCount = () => this.roster.filter(x => x.hasIncrease()).length;
+      doublesCount = () => this.roster.filter(x => x.hasDouble()).length;
 
+      async getCoach () {
+        let response = await fetch(`/api/v2/clan/build/coach/${coach}`);
+      }
 
+      addPlayer () {
+        this.roster.push(new PlayerModel({
+          name: this.newPlayer.name,
+          playerType: this.newPlayer.playerType,
+          fixedSkills : this.skills[this.newPlayer.playerType.type],
+          tier: this.teamTier(),
+          skillModel: this.skillModel
+        }));
+        this.newPlayer.playerType = '';
+        this.newPlayer.name = '';
+      }
 
+      removePlayer (player){
+        this.roster.splice(this.roster.indexOf(player),1);
+      }
 
+      async load() {
 
+        let [team, skills, skillDescriptions, playerTypes, races] = await Promise.all([
+            fetch(`/api/v2/clan/build/#{clan}/team/#{team}`).then(response => response.json()),
+            fetch('/api/v2/bloodbowl/skills').then(response => response.json()),
+            fetch('/api/v2/bloodbowl/skilldescriptions').then(response => response.json()),
+            fetch('/api/v2/bloodbowl/playertypes').then(response => response.json()),
+            fetch('/api/v2/bloodbowl/races').then(response => response.json()),
+        ]);
+
+        model.map(team);
+        model.skills = skills;
+        model.playerTypes = playerTypes.filter(x => x.race < 26);
+        model.playerTypes.forEach(x => x.displayName = x.type.substr(x.type.indexOf('_')+1).replace(/([A-Z])/g, ' $1'));
+        model.races = races.filter(x => x.id < 26).sort((a,b) => a.name > b.name);
+        SkillDescriptions = skillDescriptions.concat([{name:'Increase Strength',category:'Increase'},{name:'Increase Movement',category:'Increase'},{name:'Increase Agility',category:'Increase'},{name:'Increase Armour',category:'Increase'}]);
+      }
+    }      
+
+    let model = new TeamModel();
+    let races = [
+      {id:13,name:'Amazon'}
+      ,{id:24,name:'Bretonnian'}
+      ,{id:8,name:'Chaos'}
+      ,{id:21,name:'Chaos Dwarf'}
+      ,{id:9,name:'Dark Elf'}
+      ,{id:2,name:'Dwarf'}
+      ,{id:14,name:'Elven Union'}
+      ,{id:6,name:'Goblin'}
+      ,{id:11,name:'Halfling'}
+      ,{id:15,name:'High Elf'}
+      ,{id:1,name:'Human'}
+      ,{id:16,name:'Khemri'}
+      ,{id:25,name:'Kislev'}
+      ,{id:5,name:'Lizardman'}
+      ,{id:17,name:'Necromantic'}
+      ,{id:12,name:'Norse'}
+      ,{id:18,name:'Nurgle'}
+      ,{id:4,name:'Orc'}
+      ,{id:19,name:'Ogre'}
+      ,{id:3,name:'Skaven'}
+      ,{id:10,name:'Undead'}
+      ,{id:22,name:'Underworld Denizens'}
+      ,{id:20,name:'Vampire'}
+      ,{id:7,name:'Wood Elf'}
+    ];
+    ko.applyBindings(model);
+    $(document).ready(function(){
+      model.load();
+    });
