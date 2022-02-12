@@ -269,11 +269,73 @@ block scripts
         ko.track(this);
       }
       map(data){
-        this.increaseStats = data.increaseStats || 0;
+        this.statsIncreases = data.statsIncreases || [];
+        this.doubleGeneralSkills = data.doubleGeneralSkills || [];
         this.doubleAgilitySkills = data.doubleAgilitySkills || [];
         this.doublePassingSkills = data.doublePassingSkills || [];
         this.doubleStrengthSkills = data.doubleStrengthSkills || [];
         this.doubleMutationSkills = data.doubleMutationSkills || [];
+      }
+      /*
+      Tier 1 & 2 teams:
+      May not take Strength as statistic upgrade.
+      May only take 2 doubles, or 1 statistic and 1 double.
+
+      Tier 3-6 teams:
+      May take any statistic upgrade.
+      May take 3 doubles, or 1 statistic and 1 double.
+
+      Tier 7 teams (stunty):
+      May take any statistic upgrade.
+      May take 4 doubles, or 1 statistic and 2 doubles.
+      May take up to 4 general skills as doubles (and they can be the same skill as they are general skills). 
+      */
+
+      isAllowed = (category, skill) => {
+        if (this.tier() < 3 && skill == 'Increase Strength') return false;
+        if (this.statsIncreases.length === 1) return this._isValidWithStat(category, skill);
+        return this._isValidWithoutStat(category, skill);
+      }
+      _isValidWithStat = (category, skill) => {
+        let count = this.doubleGeneralSkills.length + this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+        if (this.tier() < 3) return count < 2;
+        else if (this.tier() < 7) {
+          if (count >= 1) return false;
+        }
+        else if (this.tier() < 8) {
+          if (category === 'General') return this.doubleGeneralSkills.length < 5;
+          count = this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+          if (count >= 2) return false;
+        }
+        return true;
+      }
+
+      _isValidWithoutStat = (category, skill) => {
+        let count = this.doubleGeneralSkills.length + this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+        if (this.tier() < 3) return count < 3;
+        else if (this.tier() < 7) {
+          if (count >= 3) return false;
+          return this._isSkillAllowed(category, skill)
+        }
+        else if (this.tier() < 8) {
+          if (category === 'General') return this.doubleGeneralSkills.length < 5;
+          count = this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+          if (count >= 4) return false;
+          return this._isSkillAllowed(category, skill)
+        }
+      }
+
+      _isSkillAllowed = (category,skill) => {
+        switch (category){
+          case "Agility":
+            return this.doubleAgilitySkills.length < 2 && !this.doubleAgilitySkills.includes(skill);
+          case "Passing":
+            return this.doublePassingSkills.length < 2 && !this.doublePassingSkills.includes(skill);
+          case "Strength":
+            return this.doubleStrengthSkills.length < 2 && !this.doubleStrengthSkills.includes(skill);
+          case "Mutation":
+            return this.doubleMutationSkills.length < 2 && !this.doubleMutationSkills.includes(skill);
+        }
       }
 
     }
@@ -306,7 +368,10 @@ block scripts
         if (this.isDouble(skill)) this.skillModel.doubleSkills++;
         switch(this.getCategory(skill)){
           case 'Increase':
-            this.skillModel.increaseStats++;
+            this.skillModel.statsIncreases.push(skill);
+            break;
+          case 'General':
+            this.skillModel.doubleAgilitySkills.push(skill);
             break;
           case 'Agility':
             this.skillModel.doubleAgilitySkills.push(skill);
@@ -326,7 +391,10 @@ block scripts
         if (!oldValue) return;
         switch(this.getCategory(oldValue)){
           case 'Increase':
-            this.skillModel.increaseStats--;
+            this.skillModel.statsIncreases.splice(this.skillModel.statsIncreases.indexOf(oldValue),1);
+            break;
+          case 'General':
+            this.skillModel.doubleGeneralSkills.splice(this.skillModel.doubleGeneralSkills.indexOf(oldValue),1);
             break;
           case 'Agility':
             this.skillModel.doubleAgilitySkills.splice(this.skillModel.doubleAgilitySkills.indexOf(oldValue),1);
@@ -355,19 +423,10 @@ block scripts
       increases = () => SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.tier > 2 || x.name !== 'Increase Strength').map(x => x.name);
       
       accessibleSkills(){
-        const increases = this.skillModel.increaseStats === 0 || this.hasIncrease() ? this.increases() : [];
+        const increases = this.skillModel.statsIncreases.length === 0 || this.hasIncrease() ? this.increases() : [];
         let doubles = SkillDescriptions.filter(x => this.playerType.doubles.includes(x.category));
-        if (this.skillModel.doubleAgilitySkills.length >= 2) doubles = doubles.filter(x => x.category !== 'Agility' || x.name === this.skill1);
-        else doubles = doubles.filter(x => !this.skillModel.doubleAgilitySkills.includes(x.name) || x.name === this.skill1);
 
-        if (this.skillModel.doublePassingSkills.length >= 2) doubles = doubles.filter(x => x.category !== 'Passing' || x.name === this.skill1);
-        else doubles = doubles.filter(x => !this.skillModel.doublePassingSkills.includes(x.name) || x.name === this.skill1);
-
-        if (this.skillModel.doubleStrengthSkills.length >= 2) doubles = doubles.filter(x => x.category !== 'Strength' || x.name === this.skill1);
-        else doubles = doubles.filter(x => !this.skillModel.doubleStrengthSkills.includes(x.name) || x.name === this.skill1);
-
-        if (this.skillModel.doubleMutationSkills.length >= 2) doubles = doubles.filter(x => x.category !== 'Mutation' || x.name === this.skill1);          
-        else doubles = doubles.filter(x => !this.skillModel.doubleMutationSkills.includes(x.name) || x.name === this.skill1);
+        doubles = doubles.filter(x => !this.fixedSkills.includes(x.name) && this.skillModel.isAllowed(x.category, x.name) || x.name === this.skill1);
 
         return this.normals().concat(doubles.map(x => x.name)).concat(increases).sort();
       } 
@@ -387,6 +446,7 @@ block scripts
         this.newPlayer = new PlayerModel();
         this.skillModel = new SkillModel();
         ko.track(this);
+        this.skillModel.tier = this.teamTier;
       }
       map(data){
         this.roster = data.roster || [];
@@ -405,7 +465,6 @@ block scripts
         this.races = [];
         this.skills = [];
         this.playerTypes = [];
-
       }
       
       toggleApo = () => this.apothecary = !this.apothecary;
