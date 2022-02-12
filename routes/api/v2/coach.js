@@ -50,6 +50,7 @@ class CoachApi{
         name: account.coach,
         reddit:account.reddit, 
         discord: account.discord, 
+        discordId: account.discordId,
         steam: account.steam, 
         timezone: account.timezone, 
         twitch: account.twitch
