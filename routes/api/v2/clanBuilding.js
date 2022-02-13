@@ -33,6 +33,16 @@ class ClanBuildingApi{
     res.json(team || this.team());
   }
 
+  async _getReturningTeam(req,res){
+    const team = await clanService.getCoachLastSeasonTeam(req.params.coach);
+    res.json({name:team.team.name, id:team.team.id, raceId:team.team.idraces});
+  }
+
+  async _getReturningTeamPlayers(req,res){
+    const players = await clanService.getReturningTeamPlayers(req.params.teamId);
+    res.json(players);
+  }
+
   routesConfig(){
     const apiRateLimiter = rateLimit({
       windowMs: 30 * 1000,
@@ -44,9 +54,12 @@ class ClanBuildingApi{
       }
     });
 
-    this.router.use("/coach/:coach",util.ensureAuthenticated , apiRateLimiter, this._getCoach.bind(this));
+    this.router.use("/coach/:coach/team",util.ensureAuthenticated , apiRateLimiter, this._getReturningTeam.bind(this));
+    this.router.use("/coach/:coach",util.ensureAuthenticated ,  this._getCoach.bind(this));
+    this.router.use("/team/:teamId/players",util.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));
 
-    this.router.use("/:clan/:team",util.ensureAuthenticated , apiRateLimiter, this._getTeam.bind(this));
+
+    this.router.use("/:clan/:team",util.ensureAuthenticated ,  this._getTeam.bind(this));
 
 
     return this.router;
