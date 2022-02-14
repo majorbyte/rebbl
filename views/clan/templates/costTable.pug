@@ -1,0 +1,25 @@
+table.table.table-striped.table-sm 
+  tr
+    th.table-info player cost
+    td.data
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost())")
+  tr
+    th.table-info skill tax
+    td.data
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())")
+  tr
+    th.table-info management cost
+    td.data
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(subTotalRerolls())")
+  tr
+    th.table-info team cost
+    td.data
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(teamCost())")
+  tr
+    th.table-info tier tax
+    td.data
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(teamTax())")
+  tr
+    th.table-info Total
+    th.table-info.data(style="border-top:1px solid black !important") 
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(teamTotal())")

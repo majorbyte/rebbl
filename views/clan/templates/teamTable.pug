@@ -1,0 +1,27 @@
+table.table.table-striped.table-sm 
+  tr
+    th.table-info returning team
+    td 
+        button.btn.btn-sm(data-bind="{text: isReturningTeam ? 'yes' : 'no', click:toggleReturning, css: isReturningTeam ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary'}")
+  tr
+    th.table-info coach name
+    td
+      input(placeholder='Coach Name' data-bind="value: coach")
+  tr
+    th.table-info team name
+    td
+      input(type="text")
+  tr
+    th.table-info race
+    td 
+      select(data-bind="options: $root.races(), optionsText: 'name', value: race,optionsCaption: 'Choose...', enable: roster.length == 0")
+  tr 
+    th.table-info SPP+
+    td.data(data-bind="text:sppSurplus()") 
+  tr 
+    th.table-info tier 
+    td.data(data-bind="text: teamTier()")
+  tr
+    th.table-info team value
+    td.data
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(teamValue())")

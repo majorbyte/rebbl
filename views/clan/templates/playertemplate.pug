@@ -1,0 +1,75 @@
+tr
+  td.left-align
+    // ko if: id > 0
+    i.fa.fa-id-card-o(title="returning player")
+    // /ko
+    // ko if: id === 0
+    i.fa.fa-user-circle-o(title="rookie player")
+    // /ko
+    span(data-bind='text:name')
+
+  td.left-align
+    span(data-bind="text:playerType.displayName") 
+  td
+    span(data-bind="text:ma, css:maColor")
+  td
+    span(data-bind="text:st, css:stColor")
+  td
+    span(data-bind="text:ag, css:agColor")
+  td
+    span(data-bind="text:av, css:avColor")
+  td
+    span(data-bind="text: xp")
+  td
+    span(data-bind="text: sppSurplus")
+  td.left-align
+    // ko foreach: fixedSkills
+    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+    // /ko
+    // ko foreach: skills
+    // ko if: !$parent.fixedSkills.includes($data)
+    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+    // /ko
+    // /ko
+    // ko if: skill1
+    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${skill1.replace(/ /g,'')}.png`,title:skill1.replace(/([A-Z])/g, ' $1').trim()}")
+    // /ko
+    // ko if: skill2
+    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${skill2.replace(/ /g,'')}.png`,title:skill2.replace(/([A-Z])/g, ' $1').trim()}")
+    // /ko
+  td
+    // ko foreach: casualties
+    img.skill(data-bind="click: toggleCured, css: $data.removed ? 'cured' : '', attr:{title:$data.name.replace(/([A-Z])/g, ' $1').trim(), src:`https://cdn2.rebbl.net/images/skills/${$data.name}.png`}" alt="") 
+    // /ko
+  td.data
+    span(data-bind="text: new Intl.NumberFormat('en-US').format(cost())")
+  td.data
+    // ko if: isSuperstar()
+    span(data-bind="text: new Intl.NumberFormat('en-US').format($parent.superstarPlayerTax(player))")
+    // /ko
+  td.left-align
+    .flex-container
+      button.btn.btn-danger.btn-sm.pull-right(title='Remove player', data-bind="click: $parent.removePlayer.bind($parent)")
+        i.fa.fa-times-rectangle-o
+      // ko if: (id > 0 && levelEligible) || (id === 0 && !$parent.isReturningTeam)
+      button.btn.btn-sm.btn-info.pull-right(data-bind="click: player.toggleEdit")
+        i.fa.fa-pencil-square-o
+      // /ko
+
+tr(data-bind="visible: player.visible")
+  td.left-align
+    input(placeholder='Player Name' data-bind="textInput: player.name")
+  // ko if: id > 0
+  td(colspan='9') 
+    span &nbsp;
+  // /ko
+  // ko if: id < 1
+  td
+    span skills
+  td(colspan='8')
+    div(style="display:flex")
+      select(aria-labelledby='' data-bind="options:player.getSkills1(), value:skill1, optionsCaption:'choose ..',optionsAfterRender: setClass.bind(player)")
+      // ko if: !hasDoubleOrIncrease()
+      select(aria-labelledby='' data-bind="options:player.getSkills2(), value:skill2, optionsCaption:'choose ..'")
+      // /ko
+  // /ko

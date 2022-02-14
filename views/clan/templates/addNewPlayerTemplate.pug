@@ -1,0 +1,57 @@
+tr.add-player-row
+  // ko if: isReturningTeam
+  td.left-align
+    input(placeholder='Player Name' data-bind="textInput: returningPlayer.name")
+  td.left-align
+    select(aria-labelledby='position-header' data-bind="options: availableReturningPlayers(),optionsText:'name', value:returningPlayer")
+      td
+        span(data-bind="text:returningPlayer.ma, css:returningPlayer.maColor")
+      td
+        span(data-bind="text:returningPlayer.st, css:returningPlayer.stColor")
+      td
+        span(data-bind="text:returningPlayer.ag, css:returningPlayer.agColor")
+      td
+        span(data-bind="text:returningPlayer.av, css:returningPlayer.avColor")
+      td
+        span(data-bind="text: returningPlayer.sppSurplus")            
+  td.left-align
+    // ko foreach: returningPlayer.fixedSkills
+    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+    // /ko
+    // ko foreach: returningPlayer.skills
+    // ko if: !$parent.returningPlayer.fixedSkills.includes($data)
+    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+    // /ko
+    // /ko
+  td
+    // ko foreach: returningPlayer.casualties
+    img.skill(data-bind="click: toggleCured, css: $data.removed ? 'cured' : '', attr:{title:$data.name.replace(/([A-Z])/g, ' $1').trim(), src:`https://cdn2.rebbl.net/images/skills/${$data.name}.png`}" alt="") 
+    // /ko        
+  td.data
+    span(data-bind="text: new Intl.NumberFormat('en-US').format(returningPlayer?.value * 1000)")
+  td.left-align
+    .flex-container
+      button.btn.btn-sm.btn-success(title='add player' data-bind="click:addReturningPlayer")
+        i.fa.fa-plus-square
+  // /ko
+tr.add-player-row
+  td.left-align
+    input(placeholder='Player Name' data-bind="textInput: newPlayer.name")
+  td.left-align
+    select(aria-labelledby='position-header' data-bind="options: positions(),optionsText: 'displayName', value:newPlayer.playerType")
+  td
+    span(data-bind="text:newPlayer.playerType?.st")
+  td
+    span(data-bind="text:newPlayer.playerType?.ma")
+  td
+    span(data-bind="text:newPlayer.playerType?.ag")
+  td
+    span(data-bind="text:newPlayer.playerType?.av")
+  td.left-align
+    span.skills  
+  td.data
+    span(data-bind="text:  new Intl.NumberFormat('en-US').format(newPlayer.playerType?.cost)")
+  td.left-align
+    .flex-container
+      button.btn.btn-sm.btn-success(title='add player' data-bind="click:addPlayer")
+        i.fa.fa-plus-square

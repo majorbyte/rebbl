@@ -22,7 +22,7 @@ class ClanBuildingApi{
   async _getCoach(req,res){
     const account = await accountService.searchAccount({coach:new RegExp(`^${req.params.coach}$`,'i')});
     if (!account) res.status(404).json("coach not found");
-    else res.json(account.reddit);
+    else res.json({reddit: account.reddit, coach:account.coach, discord:account.discord});
   }
 
   async _getTeam(req,res){
@@ -35,12 +35,19 @@ class ClanBuildingApi{
 
   async _getReturningTeam(req,res){
     const team = await clanService.getCoachLastSeasonTeam(req.params.coach);
-    res.json({name:team.team.name, id:team.team.id, raceId:team.team.idraces});
+    if (team) res.json({name:team.team.name, id:team.team.id, raceId:team.team.idraces});
+    res.status(404).send();
   }
 
   async _getReturningTeamPlayers(req,res){
     const players = await clanService.getReturningTeamPlayers(req.params.teamId);
     res.json(players);
+  }
+
+  async _getClan(req,res){
+    const account = await accountService.getAccount(req.user.name);
+    let clan = await clanService.getNewClanByUser(account.coach); 
+    res.json(clan);
   }
 
   routesConfig(){
@@ -57,9 +64,8 @@ class ClanBuildingApi{
     this.router.use("/coach/:coach/team",util.ensureAuthenticated , apiRateLimiter, this._getReturningTeam.bind(this));
     this.router.use("/coach/:coach",util.ensureAuthenticated ,  this._getCoach.bind(this));
     this.router.use("/team/:teamId/players",util.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));
-
-
     this.router.use("/:clan/:team",util.ensureAuthenticated ,  this._getTeam.bind(this));
+    this.router.use("/", this._getClan.bind(this))
 
 
     return this.router;

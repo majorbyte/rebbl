@@ -1,0 +1,44 @@
+label(for="clanName") clan name
+input(data-bind="textInput: name" id="clanName")
+
+table.table 
+  thead 
+    tr 
+      th.table-info coach 
+      th.table-info reddit 
+      th.table-info dicord 
+      th.table-info team name 
+      th.table-info returning
+      th.table-info normal team cost
+      th.table-info skill tax
+      th.table-info tier tax
+      th.table-info total cost
+      th.table-info  
+  tbody(data-bind="foreach: members")
+    tr
+      td
+        input(data-bind="value: coach")
+      td
+        span(data-bind="text: reddit")
+      td
+        span(data-bind="text: discord")
+      //ko with: team()
+      td 
+        input(data-bind="textInput: name")
+      td 
+        button.btn.btn-sm(data-bind="{text: isReturningTeam ? 'yes' : 'no', click:toggleReturning, css: isReturningTeam ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary'}")
+      td(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost() + subTotalRerolls() )") 
+      td(data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())") 
+      td(data-bind="text: new Intl.NumberFormat('en-US').format(teamTax())") 
+      td(data-bind="text: new Intl.NumberFormat('en-US').format(teamTotal())") 
+
+      // /ko  
+      // ko if: !team()
+      td(colspan="6") &nbsp;
+      // /ko
+      td.left-align
+        .flex-container
+          button.btn.btn-danger.btn-sm.pull-right(title='Remove coach')
+            i.fa.fa-times-rectangle-o
+          button.btn.btn-sm.btn-info.pull-right(title='Edit team' data-bind="click:$parent.onEditTeam")
+            i.fa.fa-pencil-square-o
