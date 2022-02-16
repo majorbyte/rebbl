@@ -13,7 +13,7 @@ table.table.table-striped.table-sm
       input(type="text")
   tr
     th.table-info race
-    td 
+    td(data-bind="css:race ? '' : 'choose-race'") 
       select(data-bind="options: $root.races(), optionsText: 'name', value: race,optionsCaption: 'Choose...', enable: roster.length == 0")
   tr 
     th.table-info SPP+

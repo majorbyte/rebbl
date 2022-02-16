@@ -15,9 +15,50 @@ block head
     .btn:focus, .btn.primary:focus {box-shadow:unset !important}
     .skill{width: 2em;border-radius: 4px;margin-left:1px;}
     .bg-double{background-color:#ff8900}
+    .choose-race{background: #ffc1075e;}
 
 block content
   div(class=`` id="app" style="display:none")
+    // ko if: loading
+    style.
+      .lds-hourglass {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+      }
+      .lds-hourglass:after {
+        content: " ";
+        display: block;
+        border-radius: 50%;
+        width: 0;
+        height: 0;
+        margin: 8px;
+        box-sizing: border-box;
+        border: 32px solid #fff;
+        border-color: #ff8900  transparent #ff8900 transparent;
+        animation: lds-hourglass 1.2s infinite;
+      }
+      @keyframes lds-hourglass {
+        0% {
+          transform: rotate(0);
+          animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        }
+        50% {
+          transform: rotate(900deg);
+          animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        100% {
+          transform: rotate(1800deg);
+        }
+      }
+
+    .lds-hourglass    
+    // /ko
+    // ko if: registerClan
+    // ko template: { name: 'registerClanTemplate' }
+    // /ko
+    // /ko
     // ko if: editClan
     // ko template: { name: 'clanTemplate' }
     // /ko
@@ -29,6 +70,7 @@ block content
 
 block scripts
   script(type="text/html" id="clanTemplate")
+  script(type="text/html" id="registerClanTemplate")
   script(type="text/html" id="teamTemplate")
   script(type="text/html" id="playerTemplate")
   script(type="text/html" id="addNewPlayerTemplate")
@@ -45,6 +87,8 @@ block scripts
     let races = [];
     let skills = [];
     let playerTypes = [];
+
+    const stringifyWithoutOriginal = (value) => JSON.stringify(value, (key, val) => key === "_original" ? undefined : val);
 
     const SPP = [
       {level:1,	spp:0, eligible:3},
@@ -82,6 +126,40 @@ block scripts
       {race:'Goblin', tier:	7, rebate: 0},
       {race:'Halfling', tier:	7, rebate: 0},
     ];
+
+    class Tracking{
+      constructor(clone) {
+        this.clone = clone;
+      }
+
+      clone = () => {};
+
+      snap() {
+        const clone = this.clone();
+        clone._original = this;
+        return clone;
+      }
+
+      isDirty() {
+        return this._original ? stringifyWithoutOriginal(this) !== stringifyWithoutOriginal(this._original) : false;
+      }
+
+      commit() {
+        if (this._original != null) {
+          this._original.map(this);
+        } else {
+          throw "Model must be snapped before it can be committed.";
+        }
+      }
+
+      rollback = () => {
+          if (this._original != null) {
+              this.map(this._original);
+          } else {
+              throw "Model must be snapped before it can be rolled back.";
+          }
+      }
+    }
 
     class SkillModel{
       constructor(data){
@@ -190,7 +268,7 @@ block scripts
       }
       map(data){
         this.id = data.id || 0;
-        this.playerType = data.playerType || '';
+        this.playerType = data.playerType || undefined;
         this.name = data.name || '';
         this.skill1 = data.skill1;
         this.skill2 = data.skill2;
@@ -210,46 +288,46 @@ block scripts
           const cas = this.casualties.filter(x => ["SmashedAnkle","SmashedHip"].includes(x.name) && !x.removed);
           const stats = this.skills.filter(x => x === "IncreaseMovement");
 
-          return this.playerType.ma - Math.min(cas.length, 2) + Math.min(stats.length, 2);
+          return this.playerType ? this.playerType.ma - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
         });
         ko.defineProperty(this, 'st', function () {
           const cas = this.casualties.filter(x => "SmashedCollarBone" === x.name && !x.removed);
           const stats = this.skills.filter(x => x === "IncreaseStrength");
 
-          return this.playerType.st - Math.min(cas.length, 2) + Math.min(stats.length, 2);
+          return this.playerType ? this.playerType.st - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
         });
         ko.defineProperty(this, 'ag', function () {
           const cas = this.casualties.filter(x => "BrokenNeck" === x.name && !x.removed);
           const stats = this.skills.filter(x => x === "IncreaseAgility");
 
-          return this.playerType.ag - Math.min(cas.length, 2) + Math.min(stats.length, 2);
+          return this.playerType ? this.playerType.ag - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
         });
         ko.defineProperty(this, 'av', function () {
           const cas = this.casualties.filter(x => ["FracturedSkull","SeriousConcussion"].includes(x.name) && !x.removed);
           const stats = this.skills.filter(x => x === "IncreaseArmour");
 
-          return this.playerType.av - Math.min(cas.length, 2) + Math.min(stats.length, 2);
+          return this.playerType ? this.playerType.av - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
         });
 
 
         ko.defineProperty(this, 'maColor', function () {
-          if (this.ma > this.playerType.ma) return "green";
-          if (this.ma < this.playerType.ma) return "red";
+          if (this.ma > this.playerType?.ma) return "green";
+          if (this.ma < this.playerType?.ma) return "red";
           return '' ;
         });
         ko.defineProperty(this, 'stColor', function () {
-          if (this.st > this.playerType.st) return "green";
-          if (this.st < this.playerType.st) return "red";
+          if (this.st > this.playerType?.st) return "green";
+          if (this.st < this.playerType?.st) return "red";
           return '' ;
         });
         ko.defineProperty(this, 'agColor', function () {
-          if (this.ag > this.playerType.ag) return "green";
-          if (this.ag < this.playerType.ag) return "red";
+          if (this.ag > this.playerType?.ag) return "green";
+          if (this.ag < this.playerType?.ag) return "red";
           return '' ;
         });
         ko.defineProperty(this, 'avColor', function () {
-          if (this.av > this.playerType.av) return "green";
-          if (this.av < this.playerType.av) return "red";
+          if (this.av > this.playerType?.av) return "green";
+          if (this.av < this.playerType?.av) return "red";
           return '' ;
         });
 
@@ -340,15 +418,19 @@ block scripts
       }
     }
 
-    class TeamModel{
+    class TeamModel extends Tracking{
       constructor(data){
+        super(() => new TeamModel(this))
         this.map(data || {});
         this.newPlayer = new PlayerModel();
         this.returningPlayer = new PlayerModel();
         this.skillModel = new SkillModel();
-        ko.track(this);
         this.skillModel.tier = this.teamTier;
-        
+         
+        this._reset = () => this.map(data);
+        this.isDirty.bind(this);
+        this.commit.bind(this);
+        ko.track(this);
         ko.getObservable(this, 'coach').subscribe(this.onCoachChange.bind(this));
       }
       map(data){
@@ -359,18 +441,17 @@ block scripts
         this.cheerleaders = data.cheerleaders || 0;
         this.apothecary = data.apothecary || true;
         this.name = data.name || '';
-        this.race = data.race || '';
+        this.race = data.race || undefined;
         this.coach = data.coach || '';
         this.value = data.value || 0;
         this.cost = data.cost || 0;
         this.tier = data.tier || 0;
-        this.isReturningTeam = false;
-        this.returningTeam = null;
-        this.returningPlayers = [];
-
+        this.isReturningTeam = data.isReturningTeam || false;
+        this.returningTeam = data.returningTeam ||null;
+        this.returningPlayers = data.returningPlayers || [];
 
       }
-      
+
       toggleApo = () => this.apothecary = !this.apothecary;
       toggleReturning = () => this.isReturningTeam = !this.isReturningTeam;
       subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + Number(this.fanfactor) - 5) * 10000 + (this.apothecary ? 50000 : 0);
@@ -430,9 +511,14 @@ block scripts
       }
     }      
 
-    class LedgerModel{
+    class LedgerModel extends Tracking{
       constructor(data){
+        super(() => new LedgerModel(this))
         this.map(data || {});
+
+        this._reset = () => this.map(data);
+        this.isDirty.bind(this);
+        this.commit.bind(this);
         ko.track(this);
       }
       map(data){
@@ -455,7 +541,7 @@ block scripts
         this.emergencyIntensiveCare = data.emergencyIntensiveCare || 0;
         this.newBlood = data.newBlood || 0;
         this.bloodSacrifice = data.bloodSacrifice || 0;
-        this.teamBuilding = data.teamBuilding?.map(x => new TeamModel(x)) || [];
+        this.teamBuilding = data.teamBuilding?.map(x => new TeamModel(x).snap()) || [];
       }
     }
 
@@ -492,36 +578,64 @@ block scripts
       team = () => model.ledger.teamBuilding.find(x => x.coach === this.coach);
     }
 
-    class ClanModel{
+    class ClanModel extends Tracking{
       constructor(data){
-        this.editClan = true;
+        super(() => new ClanModel(this))
+        this.registerClan = false;
+        this.editClan = false;
         this.editTeam = false;
+        this.loading = false;
         this.team = null;
         this.map(data || {});
+        this._reset = () => this.map(data);
+        this.isDirty.bind(this);
+        this.commit.bind(this);
         ko.track(this);
       }
       map(data){
-        this.ledger = new LedgerModel(data?.ledger);
-        this.name = data.leader ||'';
+        this.ledger = new LedgerModel(data?.ledger).snap();
+        this.name = data.name ||'';
         this.division = data.division || '';
-        this.season ="season 13";
-        this.members = data.members?.map(x => new MemberModel(x)) || [new MemberModel(),new MemberModel(),new MemberModel(),new MemberModel(),new MemberModel()];
+        this.season = 'season 13';
+        this.members = data.members?.map(x => new MemberModel(x)) ||[];
+        this.editClan = this.name.length > 1;
+        this.registerClan = !this.editClan;
+
+        while (this.members.length < 5) this.members.push(new MemberModel());
       }
-      onEditTeam = (member) => {
+      onEditTeam = (team) => {
         this.editClan = !this.editClan;
         this.editTeam = !this.editTeam;
-        this.team = member.team();
+
+        this.team = team;
       }
+      onSaveTeam = (team) => {
+        team.commit();
+        this.saveTeam(team);
+      }
+
       onTeamDoneClick = () => {
         this.editClan = !this.editClan;
         this.editTeam = !this.editTeam;
         this.team = null;
       }
+      async onRegisterClanClick(){
+        let result = await fetch(`/api/v2/clan/build/${this.name}`, {method:'POST'});
+        if (result.ok) {
+          model.map(await result.json());
+          this.registerClan = false;
+          this.editClan = true;
+        }
+      }
+
       
       races = () => races;
 
       async load() {
-
+        this.loading = true;
+        this.registerClan = false;
+        this.editClan = false;
+        this.editTeam = false;
         let [clan, _skills, skillDescriptions, _playerTypes, _races] = await Promise.all([
             fetch('/api/v2/clan/build').then(response => response.json()),
             fetch('/api/v2/bloodbowl/skills').then(response => response.json()),
@@ -537,13 +651,20 @@ block scripts
         races = _races.filter(x => x.id < 26).sort((a,b) => a.name > b.name);
         SkillDescriptions = skillDescriptions.concat([{name:'Increase Strength',category:'Increase'},{name:'Increase Movement',category:'Increase'},{name:'Increase Agility',category:'Increase'},{name:'Increase Armour',category:'Increase'}]);
         model.map(clan || {});
+        model.commit();
+        this.loading = false;
       }
 
-
-
+      async saveTeam(team){
+        team.commit();
+        await fetch(`/api/v2/clan/build/${this.name}/team` ,{
+          method:'PUT',
+          headers:{ 'Content-Type': 'application/json'},
+          body: JSON.stringify(team)});
+      }
     }
 
-    let model = new ClanModel();
+    let model = new ClanModel().snap();
     $(document).ready(function(){
       
       const promises = $("script[type='text/html']").map(function(_, script) {
@@ -558,3 +679,7 @@ block scripts
       });
 
     }); 
+
+
+    "{\"roster\":[],\"fanfactor\":5,\"rerolls\":0,\"coaches\":0,\"cheerleaders\":0,\"apothecary\":true,\"name\":\"\",\"coach\":\"majorbyte\",\"value\":0,\"cost\":0,\"tier\":0,\"isReturningTeam\":true,\"returningTeam\":null,\"returningPlayers\":[],\"newPlayer\":{\"id\":0,\"name\":\"\",\"fixedSkills\":[],\"skills\":[],\"injuries\":[],\"visible\":false,\"tier\":1,\"skillModel\":{\"statsIncreases\":[],\"doubleGeneralSkills\":[],\"doubleAgilitySkills\":[],\"doublePassingSkills\":[],\"doubleStrengthSkills\":[],\"doubleMutationSkills\":[]},\"value\":0,\"casualties\":[],\"level\":1,\"xp\":0,\"sppSurplus\":0,\"ma\":0,\"st\":0,\"ag\":0,\"av\":0,\"maColor\":\"\",\"stColor\":\"\",\"agColor\":\"\",\"avColor\":\"\"},\"returningPlayer\":{\"id\":0,\"name\":\"\",\"fixedSkills\":[],\"skills\":[],\"injuries\":[],\"visible\":false,\"tier\":1,\"skillModel\":{\"statsIncreases\":[],\"doubleGeneralSkills\":[],\"doubleAgilitySkills\":[],\"doublePassingSkills\":[],\"doubleStrengthSkills\":[],\"doubleMutationSkills\":[]},\"value\":0,\"casualties\":[],\"level\":1,\"xp\":0,\"sppSurplus\":0,\"ma\":0,\"st\":0,\"ag\":0,\"av\":0,\"maColor\":\"\",\"stColor\":\"\",\"agColor\":\"\",\"avColor\":\"\"},\"skillModel\":{\"statsIncreases\":[],\"doubleGeneralSkills\":[],\"doubleAgilitySkills\":[],\"doublePassingSkills\":[],\"doubleStrengthSkills\":[],\"doubleMutationSkills\":[]}}"
+    "{\"roster\":[],\"fanfactor\":5,\"rerolls\":0,\"coaches\":0,\"cheerleaders\":0,\"apothecary\":true,\"name\":\"\",\"coach\":\"majorbyte\",\"value\":0,\"cost\":0,\"tier\":0,\"isReturningTeam\":false,\"returningTeam\":null,\"returningPlayers\":[],\"newPlayer\":{\"id\":0,\"name\":\"\",\"fixedSkills\":[],\"skills\":[],\"injuries\":[],\"visible\":false,\"tier\":1,\"skillModel\":{\"statsIncreases\":[],\"doubleGeneralSkills\":[],\"doubleAgilitySkills\":[],\"doublePassingSkills\":[],\"doubleStrengthSkills\":[],\"doubleMutationSkills\":[]},\"value\":0,\"casualties\":[],\"level\":1,\"xp\":0,\"sppSurplus\":0,\"ma\":0,\"st\":0,\"ag\":0,\"av\":0,\"maColor\":\"\",\"stColor\":\"\",\"agColor\":\"\",\"avColor\":\"\"},\"returningPlayer\":{\"id\":0,\"name\":\"\",\"fixedSkills\":[],\"skills\":[],\"injuries\":[],\"visible\":false,\"tier\":1,\"skillModel\":{\"statsIncreases\":[],\"doubleGeneralSkills\":[],\"doubleAgilitySkills\":[],\"doublePassingSkills\":[],\"doubleStrengthSkills\":[],\"doubleMutationSkills\":[]},\"value\":0,\"casualties\":[],\"level\":1,\"xp\":0,\"sppSurplus\":0,\"ma\":0,\"st\":0,\"ag\":0,\"av\":0,\"maColor\":\"\",\"stColor\":\"\",\"agColor\":\"\",\"avColor\":\"\"},\"skillModel\":{\"statsIncreases\":[],\"doubleGeneralSkills\":[],\"doubleAgilitySkills\":[],\"doublePassingSkills\":[],\"doubleStrengthSkills\":[],\"doubleMutationSkills\":[]}}"

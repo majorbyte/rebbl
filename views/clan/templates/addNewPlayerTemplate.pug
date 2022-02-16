@@ -3,7 +3,7 @@ tr.add-player-row
   td.left-align
     input(placeholder='Player Name' data-bind="textInput: returningPlayer.name")
   td.left-align
-    select(aria-labelledby='position-header' data-bind="options: availableReturningPlayers(),optionsText:'name', value:returningPlayer")
+    select(aria-labelledby='position-header' data-bind="options: availableReturningPlayers(),optionsText:'name', value:returningPlayer,optionsCaption: 'Choose...'")
       td
         span(data-bind="text:returningPlayer.ma, css:returningPlayer.maColor")
       td
@@ -38,7 +38,7 @@ tr.add-player-row
   td.left-align
     input(placeholder='Player Name' data-bind="textInput: newPlayer.name")
   td.left-align
-    select(aria-labelledby='position-header' data-bind="options: positions(),optionsText: 'displayName', value:newPlayer.playerType")
+    select(aria-labelledby='position-header' data-bind="options: positions(),optionsText: 'displayName', value:newPlayer.playerType,optionsCaption: 'Choose...'")
   td
     span(data-bind="text:newPlayer.playerType?.st")
   td
