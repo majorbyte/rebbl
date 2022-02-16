@@ -18,7 +18,7 @@ const express = require("express")
       let upstarts = await dataService.getSchedules({season:/season 23/i, round:1, league:"ReBBRL Upstarts"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
       let minors = await dataService.getSchedules({season:/season 14/i, round:1, league:"ReBBRL Minors League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
       let college = await dataService.getSchedules({season:/season 15/i, round:1, league:"ReBBRL College League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
-      let playoffs = await dataService.getSchedules({season:"season 17", round:1, league:"ReBBL Playoffs",competition:{$in:['Challenger\'s Cup XVII','REBBL Playoffs Season 17']}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
+      let playoffs = await dataService.getSchedules({season:"season 18", round:1, league:"ReBBL Playoffs",competition:{$in:['Challenger\'s Cup XVIII','REBBL Playoffs Season 18']}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
 
       data = data.concat(upstarts,minors,college,playoffs);
 
@@ -87,7 +87,7 @@ const express = require("express")
         competitions = data.competitions;
         if (req.params.league === "ReBBL Playoffs"){
           //search.competition = 
-          competitions = competitions.filter(x => ["Challenger's Cup XVII","REBBL Playoffs Season 17"].indexOf(x.name)>-1);
+          competitions = competitions.filter(x => ["Challenger's Cup XVIII","REBBL Playoffs Season 18"].indexOf(x.name)>-1);
         } cache.put(cacheKey, competitions,10*60*1000);
       }
 
