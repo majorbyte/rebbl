@@ -2,16 +2,37 @@
 const   
   leagueService = require("../../lib/LeagueService.js")
   , bloodBowlService = require("../../lib/bloodbowlService.js")
+  , datingService = require("../../lib/DatingService.js")
   , util = require('../../lib/util.js')
   , express = require('express')
   , router = express.Router({mergeParams:true})
   , bloodbowlService = require("../../lib/bloodbowlService.js");
 
-router.get('/unplayed/:match_id',util.cache(10*60), async function(req, res){
+router.get('/unplayed/:match_id', async function(req, res){
   try{
     let match = await leagueService.getUnplayedMatch(req.params.match_id);
 
     res.render('rebbl/match/unplayed',{matches: match,company:req.params.company} );
+  } catch(err){
+    console.log(err);
+  }
+});
+
+router.put('/unplayed/:match_id', util.checkAuthenticated, util.hasRole('streamer'), async function(req, res){
+  try{
+    let contest = [];
+    contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id) });
+    if (contest.length === 0) contest = await leagueService.searchLeagues({matches:{$elemMatch:{contest_id:Number(req.params.match_id) }} });
+    
+    if(contest.length > 0){
+      if (req.body.date.length === 16)
+        datingService.updateDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id), req.body.date);
+      else 
+        datingService.removeDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id));
+      res.send("ok");
+    } else {
+      res.status(403).send();
+    }
   } catch(err){
     console.log(err);
   }
@@ -54,6 +75,8 @@ router.get('/:match_id', util.cache(600), async function(req, res, next){
   data.company= data.match.leaguename.indexOf("mperium") > -1 ? "imperium" : req.params.company;
   res.render('rebbl/match/match', data);
 });
+
+
 
 
 

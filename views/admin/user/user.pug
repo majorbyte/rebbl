@@ -321,6 +321,17 @@ block append scripts
       }
 
   script.
+    UserModel.prototype.toggleStreamer = function(data,event){
+      $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+      $(event.currentTarget || event.target ).toggleClass("btn-success");
+      if(this.roles.indexOf("streamer") > -1 ){
+        this.roles.splice(this.roles.indexOf("streamer"),1);
+        this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"streamer", action:"remove"});
+      } else {
+        this.roles.push("streamer")
+        this.post("/api/v1/admin/user/toggleRole", {reddit:this.reddit(), role:"streamer", action:"add"});
+      }
+    }
     UserModel.prototype.toggleClanLeader = function(data,event){
       $(event.currentTarget || event.target ).toggleClass("btn-secondary");
       $(event.currentTarget || event.target ).toggleClass("btn-success");
@@ -439,6 +450,7 @@ block content
             button.btn.mx-1(data-bind="click: toggleAdmin, css: roles.indexOf('admin') > -1 ? 'btn-success' : 'btn-secondary'  " ) admin
           button.btn.mx-1(data-bind="click: toggleClanAdmin, css: roles.indexOf('clanadmin') > -1 ? 'btn-success' : 'btn-secondary'  " ) clan admin
           button.btn.mx-1(data-bind="click: toggleClanLeader, css: roles.indexOf('clanleader') > -1 ? 'btn-success' : 'btn-secondary'  " ) clan leader
+          button.btn.mx-1(data-bind="click: toggleStreamer, css: roles.indexOf('streamer')  > -1? 'btn-success' : 'btn-secondary'  " ) streamer
         - let userAction = user ? "/admin/user/update" : "/admin/user/new"
         form(action=userAction method="post" class="container signup")
           div
