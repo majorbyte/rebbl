@@ -228,7 +228,7 @@ block content
                   div(class="col-5")
                     h1(class="pull-right" data-bind="text:model.selected.opponents[0].team.score, css: model.selected.winner.index === 0 ? 'winner' : ''"  )
                   div(class="col-2")
-                    h1 -
+                    h1 -      
                   div(class="col-5")
                     h1(data-bind="text:model.selected.opponents[1].team.score, css: model.selected.winner.index === 1 ? 'winner' : ''")
                   // /ko
@@ -245,6 +245,11 @@ block content
                 div(class="col-6 offset-3 text-center")
                   a(data-bind="attr:{href: '/rebbl/match/' + model.selected.match_uuid }" target="_blank")
                     span(class="winner") match summary
+                // /ko
+                // ko if: model.selected.status === 'scheduled'
+                div(class="col-6 offset-3 text-center")
+                  a(data-bind="attr:{href: `/rebbl/match/unplayed/${ model.selected.contest_id}`}" target="_blank")
+                    span matchup summary
                 // /ko
               div(class="col-12 row")
                 div(class="col-6")
