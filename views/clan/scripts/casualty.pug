@@ -1,0 +1,12 @@
+script.
+  class CasualtyModel{
+    constructor(data){
+      this.map(data || {});
+      ko.track(this);
+    }
+    map(data){
+      this.name = data.name || '';
+      this.removed = data.removed || false;
+    }
+    toggleCured = () => this.removed = !this.removed;
+  }

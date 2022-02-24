@@ -1,0 +1,93 @@
+script.
+  class ClanModel extends Tracking{
+    constructor(data){
+      super(() => new ClanModel(this))
+      this.registerClan = false;
+      this.editClan = false;
+      this.editTeam = false;
+      this.loading = false;
+      this.team = null;
+      this.map(data || {});
+      this._reset = () => this.map(data);
+      this.isDirty.bind(this);
+      this.commit.bind(this);
+      ko.track(this);
+    }
+    map(data){
+      this.ledger = new LedgerModel(data?.ledger).snap();
+      this.name = data.name ||'';
+      this.division = data.division || '';
+      this.season = 'season 13';
+      this.members = data.members?.map(x => new MemberModel(x)) ||[];
+      this.editClan = this.name.length > 1;
+      this.registerClan = !this.editClan;
+
+      while (this.members.length < 5) this.members.push(new MemberModel());
+    }
+    onEditTeam = (team) => {
+      this.editClan = !this.editClan;
+      this.editTeam = !this.editTeam;
+
+      this.team = team;
+    }
+    onSaveTeam = (team) => {
+      team.commit();
+      this.saveTeam(team);
+    }
+
+    onTeamDoneClick = () => {
+      this.editClan = !this.editClan;
+      this.editTeam = !this.editTeam;
+      this.team = null;
+    }
+    async onRegisterClanClick(){
+      let result = await fetch(`/api/v2/clan/build/${this.name.toUpperCase()}`, {method:'POST'});
+      if (result.ok) {
+        model.map(await result.json());
+        this.registerClan = false;
+        this.editClan = true;
+      }
+    }
+
+    isClanLeader = () => me.isClanLeader;
+    
+    races = () => races;
+
+
+
+
+    async load() {
+      this.loading = true;
+      this.registerClan = false;
+      this.editClan = false;
+      this.editTeam = false;
+      let [clan, _me, _skills, skillDescriptions, _playerTypes, _races] = await Promise.all([
+          fetch('/api/v2/clan/build').then(response => response.json()),
+          fetch('/api/v2/clan/build/coach').then(response => response.json()),
+          fetch('/api/v2/bloodbowl/skills').then(response => response.json()),
+          fetch('/api/v2/bloodbowl/skilldescriptions').then(response => response.json()),
+          fetch('/api/v2/bloodbowl/playertypes').then(response => response.json()),
+          fetch('/api/v2/bloodbowl/races').then(response => response.json()),
+      ]);
+
+      
+      me = _me;
+      skills = _skills;
+      playerTypes = _playerTypes.filter(x => x.race < 26);
+      playerTypes.forEach(x => x.displayName = x.type.substr(x.type.indexOf('_')+1).replace(/([A-Z])/g, ' $1'));
+      races = _races.filter(x => x.id < 26).sort((a,b) => a.name > b.name);
+      SkillDescriptions = skillDescriptions.concat([{name:'Increase Strength',category:'Increase'},{name:'Increase Movement',category:'Increase'},{name:'Increase Agility',category:'Increase'},{name:'Increase Armour',category:'Increase'}]);
+      model.map(clan || {});
+      model.commit();
+      this.loading = false;
+
+    }
+
+    async saveTeam(team){
+      team.commit();
+      await fetch(`/api/v2/clan/build/${this.name}/team` ,{
+        method:'PUT',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(team)});
+    }
+  }

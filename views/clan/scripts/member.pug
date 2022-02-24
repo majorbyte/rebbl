@@ -1,0 +1,33 @@
+script.
+  class MemberModel{
+    constructor(data){
+      this.map(data||{});
+      ko.track(this);
+
+      ko.getObservable(this, 'coach').subscribe(this.onCoachChange.bind(this));
+    }
+    map(data){
+      this.coach = data.coach || '';
+      this.coachId = data.coachId || 0;
+      this.reddit = data.reddit || '';
+      this.discord = data.discord || '';
+    }
+    onCoachChange = (coach) => this.updateCoach(coach).then (t => t);
+    async updateCoach(coach){
+      let response = await fetch(`/api/v2/clan/build/coach/${coach}`);
+      if (!response.ok) return true;
+
+      const c = await response.json();
+      this.reddit = c.reddit;
+      this.discord = c.discord;
+
+      let team = model.ledger.teamBuilding.find(x => x.coach === this.coach);
+      if (!team) {
+        model.ledger.teamBuilding.push(new TeamModel({coach:this.coach}));
+      }
+
+      return true;
+    }
+
+    team = () => model.ledger.teamBuilding.find(x => x.coach === this.coach);
+  }

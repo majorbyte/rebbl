@@ -1,0 +1,34 @@
+script.
+  class Tracking{
+    constructor(clone) {
+      this.clone = clone;
+    }
+
+    clone = () => {};
+
+    snap() {
+      const clone = this.clone();
+      clone._original = this;
+      return clone;
+    }
+
+    isDirty() {
+      return this._original ? stringifyWithoutOriginal(this) !== stringifyWithoutOriginal(this._original) : false;
+    }
+
+    commit() {
+      if (this._original != null) {
+        this._original.map(this);
+      } else {
+        throw "Model must be snapped before it can be committed.";
+      }
+    }
+
+    rollback = () => {
+        if (this._original != null) {
+            this.map(this._original);
+        } else {
+            throw "Model must be snapped before it can be rolled back.";
+        }
+    }
+  }

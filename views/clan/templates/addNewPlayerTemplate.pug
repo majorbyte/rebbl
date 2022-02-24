@@ -4,16 +4,16 @@ tr.add-player-row
     input(placeholder='Player Name' data-bind="textInput: returningPlayer.name")
   td.left-align
     select(aria-labelledby='position-header' data-bind="options: availableReturningPlayers(),optionsText:'name', value:returningPlayer,optionsCaption: 'Choose...'")
-      td
-        span(data-bind="text:returningPlayer.ma, css:returningPlayer.maColor")
-      td
-        span(data-bind="text:returningPlayer.st, css:returningPlayer.stColor")
-      td
-        span(data-bind="text:returningPlayer.ag, css:returningPlayer.agColor")
-      td
-        span(data-bind="text:returningPlayer.av, css:returningPlayer.avColor")
-      td
-        span(data-bind="text: returningPlayer.sppSurplus")            
+  td
+    span(data-bind="text:returningPlayer.ma, css:returningPlayer.maColor")
+  td
+    span(data-bind="text:returningPlayer.st, css:returningPlayer.stColor")
+  td
+    span(data-bind="text:returningPlayer.ag, css:returningPlayer.agColor")
+  td
+    span(data-bind="text:returningPlayer.av, css:returningPlayer.avColor")
+  td
+    span(data-bind="text: returningPlayer.sppSurplus")            
   td.left-align
     // ko foreach: returningPlayer.fixedSkills
     img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")

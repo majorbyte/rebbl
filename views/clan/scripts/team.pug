@@ -1,0 +1,94 @@
+script.
+  class TeamModel extends Tracking{
+    constructor(data){
+      super(() => new TeamModel(this))
+      this.map(data || {});
+      this.newPlayer = new PlayerModel();
+      this.returningPlayer = new PlayerModel();
+      this.skillModel = new SkillModel();
+      this.skillModel.tier = this.teamTier;
+        
+      this._reset = () => this.map(data);
+      this.isDirty.bind(this);
+      this.commit.bind(this);
+      ko.track(this);
+      ko.getObservable(this, 'coach').subscribe(this.onCoachChange.bind(this));
+    }
+    map(data){
+      this.roster = data.roster || [];
+      this.fanfactor = data.fanfactor || 5;
+      this.rerolls = data.rerolls || 0;
+      this.coaches = data.coaches || 0;
+      this.cheerleaders = data.cheerleaders || 0;
+      this.apothecary = data.apothecary || true;
+      this.name = data.name || '';
+      this.race = data.race || undefined;
+      this.coach = data.coach || '';
+      this.value = data.value || 0;
+      this.cost = data.cost || 0;
+      this.tier = data.tier || 0;
+      this.isReturningTeam = data.isReturningTeam || false;
+      this.returningTeam = data.returningTeam ||null;
+      this.returningPlayers = data.returningPlayers || [];
+
+    }
+
+    toggleApo = () => this.apothecary = !this.apothecary;
+    toggleReturning = () => this.isReturningTeam = !this.isReturningTeam;
+    subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + Number(this.fanfactor) - 5) * 10000 + (this.apothecary ? 50000 : 0);
+    rerollCost = () => this.race ? this.race.reroll : 50000;
+    playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
+    positions = () => this.race ? playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b)  : [];
+    availableReturningPlayers = () => this.returningPlayers.filter(x => !this.roster.find(p => p.id === x.id));
+    teamValue = () => this.playerCost() + this.subTotalRerolls() + 50000 ; // 5 FF
+    teamCost = () => this.playerCost() + this.subTotalRerolls() + this.superstarTax();
+    teamTax = () => TierTax.find(x => x.race === this.race?.name)?.rebate || 0;
+    teamTier = () => TierTax.find(x => x.race === this.race?.name)?.tier;
+    teamTotal = () => this.teamCost() + this.teamTax();
+    superstarTax = () => this.roster.filter(x => x.isSuperstar()).reduce((p,c,i) => p + 10*(i+1), 0) * 1000;
+    sppSurplus = () => this.roster.reduce((p,c) => p+c.sppSurplus,0);
+    onCoachChange = (coach) => this.getReturningTeam(coach).then (t => t);
+
+    async getReturningTeam (coach){
+      if (!this.isReturningTeam) return;
+      let response = await fetch(`/api/v2/clan/build/coach/${this.coach}/team`);
+      if (!response.ok) return;
+      
+      this.returningTeam = await response.json();
+      response = await fetch(`/api/v2/clan/build/team/${this.returningTeam?.id}/players`);
+      if (!response.ok) return;
+
+      const returningPlayers = await response.json();
+      returningPlayers.forEach(x => x.playerType = playerTypes.find(pt => pt.type === x.type));
+      returningPlayers.forEach(x => x.fixedSkills = skills[x.type]);
+      this.returningPlayers = returningPlayers.map(x => new PlayerModel(x));
+      return true;
+    }
+
+    superstarPlayerTax(player) {
+      return (1 + this.roster.filter(x => x.isSuperstar()).indexOf(player)) * 10000;
+    }
+
+    statIncreaseCount = () => this.roster.filter(x => x.hasIncrease()).length;
+    doublesCount = () => this.roster.filter(x => x.hasDouble()).length;
+
+    addPlayer () {
+      this.roster.push(new PlayerModel({
+        name: this.newPlayer.name,
+        playerType: this.newPlayer.playerType,
+        fixedSkills : skills[this.newPlayer.playerType.type],
+        tier: this.teamTier(),
+        skillModel: this.skillModel
+      }));
+      this.newPlayer.playerType = '';
+      this.newPlayer.name = '';
+    }
+    addReturningPlayer () {
+      this.roster.push(this.returningPlayer);
+    }
+
+    removePlayer (player){
+      this.roster.splice(this.roster.indexOf(player),1);
+    }
+  }      
+

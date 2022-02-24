@@ -26,6 +26,21 @@ class ClanBuildingApi{
     else res.json({reddit: account.reddit, coach:account.coach, discord:account.discord});
   }
 
+  async _getMe(req,res){
+    const account = await accountService.getAccount(req.user.name);
+    let oldClan = await clanService.getClanByUser(account.coach);
+    let newClan = await clanService.getNewClanByUser(account.coach);
+
+    res.json({
+      coach:account.coach,
+      reddit:account.reddit,
+      isClanLeader: account.roles.includes("clanleader"),
+      oldClan: oldClan?.name,
+      newClan: newClan?.name
+    })
+
+  }
+
   async _getTeam(req,res){
     const clan = await clanService.getClanByName(req.params.clan);
     if (!clan) res.json(this.team());
@@ -77,7 +92,7 @@ class ClanBuildingApi{
   routesConfig(){
     const apiRateLimiter = rateLimit({
       windowMs: 30 * 1000,
-      max: 2, 
+      max: 5, 
       message:
         'Too many requests, please wait 30 seconds',
       keyGenerator: function(req){
@@ -85,6 +100,7 @@ class ClanBuildingApi{
       }
     });
 
+    this.router.get('/coach',util.ensureAuthenticated ,  this._getMe.bind(this));
     this.router.get('/coach/:coach/team',util.ensureAuthenticated , apiRateLimiter, this._getReturningTeam.bind(this));
     this.router.get('/coach/:coach',util.ensureAuthenticated ,  this._getCoach.bind(this));
     this.router.get('/team/:teamId/players',util.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));

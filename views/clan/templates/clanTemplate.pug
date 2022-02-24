@@ -1,5 +1,4 @@
-label(for="clanName") clan name
-input(data-bind="textInput: name" id="clanName")
+span.mx-2(data-bind="text: name" id="clanName")
 
 table.table 
   thead 
@@ -16,8 +15,15 @@ table.table
       th.table-info  
   tbody(data-bind="foreach: members")
     tr
+      // ko if: $index() === 0
+      td
+        i.fa.fa-user-circle-o.mx-1(title="clan leader")
+        span(data-bind="text: coach")
+      // /ko
+      // ko if: $index() > 0
       td
         input(data-bind="value: coach")
+      // /ko
       td
         span(data-bind="text: reddit")
       td
@@ -46,3 +52,11 @@ table.table
       // ko if: !team()
       td(colspan="7") &nbsp;
       // /ko
+
+br
+
+.mx-1 
+  //ko template:{name:'clanPowersTemplate'}
+  // /ko
+
+
