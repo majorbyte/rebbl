@@ -1,4 +1,4 @@
-table.table.table-striped.table-sm 
+table.table.table-striped.table-sm.table-responsive
   tr
     th.table-info returning team
     td 
@@ -10,7 +10,7 @@ table.table.table-striped.table-sm
   tr
     th.table-info team name
     td
-      input(type="text")
+      input(data-bind="textInput: name, attr:{pattern:`\\\\u{5B}${$root.name}\\\\u{5D}.*S13`}" required maxlength="25")
   tr
     th.table-info race
     td(data-bind="css:race ? '' : 'choose-race'") 

@@ -31,6 +31,8 @@ block head
         transform: rotate(1800deg);
       }
     }    
+    input:invalid, .invalid{border:1px solid var(--danger)}
+    input:valid, .valid{border:1px solid var(--success)}
 
 block content
   div(class=`` id="app" style="display:none")
@@ -105,21 +107,21 @@ block scripts
     ];
 
     const Powers = [
-      {key:'assassination', name:'Assassination', use:2, cost:100},
-      {key:'badInducementDeal', name:'Bad Inducement Deal', use:2, cost:50},
-      {key:'confusion', name:'Confusion', use:2, cost:50},
-      {key:'financialFairPlay', name:'Financial Fair Play', use:2, cost:50},
-      {key:'hatredOfPublicTransport', name:'Hatred of Public Transport', use:5, cost:20},
-      {key:'inspiration', name:'Inspiration', use:2, cost:100},
-      {key:'lastMinuteSwitch', name:'Last Minute Switch', use:1, cost:150},
-      {key:'miscommunication', name:'Miscommunication', use:1, cost:150},
-      {key:'stuntyAssassination', name:'Stunty Assassination', use:2, cost:100},
-      {key:'stuntyBadInducementDeal', name:'Stunty Bad Inducement Deal', use:2, cost:50},
-      {key:'stuntyConfusion', name:'Stunty Confusion', use:2, cost:50},
-      {key:'stuntyHatredOfPublicTransport', name:'Stunty Hatred of Public Transport', use:5, cost:20}
-      {key:'stuntyInspiration', name:'Stunty Inspiration', use:2, cost:100},
-      {key:'stuntyLastMinuteSwitch', name:'Stunty LastMinuteSwitch', use:1, cost:150},
-      {key:'stuntyMiscommunication', name:'Stunty Miscommunication', use:1, cost:150},
+      {key:'assassination', name:'Assassination', use:2, cost:100000},
+      {key:'badInducementDeal', name:'Bad Inducement Deal', use:2, cost:50000},
+      {key:'confusion', name:'Confusion', use:2, cost:50000},
+      {key:'financialFairPlay', name:'Financial Fair Play', use:2, cost:50000},
+      {key:'hatredOfPublicTransport', name:'Hatred of Public Transport', use:5, cost:20000},
+      {key:'inspiration', name:'Inspiration', use:2, cost:100000},
+      {key:'lastMinuteSwitch', name:'Last Minute Switch', use:1, cost:150000},
+      {key:'miscommunication', name:'Miscommunication', use:1, cost:150000},
+      {key:'stuntyAssassination', name:'Stunty Assassination', use:2, cost:100000},
+      {key:'stuntyBadInducementDeal', name:'Stunty Bad Inducement Deal', use:2, cost:50000},
+      {key:'stuntyConfusion', name:'Stunty Confusion', use:2, cost:50000},
+      {key:'stuntyHatredOfPublicTransport', name:'Stunty Hatred of Public Transport', use:5, cost:20000},
+      {key:'stuntyInspiration', name:'Stunty Inspiration', use:2, cost:100000},
+      {key:'stuntyLastMinuteSwitch', name:'Stunty LastMinuteSwitch', use:1, cost:150000},
+      {key:'stuntyMiscommunication', name:'Stunty Miscommunication', use:1, cost:150000}
     ];
 
     let model = new ClanModel().snap();

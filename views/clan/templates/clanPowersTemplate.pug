@@ -1,70 +1,30 @@
 
-.flex-container
-  select(aria-labelledby='position-header' data-bind="options: availablePowers(),optionsText:'name', value:returningPlayer,optionsCaption: 'Choose...'")
-  button.btn.btn-sm.btn-success(title='add player' data-bind="click:addReturningPlayer")
-    i.fa.fa-plus-square
+form 
+  .tables
+    table.table.table-striped.table-sm.table-responsive
+      tbody(data-bind="foreach:{data:powers(), as:'power'}")
+        // ko template: {name:'powerTemplate'}
+        // /ko
+    table.table.table-striped.table-sm.table-responsive
+      tbody(data-bind="foreach:{data:stuntyPowers(), as:'power'}")  
+        // ko template: {name:'powerTemplate'}
+        // /ko
+      tfoot
+        tr
+          td(colspan="4")
+            span total
+          td.data
+            input.data(data-bind="value: new Intl.NumberFormat('en-US').format(stuntyTotal())"  id="stuntyTotal" readonly)
 
-.tables
-  table.table
-    tr
-      td
-        span Assassination
-      td
-    tr
-      td
-        span Bad Inducement Deal
-      td
-    tr
-      td
-        span Confusion
-      td
-  table.table    
-    tr
-      td
-        span Financial Fair Play
-      td
-    tr
-      td
-        span Hatred of Public Transport
-      td
-    tr
-      td
-        span Inspiration
-      td
-    tr
-      td
-        span Last Minute Switch
-      td
-    tr
-      td
-        span Miscommunication
-      td
-
-  table.table    
-    tr
-      td
-        span stuntyAssassination: 
-      td
-    tr
-      td
-        span stuntyBadInducementDeal: 
-      td
-    tr
-      td
-        span stuntyConfusion: 
-      td
-    tr
-      td
-        span stuntyHatredOfPublicTransport: 
-      td
-    tr
-      td
-        span stuntyInspiration: 
-      td
-    tr
-      td
-        span stuntyLastMinuteSwitch: 
-      td
-    tr
-      td
-        span stuntyMiscommunication: 
+script(type="text/html" id="powerTemplate")
+  tr
+    td
+      span(data-bind="text: power.name")
+    td
+      input(type="number" data-bind="value:$parent[power.key],attr:{max:power.use}" min="0" )
+    td.data 
+      span @
+    td.data 
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(power.cost)")  
+    td.data 
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(power.cost * $parent[power.key])")  

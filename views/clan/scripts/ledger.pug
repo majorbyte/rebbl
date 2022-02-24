@@ -29,11 +29,51 @@ script.
       this.stuntyHatredOfPublicTransport = data.stuntyHatredOfPublicTransport || 0;
       
       this.teamBuilding = data.teamBuilding?.map(x => new TeamModel(x).snap()) || [];
+
+      this.selectedPower = null;
     }
 
-    availablePowers = () =>{
+    onAddPowerClick = (power) => {console.log(power)}
+
+    hasStuntyTeam = () =>  this.teamBuilding.filter(team => team.teamTier() === 7).length > 0;
+
+    powers = () =>{
       const powers = ['miscommunication', 'badInducementDeal', 'lastMinuteSwitch', 'assassination', 'inspiration', 'confusion', 'hatredOfPublicTransport', 'financialFairPlay'];
-      const stuntyPowers = ['stuntyMiscommunication', 'stuntyLastMinuteSwitch', 'stuntyAssassination', 'stuntyInspiration', 'stuntyBadInducementDeal', 'stuntyConfusion', 'stuntyHatredOfPublicTransport'];
-        
+      return Powers.filter(p => powers.includes(p.key));
     }
+    stuntyPowers = () =>{
+      const powers = ['stuntyMiscommunication', 'stuntyLastMinuteSwitch', 'stuntyAssassination', 'stuntyInspiration', 'stuntyBadInducementDeal', 'stuntyConfusion', 'stuntyHatredOfPublicTransport'];
+      return Powers.filter(p => powers.includes(p.key));
+    }
+
+    powersTotal =() =>{
+      const powers = ['miscommunication', 'badInducementDeal', 'lastMinuteSwitch', 'assassination', 'inspiration', 'confusion', 'hatredOfPublicTransport', 'financialFairPlay'];
+      let cost = 0;
+      for(const key of powers){
+        cost += Powers.find(x => x.key === key).cost * this[key];
+      }
+      return cost;
+    }
+
+    stuntyTotal = () => {
+      const powers = ['stuntyMiscommunication', 'stuntyLastMinuteSwitch', 'stuntyAssassination', 'stuntyInspiration', 'stuntyBadInducementDeal', 'stuntyConfusion', 'stuntyHatredOfPublicTransport'];
+
+      let cost = 0;
+      for(const key of powers){
+        cost += Powers.find(x => x.key === key).cost * this[key];
+      }
+      this.updateStunty(cost <= 150_000);
+      return cost;
+    }
+
+    updateStunty = (valid) => {
+      const elem = document.getElementById('stuntyTotal');
+      if (!elem) return;
+      elem.classList.remove('valid');
+      elem.classList.remove('invalid');
+      elem.classList.add(valid ? 'valid' : 'invalid');
+    }
+
+    teamTotal = () => this.teamBuilding.reduce((p,c) => p + c?.teamTotal(),0)
   }
+  

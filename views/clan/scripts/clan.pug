@@ -53,7 +53,7 @@ script.
     
     races = () => races;
 
-
+    cost = () => this.ledger.powersTotal() + this.ledger.stuntyTotal() + this.ledger.teamTotal();
 
 
     async load() {
