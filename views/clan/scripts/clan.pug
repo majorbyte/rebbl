@@ -35,6 +35,9 @@ script.
       team.commit();
       this.saveTeam(team);
     }
+    onSaveClan = () => {
+      this.save();
+    }
 
     onTeamDoneClick = () => {
       this.editClan = !this.editClan;
@@ -55,6 +58,13 @@ script.
     races = () => races;
 
     cost = () => this.ledger.powersTotal() + this.ledger.stuntyTotal() + this.ledger.teamTotal();
+
+    isTeamCostValid = () => Divisions.find(x => x.name === this.division).budget >= this.ledger.teamTotal();
+    
+    isTotalCostValid = () => {
+      const d = Divisions.find(x => x.name === this.division)
+      return d.budget + d.powerBudget >= this.cost();
+    }
 
     getMemberTeam = (i) => this.ledger.teamBuilding[i];
 
@@ -83,6 +93,21 @@ script.
       model.commit();
       this.loading = false;
 
+    }
+
+    async save(){
+      this.commit();
+      const data = this;
+      delete data._original;
+      delete data.excludeFields;
+      delete data.ledger._original;
+      delete data.ledger.excludeFields;
+      data.ledger.teamBuilding.forEach(x => {delete x._original; delete x._excludeFields});
+      await fetch(`/api/v2/clan/build/${this.name}` ,{
+        method:'PUT',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
     }
 
     async saveTeam(team){

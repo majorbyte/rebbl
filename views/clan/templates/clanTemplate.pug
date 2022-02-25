@@ -1,7 +1,12 @@
 .mx-1 
   span.mx-2(data-bind="text: name" id="clanName")
-
-  table.table.table-sm.table-responsive
+  span.mx-2(data-bind="text: division" id="division")
+  // ko if: isClanLeader()
+  button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onSaveClan, attr:{disabled: !isDirty()}" title="save clan") 
+    i.fa.fa-save
+  // /ko
+  
+  table.table.table-sm.table-responsive.table-borderless
     thead 
       tr 
         th.table-info coach 
@@ -43,18 +48,14 @@
           // /ko
         td 
           button.btn.btn-sm(data-bind="{text: isReturningTeam ? 'yes' : 'no', click:toggleReturning, css: isReturningTeam ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary'}")
-        td(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost() + subTotalRerolls() )") 
-        td(data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())") 
-        td(data-bind="text: new Intl.NumberFormat('en-US').format(teamTax())") 
-        td(data-bind="text: new Intl.NumberFormat('en-US').format(teamTotal())") 
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost() + subTotalRerolls() )") 
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())") 
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTax())") 
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTotal())") 
         td.left-align
           .flex-container
-            button.btn.btn-danger.btn-sm.pull-right(title='Remove coach')
-              i.fa.fa-times-rectangle-o
-            // ko if: isDirty()
-            button.btn.btn-success.btn-sm.pull-right(title='save team', data-bind="click:$root.onSaveTeam")
+            button.btn.btn-success.btn-sm.pull-right(title='save team', data-bind="click:$root.onSaveTeam, attr:{disabled: !isDirty()}")
               i.fa.fa-save
-            // /ko
             button.btn.btn-sm.btn-info.pull-right(title='Edit team' data-bind="click:$root.onEditTeam")
               i.fa.fa-pencil-square-o
 
@@ -63,6 +64,13 @@
         td(colspan="7") &nbsp;
         // /ko
     tfoot 
+      // ko if: division !== "Division 3"
+      tr
+        td.data(colspan="8")
+          span Team Total
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.teamTotal()),css: isTeamCostValid() ? 'valid' : 'invalid'")  
+      // /ko
       tr
         td.data(colspan="8")
           span Powers Total
@@ -77,7 +85,7 @@
         td.data(colspan="8")
           span Clan Total
         td.data
-          span(data-bind="text: new Intl.NumberFormat('en-US').format(cost())")  
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(cost()),css: isTotalCostValid() ? 'valid' : 'invalid'")  
   //ko template:{name:'clanPowersTemplate', data:ledger}
   // /ko
 
