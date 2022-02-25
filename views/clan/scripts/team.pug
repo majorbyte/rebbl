@@ -51,12 +51,12 @@ script.
     rerollCost = () => this.race ? this.race.reroll : 50000;
     playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
     positions = () => {
-      if (!this.race) return [];
+      if (!this.race || this.roster.length >= 16) return [];
 
       const types = playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b);
       return types.filter(t => this.roster.filter(x => x.playerType.type === t.type).length < t.allowed);
     }
-    availableReturningPlayers = () => this.returningPlayers.filter(x => !this.roster.find(p => p.id === x.id));
+    availableReturningPlayers = () => this.roster.length < 16 ? this.returningPlayers.filter(x => !this.roster.find(p => p.id === x.id)) : [];
     teamValue = () => this.playerCost() + this.subTotalRerolls() + (this.fanfactor < 5 ? this.fanfactor * 10000  : 50000);
     teamCost = () => this.playerCost() + this.subTotalRerolls() + this.superstarTax();
     teamTax = () => TierTax.find(x => x.race === this.race?.name)?.rebate || 0;
