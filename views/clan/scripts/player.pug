@@ -72,10 +72,12 @@ script.
         return '' ;
       });
 
-      if (!data.level) return;
-      const spp = SPP.find(x => x.level === data.level);
-      this.sppSurplus = data.xp - spp.spp;
+      const spp = SPP.find(x => x.level === this.level);
+      this.sppSurplus = Math.max(data.xp - spp.spp,0);
       this.levelEligible = this.xp >= spp.eligible;
+      const nextSPP = SPP.find(x => x.level === this.level+1);
+      this.nextLevelSPP = 0;
+      if (nextSPP) this.nextLevelSPP = nextSPP.spp - this.xp;
     }
 
     toggleEdit(){
@@ -89,7 +91,7 @@ script.
           this.skillModel.statsIncreases.push(skill);
           break;
         case 'General':
-          this.skillModel.doubleAgilitySkills.push(skill);
+          this.skillModel.doubleGeneralSkills.push(skill);
           break;
         case 'Agility':
           this.skillModel.doubleAgilitySkills.push(skill);
@@ -102,6 +104,21 @@ script.
           break;
         case 'Mutation':
           this.skillModel.doubleMutationSkills.push(skill);
+          break;
+      }
+
+      /*
+        Special race rules:
+        Undead may only buy 1 double OR 1 statistic on one of their Mummies.
+        Ogres may take either 3 doubles, or 1 double AND 1 statistic, on their Ogres.
+      */
+      switch (this.playerType.type){
+        case 'Undead_Mummy':
+          if (this.isDouble(skill) || this.isIncrease(skill) ) this.skillModel.mummyDoubleCount++;
+          break;
+        case 'Ogre_Ogre':
+          if (this.isDouble(skill) ) this.skillModel.ogreDoubleCount++;
+          else if (this.isIncrease(skill) ) this.skillModel.ogreStatsCount++;
           break;
       }
     }
@@ -127,6 +144,15 @@ script.
           this.skillModel.doubleMutationSkills.splice(this.skillModel.doubleMutationSkills.indexOf(oldValue),1);
           break;
       }
+      switch (this.playerType.type){
+        case 'Undead_Mummy':
+          if (this.isDouble(skoldValuell) || this.isIncrease(oldValue) ) this.skillModel.mummyDoubleCount--;
+          break;
+        case 'Ogre_Ogre':
+          if (this.isDouble(oldValue) ) this.skillModel.ogreDoubleCount--;
+          else if (this.isIncrease(oldValue) ) this.skillModel.ogreStatsCount--;
+          break;
+      }
     }
 
     getCategory = (skill) => SkillDescriptions.find(x => x.name === skill).category;
@@ -141,10 +167,12 @@ script.
     increases = () => SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.tier > 2 || x.name !== 'Increase Strength').map(x => x.name);
     
     accessibleSkills(){
-      const increases = SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.skillModel.isAllowed(x.category, x.name) || x.name === this.skill1).map(x => x.name);
+      const increases = SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.skillModel.isAllowed(x.category, x.name, this.playerType.type) || x.name === this.skill1).map(x => x.name);
       let doubles = SkillDescriptions.filter(x => this.playerType.doubles.includes(x.category));
 
-      doubles = doubles.filter(x => !this.fixedSkills.includes(x.name) && this.skillModel.isAllowed(x.category, x.name) || x.name === this.skill1);
+      doubles = doubles.filter(x => !this.fixedSkills.includes(x.name) && this.skillModel.isAllowed(x.category, x.name, this.playerType.type) || x.name === this.skill1);
+
+
 
       return this.normals().concat(doubles.map(x => x.name)).concat(increases).sort();
     } 

@@ -1,6 +1,7 @@
 script.
   class ClanModel extends Tracking{
     constructor(data){
+      $('.toast').toast({autohide:true})
       super(() => new ClanModel(this))
       this.registerClan = false;
       this.editClan = false;
@@ -55,6 +56,7 @@ script.
 
     cost = () => this.ledger.powersTotal() + this.ledger.stuntyTotal() + this.ledger.teamTotal();
 
+    getMemberTeam = (i) => this.ledger.teamBuilding[i];
 
     async load() {
       this.loading = true;
@@ -84,10 +86,19 @@ script.
     }
 
     async saveTeam(team){
-      team.commit();
-      await fetch(`/api/v2/clan/build/${this.name}/team` ,{
+      let response = await fetch(`/api/v2/clan/build/${this.name}/members` ,{
         method:'PUT',
         headers:{ 'Content-Type': 'application/json'},
-        body: JSON.stringify(team)});
+        body: JSON.stringify(this.members)
+      });      
+
+      if (!response.ok) $('#toast').toast('show');
+
+      team.commit();
+      await fetch(`/api/v2/clan/build/${this.name}/${team.id}` ,{
+        method:'PUT',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(team)
+      });
     }
   }

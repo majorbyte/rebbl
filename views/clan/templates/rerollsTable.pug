@@ -8,9 +8,14 @@ table.table.table-striped.table-sm
   tr
     th.table-info fan factor
     td 
+      // ko if: teamTier() < 7
       input.w-50(type="number" data-bind="textInput:fanfactor" min="5" max="16")
+      // /ko
+      // ko if: teamTier() === 7
+      input.w-50(type="number" data-bind="textInput:fanfactor" min="0" max="16")
+      // /ko
     td 10,000
-    td.data(data-bind="text: new Intl.NumberFormat('en-US').format((fanfactor-5) * 10000)")
+    td.data(data-bind="text: new Intl.NumberFormat('en-US').format(Math.max((fanfactor-5) * 10000,0))")
   tr
     th.table-info assistant coaches
     td

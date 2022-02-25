@@ -21,10 +21,8 @@ script.
       this.reddit = c.reddit;
       this.discord = c.discord;
 
-      let team = model.ledger.teamBuilding.find(x => x.coach === this.coach);
-      if (!team) {
-        model.ledger.teamBuilding.push(new TeamModel({coach:this.coach}));
-      }
+      let index = model.members.findIndex(x => x.coach === this.coach);
+      model.ledger.teamBuilding[index].coach = this.coach
 
       return true;
     }

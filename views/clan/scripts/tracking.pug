@@ -1,7 +1,9 @@
 script.
   class Tracking{
-    constructor(clone) {
+    constructor(clone, excludeFields) {
       this.clone = clone;
+      this.excludeFields = excludeFields || [];
+      this.excludeFields.push('_original')
     }
 
     clone = () => {};
@@ -12,15 +14,17 @@ script.
       return clone;
     }
 
+    stringify = (value) => JSON.stringify(value, (key, val) => this.excludeFields.includes(key) ? undefined : val);
+
     isDirty() {
-      return this._original ? stringifyWithoutOriginal(this) !== stringifyWithoutOriginal(this._original) : false;
+      return this._original ? this.stringify(this) !== this.stringify(this._original) : false;
     }
 
     commit() {
       if (this._original != null) {
         this._original.map(this);
       } else {
-        throw "Model must be snapped before it can be committed.";
+        throw 'Model must be snapped before it can be committed.';
       }
     }
 
@@ -28,7 +32,7 @@ script.
         if (this._original != null) {
             this.map(this._original);
         } else {
-            throw "Model must be snapped before it can be rolled back.";
+            throw 'Model must be snapped before it can be rolled back.';
         }
     }
   }

@@ -5,13 +5,11 @@ const express = require('express')
 , clanService = require('../../../lib/ClanService.js')
 , rateLimit = require('express-rate-limit')
 , util = require('../../../lib/util.js');
-const { getActiveClanSeason } = require('../../../lib/ConfigurationService.js');
 
 class ClanBuildingApi{
   constructor(){
     this.router =express.Router();
   }
-
 
   team(){
     return {
@@ -34,7 +32,7 @@ class ClanBuildingApi{
     res.json({
       coach:account.coach,
       reddit:account.reddit,
-      isClanLeader: account.roles.includes("clanleader"),
+      isClanLeader: account.roles?.includes('clanleader'),
       oldClan: oldClan?.name,
       newClan: newClan?.name
     })
@@ -77,17 +75,64 @@ class ClanBuildingApi{
     res.json(clan);
   }
 
-  async _saveTeam(req,res){
-    res.json({});
+  async _saveMembers(req,res){
+    const account = await accountService.getAccount(req.user.name);
+    clanService.updateMembers(account.coach, req.body);
+    res.sendStatus(200);
   }
 
+  async _saveTeam(req,res){
+    const account = await accountService.getAccount(req.user.name);
+    clanService.updateTeam(account.coach, Number(req.params.team), req.body);
+    res.sendStatus(200);
+  }
+
+  async _saveClan(req,res){
+    const account = await accountService.getAccount(req.user.name);
+    clanService.updateClan(account.coach, req.body);
+    res.sendStatus(200);
+  }
 
   async teamSaveAllowed(req, res, next) {
-    const account = await accountService.getAccount(req.user.name)
-    return account.roles?.includes("clanleader") || account.coach.toLowerCase() === req.body.coach.toLowerCase() 
-      ? next() 
-      : res.status(403).send({error: "You are not allowed to make changes to this team"});
+    const account = await accountService.getAccount(req.user.name);
+    const clan = await clanService.getNewClanByUser(account.coach);
+
+    if(!clan) return res.status(404).send({error:'Clan not found'});
+
+    const isMember = clan.name === req.params.clan;
+
+    if (!isMember) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
+
+    const isClanLeader = clan.leader === account.coach;
+
+    if (isClanLeader) return next();
+
+    const team = clan.ledger.teamBuilding.find(team => team.id === Number(req.params.team));
+
+    if (!team) return res.status(404).send({error: 'Team Id not found'});
+    if (!team.coach || team.coach !== account.coach) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
+
+    if (account.coach.toLowerCase() !== req.body.coach.toLowerCase()) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
+
+    return next();
   };
+
+  async isClanLeader(req, res, next) {
+    const account = await accountService.getAccount(req.user.name);
+    const clan = await clanService.getNewClanByUser(account.coach);
+
+    if(!clan) return res.status(404).send({error:'Clan not found'});
+
+    const isClanLeader = clan.leader === account.coach;
+
+    if (isClanLeader) return next();
+
+    return res.status(403).send({error: 'You are not allowed to make changes to this team'});
+  };
+
+  async _skillPlayer(req,res){
+    
+  }
 
   routesConfig(){
     const apiRateLimiter = rateLimit({
@@ -107,9 +152,12 @@ class ClanBuildingApi{
     this.router.get('/:clan/:team',util.ensureAuthenticated ,  this._getTeam.bind(this));
     this.router.get('/', this._getClan.bind(this));
 
-    this.router.post('/:clan', util.hasRole("clanleader"), this._registerClan.bind(this));
+    this.router.post('/:clan', util.hasRole('clanleader'), this._registerClan.bind(this));
+    this.router.post('/:clan/:team/skill', this.teamSaveAllowed, this._skillPlayer.bind(this));
 
-    this.router.put('/:clan/team', this.teamSaveAllowed, this._saveTeam.bind(this));
+    this.router.put('/:clan/members', this.isClanLeader, this._saveMembers.bind(this));
+    this.router.put('/:clan/:team', this.teamSaveAllowed, this._saveTeam.bind(this));
+    this.router.put('/:clan', this.isClanLeader, this._saveClan.bind(this));
 
 
     return this.router;

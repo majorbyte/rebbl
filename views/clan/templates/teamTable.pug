@@ -13,8 +13,14 @@ table.table.table-striped.table-sm.table-responsive
       input(data-bind="textInput: name, attr:{pattern:`\\\\u{5B}${$root.name}\\\\u{5D}.*S13`}" required maxlength="25")
   tr
     th.table-info race
+    // ko if: race && roster.length > 0
+    td 
+      span(data-bind="text: race.name")
+    // /ko
+    // ko if: roster.length === 0
     td(data-bind="css:race ? '' : 'choose-race'") 
       select(data-bind="options: $root.races(), optionsText: 'name', value: race,optionsCaption: 'Choose...', enable: roster.length == 0")
+    // /ko
   tr 
     th.table-info SPP+
     td.data(data-bind="text:sppSurplus()") 

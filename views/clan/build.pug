@@ -33,6 +33,53 @@ block head
     }    
     input:invalid, .invalid{border:1px solid var(--danger)}
     input:valid, .valid{border:1px solid var(--success)}
+    .toast {
+      -ms-flex-preferred-size: 350px;
+      flex-basis: 350px;
+      max-width: 350px;
+      font-size: 0.875rem;
+      background-color: rgba(255, 255, 255, 0.85);
+      background-clip: padding-box;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      border-radius: 0.25rem;
+    }
+
+    .toast:not(:last-child) {
+      margin-bottom: 0.75rem;
+    }
+
+    .toast.showing {
+      opacity: 1;
+    }
+
+    .toast.show {
+      display: block;
+      opacity: 1;
+    }
+
+    .toast.hide {
+      display: none;
+    }
+
+    .toast-header {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-align: center;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      color: #6c757d;
+      background-color: rgba(255, 255, 255, 0.85);
+      background-clip: padding-box;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      border-top-left-radius: calc(0.25rem - 1px);
+      border-top-right-radius: calc(0.25rem - 1px);
+    }
+
+    .toast-body {
+      padding: 0.75rem;
+    }    
 
 block content
   div(class=`` id="app" style="display:none")
@@ -67,7 +114,7 @@ block scripts
     let playerTypes = [];
     let me = {};
 
-    const stringifyWithoutOriginal = (value) => JSON.stringify(value, (key, val) => key === "_original" ? undefined : val);
+    
 
     const SPP = [
       {level:1,	spp:0, eligible:3},
@@ -80,28 +127,34 @@ block scripts
     ];
 
     const TierTax = [
-      {race:'Chaos Dwarf', tier:	2, rebate: 100000},
       {race:'Lizardman', tier:	1, rebate: 150000},
-      {race:'Undead', tier:	3, rebate: 50000},
-      {race:'Necromantic', tier:	2, rebate: 100000},
-      {race:'Wood Elf', tier:	3, rebate: 50000},
-      {race:'Dark Elf', tier:	2, rebate: 100000},
-      {race:'Dwarf', tier:	2, rebate: 100000},
+      {race:'Necromantic', tier:	1, rebate: 100000},
       {race:'Orc', tier:	1, rebate: 150000},
-      {race:'Chaos', tier:	2, rebate: 100000},
-      {race:'Skaven', tier:	1, rebate: 150000},
-      {race:'Norse', tier:	5, rebate: -50000},
-      {race:'High Elf', tier:	5, rebate: -50000},
-      {race:'Khemri', tier:	3, rebate: 50000},
-      {race:'Amazon', tier:	3, rebate: 50000},
-      {race:'Elven Union', tier:	5, rebate: -50000},
+
+      {race:'Amazon', tier:	2, rebate: 50000},
+      {race:'Chaos Dwarf', tier:	2, rebate: 100000},
+      {race:'Khemri', tier:	2, rebate: 50000},
+      {race:'Skaven', tier:	2, rebate: 150000},
+      {race:'Wood Elf', tier:	2, rebate: 50000},
+
+      {race:'Chaos', tier:	3, rebate: 100000},
+      {race:'Dark Elf', tier:	3, rebate: 100000},
+      {race:'Dwarf', tier:	3, rebate: 100000},
       {race:'Nurgle', tier:	3, rebate: 50000},
-      {race:'Bretonnian', tier:	4, rebate: 0},
-      {race:'Human', tier:	5, rebate: -50000},
-      {race:'Underworld Denizens', tier:	6, rebate: -100000},
+      {race:'Undead', tier:	3, rebate: 50000},
+
+      {race:'Human', tier:	4, rebate: -50000},
+      {race:'High Elf', tier:	4, rebate: -50000},
+
+      {race:'Bretonnian', tier:	5, rebate: 0},
+      {race:'Elven Union', tier:	5, rebate: -50000},
+      {race:'Norse', tier:	5, rebate: -50000},
+
       {race:'Kislev', tier:	6, rebate: -100000},
       {race:'Ogre', tier:	6, rebate: -100000},
+      {race:'Underworld Denizens', tier:	6, rebate: -100000},
       {race:'Vampire', tier:	6, rebate: -100000},
+
       {race:'Goblin', tier:	7, rebate: 0},
       {race:'Halfling', tier:	7, rebate: 0},
     ];

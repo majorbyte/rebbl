@@ -51,7 +51,11 @@ tr
     .flex-container
       button.btn.btn-danger.btn-sm.pull-right(title='Remove player', data-bind="click: $parent.removePlayer.bind($parent)")
         i.fa.fa-times-rectangle-o
-      // ko if: (id > 0 && levelEligible) || (id === 0 && !$parent.isReturningTeam)
+      // ko if: id > 0 && levelEligible
+      button.btn.btn-sm.btn-success.pull-right(data-bind="click: $parent.showSkillPlayerModal.bind($parent)")
+        img(src="https://cdn2.rebbl.net/images/level.png" style="width: 20px;")
+      // /ko
+      // ko if: id === 0 && !$parent.isReturningTeam
       button.btn.btn-sm.btn-info.pull-right(data-bind="click: player.toggleEdit")
         i.fa.fa-pencil-square-o
       // /ko

@@ -21,7 +21,7 @@ script(type="text/html" id="powerTemplate")
     td
       span(data-bind="text: power.name")
     td
-      input(type="number" data-bind="value:$parent[power.key],attr:{max:power.use}" min="0" )
+      input(type="number" data-bind="value:$parent[power.key],attr:{max:power.use, disabled:!$root.isClanLeader()}" min="0" )
     td.data 
       span @
     td.data 

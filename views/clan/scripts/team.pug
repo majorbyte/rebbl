@@ -1,12 +1,15 @@
 script.
   class TeamModel extends Tracking{
     constructor(data){
-      super(() => new TeamModel(this))
+      super(() => new TeamModel(this),['newPlayer','returningPlayer','skillingPlayer','skillModel']);
+      this.skillModel = new SkillModel();
       this.map(data || {});
       this.newPlayer = new PlayerModel();
       this.returningPlayer = new PlayerModel();
-      this.skillModel = new SkillModel();
+      this.skillingPlayer = new PlayerModel();
+     
       this.skillModel.tier = this.teamTier;
+      this.skillModel.race = this.race;
         
       this._reset = () => this.map(data);
       this.isDirty.bind(this);
@@ -15,12 +18,14 @@ script.
       ko.getObservable(this, 'coach').subscribe(this.onCoachChange.bind(this));
     }
     map(data){
-      this.roster = data.roster || [];
+      data.roster?.forEach(x => x.skillModel = this.skillModel);
+      this.roster = data.roster?.map(x => new PlayerModel(x)) ||[];
       this.fanfactor = data.fanfactor || 5;
       this.rerolls = data.rerolls || 0;
       this.coaches = data.coaches || 0;
       this.cheerleaders = data.cheerleaders || 0;
       this.apothecary = data.apothecary || true;
+      this.id = data.id || 0;
       this.name = data.name || '';
       this.race = data.race || undefined;
       this.coach = data.coach || '';
@@ -31,16 +36,28 @@ script.
       this.returningTeam = data.returningTeam ||null;
       this.returningPlayers = data.returningPlayers || [];
 
+      this.roster.forEach(x => {
+        if (x.skill1) x.updateSkillModel(x.skill1);
+        if (x.skill2) x.updateSkillModel(x.skill2);
+      });
     }
-
+    isTeamOwner = () => this.coach === me.coach;
     toggleApo = () => this.apothecary = !this.apothecary;
-    toggleReturning = () => this.isReturningTeam = !this.isReturningTeam;
-    subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + Number(this.fanfactor) - 5) * 10000 + (this.apothecary ? 50000 : 0);
+    toggleReturning = async () => {
+      this.isReturningTeam = !this.isReturningTeam;
+      await this.getReturningTeam(this.coach);
+    } 
+    subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + Math.max(Number(this.fanfactor) - 5,0)) * 10000 + (this.apothecary ? 50000 : 0);
     rerollCost = () => this.race ? this.race.reroll : 50000;
     playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
-    positions = () => this.race ? playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b)  : [];
+    positions = () => {
+      if (!this.race) return [];
+
+      const types = playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b);
+      return types.filter(t => this.roster.filter(x => x.playerType.type === t.type).length < t.allowed);
+    }
     availableReturningPlayers = () => this.returningPlayers.filter(x => !this.roster.find(p => p.id === x.id));
-    teamValue = () => this.playerCost() + this.subTotalRerolls() + 50000 ; // 5 FF
+    teamValue = () => this.playerCost() + this.subTotalRerolls() + (this.fanfactor < 5 ? this.fanfactor * 10000  : 50000);
     teamCost = () => this.playerCost() + this.subTotalRerolls() + this.superstarTax();
     teamTax = () => TierTax.find(x => x.race === this.race?.name)?.rebate || 0;
     teamTier = () => TierTax.find(x => x.race === this.race?.name)?.tier;
@@ -51,7 +68,9 @@ script.
 
     async getReturningTeam (coach){
       if (!this.isReturningTeam) return;
-      let response = await fetch(`/api/v2/clan/build/coach/${this.coach}/team`);
+      if (!coach) return;
+
+      let response = await fetch(`/api/v2/clan/build/coach/${coach}/team`);
       if (!response.ok) return;
       
       this.returningTeam = await response.json();
@@ -88,7 +107,31 @@ script.
     }
 
     removePlayer (player){
+      if (player.skill1) player.removeSkillModel(player.skill1);
+      if (player.skill2) player.removeSkillModel(player.skill2);
       this.roster.splice(this.roster.indexOf(player),1);
     }
+
+    showSkillPlayerModal(player){
+      this.skillingPlayer = player;
+      $('#skillPlayerModal').modal('show');
+    }
+
+    async skillPlayer (vm, e){
+      var context = ko.contextFor(e.target);
+      this.commit();
+      await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}` ,{
+        method:'PUT',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(this)
+      });
+
+      /*const player = await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}/skill` ,{
+        method:'POST',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(this.skillingPlayer)
+      });*/
+    }
+
   }      
 

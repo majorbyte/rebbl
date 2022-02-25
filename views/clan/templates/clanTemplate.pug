@@ -21,17 +21,26 @@
           i.fa.fa-user-circle-o.mx-1(title="clan leader")
           span(data-bind="text: coach")
         // /ko
-        // ko if: $index() > 0
+        // ko if: $index() > 0 && $root.isClanLeader()
         td
           input(data-bind="value: coach" required)
+        // /ko
+        // ko if: $index() > 0 && !$root.isClanLeader()
+        td
+          span(data-bind="text: coach")
         // /ko
         td
           span(data-bind="text: reddit")
         td
           span(data-bind="text: discord")
-        //ko with: team()
+        //ko with: $root.getMemberTeam($index())
         td 
+          // ko if: $root.isClanLeader() || isTeamOwner()
           input(data-bind="textInput: name, attr:{pattern:`\\\\u{5B}${$root.name}\\\\u{5D}.*S13`}" required maxlength="25")
+          // /ko
+          // ko if: !$root.isClanLeader() && !isTeamOwner()
+          span(data-bind="text: name")
+          // /ko
         td 
           button.btn.btn-sm(data-bind="{text: isReturningTeam ? 'yes' : 'no', click:toggleReturning, css: isReturningTeam ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary'}")
         td(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost() + subTotalRerolls() )") 
@@ -50,7 +59,7 @@
               i.fa.fa-pencil-square-o
 
         // /ko  
-        // ko if: !team()
+        // ko if: !$root.getMemberTeam($index())
         td(colspan="7") &nbsp;
         // /ko
     tfoot 
@@ -72,4 +81,10 @@
   //ko template:{name:'clanPowersTemplate', data:ledger}
   // /ko
 
-
+.position-fixed.bottom-0.right-0.p-3(style="z-index: 5; right: 0; bottom: 0;")
+  .toast.hide(id="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000")
+    .toast-header
+      strong.mr-auto Toast
+      button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+        span(aria-hidden="true") &times;
+    .toast-body Hello, world! This is a toast message.
