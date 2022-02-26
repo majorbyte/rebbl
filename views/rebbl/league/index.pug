@@ -41,29 +41,24 @@ block scripts
     });
     
 block navigation
-  nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;justify-content:unset")
-    button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-      span(class="navbar-toggler-icon")
-    a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= "STANDINGS - " + league 
-    div(class="collapse navbar-collapse" id="rebblSubNav")
-      ul(class="navbar-nav mr-auto")
-        - if (seasons.length > 0 )
-          li( class="nav-item active")
-            div(class="nav-link") DISPLAY 
-          li( class="nav-item dropdown")
-            a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
-            div(class="dropdown-menu" aria-labelledby="dropdownSeason")
-              each season in seasons
-                a(class="dropdown-item " + season.replace(' ', '')  href="#")= season.toUpperCase()
-        li( class="nav-item active")
-          div(class="nav-link") NAVIGATE TO
-        li( class="nav-item dropdown")
-          a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
-          div(class="dropdown-menu" aria-labelledby="dropdownDivision")
-            each round in rounds.sort(collator.compare)
-              - let season = round.substr(0,9).replace(' ', '')
-              - let hideSeason = season.toLowerCase().trim() != (seasons[0] || "").replace(' ', '').toLowerCase().trim()
-              a(class=`dropdown-item Season ${season}` style=`${hideSeason ? "display:none": ""}` href=`/${company}/${league}/${round}`)=  round.toUpperCase()
+  - if (seasons.length > 0 )
+    li( class="nav-item active")
+      div(class="nav-link") DISPLAY 
+    li( class="nav-item dropdown")
+      a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
+      div(class="dropdown-menu" aria-labelledby="dropdownSeason")
+        each season in seasons
+          a(class="dropdown-item " + season.replace(' ', '')  href="#")= season.toUpperCase()
+  -if (rounds.length > 0 && league !== 'Greenhorn Cup')
+    li( class="nav-item active")
+      div(class="nav-link") NAVIGATE TO
+    li( class="nav-item dropdown")
+      a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
+      div(class="dropdown-menu" aria-labelledby="dropdownDivision")
+        each round in rounds.sort(collator.compare)
+          - let season = round.substr(0,9).replace(' ', '')
+          - let hideSeason = season.toLowerCase().trim() != (seasons[0] || "").replace(' ', '').toLowerCase().trim()
+          a(class=`dropdown-item Season ${season}` style=`${hideSeason ? "display:none": ""}` href=`/${company}/${league}/${round}`)=  round.toUpperCase()
 block content
   -let seasonName = ""
   -let i = -1
