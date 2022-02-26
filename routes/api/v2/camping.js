@@ -10,7 +10,7 @@ class CampingApi{
 
   routesConfig(){
     this.router.get('/winter', util.cache(10*60), async function(req, res){
-      res.json(await dataService.getStandings({competition:"REBBL Winter Camp",season:"season 2"}));
+      res.json(await dataService.getStandings({competition:"REBBL Winter Camp",season:"season 4"}));
     });
 
     this.router.get('/summer', util.cache(10*60), async function(req, res){
