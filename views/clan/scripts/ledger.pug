@@ -35,7 +35,7 @@ script.
 
     onAddPowerClick = (power) => {console.log(power)}
 
-    hasStuntyTeam = () =>  this.teamBuilding.filter(team => team.teamTier() === 7).length > 0;
+    hasStuntyTeam = () =>  this.teamBuilding.some(team => team.teamTier() === 7);
 
     powers = () =>{
       const powers = ['miscommunication', 'badInducementDeal', 'lastMinuteSwitch', 'assassination', 'inspiration', 'confusion', 'hatredOfPublicTransport', 'financialFairPlay'];

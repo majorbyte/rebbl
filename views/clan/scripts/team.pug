@@ -48,7 +48,8 @@ script.
     toggleApo = () => this.apothecary = !this.apothecary;
     toggleReturning = async () => {
       this.isReturningTeam = !this.isReturningTeam;
-      await this.getReturningTeam(this.coach);
+      if (!this.isReturningTeam) this.returningTeam = null;
+      else await this.getReturningTeam(this.coach);
     } 
     subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + Math.max(Number(this.fanfactor) - 5,0)) * 10000 + (this.apothecary ? 50000 : 0);
     rerollCost = () => this.race ? this.race.reroll : 50000;
@@ -70,6 +71,7 @@ script.
     spentSPP = () => this.roster.reduce((p,c) => p+c.spentSPP,0);
     onCoachChange = (coach) => this.getReturningTeam(coach).then (t => t);
     isPlayerEligable = (player) => this.sppSurplus() - player.sppSurplus - this.spentSPP() >= player.nextLevelSPP;
+    hasTraded = () => this.roster.some(player => player.spentSPP >0);
 
     async getReturningTeam (coach){
       if (!this.isReturningTeam) return;
@@ -152,7 +154,7 @@ script.
       });
       const player = await result.json();
       if (result.ok){
-        $('#toast-succes-message').text(`Player skilled successfully`);
+        $('#toast-success-message').text(`Player skilled successfully`);
         $('#toast-success').toast('show');
         var index = this.roster.findIndex(x => x.id === player.id);
         player.skillModel = this.skillModel;
