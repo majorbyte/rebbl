@@ -75,16 +75,16 @@ script.
       if (!this.isReturningTeam) return;
       if (!coach) return;
 
-      let response = await fetch(`/api/v2/clan/build/coach/${coach}/team`);
+      if (!this.returningTeam){
+        let response = await fetch(`/api/v2/clan/build/coach/${coach}/team`);
+        if (!response.ok) return;
+    
+        this.returningTeam = await response.json();
+        this.race = races.find(x => x.id === this.returningTeam.raceId);
+      }
+    
+      let response = await fetch(`/api/v2/clan/build/team/${this.returningTeam?.id}/players`);
       if (!response.ok) return;
-      
-      this.returningTeam = await response.json();
-      this.race = races.find(x => x.id === this.returningTeam.raceId);
-
-      response = await fetch(`/api/v2/clan/build/team/${this.returningTeam?.id}/players`);
-      if (!response.ok) return;
-
-      
 
       const returningPlayers = await response.json();
       returningPlayers.forEach(x => x.playerType = playerTypes.find(pt => pt.type === x.type));

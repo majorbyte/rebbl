@@ -6,7 +6,7 @@ block vars
 
 block head  
   style.
-    .popoverFix {z-index:10000 !important;}
+    .popoverFix {z-index:10_000 !important;}
     .tables {width: 100%;overflow: auto;display: flex;flex-wrap: wrap;margin-top: 1em;align-items: flex-start;}
     .table {width:unset !important; margin-block-end: 1em;margin-right: 1em;flex-grow:1}
     .data {text-align: right}
@@ -14,7 +14,7 @@ block head
     .table th {border-top:unset !important;}   
     .btn:focus, .btn.primary:focus {box-shadow:unset !important}
     .skill{width: 2em;border-radius: 4px;margin-left:1px;}
-    .bg-double{background-color:#ff8900}
+    .bg-double{background-color:#ff8900; color:white;}
     .choose-race{background: #ffc1075e;}
     .lds-hourglass {display: inline-block;position: relative;width: 80px;height: 80px;}
     .lds-hourglass:after {content: " ";display: block; border-radius: 50%;width: 0;height: 0;margin: 8px;box-sizing: border-box;border: 32px solid #fff;border-color: #ff8900  transparent #ff8900 transparent;animation: lds-hourglass 1.2s infinite;}
@@ -117,54 +117,54 @@ block scripts
     ];
 
     const TierTax = [
-      {race:'Lizardman', tier:	1, rebate: 150000},
-      {race:'Necromantic', tier:	1, rebate: 100000},
-      {race:'Orc', tier:	1, rebate: 150000},
+      {race:'Lizardman', tier:	1, rebate: 150_000},
+      {race:'Necromantic', tier:	1, rebate: 150_000},
+      {race:'Orc', tier:	1, rebate: 150_000},
 
-      {race:'Amazon', tier:	2, rebate: 50000},
-      {race:'Chaos Dwarf', tier:	2, rebate: 100000},
-      {race:'Khemri', tier:	2, rebate: 50000},
-      {race:'Skaven', tier:	2, rebate: 150000},
-      {race:'Wood Elf', tier:	2, rebate: 50000},
+      {race:'Amazon', tier:	2, rebate: 100_000},
+      {race:'Chaos Dwarf', tier:	2, rebate: 100_000},
+      {race:'Khemri', tier:	2, rebate: 100_000},
+      {race:'Skaven', tier:	2, rebate: 100_000},
+      {race:'Wood Elf', tier:	2, rebate: 100_000},
 
-      {race:'Chaos', tier:	3, rebate: 100000},
-      {race:'Dark Elf', tier:	3, rebate: 100000},
-      {race:'Dwarf', tier:	3, rebate: 100000},
-      {race:'Nurgle', tier:	3, rebate: 50000},
-      {race:'Undead', tier:	3, rebate: 50000},
+      {race:'Chaos', tier:	3, rebate: 50_000},
+      {race:'Dark Elf', tier:	3, rebate: 50_000},
+      {race:'Dwarf', tier:	3, rebate: 50_000},
+      {race:'Nurgle', tier:	3, rebate: 50_000},
+      {race:'Undead', tier:	3, rebate: 50_000},
 
-      {race:'Human', tier:	4, rebate: -50000},
-      {race:'High Elf', tier:	4, rebate: -50000},
+      {race:'Human', tier:	4, rebate: 0},
+      {race:'High Elf', tier:	4, rebate: 0},
 
-      {race:'Bretonnian', tier:	5, rebate: 0},
-      {race:'Elven Union', tier:	5, rebate: -50000},
-      {race:'Norse', tier:	5, rebate: -50000},
+      {race:'Bretonnian', tier:	5, rebate: -50_000},
+      {race:'Elven Union', tier:	5, rebate: -50_000},
+      {race:'Norse', tier:	5, rebate: -50_000},
 
-      {race:'Kislev', tier:	6, rebate: -100000},
-      {race:'Ogre', tier:	6, rebate: -100000},
-      {race:'Underworld Denizens', tier:	6, rebate: -100000},
-      {race:'Vampire', tier:	6, rebate: -100000},
+      {race:'Kislev', tier:	6, rebate: -100_000},
+      {race:'Ogre', tier:	6, rebate: -100_000},
+      {race:'Underworld Denizens', tier:	6, rebate: -100_000},
+      {race:'Vampire', tier:	6, rebate: -100_000},
 
       {race:'Goblin', tier:	7, rebate: 0},
       {race:'Halfling', tier:	7, rebate: 0},
     ];
 
     const Powers = [
-      {key:'assassination', name:'Assassination', use:2, cost:100000},
-      {key:'badInducementDeal', name:'Bad Inducement Deal', use:2, cost:50000},
-      {key:'confusion', name:'Confusion', use:2, cost:50000},
-      {key:'financialFairPlay', name:'Financial Fair Play', use:2, cost:50000},
-      {key:'hatredOfPublicTransport', name:'Hatred of Public Transport', use:5, cost:20000},
-      {key:'inspiration', name:'Inspiration', use:2, cost:100000},
-      {key:'lastMinuteSwitch', name:'Last Minute Switch', use:1, cost:150000},
-      {key:'miscommunication', name:'Miscommunication', use:1, cost:150000},
-      {key:'stuntyAssassination', name:'Stunty Assassination', use:2, cost:100000},
-      {key:'stuntyBadInducementDeal', name:'Stunty Bad Inducement Deal', use:2, cost:50000},
-      {key:'stuntyConfusion', name:'Stunty Confusion', use:2, cost:50000},
-      {key:'stuntyHatredOfPublicTransport', name:'Stunty Hatred of Public Transport', use:5, cost:20000},
-      {key:'stuntyInspiration', name:'Stunty Inspiration', use:2, cost:100000},
-      {key:'stuntyLastMinuteSwitch', name:'Stunty LastMinuteSwitch', use:1, cost:150000},
-      {key:'stuntyMiscommunication', name:'Stunty Miscommunication', use:1, cost:150000}
+      {key:'assassination', name:'Assassination', use:2, cost:100_000},
+      {key:'badInducementDeal', name:'Bad Inducement Deal', use:2, cost:50_000},
+      {key:'confusion', name:'Confusion', use:2, cost:50_000},
+      {key:'financialFairPlay', name:'Financial Fair Play', use:2, cost:50_000},
+      {key:'hatredOfPublicTransport', name:'Hatred of Public Transport', use:5, cost:20_000},
+      {key:'inspiration', name:'Inspiration', use:2, cost:100_000},
+      {key:'lastMinuteSwitch', name:'Last Minute Switch', use:1, cost:150_000},
+      {key:'miscommunication', name:'Miscommunication', use:1, cost:150_000},
+      {key:'stuntyAssassination', name:'Stunty Assassination', use:2, cost:100_000},
+      {key:'stuntyBadInducementDeal', name:'Stunty Bad Inducement Deal', use:2, cost:50_000},
+      {key:'stuntyConfusion', name:'Stunty Confusion', use:2, cost:50_000},
+      {key:'stuntyHatredOfPublicTransport', name:'Stunty Hatred of Public Transport', use:5, cost:20_000},
+      {key:'stuntyInspiration', name:'Stunty Inspiration', use:2, cost:100_000},
+      {key:'stuntyLastMinuteSwitch', name:'Stunty LastMinuteSwitch', use:1, cost:150_000},
+      {key:'stuntyMiscommunication', name:'Stunty Miscommunication', use:1, cost:150_000}
     ];
 
     
