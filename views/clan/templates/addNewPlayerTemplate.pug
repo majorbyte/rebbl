@@ -1,7 +1,7 @@
 tr.add-player-row
-  // ko if: isReturningTeam
+  // ko if: isReturningTeam && availableReturningPlayers().length > 0
   td.left-align
-    input(placeholder='Player Name' data-bind="textInput: returningPlayer.name")
+    input(placeholder='Player Name' data-bind="value: returningPlayer.name")
   td.left-align
     select(aria-labelledby='position-header' data-bind="options: availableReturningPlayers(),optionsText:'name', value:returningPlayer")
   td

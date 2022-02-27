@@ -2,6 +2,15 @@ extends ../no-cache-sub-relayout.pug
 
 block append vars
   -let options = {company:"Team"}
+block head 
+  style.
+    .dice{background: url("/images/dice.png") no-repeat;width: 32px;height: 32px;display: inline-block;background-position-x: 0px;vertical-align: bottom;transform: scale(1.2);}
+    .dice-1{background-position-x:0px;background-position-y:0px}
+    .dice-2{background-position-x:-32px;background-position-y:0px}
+    .dice-3{background-position-x:-64px;background-position-y:0px}
+    .dice-4{background-position-x:-96px;background-position-y:0px}
+    .dice-5{background-position-x:-128px;background-position-y:0px}
+    .dice-6{background-position-x:-160px;background-position-y:0px}
 
 block content
   div(class="container")
@@ -331,6 +340,12 @@ block content
       td(class="td-prevent")
         // ko foreach: $data.playerSkills
         img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
+        // /ko
+        // ko if: diceRoll
+        div(data-bind="attr:{title:`rolled: ${(new Date(diceRoll.date)).toISOString()}, clan: ${diceRoll.clan}`}" style="display:inline")
+          // ko foreach: diceRoll.dice
+          div(data-bind="css:`dice dice-${$data}`")
+          // /ko
         // /ko
       td(data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
         //ko if: eic
@@ -748,6 +763,7 @@ block scripts
         this.xp = data.xp || 0;
         this.eic = data.eic || false;
         this.assassinated = data.assassinated || false;
+        this.diceRoll = data.diceRoll || undefined;
       }
 
       cssClass(){

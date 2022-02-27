@@ -66,6 +66,11 @@ class ClanBuildingApi{
 
   async _registerClan(req,res){
     const account = await accountService.getAccount(req.user.name);
+
+    if (!/^[A-Z]+$/.test(req.params.clan)){
+      return res.status(400).json({error:"invalid clan name"});
+    }
+
     const clan = clanService.createClan(req.params.clan, {
       coach: account.coach,
       coachId: account.coachId || 0,
@@ -76,21 +81,30 @@ class ClanBuildingApi{
   }
 
   async _saveMembers(req,res){
-    const account = await accountService.getAccount(req.user.name);
+    const account = res.locals.account;
     clanService.updateMembers(account.coach, req.body);
     res.sendStatus(200);
   }
 
   async _saveTeam(req,res){
-    const account = await accountService.getAccount(req.user.name);
+    const account = res.locals.account;
     clanService.updateTeam(account.coach, Number(req.params.team), req.body);
     res.sendStatus(200);
   }
 
   async _saveClan(req,res){
-    const account = await accountService.getAccount(req.user.name);
-    clanService.updateClan(account.coach, req.body);
+    const account = res.locals.account;
+    await clanService.updateClan(account.coach, req.body);
     res.sendStatus(200);
+  }
+
+  async _skillPlayer(req,res){
+    try{
+      const player = await clanService.skillPlayer(res.locals.clan.name, Number(req.params.team), req.body);
+      res.json(player);
+    } catch (ex) {
+      res.status(400).send({error: ex.message});
+    }
   }
 
   async teamSaveAllowed(req, res, next) {
@@ -98,6 +112,8 @@ class ClanBuildingApi{
     const clan = await clanService.getNewClanByUser(account.coach);
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
+    res.locals.clan = clan;
+    res.locals.account = account;
 
     const isMember = clan.name === req.params.clan;
 
@@ -124,15 +140,15 @@ class ClanBuildingApi{
     if(!clan) return res.status(404).send({error:'Clan not found'});
 
     const isClanLeader = clan.leader === account.coach;
+    res.locals.clan = clan;
+    res.locals.account = account;
 
     if (isClanLeader) return next();
 
     return res.status(403).send({error: 'You are not allowed to make changes to this team'});
   };
 
-  async _skillPlayer(req,res){
-    
-  }
+
 
   routesConfig(){
     const apiRateLimiter = rateLimit({
@@ -153,7 +169,7 @@ class ClanBuildingApi{
     this.router.get('/', this._getClan.bind(this));
 
     this.router.post('/:clan', util.hasRole('clanleader'), this._registerClan.bind(this));
-    this.router.post('/:clan/:team/skill', this.teamSaveAllowed, this._skillPlayer.bind(this));
+    this.router.post('/:clan/:team/skill', this.isClanLeader, this._skillPlayer.bind(this));
 
     this.router.put('/:clan/members', this.isClanLeader, this._saveMembers.bind(this));
     this.router.put('/:clan/:team', this.teamSaveAllowed, this._saveTeam.bind(this));

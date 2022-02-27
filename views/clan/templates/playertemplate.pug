@@ -22,6 +22,8 @@ tr
     span(data-bind="text: xp")
   td
     span(data-bind="text: sppSurplus")
+  td
+    span(data-bind="text: spentSPP")
   td.left-align
     // ko foreach: fixedSkills
     img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
@@ -37,6 +39,9 @@ tr
     // ko if: skill2
     img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${skill2.replace(/ /g,'')}.png`,title:skill2.replace(/([A-Z])/g, ' $1').trim()}")
     // /ko
+    // ko foreach: dice
+    div(data-bind="css: `dice dice-${$data}` ")
+    // /ko
   td
     // ko foreach: casualties
     img.skill(data-bind="click: toggleCured, css: $data.removed ? 'cured' : '', attr:{title:$data.name.replace(/([A-Z])/g, ' $1').trim(), src:`https://cdn2.rebbl.net/images/skills/${$data.name}.png`}" alt="") 
@@ -49,11 +54,17 @@ tr
     // /ko
   td.left-align
     .flex-container
+      // ko if: (id > 0 && !player.dice) || id === 0
       button.btn.btn-danger.btn-sm.pull-right(title='Remove player', data-bind="click: $parent.removePlayer.bind($parent)")
         i.fa.fa-times-rectangle-o
-      // ko if: id > 0 && levelEligible
+      // /ko
+      // ko if: id > 0 && levelEligible && $parent.isPlayerEligable(player)
       button.btn.btn-sm.btn-success.pull-right(data-bind="click: $parent.showSkillPlayerModal.bind($parent)")
         img(src="https://cdn2.rebbl.net/images/level.png" style="width: 20px;")
+      // /ko
+      // ko if: id > 0 && player.dice
+      button.btn.btn-sm.btn-info.pull-right(data-bind="click: player.toggleEdit")
+        i.fa.fa-pencil-square-o
       // /ko
       // ko if: id === 0 && !$parent.isReturningTeam
       button.btn.btn-sm.btn-info.pull-right(data-bind="click: player.toggleEdit")
@@ -62,18 +73,23 @@ tr
 
 tr(data-bind="visible: player.visible")
   td.left-align
+    // ko if: id > 0
+    span &nbsp;
+    // /ko
+    // ko if: id === 0
     input(placeholder='Player Name' data-bind="textInput: player.name")
-  // ko if: id > 0
+    // /ko
+  // ko if: id > 0 && !player.dice
   td(colspan='9') 
     span &nbsp;
   // /ko
-  // ko if: id < 1
+  // ko if: id < 1 || player.dice
   td
     span skills
   td(colspan='8')
     div(style="display:flex")
       select(aria-labelledby='' data-bind="options:player.getSkills1(), value:skill1, optionsCaption:'choose ..',optionsAfterRender: setClass.bind(player)")
-      // ko if: !hasDoubleOrIncrease()
+      // ko if: !hasDoubleOrIncrease() && !$parent.isReturningTeam
       select(aria-labelledby='' data-bind="options:player.getSkills2(), value:skill2, optionsCaption:'choose ..'")
       // /ko
   // /ko

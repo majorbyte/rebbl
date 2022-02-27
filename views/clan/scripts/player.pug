@@ -5,7 +5,7 @@ script.
       ko.track(this);
 
       ko.getObservable(this, 'skill1').subscribe(this.updateSkillModel.bind(this));
-      ko.getObservable(this, 'skill1').subscribe(this.removeSkillModel.bind(this),null, "beforeChange");
+      ko.getObservable(this, 'skill1').subscribe(this.removeSkillModel.bind(this),null, 'beforeChange');
     }
     map(data){
       this.id = data.id || 0;
@@ -20,55 +20,59 @@ script.
       this.tier = data.tier || 1;
       this.skillModel = data.skillModel || new SkillModel();
       this.value = data.value || 0;
-      this.casualties = data.casualties_state?.map(x => new CasualtyModel({name: x})) || [];
+      if (data.casualties_state) this.casualties = data.casualties_state.filter(x => ['SmashedAnkle','SmashedHip','SmashedCollarBone','BrokenNeck','FracturedSkull','SeriousConcussion'].includes(x) ).map(x => new CasualtyModel({name: x}));
+      else if (data.casualties) this.casualties = data.casualties.filter(x => ['SmashedAnkle','SmashedHip','SmashedCollarBone','BrokenNeck','FracturedSkull','SeriousConcussion'].includes(x.name) ).map(x => new CasualtyModel(x)) 
+      else this.casualties = [];
       this.level = data.level || 1;
       this.xp = data.xp || 0;
       this.sppSurplus = 0;
+      this.spentSPP = data.spentSPP || 0;
+      this.dice = data.dice || undefined;
 
       ko.defineProperty(this, 'ma', function () {
-        const cas = this.casualties.filter(x => ["SmashedAnkle","SmashedHip"].includes(x.name) && !x.removed);
-        const stats = this.skills.filter(x => x === "IncreaseMovement");
+        const cas = this.casualties.filter(x => ['SmashedAnkle','SmashedHip'].includes(x.name) && !x.removed);
+        const stats = this.skills.filter(x => x === 'IncreaseMovement');
 
         return this.playerType ? this.playerType.ma - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
       });
       ko.defineProperty(this, 'st', function () {
-        const cas = this.casualties.filter(x => "SmashedCollarBone" === x.name && !x.removed);
-        const stats = this.skills.filter(x => x === "IncreaseStrength");
+        const cas = this.casualties.filter(x => 'SmashedCollarBone' === x.name && !x.removed);
+        const stats = this.skills.filter(x => x === 'IncreaseStrength');
 
         return this.playerType ? this.playerType.st - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
       });
       ko.defineProperty(this, 'ag', function () {
-        const cas = this.casualties.filter(x => "BrokenNeck" === x.name && !x.removed);
-        const stats = this.skills.filter(x => x === "IncreaseAgility");
+        const cas = this.casualties.filter(x => 'BrokenNeck' === x.name && !x.removed);
+        const stats = this.skills.filter(x => x === 'IncreaseAgility');
 
         return this.playerType ? this.playerType.ag - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
       });
       ko.defineProperty(this, 'av', function () {
-        const cas = this.casualties.filter(x => ["FracturedSkull","SeriousConcussion"].includes(x.name) && !x.removed);
-        const stats = this.skills.filter(x => x === "IncreaseArmour");
+        const cas = this.casualties.filter(x => ['FracturedSkull','SeriousConcussion'].includes(x.name) && !x.removed);
+        const stats = this.skills.filter(x => x === 'IncreaseArmour');
 
         return this.playerType ? this.playerType.av - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
       });
 
 
       ko.defineProperty(this, 'maColor', function () {
-        if (this.ma > this.playerType?.ma) return "green";
-        if (this.ma < this.playerType?.ma) return "red";
+        if (this.ma > this.playerType?.ma) return 'green';
+        if (this.ma < this.playerType?.ma) return 'red';
         return '' ;
       });
       ko.defineProperty(this, 'stColor', function () {
-        if (this.st > this.playerType?.st) return "green";
-        if (this.st < this.playerType?.st) return "red";
+        if (this.st > this.playerType?.st) return 'green';
+        if (this.st < this.playerType?.st) return 'red';
         return '' ;
       });
       ko.defineProperty(this, 'agColor', function () {
-        if (this.ag > this.playerType?.ag) return "green";
-        if (this.ag < this.playerType?.ag) return "red";
+        if (this.ag > this.playerType?.ag) return 'green';
+        if (this.ag < this.playerType?.ag) return 'red';
         return '' ;
       });
       ko.defineProperty(this, 'avColor', function () {
-        if (this.av > this.playerType?.av) return "green";
-        if (this.av < this.playerType?.av) return "red";
+        if (this.av > this.playerType?.av) return 'green';
+        if (this.av < this.playerType?.av) return 'red';
         return '' ;
       });
 
@@ -167,21 +171,34 @@ script.
     increases = () => SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.tier > 2 || x.name !== 'Increase Strength').map(x => x.name);
     
     accessibleSkills(){
-      const increases = SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.skillModel.isAllowed(x.category, x.name, this.playerType.type) || x.name === this.skill1).map(x => x.name);
       let doubles = SkillDescriptions.filter(x => this.playerType.doubles.includes(x.category));
+
+      if (this.id > 0 && this.dice) {
+        let skills = this.normals();
+        if (this.dice[0] === this.dice[1]) skills = skills.concat(doubles.map(x => x.name));
+        if (this.dice[0] + this.dice[1] === 10) {
+          skills.push('Increase Movement');
+          skills.push('Increase Armour');
+        }
+        if (this.dice[0] + this.dice[1] === 11) skills.push('Increase Agility');
+        if (this.dice[0] + this.dice[1] === 12) skills.push('Increase Strength');
+
+        return skills.sort().filter(x => !this.fixedSkills.includes(x) && !this.skills.includes(x));
+      }
+      const increases = SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.skillModel.isAllowed(x.category, x.name, this.playerType.type) || x.name === this.skill1).map(x => x.name);
 
       doubles = doubles.filter(x => !this.fixedSkills.includes(x.name) && this.skillModel.isAllowed(x.category, x.name, this.playerType.type) || x.name === this.skill1);
 
 
 
-      return this.normals().concat(doubles.map(x => x.name)).concat(increases).sort();
+      return this.normals().filter(x => !this.fixedSkills.includes(x)).concat(doubles.map(x => x.name)).concat(increases).sort();
     } 
 
     getSkills1 = () => this.accessibleSkills().filter(x => x !== this.skill2);
     getSkills2 = () => this.hasDoubleOrIncrease() ? [] : this.normals().filter(x => x !== this.skill1);
 
     medicalBill = () => this.casualties.reduce((p,c) => p += c.removed ? 1 : 0 ,0) * 100_000;
-    cost = () => this.id ? this.value * 1000 + this.medicalBill() : this.playerType.cost + (this.isDouble(this.skill1) ? 30000 : this.skill1 ? 20000 : 0 ) + (this.skill2 ? 20000 : 0 );
+    cost = () => this.id ? this.value * 1000 + this.medicalBill() + (this.isDouble(this.skill1) ? 30000 : this.skill1 ? 20000 : 0 ) : this.playerType.cost + (this.isDouble(this.skill1) ? 30000 : this.skill1 ? 20000 : 0 ) + (this.skill2 ? 20000 : 0 );
     setClass(option, skill) {
       if (this.isDouble(skill) || this.isIncrease(skill)) $(option).addClass('bg-double');
     }

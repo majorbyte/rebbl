@@ -28,7 +28,7 @@ script.
       this.stuntyConfusion = data.stuntyConfusion || 0;
       this.stuntyHatredOfPublicTransport = data.stuntyHatredOfPublicTransport || 0;
       
-      this.teamBuilding = data.teamBuilding?.map(x => new TeamModel(x).snap()) || [];
+      this.teamBuilding = data.teamBuilding?.map(x => new TeamModel(x)) || [];
 
       this.selectedPower = null;
     }

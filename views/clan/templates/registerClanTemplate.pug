@@ -6,6 +6,6 @@
   // ko if: isClanLeader()
   .form-inline
     .form-group.mx-sm-3.mb-2
-      input.form-control(data-bind="value: name" id="clanName" placeholder="Your Clan Name" style="text-transform: uppercase")
+      input.form-control(data-bind="value: name" id="clanName" placeholder="Your Clan Name" pattern="[A-Z]*" required)
     button.btn.btn-primary.mb-2(data-bind="click:onRegisterClanClick") Register
   // /ko

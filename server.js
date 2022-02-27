@@ -3,6 +3,7 @@ const express = require('express')
   , path = require('path')
   , chaosService = require('./lib/ChaosService.js')
   , crippleService = require('./lib/crippleService.js')
+  , clanService = require('./lib/ClanService.js')
   , maintenanceService = require('./lib/MaintenanceService.js')
   , signupService = require('./lib/signupService.js')
   , util = require("./lib/util.js")
@@ -178,7 +179,11 @@ class Server{
     this.io = require('socket.io')(this.server);
 
     this.io.on('connection', async function (socket) {
-
+      let query = socket.handshake.query;
+      if (query.roomName){
+        socket.join(query.roomName);
+        return;
+      }
       let data = await crippleService.getCasualties();
 
       socket.emit('cripple', data);
@@ -198,6 +203,7 @@ class Server{
     });
 
     crippleService.init(this.io);
+    clanService.init(this.io);
     signupService.init(this.io);
     maintenanceService.init(this.io);
     chaosService.init(this.io);

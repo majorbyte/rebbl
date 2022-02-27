@@ -33,53 +33,24 @@ block head
     }    
     input:invalid, .invalid{border:1px solid var(--danger)}
     input:valid, .valid{border:1px solid var(--success)}
-    .toast {
-      -ms-flex-preferred-size: 350px;
-      flex-basis: 350px;
-      max-width: 350px;
-      font-size: 0.875rem;
-      background-color: rgba(255, 255, 255, 0.85);
-      background-clip: padding-box;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
-      opacity: 0;
-      border-radius: 0.25rem;
-    }
 
-    .toast:not(:last-child) {
-      margin-bottom: 0.75rem;
-    }
+    .toast {-ms-flex-preferred-size: 350px;flex-basis: 350px;max-width: 350px;font-size: 0.875rem;background-color: rgba(255, 255, 255, 0.85);background-clip: padding-box;border: 1px solid rgba(0, 0, 0, 0.1);box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);opacity: 0;border-radius: 0.25rem;}
+    .toast:not(:last-child) {margin-bottom: 0.75rem;}
+    .toast.showing {opacity: 1;}
+    .toast.show {display: block;opacity: 1;}
+    .toast.hide {display: none;}
+    .toast-header {display: -ms-flexbox;display: flex;-ms-flex-align: center;align-items: center;padding: 0.25rem 0.75rem;color: #6c757d;background-color: rgba(255, 255, 255, 0.85);background-clip: padding-box;border-bottom: 1px solid rgba(0, 0, 0, 0.05);border-top-left-radius: calc(0.25rem - 1px);border-top-right-radius: calc(0.25rem - 1px);}
+    .toast-body {padding: 0.75rem;}    
 
-    .toast.showing {
-      opacity: 1;
-    }
+    .toast-body
 
-    .toast.show {
-      display: block;
-      opacity: 1;
-    }
-
-    .toast.hide {
-      display: none;
-    }
-
-    .toast-header {
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-align: center;
-      align-items: center;
-      padding: 0.25rem 0.75rem;
-      color: #6c757d;
-      background-color: rgba(255, 255, 255, 0.85);
-      background-clip: padding-box;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      border-top-left-radius: calc(0.25rem - 1px);
-      border-top-right-radius: calc(0.25rem - 1px);
-    }
-
-    .toast-body {
-      padding: 0.75rem;
-    }    
+    .dice{background: url("/images/dice.png") no-repeat;width: 32px;height: 32px;display: inline-block;background-position-x: 0px;vertical-align: bottom;transform: scale(1.2);}
+    .dice-1{background-position-x:0px;background-position-y:0px}
+    .dice-2{background-position-x:-32px;background-position-y:0px}
+    .dice-3{background-position-x:-64px;background-position-y:0px}
+    .dice-4{background-position-x:-96px;background-position-y:0px}
+    .dice-5{background-position-x:-128px;background-position-y:0px}
+    .dice-6{background-position-x:-160px;background-position-y:0px}
 
 block content
   div(class=`` id="app" style="display:none")
@@ -98,13 +69,33 @@ block content
     // ko template: { name: 'teamTemplate', data: team }
     // /ko
     // /ko
+    .position-fixed.bottom-0.right-0.p-3(style="z-index: 5; right: 0; top: 50px;")
+      .toast.hide.text-white.bg-success(id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
+        .toast-header
+          button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+            span(aria-hidden="true") &times;
+        .toast-body#toast-success-message
+
+      .toast.hide.text-white.bg-danger(id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
+        .toast-header
+          strong.mr-auto Error
+          button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+            span(aria-hidden="true") &times;
+        .toast-body#toast-error-message    
+
+      .toast.hide.text-white.bg-info(id="toast-information" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
+        .toast-header
+          strong.mr-auto 
+          button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+            span(aria-hidden="true") &times;
+        .toast-body#toast-information-message    
 
 block scripts
   script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
   script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
   script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  script(src="https://cdn2.rebbl.net/scripts/socket.io.js")
   include templates/includes.pug
-
   include scripts/includes.pug
 
   script.
@@ -113,6 +104,7 @@ block scripts
     let skills = [];
     let playerTypes = [];
     let me = {};
+    let socket = {};
 
     const Divisions =[{name: 'Division 1',budget:7_500_000, powerBudget: 300_000},{name: 'Division 2',budget:7_100_000, powerBudget: 150_000},{name: 'Division 3',budget:6_750_000, powerBudget: 0}];
 
@@ -177,9 +169,10 @@ block scripts
       {key:'stuntyMiscommunication', name:'Stunty Miscommunication', use:1, cost:150000}
     ];
 
+    
     let model = new ClanModel().snap();
-    $(document).ready(function(){
-       ko.applyBindings(model);
+      $(document).ready(function(){
+        ko.applyBindings(model);
         model.load();
         $("#app").show();
     }); 
