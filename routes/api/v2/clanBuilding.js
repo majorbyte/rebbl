@@ -162,7 +162,7 @@ class ClanBuildingApi{
     });
 
     this.router.get('/coach',util.ensureAuthenticated ,  this._getMe.bind(this));
-    this.router.get('/coach/:coach/team',util.ensureAuthenticated , apiRateLimiter, this._getReturningTeam.bind(this));
+    this.router.get('/coach/:coach/team',util.ensureAuthenticated , util.cache(60*10)/*apiRateLimiter*/, this._getReturningTeam.bind(this));
     this.router.get('/coach/:coach',util.ensureAuthenticated ,  this._getCoach.bind(this));
     this.router.get('/team/:teamId/players',util.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));
     this.router.get('/:clan/:team',util.ensureAuthenticated ,  this._getTeam.bind(this));

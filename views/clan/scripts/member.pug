@@ -11,19 +11,25 @@ script.
       this.coachId = data.coachId || 0;
       this.reddit = data.reddit || '';
       this.discord = data.discord || '';
+      this.noLoad = false;
     }
     onCoachChange = (coach) => this.updateCoach(coach).then (t => t);
     async updateCoach(coach){
+      if (this.noLoad) return;
+
       let response = await fetch(`/api/v2/clan/build/coach/${coach}`);
       if (!response.ok) return true;
 
       const c = await response.json();
+      this.noLoad = true;
+      this.coach = c.coach;
       this.reddit = c.reddit;
       this.discord = c.discord;
 
       let index = model.members.findIndex(x => x.coach === this.coach);
       model.ledger.teamBuilding[index].coach = this.coach
-
+      this.noLoad = false;
+      
       return true;
     }
 

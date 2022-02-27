@@ -20,8 +20,8 @@ script.
       this.tier = data.tier || 1;
       this.skillModel = data.skillModel || new SkillModel();
       this.value = data.value || 0;
-      if (data.casualties_state) this.casualties = data.casualties_state.filter(x => ['SmashedAnkle','SmashedHip','SmashedCollarBone','BrokenNeck','FracturedSkull','SeriousConcussion'].includes(x) ).map(x => new CasualtyModel({name: x}));
-      else if (data.casualties) this.casualties = data.casualties.filter(x => ['SmashedAnkle','SmashedHip','SmashedCollarBone','BrokenNeck','FracturedSkull','SeriousConcussion'].includes(x.name) ).map(x => new CasualtyModel(x)) 
+      if (data.casualties_state) this.casualties = data.casualties_state.filter(x => ['DamagedBack','SmashedKnee','SmashedAnkle','SmashedHip','SmashedCollarBone','BrokenNeck','FracturedSkull','SeriousConcussion'].includes(x) ).map(x => new CasualtyModel({name: x}));
+      else if (data.casualties) this.casualties = data.casualties.filter(x => ['DamagedBack','SmashedKnee','SmashedAnkle','SmashedHip','SmashedCollarBone','BrokenNeck','FracturedSkull','SeriousConcussion'].includes(x.name) ).map(x => new CasualtyModel(x)) 
       else this.casualties = [];
       this.level = data.level || 1;
       this.xp = data.xp || 0;
@@ -164,7 +164,7 @@ script.
     hasDoubleOrIncrease = () => this.hasDouble() || this.hasIncrease();
     hasIncrease = () => this.increases().includes(this.skill1);
     isDouble = (skill) => this.playerType.doubles.includes(SkillDescriptions.find(x => x.name === skill)?.category ||'');
-    isIncrease = (skill) => this.increases().includes(skill);
+    isIncrease = (skill) => SkillDescriptions.filter(x => x.category == 'Increase').map(x => x.name).includes(skill);
     isSuperstar = () => this.skill1 && this.skill2;
 
     normals = () => SkillDescriptions.filter(x => this.playerType.normal.includes(x.category)).map(x => x.name);
@@ -198,7 +198,34 @@ script.
     getSkills2 = () => this.hasDoubleOrIncrease() || !this.skill1 ? [] : this.normals().filter(x => x !== this.skill1);
 
     medicalBill = () => this.casualties.reduce((p,c) => p += c.removed ? 1 : 0 ,0) * 100_000;
-    cost = () => this.id ? this.value * 1000 + this.medicalBill() + (this.isDouble(this.skill1) ? 30000 : this.skill1 ? 20000 : 0 ) : this.playerType.cost + (this.isDouble(this.skill1) ? 30000 : this.skill1 ? 20000 : 0 ) + (this.skill2 ? 20000 : 0 );
+
+    _getSkillCost = (skill) => {
+        let skillCost = skill ? 20_000 : 0;
+        if (this.isIncrease(skill)) {
+          switch(skill){
+            case 'Increase Movement':
+            case 'Increase Armour':
+              skillCost = 30_000;
+              break;
+            case 'Increase Agility':
+              skillCost = 40_000;
+              break;
+            case 'Increase Strength':
+              skillCost = 50_000;
+              break;
+          }
+        } 
+        else if (this.isDouble(skill)) skillCost = 30_000;
+        return skillCost;
+    }
+
+    cost() {
+      if (this.id && this.id > 0){
+        return this.value * 1000 + this.medicalBill() + this._getSkillCost(this.skill1);
+      }
+
+      return this.playerType.cost + this._getSkillCost(this.skill1) + (this.skill2 ? 20000 : 0 );
+    }
     setClass(option, skill) {
       if (this.isDouble(skill) || this.isIncrease(skill)) $(option).addClass('bg-double');
     }
