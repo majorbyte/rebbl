@@ -39,6 +39,9 @@ script.
       this.skillModel.tier = this.teamTier;
       this.skillModel.race = this.race;
 
+      this.skillModel.rookieCount = this.rookieCount;
+      this.skillModel.superstarCount = this.superstarCount;
+
       this.roster.forEach(x => {
         if (x.skill1) x.updateSkillModel(x.skill1);
         if (x.skill2) x.updateSkillModel(x.skill2);
@@ -68,6 +71,9 @@ script.
     teamTotal = () => this.teamCost() + this.teamTax();
 
     isTeamCostValid = () => this.teamCost () >= (this.teamTier() < 7 ? 1_200_000 : 900_000);
+
+    rookieCount = () => this.roster.filter(x => !x.skill1).length;
+    superstarCount = () => this.roster.filter(x => x.skill1 && x.skill2).length;
 
     superstarTax = () => this.roster.filter(x => x.isSuperstar()).reduce((p,c,i) => p + 10*(i+1), 0) * 1000;
     sppSurplus = () => this.roster.reduce((p,c) => p+c.sppSurplus,0);

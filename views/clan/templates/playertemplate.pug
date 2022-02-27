@@ -80,16 +80,18 @@ tr(data-bind="visible: player.visible")
     input(placeholder='Player Name' data-bind="textInput: player.name")
     // /ko
   // ko if: id > 0 && !player.dice
-  td(colspan='9') 
+  td(colspan='10') 
     span &nbsp;
   // /ko
   // ko if: id < 1 || player.dice
   td
     span skills
-  td(colspan='8')
+  td(colspan='9')
     div(style="display:flex")
+      // ko if: player.getSkills1().length > 0
       select(aria-labelledby='' data-bind="options:player.getSkills1(), value:skill1, optionsCaption:'choose ..',optionsAfterRender: setClass.bind(player)")
-      // ko if: !hasDoubleOrIncrease() && !$parent.isReturningTeam
+      // /ko
+      // ko if: player.getSkills2().length > 0 && !hasDoubleOrIncrease() && !$parent.isReturningTeam
       select(aria-labelledby='' data-bind="options:player.getSkills2(), value:skill2, optionsCaption:'choose ..'")
       // /ko
   // /ko
