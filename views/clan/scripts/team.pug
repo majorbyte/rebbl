@@ -66,6 +66,9 @@ script.
     teamTax = () => TierTax.find(x => x.race === this.race?.name)?.rebate || 0;
     teamTier = () => TierTax.find(x => x.race === this.race?.name)?.tier;
     teamTotal = () => this.teamCost() + this.teamTax();
+
+    isTeamCostValid = () => this.teamCost () >= (this.teamTier() < 7 ? 1_200_000 : 900_000);
+
     superstarTax = () => this.roster.filter(x => x.isSuperstar()).reduce((p,c,i) => p + 10*(i+1), 0) * 1000;
     sppSurplus = () => this.roster.reduce((p,c) => p+c.sppSurplus,0);
     spentSPP = () => this.roster.reduce((p,c) => p+c.spentSPP,0);

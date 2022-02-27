@@ -13,7 +13,10 @@ table.table.table-striped.table-sm
       span(data-bind="text: new Intl.NumberFormat('en-US').format(subTotalRerolls())")
   tr
     th.table-info team cost
-    td.data
+    td.data(data-bind="css: isTeamCostValid() ? '' : 'choose-race'")
+      // ko if: !isTeamCostValid()
+      i.fa.fa-info-circle(title="you need spend more")
+      // /ko
       span(data-bind="text: new Intl.NumberFormat('en-US').format(teamCost())")
   tr
     th.table-info tier tax
