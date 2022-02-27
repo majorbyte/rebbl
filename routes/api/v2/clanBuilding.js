@@ -67,7 +67,7 @@ class ClanBuildingApi{
   async _registerClan(req,res){
     const account = await accountService.getAccount(req.user.name);
 
-    if (!/^[A-Z]+$/.test(req.params.clan)){
+    if (!/^[A-Z|0-9]+$/.test(req.params.clan)){
       return res.status(400).json({error:"invalid clan name"});
     }
 
