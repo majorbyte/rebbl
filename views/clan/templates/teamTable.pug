@@ -2,7 +2,9 @@ table.table.table-striped.table-sm.table-responsive
   tr
     th.table-info returning team
     td 
-        button.btn.btn-sm(data-bind="{text: isReturningTeam ? 'yes' : 'no', click:toggleReturning, css: isReturningTeam ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary'}")
+      // ko if: isReturningTeam
+      a(data-bind="attr:{href:`https://rebbl.net/team/${returningTeam.id}`}, text:returningTeam.name" target="_blank")        
+      // /ko
   tr
     th.table-info coach name
     td

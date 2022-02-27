@@ -21,7 +21,7 @@ script.
       this.rerolls = data.rerolls || 0;
       this.coaches = data.coaches || 0;
       this.cheerleaders = data.cheerleaders || 0;
-      this.apothecary = data.apothecary || true;
+      this.apothecary = data.apothecary || false;
       this.id = data.id || 0;
       this.name = data.name || '';
       this.race = data.race || undefined;
@@ -79,8 +79,12 @@ script.
       if (!response.ok) return;
       
       this.returningTeam = await response.json();
+      this.race = races.find(x => x.id === this.returningTeam.raceId);
+
       response = await fetch(`/api/v2/clan/build/team/${this.returningTeam?.id}/players`);
       if (!response.ok) return;
+
+      
 
       const returningPlayers = await response.json();
       returningPlayers.forEach(x => x.playerType = playerTypes.find(pt => pt.type === x.type));

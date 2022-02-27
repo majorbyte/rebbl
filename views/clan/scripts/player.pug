@@ -25,7 +25,7 @@ script.
       else this.casualties = [];
       this.level = data.level || 1;
       this.xp = data.xp || 0;
-      this.sppSurplus = 0;
+      this.sppSurplus = data.sppSurplus || 0;
       this.spentSPP = data.spentSPP || 0;
       this.dice = data.dice || undefined;
 
@@ -77,7 +77,7 @@ script.
       });
 
       const spp = SPP.find(x => x.level === this.level);
-      this.sppSurplus = Math.max(data.xp - spp.spp,0);
+      this.sppSurplus = Math.max(this.xp - spp.spp,0);
       this.levelEligible = this.xp >= spp.eligible;
       const nextSPP = SPP.find(x => x.level === this.level+1);
       this.nextLevelSPP = 0;
@@ -195,7 +195,7 @@ script.
     } 
 
     getSkills1 = () => this.accessibleSkills().filter(x => x !== this.skill2);
-    getSkills2 = () => this.hasDoubleOrIncrease() ? [] : this.normals().filter(x => x !== this.skill1);
+    getSkills2 = () => this.hasDoubleOrIncrease() || !this.skill1 ? [] : this.normals().filter(x => x !== this.skill1);
 
     medicalBill = () => this.casualties.reduce((p,c) => p += c.removed ? 1 : 0 ,0) * 100_000;
     cost = () => this.id ? this.value * 1000 + this.medicalBill() + (this.isDouble(this.skill1) ? 30000 : this.skill1 ? 20000 : 0 ) : this.playerType.cost + (this.isDouble(this.skill1) ? 30000 : this.skill1 ? 20000 : 0 ) + (this.skill2 ? 20000 : 0 );
