@@ -1,0 +1,168 @@
+script.
+  class TeamModel extends Tracking{
+    constructor(data){
+      super(() => new TeamModel(this),['returningPlayers','newPlayer','returningPlayer','skillingPlayer','skillModel']);
+      this.map(data || {});
+       
+      this._reset = () => this.map(data);
+      this.isDirty.bind(this);
+      this.commit.bind(this);
+      
+      ko.track(this);
+      ko.getObservable(this, 'coach').subscribe(this.onCoachChange.bind(this));
+      this.getReturningTeam(this.coach);
+    }
+    map(data){
+      this.skillModel = new SkillModel();
+
+      data.roster?.forEach(x => x.skillModel = this.skillModel);
+      this.roster = data.roster?.map(x => new PlayerModel(x)) ||[];
+      this.fanfactor = data.fanfactor || 5;
+      this.rerolls = data.rerolls || 0;
+      this.coaches = data.coaches || 0;
+      this.cheerleaders = data.cheerleaders || 0;
+      this.apothecary = data.apothecary || true;
+      this.id = data.id || 0;
+      this.name = data.name || '';
+      this.race = data.race || undefined;
+      this.coach = data.coach || '';
+      this.value = data.value || 0;
+      this.cost = data.cost || 0;
+      this.tier = data.tier || 0;
+      this.isReturningTeam = data.isReturningTeam || false;
+      this.returningTeam = data.returningTeam ||null;
+      this.returningPlayers = [];
+      this.returningPlayer = new PlayerModel();
+      this.newPlayer = new PlayerModel();
+      this.skillingPlayer = new PlayerModel();
+
+      this.skillModel.tier = this.teamTier;
+      this.skillModel.race = this.race;
+
+      this.roster.forEach(x => {
+        if (x.skill1) x.updateSkillModel(x.skill1);
+        if (x.skill2) x.updateSkillModel(x.skill2);
+      });
+    }
+    isTeamOwner = () => this.coach === me.coach;
+    toggleApo = () => this.apothecary = !this.apothecary;
+    toggleReturning = async () => {
+      this.isReturningTeam = !this.isReturningTeam;
+      await this.getReturningTeam(this.coach);
+    } 
+    subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + Math.max(Number(this.fanfactor) - 5,0)) * 10000 + (this.apothecary ? 50000 : 0);
+    rerollCost = () => this.race ? this.race.reroll : 50000;
+    playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
+    positions = () => {
+      if (!this.race || this.roster.length >= 16) return [];
+
+      const types = playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b);
+      return types.filter(t => this.roster.filter(x => x.playerType.type === t.type).length < t.allowed);
+    }
+    availableReturningPlayers = () => this.roster.length < 16 ? this.returningPlayers.filter(x => !this.roster.find(p => p.id === x.id)) : [];
+    teamValue = () => this.playerCost() + this.subTotalRerolls() + (this.fanfactor < 5 ? this.fanfactor * 10000  : 50000);
+    teamCost = () => this.playerCost() + this.subTotalRerolls() + this.superstarTax();
+    teamTax = () => TierTax.find(x => x.race === this.race?.name)?.rebate || 0;
+    teamTier = () => TierTax.find(x => x.race === this.race?.name)?.tier;
+    teamTotal = () => this.teamCost() + this.teamTax();
+    superstarTax = () => this.roster.filter(x => x.isSuperstar()).reduce((p,c,i) => p + 10*(i+1), 0) * 1000;
+    sppSurplus = () => this.roster.reduce((p,c) => p+c.sppSurplus,0);
+    spentSPP = () => this.roster.reduce((p,c) => p+c.spentSPP,0);
+    onCoachChange = (coach) => this.getReturningTeam(coach).then (t => t);
+    isPlayerEligable = (player) => this.sppSurplus() - player.sppSurplus - this.spentSPP() >= player.nextLevelSPP;
+
+    async getReturningTeam (coach){
+      if (!this.isReturningTeam) return;
+      if (!coach) return;
+
+      let response = await fetch(`/api/v2/clan/build/coach/${coach}/team`);
+      if (!response.ok) return;
+      
+      this.returningTeam = await response.json();
+      response = await fetch(`/api/v2/clan/build/team/${this.returningTeam?.id}/players`);
+      if (!response.ok) return;
+
+      const returningPlayers = await response.json();
+      returningPlayers.forEach(x => x.playerType = playerTypes.find(pt => pt.type === x.type));
+      returningPlayers.forEach(x => x.fixedSkills = skills[x.type]);
+      this.returningPlayers = returningPlayers.map(x => new PlayerModel(x));
+      return true;
+    }
+
+    superstarPlayerTax(player) {
+      return (1 + this.roster.filter(x => x.isSuperstar()).indexOf(player)) * 10000;
+    }
+
+    statIncreaseCount = () => this.roster.filter(x => x.hasIncrease()).length;
+    doublesCount = () => this.roster.filter(x => x.hasDouble()).length;
+
+    addPlayer () {
+      this.roster.push(new PlayerModel({
+        name: this.newPlayer.name,
+        playerType: this.newPlayer.playerType,
+        fixedSkills : skills[this.newPlayer.playerType.type],
+        tier: this.teamTier(),
+        skillModel: this.skillModel
+      }));
+      this.newPlayer.playerType = '';
+      this.newPlayer.name = '';
+    }
+    addReturningPlayer () {
+      this.roster.push(this.returningPlayer);
+    }
+
+    removePlayer (player){
+      if (player.skill1) player.removeSkillModel(player.skill1);
+      if (player.skill2) player.removeSkillModel(player.skill2);
+      this.roster.splice(this.roster.indexOf(player),1);
+    }
+
+    showSkillPlayerModal(player){
+      this.skillingPlayer = player;
+      $('#skillPlayerModal').modal('show');
+    }
+
+    async skillPlayer (vm, e){
+      var context = ko.contextFor(e.target);
+      this.commit();
+      const data = this.clone();
+      delete data._original;
+      delete data.excludeFields;
+      delete data.returningPlayers;
+      delete data.returningPlayer; 
+      delete data.skillingPlayer;
+      delete data.newPlayer;
+      delete data.skillModel; 
+      data.roster.forEach(n => delete n.skillModel);      
+      context.$parent.skilling = true;
+      await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}` ,{
+        method:'PUT',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+
+      const result = await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}/skill` ,{
+        method:'POST',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(this.skillingPlayer)
+      });
+      const player = await result.json();
+      if (result.ok){
+        $('#toast-succes-message').text(`Player skilled successfully`);
+        $('#toast-success').toast('show');
+        var index = this.roster.findIndex(x => x.id === player.id);
+        player.skillModel = this.skillModel;
+        player.skillModel.tier = this.teamTier;
+        player.skillModel.race = this.race;
+
+        this.roster[index] = new PlayerModel(player);
+      } else {
+        $('#toast-error-message').text(`Skill failed: ${player.error}`);
+        $('#toast-error').toast('show');
+      }        
+      $('#skillPlayerModal').modal('hide');
+      context.$parent.skilling = false;
+    }
+
+  }      
+

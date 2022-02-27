@@ -8,6 +8,7 @@ const express = require('express')
   , cyanideService = require("../../../lib/CyanideService.js")
   , clanService = require("../../../lib/ClanService.js")
   , dataService = require("../../../lib/DataService.js").rebbl
+  , clanBuildingApi = require('./clanBuilding.js')
   , draftApi = require("./draft.js")
   , rateLimit = require("express-rate-limit")
   , util = require('../../../lib/util.js')
@@ -36,6 +37,8 @@ class ClanApi{
       const leader = await accountService.hasRole(req.user.name, "clanleader");
       res.json({ clan:clan, leader:leader && account.coach.toLowerCase() === clan.leader.toLowerCase() } );
     });
+
+    this.router.use("/build", new clanBuildingApi().routesConfig());
 
     this.router.use("/draft", new draftApi().routesConfig());
 
@@ -401,7 +404,7 @@ class ClanApi{
 
       clan.powers[req.params.power]--;
       try{
-        dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
+        await dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
         res.status(202).send();
       }
       catch(ex){

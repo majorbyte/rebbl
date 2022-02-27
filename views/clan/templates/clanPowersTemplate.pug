@@ -1,0 +1,30 @@
+
+form 
+  .tables
+    table.table.table-striped.table-sm.table-responsive
+      tbody(data-bind="foreach:{data:powers(), as:'power'}")
+        // ko template: {name:'powerTemplate'}
+        // /ko
+    table.table.table-striped.table-sm.table-responsive
+      tbody(data-bind="foreach:{data:stuntyPowers(), as:'power'}")  
+        // ko template: {name:'powerTemplate'}
+        // /ko
+      tfoot
+        tr
+          td(colspan="4")
+            span total
+          td.data
+            input.data(data-bind="value: new Intl.NumberFormat('en-US').format(stuntyTotal())"  id="stuntyTotal" readonly)
+
+script(type="text/html" id="powerTemplate")
+  tr
+    td
+      span(data-bind="text: power.name")
+    td
+      input(type="number" data-bind="value:$parent[power.key],attr:{max:power.use, disabled:!$root.isClanLeader()}" min="0" )
+    td.data 
+      span @
+    td.data 
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(power.cost)")  
+    td.data 
+      span(data-bind="text: new Intl.NumberFormat('en-US').format(power.cost * $parent[power.key])")  

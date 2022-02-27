@@ -1,0 +1,14 @@
+// ko if: race
+tr.add-player-row
+  tr
+    td
+    td
+    th.data.table-info(colspan="5")
+      span Pooled SPP
+    th.data.table-info
+      span.pull-right(data-bind="text: sppSurplus()")
+    td
+    th.table-info subtotals
+    th.data.table-info(style="border-top:1px solid black !important" data-bind="text: new Intl.NumberFormat('en-US').format(playerCost())")
+    th.data.table-info(style="border-top:1px solid black !important" data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())")
+// /ko

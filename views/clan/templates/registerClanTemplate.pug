@@ -1,0 +1,11 @@
+.container
+  .jumbotron
+    h1.display-4 Welcome to ReBBL Clan Season 13
+    p.lead If you are a clan leader you can register your new clan here.
+    p If you are want to start a new clan and are not a clan leader yet, please ask a clan admin to give you the clan leader role before you can continue.
+  // ko if: isClanLeader()
+  .form-inline
+    .form-group.mx-sm-3.mb-2
+      input.form-control(data-bind="value: name" id="clanName" placeholder="Your Clan Name" pattern="[A-Z]*" required)
+    button.btn.btn-primary.mb-2(data-bind="click:onRegisterClanClick") Register
+  // /ko

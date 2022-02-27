@@ -1,0 +1,91 @@
+.mx-1 
+  span.mx-2(data-bind="text: name" id="clanName")
+  span.mx-2(data-bind="text: division" id="division")
+  // ko if: isClanLeader()
+  button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onSaveClan, attr:{disabled: !isDirty()}" title="save clan") 
+    i.fa.fa-save
+  // /ko
+  
+  table.table.table-sm.table-responsive.table-borderless
+    thead 
+      tr 
+        th.table-info coach 
+        th.table-info reddit 
+        th.table-info dicord 
+        th.table-info team name 
+        th.table-info returning
+        th.table-info normal team cost
+        th.table-info skill tax
+        th.table-info tier tax
+        th.table-info total cost
+        th.table-info  
+    tbody(data-bind="foreach: members")
+      tr
+        // ko if: $index() === 0
+        td
+          i.fa.fa-user-circle-o.mx-1(title="clan leader")
+          span(data-bind="text: coach")
+        // /ko
+        // ko if: $index() > 0 && $root.isClanLeader()
+        td
+          input(data-bind="value: coach" required)
+        // /ko
+        // ko if: $index() > 0 && !$root.isClanLeader()
+        td
+          span(data-bind="text: coach")
+        // /ko
+        td
+          span(data-bind="text: reddit")
+        td
+          span(data-bind="text: discord")
+        //ko with: $root.getMemberTeam($index())
+        td 
+          // ko if: $root.isClanLeader() || isTeamOwner()
+          input(data-bind="textInput: name, attr:{pattern:`\\\\u{5B}${$root.name}\\\\u{5D}.*S13`}" required maxlength="25")
+          // /ko
+          // ko if: !$root.isClanLeader() && !isTeamOwner()
+          span(data-bind="text: name")
+          // /ko
+        td 
+          button.btn.btn-sm(data-bind="{text: isReturningTeam ? 'yes' : 'no', click:toggleReturning, css: isReturningTeam ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary'}")
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost() + subTotalRerolls() )") 
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())") 
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTax())") 
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTotal())") 
+        td.left-align
+          .flex-container
+            button.btn.btn-success.btn-sm.pull-right(title='save team', data-bind="click:$root.onSaveTeam, attr:{disabled: !isDirty()}")
+              i.fa.fa-save
+            button.btn.btn-sm.btn-info.pull-right(title='Edit team' data-bind="click:$root.onEditTeam")
+              i.fa.fa-pencil-square-o
+
+        // /ko  
+        // ko if: !$root.getMemberTeam($index())
+        td(colspan="7") &nbsp;
+        // /ko
+    tfoot 
+      // ko if: division !== "Division 3"
+      tr
+        td.data(colspan="8")
+          span Team Total
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.teamTotal()),css: isTeamCostValid() ? 'valid' : 'invalid'")  
+      // /ko
+      tr
+        td.data(colspan="8")
+          span Powers Total
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.powersTotal())")  
+      tr
+        td.data(colspan="8")
+          span Stunty Powers Total
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.stuntyTotal())")  
+      tr
+        td.data(colspan="8")
+          span Clan Total
+        td.data
+          span(data-bind="text: new Intl.NumberFormat('en-US').format(cost()),css: isTotalCostValid() ? 'valid' : 'invalid'")  
+  //ko template:{name:'clanPowersTemplate', data:ledger}
+  // /ko
+

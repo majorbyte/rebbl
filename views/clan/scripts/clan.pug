@@ -1,0 +1,188 @@
+script.
+  class ClanModel extends Tracking{
+    constructor(data){
+      $('.toast').toast({autohide:true})
+      super(() => new ClanModel(this))
+      this.registerClan = false;
+      this.editClan = false;
+      this.editTeam = false;
+      this.loading = false;
+      this.skilling = false;
+      this.team = null;
+      this.map(data || {});
+      this._reset = () => this.map(data);
+      this.isDirty.bind(this);
+      this.commit.bind(this);
+      ko.track(this);
+    }
+    map(data){
+      this.ledger = new LedgerModel(data?.ledger);
+      this.name = data.name ||'';
+      this.division = data.division || '';
+      this.season = 'season 13';
+      this.members = data.members?.map(x => new MemberModel(x)) ||[];
+      this.editClan = this.name.length > 1;
+      this.registerClan = !this.editClan;
+
+      while (this.members.length < 5) this.members.push(new MemberModel());
+    }
+    onEditTeam = (team) => {
+      this.editClan = !this.editClan;
+      this.editTeam = !this.editTeam;
+
+      this.team = team;
+    }
+    onSaveTeam = (team) => {
+      team.commit();
+      this.saveTeam(team);
+    }
+    onSaveClan = () => {
+      this.save();
+    }
+
+    onTeamDoneClick = () => {
+      this.editClan = !this.editClan;
+      this.editTeam = !this.editTeam;
+      this.team = null;
+    }
+    async onRegisterClanClick(){
+      if (!$("#clanName")[0].checkValidity()) return;
+
+      let result = await fetch(`/api/v2/clan/build/${this.name}`, {method:'POST'});
+      const data = await result.json();
+      if (result.ok) {
+        model.map(data);
+        model.commit();
+        model.ledger =model.ledger.snap();
+        model.ledger.teamBuilding = model.ledger.teamBuilding.map(x => x.snap());
+        this.registerClan = false;
+        this.editClan = true;
+
+        socket = io({query:{roomName: this.name}});
+        socket.on("clan", this.onClanReload.bind(this));
+        socket.on("team", this.onTeamReload.bind(this));
+      } else {
+        $('#toast-error-message').text(data.error);
+        $('#toast-error').toast('show');
+      }
+    }
+
+    isClanLeader = () => me.isClanLeader;
+    
+    races = () => races;
+
+    cost = () => this.ledger.powersTotal() + this.ledger.stuntyTotal() + this.ledger.teamTotal();
+
+    isTeamCostValid = () => Divisions.find(x => x.name === this.division).budget >= this.ledger.teamTotal();
+    
+    isTotalCostValid = () => {
+      const d = Divisions.find(x => x.name === this.division)
+      return d.budget + d.powerBudget >= this.cost();
+    }
+
+    getMemberTeam = (i) => this.ledger.teamBuilding[i];
+
+    async load() {
+      this.loading = true;
+      this.registerClan = false;
+      this.editClan = false;
+      this.editTeam = false;
+      let [clan, _me, _skills, skillDescriptions, _playerTypes, _races] = await Promise.all([
+          fetch('/api/v2/clan/build').then(response => response.json()),
+          fetch('/api/v2/clan/build/coach').then(response => response.json()),
+          fetch('/api/v2/bloodbowl/skills').then(response => response.json()),
+          fetch('/api/v2/bloodbowl/skilldescriptions').then(response => response.json()),
+          fetch('/api/v2/bloodbowl/playertypes').then(response => response.json()),
+          fetch('/api/v2/bloodbowl/races').then(response => response.json()),
+      ]);
+
+      
+      me = _me;
+      skills = _skills;
+      playerTypes = _playerTypes.filter(x => x.race < 26);
+      playerTypes.forEach(x => x.displayName = x.type.substr(x.type.indexOf('_')+1).replace(/([A-Z])/g, ' $1'));
+      races = _races.filter(x => x.id < 26).sort((a,b) => a.name > b.name);
+      SkillDescriptions = skillDescriptions.concat([{name:'Increase Strength',category:'Increase'},{name:'Increase Movement',category:'Increase'},{name:'Increase Agility',category:'Increase'},{name:'Increase Armour',category:'Increase'}]);
+      model.map(clan || {});
+      model.commit();
+      model.ledger =model.ledger.snap();
+      model.ledger.teamBuilding = model.ledger.teamBuilding.map(x => x.snap());
+      
+      if (clan){
+        socket = io({query:{roomName: clan.name}});
+        socket.on("clan", this.onClanReload.bind(this));
+        socket.on("team", this.onTeamReload.bind(this));
+      }
+
+
+      this.loading = false;
+    }
+
+    async save(){
+      this.commit();
+      const data = this.clone();
+      delete data._original;
+      delete data.excludeFields;
+      delete data.ledger._original;
+      delete data.ledger.excludeFields;
+      data.ledger.teamBuilding.forEach(x => {delete x._original; delete x.excludeFields;delete x.returningPlayers;delete x.returningPlayer; delete x.skillingPlayer;delete x.newPlayer;delete x.skillModel; x.roster.forEach(n => delete n.skillModel);});
+      await fetch(`/api/v2/clan/build/${this.name}` ,{
+        method:'PUT',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+    }
+
+    async saveTeam(team){
+      let response = await fetch(`/api/v2/clan/build/${this.name}/members` ,{
+        method:'PUT',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(this.members)
+      });      
+
+      if (!response.ok) $('#toast').toast('show');
+
+      team.commit();
+      const data = team.clone();
+      delete data._original;
+      delete data.excludeFields;
+      delete data.returningPlayers; 
+      delete data.returningPlayer; 
+      delete data.skillingPlayer;
+      delete data.newPlayer;
+      delete data.skillModel; 
+      data.roster.forEach(n => delete n.skillModel);      
+      await fetch(`/api/v2/clan/build/${this.name}/${team.id}` ,{
+        method:'PUT',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+    }
+
+    onClanReload(msg){
+      $('#toast-information-message').text('new clan data loaded');
+      $('#toast-information').toast('show');
+
+      const clan = JSON.parse(msg);
+      model.map(clan);
+      model.commit();
+      model.ledger =model.ledger.snap();
+      model.ledger.teamBuilding = model.ledger.teamBuilding.map(x => x.snap());
+      
+      model.editClan = true;
+      model.editTeam = false;
+      model.team = null;
+    }
+    onTeamReload(msg){
+      if (model.skilling) return;
+      
+      const team = JSON.parse(msg);
+      let index = model.ledger.teamBuilding.findIndex(x => x.id === team.id);
+      model.ledger.teamBuilding[index] = new TeamModel(team).snap();
+
+      $('#toast-information-message').text(`new team data loaded for team ${team.name}`);
+      $('#toast-information').toast('show');
+
+      if (model.team?.id === model.ledger.teamBuilding[index].id) model.team = model.ledger.teamBuilding[index];
+    }
+  }

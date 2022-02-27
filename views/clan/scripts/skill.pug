@@ -1,0 +1,110 @@
+script.
+  class SkillModel{
+    constructor(data){
+      this.map(data || {});
+      ko.track(this);
+    }
+    map(data){
+      this.statsIncreases = data.statsIncreases || [];
+      this.doubleGeneralSkills = data.doubleGeneralSkills || [];
+      this.doubleAgilitySkills = data.doubleAgilitySkills || [];
+      this.doublePassingSkills = data.doublePassingSkills || [];
+      this.doubleStrengthSkills = data.doubleStrengthSkills || [];
+      this.doubleMutationSkills = data.doubleMutationSkills || [];
+      this.ogreDoubleCount = data.ogreDoubleCount || 0;
+      this.ogreStatsCount = data.ogreStatsCount || 0;
+      this.mummyDoubleCount = data.mummyDoubleCount || 0;
+    }
+    /*
+    Tier 1 & 2 teams:
+    May not take Strength as statistic upgrade.
+    May only take 2 doubles, or 1 statistic and 1 double.
+
+    Tier 3-6 teams:
+    May take any statistic upgrade.
+    May take 3 doubles, or 1 statistic and 1 double.
+
+    Tier 7 teams (stunty):
+    May take any statistic upgrade.
+    May take 4 doubles, or 1 statistic and 2 doubles.
+    May take up to 4 general skills as doubles (and they can be the same skill as they are general skills). 
+    */
+
+    isAllowed = (category, skill, type) => {
+      if (type === 'Undead_Mummy') return this._isMummyValid(category, skill);
+      if (type === 'Ogre_Ogre') return this._isOgreValid(category, skill);
+      if (category === 'Increase') return this._isStatValid(skill);
+      if (this.statsIncreases.length === 1) return this._isValidWithStat(category, skill);
+      return this._isValidWithoutStat(category, skill);
+    }
+
+    _isStatValid = (category, skill) => {
+      if (this.tier() < 3 && skill == 'Increase Strength') return false;
+      if (this.statsIncreases.length > 0) return false;
+      let count = this.doubleGeneralSkills.length + this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+      if (this.tier() < 7) return count < 2;
+      else return count < 3;
+    }
+
+    _isValidWithStat = (category, skill) => {
+      let count = this.doubleGeneralSkills.length + this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+      if (this.tier() < 3) return count < 2;
+      else if (this.tier() < 7) {
+        if (count >= 1) return false;
+      }
+      else if (this.tier() < 8) {
+        if (category === 'General') return this.doubleGeneralSkills.length < 5;
+        count = this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+        if (count >= 2) return false;
+      }
+      return true;
+    }
+
+    _isValidWithoutStat = (category, skill) => {
+      let count = this.doubleGeneralSkills.length + this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+      if (this.tier() < 3) return count < 3;
+      else if (this.tier() < 7) {
+        if (count >= 3) return false;
+        return this._isSkillAllowed(category, skill)
+      }
+      else if (this.tier() < 8) {
+        if (count >= 4) return false;
+        return this._isSkillAllowed(category, skill)
+      }
+    }
+
+    _isSkillAllowed = (category,skill) => {
+      switch (category){
+        case "Agility":
+          return this.doubleAgilitySkills.length < 2 && !this.doubleAgilitySkills.includes(skill);
+        case "Passing":
+          return this.doublePassingSkills.length < 2 && !this.doublePassingSkills.includes(skill);
+        case "Strength":
+          return this.doubleStrengthSkills.length < 2 && !this.doubleStrengthSkills.includes(skill);
+        case "Mutation":
+          return this.doubleMutationSkills.length < 2 && !this.doubleMutationSkills.includes(skill);
+      }
+      return true;
+    }
+
+    _isMummyValid = (category, skill) => {
+      let count = this.doubleGeneralSkills.length + this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+      if (count >= 3) return false;
+
+      if (this.mummyDoubleCount > 0) return false;
+      return this._isSkillAllowed(category,skill);
+    }
+
+    _isOgreValid = (category, skill) => {
+      let count = this.doubleGeneralSkills.length + this.doubleAgilitySkills.length + this.doublePassingSkills.length + this.doubleStrengthSkills.length + this.doubleMutationSkills.length;
+      if (count >= 3) return false;
+      if (category === 'Increase' && this.ogreStatsCount > 0) return false;
+      if (category === 'Increase' && this.ogreDoubleCount > 1) return false;
+      if (category === 'Increase') return this._isSkillAllowed(category,skill);
+
+      if (this.ogreStatsCount > 0 && this.ogreDoubleCount > 0) return false;
+      if (this.ogreStatsCount === 0 && this.ogreDoubleCount > 2) return false;
+
+      return this._isSkillAllowed(category,skill);
+    }
+  }

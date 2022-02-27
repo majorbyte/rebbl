@@ -1,0 +1,79 @@
+script.
+  class LedgerModel extends Tracking{
+
+    constructor(data){
+      super(() => new LedgerModel(this))
+      this.map(data || {});
+
+      this._reset = () => this.map(data);
+      this.isDirty.bind(this);
+      this.commit.bind(this);
+      ko.track(this);
+    }
+    map(data){
+      this.miscommunication = data.miscommunication || 0;
+      this.badInducementDeal = data.badInducementDeal || 0;
+      this.lastMinuteSwitch = data.lastMinuteSwitch || 0;
+      this.assassination = data.assassination || 0;
+      this.inspiration = data.inspiration || 0;
+      this.confusion = data.confusion || 0;
+      this.hatredOfPublicTransport = data.hatredOfPublicTransport || 0;
+      this.financialFairPlay = data.financialFairPlay || 0;
+
+      this.stuntyMiscommunication = data.stuntyMiscommunication || 0;
+      this.stuntyLastMinuteSwitch = data.stuntyLastMinuteSwitch || 0;
+      this.stuntyAssassination = data.stuntyAssassination || 0;
+      this.stuntyInspiration = data.stuntyInspiration || 0;
+      this.stuntyBadInducementDeal = data.stuntyBadInducementDeal || 0;
+      this.stuntyConfusion = data.stuntyConfusion || 0;
+      this.stuntyHatredOfPublicTransport = data.stuntyHatredOfPublicTransport || 0;
+      
+      this.teamBuilding = data.teamBuilding?.map(x => new TeamModel(x)) || [];
+
+      this.selectedPower = null;
+    }
+
+    onAddPowerClick = (power) => {console.log(power)}
+
+    hasStuntyTeam = () =>  this.teamBuilding.filter(team => team.teamTier() === 7).length > 0;
+
+    powers = () =>{
+      const powers = ['miscommunication', 'badInducementDeal', 'lastMinuteSwitch', 'assassination', 'inspiration', 'confusion', 'hatredOfPublicTransport', 'financialFairPlay'];
+      return Powers.filter(p => powers.includes(p.key));
+    }
+    stuntyPowers = () =>{
+      const powers = ['stuntyMiscommunication', 'stuntyLastMinuteSwitch', 'stuntyAssassination', 'stuntyInspiration', 'stuntyBadInducementDeal', 'stuntyConfusion', 'stuntyHatredOfPublicTransport'];
+      return Powers.filter(p => powers.includes(p.key));
+    }
+
+    powersTotal =() =>{
+      const powers = ['miscommunication', 'badInducementDeal', 'lastMinuteSwitch', 'assassination', 'inspiration', 'confusion', 'hatredOfPublicTransport', 'financialFairPlay'];
+      let cost = 0;
+      for(const key of powers){
+        cost += Powers.find(x => x.key === key).cost * this[key];
+      }
+      return cost;
+    }
+
+    stuntyTotal = () => {
+      const powers = ['stuntyMiscommunication', 'stuntyLastMinuteSwitch', 'stuntyAssassination', 'stuntyInspiration', 'stuntyBadInducementDeal', 'stuntyConfusion', 'stuntyHatredOfPublicTransport'];
+
+      let cost = 0;
+      for(const key of powers){
+        cost += Powers.find(x => x.key === key).cost * this[key];
+      }
+      this.updateStunty(cost <= 150_000);
+      return cost;
+    }
+
+    updateStunty = (valid) => {
+      const elem = document.getElementById('stuntyTotal');
+      if (!elem) return;
+      elem.classList.remove('valid');
+      elem.classList.remove('invalid');
+      elem.classList.add(valid ? 'valid' : 'invalid');
+    }
+
+    teamTotal = () => this.teamBuilding.reduce((p,c) => p + c?.teamTotal(),0)
+  }
+  

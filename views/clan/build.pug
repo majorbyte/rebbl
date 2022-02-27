@@ -1,0 +1,178 @@
+extends ../no-cache-sub-relayout.pug
+
+block vars
+  - let options = {active: league, title: "REBBL season 12", company:"clan"}
+  - let company = "clan";
+
+block head  
+  style.
+    .popoverFix {z-index:10000 !important;}
+    .tables {width: 100%;overflow: auto;display: flex;flex-wrap: wrap;margin-top: 1em;align-items: flex-start;}
+    .table {width:unset !important; margin-block-end: 1em;margin-right: 1em;flex-grow:1}
+    .data {text-align: right}
+    .cured {opacity: 0.4}
+    .table th {border-top:unset !important;}   
+    .btn:focus, .btn.primary:focus {box-shadow:unset !important}
+    .skill{width: 2em;border-radius: 4px;margin-left:1px;}
+    .bg-double{background-color:#ff8900}
+    .choose-race{background: #ffc1075e;}
+    .lds-hourglass {display: inline-block;position: relative;width: 80px;height: 80px;}
+    .lds-hourglass:after {content: " ";display: block; border-radius: 50%;width: 0;height: 0;margin: 8px;box-sizing: border-box;border: 32px solid #fff;border-color: #ff8900  transparent #ff8900 transparent;animation: lds-hourglass 1.2s infinite;}
+    @keyframes lds-hourglass {
+      0% {
+        transform: rotate(0);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      }
+      50% {
+        transform: rotate(900deg);
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      100% {
+        transform: rotate(1800deg);
+      }
+    }    
+    input:invalid, .invalid{border:1px solid var(--danger)}
+    input:valid, .valid{border:1px solid var(--success)}
+
+    .toast {-ms-flex-preferred-size: 350px;flex-basis: 350px;max-width: 350px;font-size: 0.875rem;background-color: rgba(255, 255, 255, 0.85);background-clip: padding-box;border: 1px solid rgba(0, 0, 0, 0.1);box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);opacity: 0;border-radius: 0.25rem;}
+    .toast:not(:last-child) {margin-bottom: 0.75rem;}
+    .toast.showing {opacity: 1;}
+    .toast.show {display: block;opacity: 1;}
+    .toast.hide {display: none;}
+    .toast-header {display: -ms-flexbox;display: flex;-ms-flex-align: center;align-items: center;padding: 0.25rem 0.75rem;color: #6c757d;background-color: rgba(255, 255, 255, 0.85);background-clip: padding-box;border-bottom: 1px solid rgba(0, 0, 0, 0.05);border-top-left-radius: calc(0.25rem - 1px);border-top-right-radius: calc(0.25rem - 1px);}
+    .toast-body {padding: 0.75rem;}    
+
+    .toast-body
+
+    .dice{background: url("/images/dice.png") no-repeat;width: 32px;height: 32px;display: inline-block;background-position-x: 0px;vertical-align: bottom;transform: scale(1.2);}
+    .dice-1{background-position-x:0px;background-position-y:0px}
+    .dice-2{background-position-x:-32px;background-position-y:0px}
+    .dice-3{background-position-x:-64px;background-position-y:0px}
+    .dice-4{background-position-x:-96px;background-position-y:0px}
+    .dice-5{background-position-x:-128px;background-position-y:0px}
+    .dice-6{background-position-x:-160px;background-position-y:0px}
+
+block content
+  div(class=`` id="app" style="display:none")
+    // ko if: loading
+    .lds-hourglass    
+    // /ko
+    // ko if: registerClan
+    // ko template: { name: 'registerClanTemplate' }
+    // /ko
+    // /ko
+    // ko if: editClan
+    // ko template: { name: 'clanTemplate' }
+    // /ko
+    // /ko
+    // ko if: editTeam && team
+    // ko template: { name: 'teamTemplate', data: team }
+    // /ko
+    // /ko
+    .position-fixed.bottom-0.right-0.p-3(style="z-index: 5; right: 0; top: 50px;")
+      .toast.hide.text-white.bg-success(id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
+        .toast-header
+          button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+            span(aria-hidden="true") &times;
+        .toast-body#toast-success-message
+
+      .toast.hide.text-white.bg-danger(id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
+        .toast-header
+          strong.mr-auto Error
+          button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+            span(aria-hidden="true") &times;
+        .toast-body#toast-error-message    
+
+      .toast.hide.text-white.bg-info(id="toast-information" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
+        .toast-header
+          strong.mr-auto 
+          button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+            span(aria-hidden="true") &times;
+        .toast-body#toast-information-message    
+
+block scripts
+  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  script(src="https://cdn2.rebbl.net/scripts/socket.io.js")
+  include templates/includes.pug
+  include scripts/includes.pug
+
+  script.
+    let SkillDescriptions = [];
+    let races = [];
+    let skills = [];
+    let playerTypes = [];
+    let me = {};
+    let socket = {};
+
+    const Divisions =[{name: 'Division 1',budget:7_500_000, powerBudget: 300_000},{name: 'Division 2',budget:7_100_000, powerBudget: 150_000},{name: 'Division 3',budget:6_750_000, powerBudget: 0}];
+
+    const SPP = [
+      {level:1,	spp:0, eligible:3},
+      {level:2,	spp:6, eligible:11},
+      {level:3,	spp:16, eligible:23},
+      {level:4,	spp:31, eligible:41},
+      {level:5,	spp:51, eligible:63},
+      {level:6,	spp:76, eligible:126},
+      {level:7,	spp:176, eligible:999}
+    ];
+
+    const TierTax = [
+      {race:'Lizardman', tier:	1, rebate: 150000},
+      {race:'Necromantic', tier:	1, rebate: 100000},
+      {race:'Orc', tier:	1, rebate: 150000},
+
+      {race:'Amazon', tier:	2, rebate: 50000},
+      {race:'Chaos Dwarf', tier:	2, rebate: 100000},
+      {race:'Khemri', tier:	2, rebate: 50000},
+      {race:'Skaven', tier:	2, rebate: 150000},
+      {race:'Wood Elf', tier:	2, rebate: 50000},
+
+      {race:'Chaos', tier:	3, rebate: 100000},
+      {race:'Dark Elf', tier:	3, rebate: 100000},
+      {race:'Dwarf', tier:	3, rebate: 100000},
+      {race:'Nurgle', tier:	3, rebate: 50000},
+      {race:'Undead', tier:	3, rebate: 50000},
+
+      {race:'Human', tier:	4, rebate: -50000},
+      {race:'High Elf', tier:	4, rebate: -50000},
+
+      {race:'Bretonnian', tier:	5, rebate: 0},
+      {race:'Elven Union', tier:	5, rebate: -50000},
+      {race:'Norse', tier:	5, rebate: -50000},
+
+      {race:'Kislev', tier:	6, rebate: -100000},
+      {race:'Ogre', tier:	6, rebate: -100000},
+      {race:'Underworld Denizens', tier:	6, rebate: -100000},
+      {race:'Vampire', tier:	6, rebate: -100000},
+
+      {race:'Goblin', tier:	7, rebate: 0},
+      {race:'Halfling', tier:	7, rebate: 0},
+    ];
+
+    const Powers = [
+      {key:'assassination', name:'Assassination', use:2, cost:100000},
+      {key:'badInducementDeal', name:'Bad Inducement Deal', use:2, cost:50000},
+      {key:'confusion', name:'Confusion', use:2, cost:50000},
+      {key:'financialFairPlay', name:'Financial Fair Play', use:2, cost:50000},
+      {key:'hatredOfPublicTransport', name:'Hatred of Public Transport', use:5, cost:20000},
+      {key:'inspiration', name:'Inspiration', use:2, cost:100000},
+      {key:'lastMinuteSwitch', name:'Last Minute Switch', use:1, cost:150000},
+      {key:'miscommunication', name:'Miscommunication', use:1, cost:150000},
+      {key:'stuntyAssassination', name:'Stunty Assassination', use:2, cost:100000},
+      {key:'stuntyBadInducementDeal', name:'Stunty Bad Inducement Deal', use:2, cost:50000},
+      {key:'stuntyConfusion', name:'Stunty Confusion', use:2, cost:50000},
+      {key:'stuntyHatredOfPublicTransport', name:'Stunty Hatred of Public Transport', use:5, cost:20000},
+      {key:'stuntyInspiration', name:'Stunty Inspiration', use:2, cost:100000},
+      {key:'stuntyLastMinuteSwitch', name:'Stunty LastMinuteSwitch', use:1, cost:150000},
+      {key:'stuntyMiscommunication', name:'Stunty Miscommunication', use:1, cost:150000}
+    ];
+
+    
+    let model = new ClanModel().snap();
+      $(document).ready(function(){
+        ko.applyBindings(model);
+        model.load();
+        $("#app").show();
+    }); 

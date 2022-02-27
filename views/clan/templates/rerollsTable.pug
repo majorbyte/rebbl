@@ -1,0 +1,41 @@
+table.table.table-striped.table-sm 
+  tr
+    th.table-info rerolls
+    td.w-25
+      input.w-50(type="number" data-bind="textInput:rerolls" min="0" max="8")
+    td(data-bind="text: new Intl.NumberFormat('en-US').format(rerollCost())")
+    td.data(data-bind="text: new Intl.NumberFormat('en-US').format(rerolls * rerollCost())")
+  tr
+    th.table-info fan factor
+    td 
+      // ko if: teamTier() < 7
+      input.w-50(type="number" data-bind="textInput:fanfactor" min="5" max="16")
+      // /ko
+      // ko if: teamTier() === 7
+      input.w-50(type="number" data-bind="textInput:fanfactor" min="0" max="16")
+      // /ko
+    td 10,000
+    td.data(data-bind="text: new Intl.NumberFormat('en-US').format(Math.max((fanfactor-5) * 10000,0))")
+  tr
+    th.table-info assistant coaches
+    td
+      input.w-50(type="number" data-bind="textInput:coaches" min="0" max="16")
+      td 10,000
+    td.data(data-bind="text: new Intl.NumberFormat('en-US').format(coaches * 10000)")
+  tr
+    th.table-info cheerleaders
+    td
+      input.w-50(type="number" data-bind="textInput:cheerleaders" min="0" max="16")
+    td 10,000
+    td.data(data-bind="text: new Intl.NumberFormat('en-US').format(cheerleaders * 10000)")
+
+  tr
+    th.table-info apothecary
+    td 
+        button.btn.btn-sm(data-bind="{text: apothecary ? 'yes' : 'no', click:toggleApo, css: apothecary ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary'}")
+    td 50,000
+    td.data(data-bind="text: apothecary ? '50,000' : '0'")
+  tr
+    td
+    th.table-info(colspan="2" style="text-align:right") management cost
+    th.table-info.data(style="border-top:1px solid black !important" data-bind="text: new Intl.NumberFormat('en-US').format(subTotalRerolls())")
