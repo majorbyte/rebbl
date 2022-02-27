@@ -88,7 +88,13 @@ class ClanBuildingApi{
 
   async _saveTeam(req,res){
     const account = res.locals.account;
-    clanService.updateTeam(account.coach, Number(req.params.team), req.body);
+    clanService.updateTeam(account.coach, Number(req.params.team), req.body,true);
+    res.sendStatus(200);
+  }
+
+  async _saveTeamSkill(req,res){
+    const account = res.locals.account;
+    clanService.updateTeam(account.coach, Number(req.params.team), req.body,false);
     res.sendStatus(200);
   }
 
@@ -172,6 +178,7 @@ class ClanBuildingApi{
     this.router.post('/:clan/:team/skill', this.isClanLeader, this._skillPlayer.bind(this));
 
     this.router.put('/:clan/members', this.isClanLeader, this._saveMembers.bind(this));
+    this.router.put('/:clan/:team/skill', this.teamSaveAllowed, this._saveTeamSkill.bind(this));
     this.router.put('/:clan/:team', this.teamSaveAllowed, this._saveTeam.bind(this));
     this.router.put('/:clan', this.isClanLeader, this._saveClan.bind(this));
 

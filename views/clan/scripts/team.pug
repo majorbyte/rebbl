@@ -41,7 +41,7 @@ script.
 
       this.skillModel.rookieCount = this.rookieCount;
       this.skillModel.superstarCount = this.superstarCount;
-
+      this.proceedDisabled = false;
       this.roster.forEach(x => {
         if (x.skill1) x.updateSkillModel(x.skill1);
         if (x.skill2) x.updateSkillModel(x.skill2);
@@ -138,6 +138,7 @@ script.
     }
 
     async skillPlayer (vm, e){
+      this.proceedDisabled = true;
       var context = ko.contextFor(e.target);
       this.commit();
       const data = this.clone();
@@ -149,8 +150,8 @@ script.
       delete data.newPlayer;
       delete data.skillModel; 
       data.roster.forEach(n => delete n.skillModel);      
-      context.$parent.skilling = true;
-      await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}` ,{
+      context.$root.skilling = true;
+      await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}/skill` ,{
         method:'PUT',
         headers:{ 'Content-Type': 'application/json'},
         body: JSON.stringify(data)
@@ -175,8 +176,10 @@ script.
         $('#toast-error-message').text(`Skill failed: ${player.error}`);
         $('#toast-error').toast('show');
       }        
-      $('#skillPlayerModal').modal('hide');
-      context.$parent.skilling = false;
+      //$('#skillPlayerModal').modal('hide');
+      $('#skillPlayerModal').trigger('click');
+      this.proceedDisabled = false;
+      context.$root.skilling = false;
     }
 
   }      
