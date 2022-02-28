@@ -166,6 +166,7 @@ script.
     isDouble = (skill) => this.playerType.doubles.includes(SkillDescriptions.find(x => x.name === skill)?.category ||'');
     isIncrease = (skill) => SkillDescriptions.filter(x => x.category == 'Increase').map(x => x.name).includes(skill);
     isSuperstar = () => this.skill1 && this.skill2;
+    isSkilled = () => this.id > 0 && this.skill1;
 
     normals = () => SkillDescriptions.filter(x => this.playerType.normal.includes(x.category)).map(x => x.name);
     increases = () => SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.tier > 2 || x.name !== 'Increase Strength').map(x => x.name);

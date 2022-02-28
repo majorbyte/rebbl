@@ -49,7 +49,7 @@ tr
   td.data
     span(data-bind="text: new Intl.NumberFormat('en-US').format(cost())")
   td.data
-    // ko if: isSuperstar()
+    // ko if: isSuperstar() || (id > 0 && skill1)
     span(data-bind="text: new Intl.NumberFormat('en-US').format($parent.superstarPlayerTax(player))")
     // /ko
   td.left-align

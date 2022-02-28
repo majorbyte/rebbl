@@ -75,7 +75,12 @@ script.
     rookieCount = () => this.roster.filter(x => !x.skill1).length;
     superstarCount = () => this.roster.filter(x => x.skill1 && x.skill2).length;
 
-    superstarTax = () => this.roster.filter(x => x.isSuperstar()).reduce((p,c,i) => p + 10*(i+1), 0) * 1000;
+    superstarTax = () => this.roster.filter(x => x.isSuperstar() || x.isSkilled()).reduce((p,c,i) => {
+      if (c.isSkilled()) p += 10;
+      else p = p + 10*(i+1);
+      return p;
+      }, 0) * 1000
+    
     sppSurplus = () => this.roster.reduce((p,c) => p+c.sppSurplus,0);
     spentSPP = () => this.roster.reduce((p,c) => p+c.spentSPP,0);
     onCoachChange = (coach) => this.getReturningTeam(coach).then (t => t);
@@ -105,7 +110,8 @@ script.
     }
 
     superstarPlayerTax(player) {
-      return (1 + this.roster.filter(x => x.isSuperstar()).indexOf(player)) * 10000;
+      if (player.isSkilled()) return 10_000;
+      return (1 + this.roster.filter(x => x.isSuperstar()).indexOf(player)) * 10_000;
     }
 
     statIncreaseCount = () => this.roster.filter(x => x.hasIncrease()).length;

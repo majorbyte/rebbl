@@ -76,8 +76,10 @@ script.
     isTeamCostValid = () => Divisions.find(x => x.name === this.division).budget >= this.ledger.teamTotal();
     
     isTotalCostValid = () => {
-      const d = Divisions.find(x => x.name === this.division)
-      return d.budget + d.powerBudget >= this.cost();
+      const d = Divisions.find(x => x.name === this.division);
+      let budget = d.budget + d.powerBudget;
+      if (this.ledger.hasStuntyTeam()) budget += 150_000;
+      return budget >= this.cost();
     }
 
     getMemberTeam = (i) => this.ledger.teamBuilding[i];
