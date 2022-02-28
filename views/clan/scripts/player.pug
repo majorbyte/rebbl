@@ -196,7 +196,9 @@ script.
     } 
 
     getSkills1 = () => !this.skill1 && this.skillModel.rookieCount() <= 3 ? [] : this.accessibleSkills().filter(x => x !== this.skill2);
-    getSkills2 = () => this.hasDoubleOrIncrease() || !this.skill1 || this.skillModel.superstarCount() > 5 ? [] : this.normals().filter(x => x !== this.skill1 && !this.fixedSkills.includes(x));
+    getSkills2 = () => this.hasDoubleOrIncrease() || !this.skill1 || this.skillModel.superstarCount() >= 5 
+      ? ( this.skill2 ? [this.skill2] : [])
+      : this.normals().filter(x => x !== this.skill1 && !this.fixedSkills.includes(x));
 
     medicalBill = () => this.casualties.reduce((p,c) => p += c.removed ? 1 : 0 ,0) * 100_000;
 
