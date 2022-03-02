@@ -25,7 +25,11 @@ table.table.table-striped.table-sm.table-responsive
     // /ko
   tr 
     th.table-info SPP+
-    td.data(data-bind="text:sppSurplus()") 
+    td.data(data-bind="css: sppSurplus() - spentSPP() >= 0 ? '' : 'choose-race'")
+      // ko if: sppSurplus() - spentSPP() < 0
+      i.fa.fa-info-circle.mx-1(title="You have traded outside of your SPP budget")
+      // /ko
+      span(data-bind="text: sppSurplus() - spentSPP()")
   tr 
     th.table-info tier 
     td.data(data-bind="text: teamTier()")
