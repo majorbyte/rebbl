@@ -1,0 +1,13 @@
+script.
+  class ValidationModel{
+    constructor(data){
+      this.map(data || {});
+    }
+    map(data){
+      this.sppTradeErrors = data.sppTradeErrors || [];
+      this.sppTradeSkillErrors = data.sppTradeSkillErrors || [];
+      this.sppTradeAccounting = data.sppTradeAccounting || [];
+      this.incompleteTeamErrors = data.incompleteTeamErrors || [];
+      this.freshTeamErrors = data.freshTeamErrors?.filter(x => x != null) || [];
+    }
+  }

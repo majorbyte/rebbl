@@ -67,6 +67,11 @@ block content
     // ko template: { name: 'teamTemplate', data: team }
     // /ko
     // /ko
+    // ko if: showValidation
+    // ko template: { name: 'validationTemplate', data: validationResult }
+    // /ko
+    // /ko
+
     .position-fixed.bottom-0.right-0.p-3(style="z-index: 5; right: 0; top: 50px;")
       .toast.hide.text-white.bg-success(id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
         .toast-header Success

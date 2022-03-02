@@ -3,6 +3,7 @@
 const express = require('express')
 , accountService = require('../../../lib/accountService.js')
 , clanService = require('../../../lib/ClanService.js')
+, clanValidationService = require('../../../lib/ClanValidationService.js')
 , rateLimit = require('express-rate-limit')
 , util = require('../../../lib/util.js');
 
@@ -63,6 +64,8 @@ class ClanBuildingApi{
     let clan = await clanService.getNewClanByUser(account.coach);
     res.json(clan);
   }
+
+  _validateClan = async (req,res) => res.json(await clanValidationService.validate(req.params.clan));
 
   async _registerClan(req,res){
     const account = await accountService.getAccount(req.user.name);
@@ -171,6 +174,7 @@ class ClanBuildingApi{
     this.router.get('/coach/:coach/team',util.ensureAuthenticated , util.cache(60*10)/*apiRateLimiter*/, this._getReturningTeam.bind(this));
     this.router.get('/coach/:coach',util.ensureAuthenticated ,  this._getCoach.bind(this));
     this.router.get('/team/:teamId/players',util.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));
+    this.router.get('/:clan/validate', this._validateClan.bind(this));
     this.router.get('/:clan/:team',util.ensureAuthenticated ,  this._getTeam.bind(this));
     this.router.get('/', this._getClan.bind(this));
 

@@ -1,0 +1,61 @@
+
+.container
+  button.btn.btn-sm.pull-right.btn-primary(data-bind="click:$root.closeValidation.bind($root)") close
+  ul.nav.nav-pills(role="tablist")
+    // ko if: sppTradeErrors.length > 0
+    li.nav-item
+      a.nav-link#nav-SppTradeErrors-tab(data-toggle="tab" href="#nav-SppTradeErrors" role="tab" aria-controls="nav-SppTradeErrors") SPP Trade Issues
+    // /ko
+
+    // ko if: sppTradeSkillErrors.length > 0
+    li.nav-item 
+      a.nav-link#nav-SppTradeSkillErrors-tab(data-toggle="tab" href="#nav-SppTradeSkillErrors" role="tab" aria-controls="nav-SppTradeSkillErrors") SPP Trade Skill Issues
+    // /ko
+    // ko if: sppTradeAccounting.length > 0
+    li.nav-item 
+      a.nav-link#nav-SppTradeAccounting-tab(data-toggle="tab" href="#nav-SppTradeAccounting" role="tab" aria-controls="nav-SppTradeAccounting") Spp Trade Accounting Issues
+    // /ko
+    // ko if: incompleteTeamErrors.length > 0
+    li.nav-item 
+      a.nav-link#nav-IncompleteTeamErrors-tab(data-toggle="tab" href="#nav-IncompleteTeamErrors" role="tab" aria-controls="nav-IncompleteTeamErrors") Incomplete Team Issues
+    // /ko
+    // ko if: freshTeamErrors.length > 0
+    li.nav-item 
+      a.nav-link#nav-FreshTeamErrors-tab(data-toggle="tab" href="#nav-FreshTeamErrors" role="tab" aria-controls="nav-FreshTeamErrors") Fresh Team Issues
+    // /ko
+
+
+  .tab-content#nav-tabContent
+    .tab-pane.fade.show#nav-SppTradeErrors(role="tabpanel" aria-labelledby="nav-SppTradeErrors-tab")
+      table.table-striped
+        tbody(data-bind="foreach:sppTradeErrors")
+          tr 
+            td(data-bind="text:$data")
+
+    .tab-pane.fade.show#nav-SppTradeSkillErrors(role="tabpanel" aria-labelledby="nav-SppTradeSkillErrors-tab")
+      table.table-striped
+        tbody(data-bind="foreach:sppTradeSkillErrors")
+          tr 
+            td(data-bind="text:$data")
+
+    .tab-pane.fade.show#nav-SppTradeAccounting(role="tabpanel" aria-labelledby="nav-SppTradeAccounting-tab")
+      table.table-striped
+        tbody(data-bind="foreach:sppTradeAccounting")
+          tr 
+            td(data-bind="text:$data")
+    
+    .tab-pane.fade.show#nav-IncompleteTeamErrors(role="tabpanel" aria-labelledby="nav-IncompleteTeamErrors-tab")
+      table.table-striped
+        tbody(data-bind="foreach:incompleteTeamErrors")
+          tr 
+            td(data-bind="text:$data")
+
+    .tab-pane.fade.show#nav-FreshTeamErrors(role="tabpanel" aria-labelledby="nav-FreshTeamErrors-tab")
+      table.table-striped
+        thead 
+          th.table-info rule
+          th.table-info message
+        tbody(data-bind="foreach:freshTeamErrors")
+          tr 
+            td(data-bind="text:$data.split(':')[0]")
+            td(data-bind="text:$data.split(':')[1]")

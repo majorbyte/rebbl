@@ -5,6 +5,9 @@
   button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onSaveClan, attr:{disabled: !isDirty()}" title="save clan") 
     i.fa.fa-save
   // /ko
+  button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onValidateClan" title="validate clan") 
+    i.fa.fa-check-square 
+    span Validate
   
   table.table.table-sm.table-responsive.table-borderless
     thead 

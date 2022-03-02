@@ -6,6 +6,7 @@ script.
       this.registerClan = false;
       this.editClan = false;
       this.editTeam = false;
+      this.showValidation = false;
       this.loading = false;
       this.skilling = false;
       this.team = null;
@@ -13,6 +14,7 @@ script.
       this._reset = () => this.map(data);
       this.isDirty.bind(this);
       this.commit.bind(this);
+      this.validationResult = new ValidationModel();
       ko.track(this);
     }
     map(data){
@@ -29,6 +31,7 @@ script.
     onEditTeam = (team) => {
       this.editClan = !this.editClan;
       this.editTeam = !this.editTeam;
+      this.showValidation = false;
 
       this.team = team;
     }
@@ -40,9 +43,20 @@ script.
       this.save();
     }
 
+    onValidateClan = () =>{
+      this.validate();
+    }
+
+    closeValidation(){
+      this.editClan = true;
+      this.editTeam = false;
+      this.showValidation = false;
+    }
+
     onTeamDoneClick = () => {
       this.editClan = !this.editClan;
       this.editTeam = !this.editTeam;
+      this.showValidation = false;
       this.team = null;
     }
     async onRegisterClanClick(){
@@ -118,6 +132,18 @@ script.
 
 
       this.loading = false;
+    }
+
+    async validate(){
+      this.editClan = false;
+      this.editTeam = false;
+      this.loading = true;
+      let result = await fetch(`/api/v2/clan/build/${this.name}/validate`);
+      if (result.ok) this.validationResult = new ValidationModel(await result.json());
+      this.showValidation = true;
+      this.loading = false;
+
+
     }
 
     async save(){
