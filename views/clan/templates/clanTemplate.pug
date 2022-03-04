@@ -1,5 +1,7 @@
 .mx-1 
   span.mx-2(data-bind="text: name" id="clanName")
+  i.fa.fa-user-circle-o.mx-1(title="clan leader") 
+  span.mx-2(data-bind="text: leader" id="clanLeader")
   span.mx-2(data-bind="text: division" id="division")
   // ko if: isClanLeader()
   button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onSaveClan, attr:{disabled: !isDirty()}" title="save clan") 
@@ -24,19 +26,8 @@
         th.table-info  
     tbody(data-bind="foreach: members")
       tr
-        // ko if: $index() === 0
-        td
-          i.fa.fa-user-circle-o.mx-1(title="clan leader")
-          span(data-bind="text: coach")
-        // /ko
-        // ko if: $index() > 0 && $root.isClanLeader()
         td
           input(data-bind="value: coach" required)
-        // /ko
-        // ko if: $index() > 0 && !$root.isClanLeader()
-        td
-          span(data-bind="text: coach")
-        // /ko
         td
           span(data-bind="text: reddit")
         td
