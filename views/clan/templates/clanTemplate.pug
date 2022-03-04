@@ -80,9 +80,13 @@
         td.data
           span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.powersTotal())")  
       tr
-        td.data(colspan="8")
+        td.data(colspan="7")
+        td.data(colspan="1" data-bind="css: ledger.stuntyBudgetLeft() > 0 ? 'choose-race' : ''")
+          //ko if: ledger.stuntyBudgetLeft() > 0
+          i.fa.fa-info-circle.mx-1(title="Don't forget to spend you stunty power budget!")
+          // /ko
           span Stunty Powers Total
-        td.data
+        td.data(data-bind="css: ledger.stuntyBudgetLeft() > 0 ? 'choose-race' : ''")
           span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.stuntyTotal())")  
       tr
         td.data(colspan="8")

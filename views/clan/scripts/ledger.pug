@@ -36,6 +36,7 @@ script.
     onAddPowerClick = (power) => {console.log(power)}
 
     hasStuntyTeam = () =>  this.teamBuilding.some(team => team.teamTier() === 7);
+    stuntyCount = () => this.teamBuilding.filter(team => team.teamTier() === 7).length;
 
     powers = () =>{
       const powers = ['miscommunication', 'badInducementDeal', 'lastMinuteSwitch', 'assassination', 'inspiration', 'confusion', 'hatredOfPublicTransport', 'financialFairPlay'];
@@ -62,9 +63,11 @@ script.
       for(const key of powers){
         cost += Powers.find(x => x.key === key).cost * this[key];
       }
-      this.updateStunty(cost <= 150_000);
+      this.updateStunty(cost <= 150_000 * this.stuntyCount());
       return cost;
     }
+
+    stuntyBudgetLeft = () => 150_000 * this.stuntyCount() - this.stuntyTotal();
 
     updateStunty = (valid) => {
       const elem = document.getElementById('stuntyTotal');

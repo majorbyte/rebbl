@@ -92,7 +92,7 @@ script.
     isTotalCostValid = () => {
       const d = Divisions.find(x => x.name === this.division);
       let budget = d.budget + d.powerBudget;
-      if (this.ledger.hasStuntyTeam()) budget += 150_000;
+      budget += this.ledger.stuntyCount() * 150_000;
       return budget >= this.cost();
     }
 
