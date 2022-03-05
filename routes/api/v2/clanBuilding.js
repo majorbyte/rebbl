@@ -157,7 +157,21 @@ class ClanBuildingApi{
     return res.status(403).send({error: 'You are not allowed to make changes to this team'});
   };
 
-
+  ensureAuthenticated = function (req, res, next) {
+    try{
+      if (res.locals.user) { return next(); }
+      req.session.returnUrl = '/clan/clan';
+      if (req.isAuthenticated()){
+        res.redirect("/account/create");
+      } else {
+        res.redirect("/account/login");
+      }
+    }
+    catch(ex){
+      console.log(ex.message);
+      console.log(ex.stack);
+    }
+  };
 
   routesConfig(){
     const apiRateLimiter = rateLimit({
@@ -170,13 +184,14 @@ class ClanBuildingApi{
       }
     });
 
-    this.router.get('/coach',util.ensureAuthenticated ,  this._getMe.bind(this));
-    this.router.get('/coach/:coach/team',util.ensureAuthenticated , util.cache(60*10)/*apiRateLimiter*/, this._getReturningTeam.bind(this));
-    this.router.get('/coach/:coach',util.ensureAuthenticated ,  this._getCoach.bind(this));
-    this.router.get('/team/:teamId/players',util.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));
+
+    this.router.get('/coach',this.ensureAuthenticated ,  this._getMe.bind(this));
+    this.router.get('/coach/:coach/team',this.ensureAuthenticated , util.cache(60*10)/*apiRateLimiter*/, this._getReturningTeam.bind(this));
+    this.router.get('/coach/:coach',this.ensureAuthenticated ,  this._getCoach.bind(this));
+    this.router.get('/team/:teamId/players',this.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));
     this.router.get('/:clan/validate', this._validateClan.bind(this));
-    this.router.get('/:clan/:team',util.ensureAuthenticated ,  this._getTeam.bind(this));
-    this.router.get('/', this._getClan.bind(this));
+    this.router.get('/:clan/:team', this.ensureAuthenticated ,  this._getTeam.bind(this));
+    this.router.get('/', this.ensureAuthenticated, this._getClan.bind(this));
 
     this.router.post('/:clan', util.hasRole('clanleader'), this._registerClan.bind(this));
     this.router.post('/:clan/:team/skill', this.isClanLeader, this._skillPlayer.bind(this));
