@@ -1,5 +1,11 @@
 
 .container
+  // ko if: noErrors()
+  p No errors detected
+  button.btn.btn-sm.pull-right.btn-success(data-bind="click:$root.closeValidation.bind($root)") close
+  // /ko 
+
+  // ko if: !noErrors()
   button.btn.btn-sm.pull-right.btn-primary(data-bind="click:$root.closeValidation.bind($root)") close
   ul.nav.nav-pills(role="tablist")
     // ko if: sppTradeErrors.length > 0
@@ -22,6 +28,18 @@
     // ko if: freshTeamErrors.length > 0
     li.nav-item 
       a.nav-link#nav-FreshTeamErrors-tab(data-toggle="tab" href="#nav-FreshTeamErrors" role="tab" aria-controls="nav-FreshTeamErrors") Fresh Team Issues
+    // /ko
+    // ko if: returningTeamErros.length > 0
+    li.nav-item 
+      a.nav-link#nav-ReturningTeamErros-tab(data-toggle="tab" href="#nav-ReturningTeamErros" role="tab" aria-controls="nav-ReturningTeamErros") Returning Team Issues
+    // /ko
+    // ko if: clanErrors.length > 0
+    li.nav-item 
+      a.nav-link#nav-ClanErrors-tab(data-toggle="tab" href="#nav-ClanErrors" role="tab" aria-controls="nav-ClanErrors") Clan Issues
+    // /ko
+    // ko if: cheatingErrors.length > 0
+    li.nav-item 
+      a.nav-link#nav-CheatingErrors-tab(data-toggle="tab" href="#nav-CheatingErrors" role="tab" aria-controls="nav-CheatingErrors") Cheating Issues
     // /ko
 
 
@@ -59,3 +77,26 @@
           tr 
             td(data-bind="text:$data.split(':')[0]")
             td(data-bind="text:$data.split(':')[1]")
+
+    .tab-pane.fade.show#nav-ReturningTeamErros(role="tabpanel" aria-labelledby="nav-ReturningTeamErros-tab")
+      table.table-striped
+        thead 
+          th.table-info rule
+          th.table-info message
+        tbody(data-bind="foreach:returningTeamErros")
+          tr 
+            td(data-bind="text:$data.split(':')[0]")
+            td(data-bind="text:$data.split(':')[1]")
+
+    .tab-pane.fade.show#nav-ClanErrors(role="tabpanel" aria-labelledby="nav-ClanErrors-tab")
+      table.table-striped
+        tbody(data-bind="foreach:clanErrors")
+          tr 
+            td(data-bind="text:$data")
+
+    .tab-pane.fade.show#nav-CheatingErrors(role="tabpanel" aria-labelledby="nav-CheatingErrors-tab")
+      table.table-striped
+        tbody(data-bind="foreach:cheatingErrors")
+          tr 
+            td(data-bind="text:$data")
+  // /ko
