@@ -2,7 +2,7 @@
 .container
   // ko if: noErrors()
   p No errors detected
-  button.btn.btn-sm.pull-right.btn-success(data-bind="click:$root.closeValidation.bind($root)") close
+  button.btn.btn-sm.btn-success(data-bind="click:$root.closeValidation.bind($root)") close
   // /ko 
 
   // ko if: !noErrors()
