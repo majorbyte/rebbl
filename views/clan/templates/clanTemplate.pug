@@ -19,6 +19,7 @@
         th.table-info discord 
         th.table-info team name 
         th.table-info returning
+        th.table-info # players
         th.table-info normal team cost
         th.table-info skill tax
         th.table-info tier tax
@@ -42,6 +43,7 @@
           // /ko
         td 
           button.btn.btn-sm(data-bind="{text: isReturningTeam ? 'yes' : 'no', click:toggleReturning, css: isReturningTeam ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary', attr:{disabled:hasTraded()}}")
+        td.data(data-bind="text: roster?.length || 0")
         td.data(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost() + subTotalRerolls() )") 
         td.data(data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())") 
         td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTax())") 
@@ -60,18 +62,18 @@
     tfoot 
       // ko if: division !== "Division 3"
       tr
-        td.data(colspan="8")
+        td.data(colspan="9")
           span Team Total
         td.data
           span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.teamTotal()),css: isTeamCostValid() ? 'valid' : 'invalid'")  
       // /ko
       tr
-        td.data(colspan="8")
+        td.data(colspan="9")
           span Powers Total
         td.data
           span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.powersTotal())")  
       tr
-        td.data(colspan="7")
+        td.data(colspan="8")
         td.data(colspan="1" data-bind="css: ledger.stuntyBudgetLeft() > 0 ? 'choose-race' : ''")
           //ko if: ledger.stuntyBudgetLeft() > 0
           i.fa.fa-info-circle.mx-1(title="Don't forget to spend you stunty power budget!")
@@ -80,7 +82,7 @@
         td.data(data-bind="css: ledger.stuntyBudgetLeft() > 0 ? 'choose-race' : ''")
           span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.stuntyTotal())")  
       tr
-        td.data(colspan="8")
+        td.data(colspan="9")
           span Clan Total
         td.data
           span(data-bind="text: new Intl.NumberFormat('en-US').format(cost()),css: isTotalCostValid() ? 'valid' : 'invalid'")  
