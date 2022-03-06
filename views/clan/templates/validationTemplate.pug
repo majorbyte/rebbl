@@ -37,6 +37,10 @@
     li.nav-item 
       a.nav-link#nav-ClanErrors-tab(data-toggle="tab" href="#nav-ClanErrors" role="tab" aria-controls="nav-ClanErrors") Clan Issues
     // /ko
+    // ko if: teamErrors.length > 0
+    li.nav-item 
+      a.nav-link#nav-TeamErrors-tab(data-toggle="tab" href="#nav-TeamErrors" role="tab" aria-controls="nav-TeamErrors") Team Issues
+    // /ko
     // ko if: cheatingErrors.length > 0
     li.nav-item 
       a.nav-link#nav-CheatingErrors-tab(data-toggle="tab" href="#nav-CheatingErrors" role="tab" aria-controls="nav-CheatingErrors") Cheating Issues
@@ -99,4 +103,19 @@
         tbody(data-bind="foreach:cheatingErrors")
           tr 
             td(data-bind="text:$data")
+
+    .tab-pane.fade.show#nav-TeamErrors(role="tabpanel" aria-labelledby="nav-TeamErrors-tab")
+      table.table-striped
+        thead 
+          th.table-info team
+          th.table-info message
+        tbody
+          // ko foreach: {data:teamErrors, as:'team'}
+          // ko foreach: {data:messages, as:'msg'}
+          tr 
+            td(data-bind="text:team.team")
+            td(data-bind="text:msg")
+          // /ko
+          // /ko
+
   // /ko
