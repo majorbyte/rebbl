@@ -20,6 +20,7 @@ script.
       this.tier = data.tier || 1;
       this.skillModel = data.skillModel || new SkillModel();
       this.value = data.value || 0;
+      if (data.casualties_state?.length === 0 && data.casualties_sustained_total && data.casualties_sustained_total?.length !== 0) data.casualties_state = data.casualties_sustained_total;
       if (data.casualties_state) this.casualties = data.casualties_state.filter(x => ['DamagedBack','SmashedKnee','SmashedAnkle','SmashedHip','SmashedCollarBone','BrokenNeck','FracturedSkull','SeriousConcussion'].includes(x) ).map(x => new CasualtyModel({name: x}));
       else if (data.casualties) this.casualties = data.casualties.filter(x => ['DamagedBack','SmashedKnee','SmashedAnkle','SmashedHip','SmashedCollarBone','BrokenNeck','FracturedSkull','SeriousConcussion'].includes(x.name) ).map(x => new CasualtyModel(x)) 
       else this.casualties = [];

@@ -62,23 +62,12 @@ tr
       button.btn.btn-sm.btn-success.pull-right(data-bind="click: $parent.showSkillPlayerModal.bind($parent)")
         img(src="https://cdn2.rebbl.net/images/level.png" style="width: 20px;")
       // /ko
-      // ko if: id > 0 && player.dice
       button.btn.btn-sm.btn-info.pull-right(data-bind="click: player.toggleEdit")
         i.fa.fa-pencil-square-o
-      // /ko
-      // ko if: id === 0 && !$parent.isReturningTeam
-      button.btn.btn-sm.btn-info.pull-right(data-bind="click: player.toggleEdit")
-        i.fa.fa-pencil-square-o
-      // /ko
 
 tr(data-bind="visible: player.visible")
   td.left-align
-    // ko if: id > 0
-    span &nbsp;
-    // /ko
-    // ko if: id === 0
     input(placeholder='Player Name' data-bind="textInput: player.name")
-    // /ko
   // ko if: id > 0 && !player.dice
   td(colspan='10') 
     span &nbsp;
