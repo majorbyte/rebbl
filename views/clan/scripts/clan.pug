@@ -110,7 +110,7 @@ script.
             else if (response.ok) return response.json();
             return;
           }),
-          fetch('/api/v2/clan/build/coach').then(response => response.json()),
+          fetch('/api/v2/clan/build/me').then(response => response.json()),
           fetch('/api/v2/bloodbowl/skills').then(response => response.json()),
           fetch('/api/v2/bloodbowl/skilldescriptions').then(response => response.json()),
           fetch('/api/v2/bloodbowl/playertypes').then(response => response.json()),

@@ -17,7 +17,7 @@ script.
     async updateCoach(coach){
       if (this.noLoad) return;
 
-      let response = await fetch(`/api/v2/clan/build/coach/${coach}`);
+      let response = await fetch(`/api/v2/clan/build/coach?coach=${encodeURIComponent(coach)}`);
       if (!response.ok) return true;
 
       const c = await response.json();

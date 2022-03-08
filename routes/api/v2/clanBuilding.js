@@ -20,7 +20,7 @@ class ClanBuildingApi{
   };
   
   async _getCoach(req,res){
-    const account = await accountService.searchAccount({coach:new RegExp(`^${req.params.coach}$`,'i')});
+    const account = await accountService.searchAccount({coach:new RegExp(`^${req.query.coach}$`,'i')});
     if (!account) res.status(404).json('coach not found');
     else res.json({reddit: account.reddit, coach:account.coach, discord:account.discord});
   }
@@ -185,9 +185,9 @@ class ClanBuildingApi{
     });
 
 
-    this.router.get('/coach',this.ensureAuthenticated ,  this._getMe.bind(this));
+    this.router.get('/me',this.ensureAuthenticated ,  this._getMe.bind(this));
     this.router.get('/coach/:coach/team',this.ensureAuthenticated , util.cache(60*10)/*apiRateLimiter*/, this._getReturningTeam.bind(this));
-    this.router.get('/coach/:coach',this.ensureAuthenticated ,  this._getCoach.bind(this));
+    this.router.get('/coach/',this.ensureAuthenticated ,  this._getCoach.bind(this));
     this.router.get('/team/:teamId/players',this.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));
     this.router.get('/:clan/validate', this._validateClan.bind(this));
     this.router.get('/:clan/:team', this.ensureAuthenticated ,  this._getTeam.bind(this));
