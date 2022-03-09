@@ -45,6 +45,10 @@
     li.nav-item 
       a.nav-link#nav-CheatingErrors-tab(data-toggle="tab" href="#nav-CheatingErrors" role="tab" aria-controls="nav-CheatingErrors") Cheating Issues
     // /ko
+    // ko if: ex
+    li.nav-item 
+      a.nav-link#nav-ExceptionErrors-tab(data-toggle="tab" href="#nav-ExceptionErrors" role="tab" aria-controls="nav-ExceptionErrors") Excepions
+    // /ko
 
 
   .tab-content#nav-tabContent
@@ -117,5 +121,10 @@
             td(data-bind="text:msg")
           // /ko
           // /ko
+
+    .tab-pane.fade.show#nav-ExceptionErrors(role="tabpanel" aria-labelledby="nav-ExceptionErrors-tab")
+      p An unexpected error occurred while validating the clan, please let majorbyte know the following: 
+      p(data-bind="text: ex")
+
 
   // /ko

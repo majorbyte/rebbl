@@ -182,7 +182,6 @@ script.
         $('#toast-error-message').text(`Skill failed: ${player.error}`);
         $('#toast-error').toast('show');
       }        
-      //$('#skillPlayerModal').modal('hide');
       $('#skillPlayerModal').trigger('click');
       this.proceedDisabled = false;
       context.$root.skilling = false;

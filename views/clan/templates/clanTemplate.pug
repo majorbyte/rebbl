@@ -3,6 +3,7 @@
   i.fa.fa-user-circle-o.mx-1(title="clan leader") 
   span.mx-2(data-bind="text: leader" id="clanLeader")
   span.mx-2(data-bind="text: division" id="division")
+  // ko if: !locked
   // ko if: isClanLeader()
   button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onSaveClan, attr:{disabled: !isDirty()}" title="save clan") 
     i.fa.fa-save
@@ -10,6 +11,11 @@
   button.btn.btn-success.btn-sm.my-1.mx-1(data-bind="click:$root.onValidateClan" title="validate clan") 
     i.fa.fa-check-square 
     span Validate
+  // ko if: isClanLeader()
+  button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onLockClan" title="save clan") 
+    i.fa.fa-lock
+  // /ko
+  // /ko
   
   table.table.table-sm.table-responsive.table-borderless
     thead 
@@ -50,11 +56,13 @@
         td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTotal())") 
         td.left-align
           .flex-container
+            //ko if: !$root.locked
             button.btn.btn-success.btn-sm.pull-right(title='save team', data-bind="click:$root.onSaveTeam, attr:{disabled: !isDirty()}")
               i.fa.fa-save
+            // /ko  
             button.btn.btn-sm.btn-info.pull-right(title='Edit team' data-bind="click:$root.onEditTeam")
               i.fa.fa-pencil-square-o
-
+            
         // /ko  
         // ko if: !$root.getMemberTeam($index())
         td(colspan="7") &nbsp;
@@ -89,3 +97,22 @@
   //ko template:{name:'clanPowersTemplate', data:ledger}
   // /ko
 
+.modal.fade#lockClan(aria-labelledby="clanLockLabel" aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h5.modal-title(id="clanLockLabel") You are about to lock your clan.
+        button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+          <span aria-hidden="true">&times;</span>
+      .modal-body
+        p
+          span You are about to lock the ledger for your clan.
+        p 
+          b This is a permanent action! 
+          br
+          span Meaning that if you proceed, a server side validation will again be made, and if everything is ok, the ledger will be locked and further changes will not be possible.
+          span &nbsp;You will not be able to undo this, not by changing team for this coach, switching to a non-returning team for this coach or sacking the player.
+
+      .modal-footer
+        button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
+        button(type="button" class="btn btn-primary" data-bind="click: lock") Proceed &amp; Lock

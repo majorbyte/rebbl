@@ -404,7 +404,7 @@ class ClanApi{
 
       clan.powers[req.params.power]--;
       try{
-        await dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
+        dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
         res.status(202).send();
       }
       catch(ex){
@@ -436,7 +436,7 @@ class ClanApi{
 
       clan.powers[req.params.power]++;
       try{
-        await dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
+        dataService.updateClan({name:clan.name, active:true},{$set:{powers:clan.powers}});
         res.status(202).send();
       }
       catch(ex){

@@ -23,7 +23,8 @@ script.
       this.clanErrors = data.clanErrors?.filter(x => x != null) || [];
       this.cheatingErrors = data.cheatingErrors?.filter(x => x != null) || [];
       this.teamErrors = data.teamErrors?.filter(x => x != null).map(x => new TeamValidationModel(x)) || [];
+      this.ex = data.ex || false;
     }
 
-    noErrors = () => 0 >= this.sppTradeErrors.length + this.sppTradeSkillErrors.length + this.sppTradeAccounting.length + this.incompleteTeamErrors.length + this.freshTeamErrors.length + this.returningTeamErros.length + this.clanErrors.length + this.cheatingErrors.length + this.teamErrors.length;
+    noErrors = () => !this.ex && 0 >= this.sppTradeErrors.length + this.sppTradeSkillErrors.length + this.sppTradeAccounting.length + this.incompleteTeamErrors.length + this.freshTeamErrors.length + this.returningTeamErros.length + this.clanErrors.length + this.cheatingErrors.length + this.teamErrors.length;
   }

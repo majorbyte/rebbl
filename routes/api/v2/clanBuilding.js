@@ -7,6 +7,7 @@ const express = require('express')
 , rateLimit = require('express-rate-limit')
 , util = require('../../../lib/util.js');
 
+
 class ClanBuildingApi{
   constructor(){
     this.router =express.Router();
@@ -67,6 +68,20 @@ class ClanBuildingApi{
 
   _validateClan = async (req,res) => res.json(await clanValidationService.validate(req.params.clan));
 
+  async _lockClan(req,res){
+    const validation = await clanValidationService.validate(req.params.clan);
+    
+    const errorCount = validation.sppTradeErrors.length + validation.sppTradeSkillErrors.length + validation.sppTradeAccounting.length
+      + validation.incompleteTeamErrors.length + validation.freshTeamErrors.length + validation.returningTeamErros.length
+      + validation.clanErrors.length + validation.cheatingErrors.length + validation.teamErrors.length;
+
+    if (errorCount > 0 || validation.ex) res.status(400).json(validation);
+    else {
+      clanService.lockClan(req.params.clan);
+      res.sendStatus(200);
+    }
+  }
+
   async _registerClan(req,res){
     const account = await accountService.getAccount(req.user.name);
 
@@ -103,7 +118,7 @@ class ClanBuildingApi{
 
   async _saveClan(req,res){
     const account = res.locals.account;
-    await clanService.updateClan(account.coach, req.body);
+    clanService.updateClan(account.coach, req.body);
     res.sendStatus(200);
   }
 
@@ -121,6 +136,7 @@ class ClanBuildingApi{
     const clan = await clanService.getNewClanByUser(account.coach);
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
+    if(clan.locked) return res.status(400).send({error:'No more updates allowed'});
     res.locals.clan = clan;
     res.locals.account = account;
 
@@ -147,6 +163,7 @@ class ClanBuildingApi{
     const clan = await clanService.getNewClanByUser(account.coach);
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
+    if(clan.locked) return res.status(400).send({error:'No more updates allowed'});
 
     const isClanLeader = clan.leader === account.coach;
     res.locals.clan = clan;
@@ -190,6 +207,7 @@ class ClanBuildingApi{
     this.router.get('/coach/',this.ensureAuthenticated ,  this._getCoach.bind(this));
     this.router.get('/team/:teamId/players',this.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));
     this.router.get('/:clan/validate', this._validateClan.bind(this));
+    this.router.get('/:clan/lock', this.isClanLeader, this._lockClan.bind(this));
     this.router.get('/:clan/:team', this.ensureAuthenticated ,  this._getTeam.bind(this));
     this.router.get('/', this.ensureAuthenticated, this._getClan.bind(this));
 

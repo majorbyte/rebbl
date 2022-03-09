@@ -18,6 +18,7 @@ script.
       ko.track(this);
     }
     map(data){
+      this.locked = data.locked || false;
       this.ledger = new LedgerModel(data?.ledger);
       this.name = data.name ||'';
       this.division = data.division || '';
@@ -46,6 +47,10 @@ script.
 
     onValidateClan = () =>{
       this.validate();
+    }
+
+    onLockClan = () => {
+      $('#lockClan').modal('show');
     }
 
     closeValidation(){
@@ -147,8 +152,28 @@ script.
       if (result.ok) this.validationResult = new ValidationModel(await result.json());
       this.showValidation = true;
       this.loading = false;
+    }
 
+    async lock() {
+      this.loading = true;
+      $('#lockClan').trigger('click');
+      let result = await fetch(`/api/v2/clan/build/${this.name}/lock`);
+      if (!result.ok) {
+        $('#toast-error-message').text(`Something went wrong while submitting the ledger.`);
+        $('#toast-error').toast('show');
 
+        this.validationResult = new ValidationModel(await result.json());
+        this.editClan = false;
+        this.editTeam = false;
+        this.showValidation = true;
+      }
+      else {
+        $('#toast-success-message').text(`Ledger is successfully submitted.`);
+        $('#toast-success').toast('show');
+
+        this.locked = true;
+      }
+      this.loading = false;
     }
 
     async save(){
