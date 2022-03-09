@@ -49,7 +49,7 @@ class ClanBuildingApi{
   }
 
   async _getReturningTeam(req,res){
-    const team = await clanService.getCoachLastSeasonTeam(req.params.coach);
+    const team = await clanService.getCoachLastSeasonTeam(req.query.coach);
     if (team) res.json({name:team.team.name, id:team.team.id, raceId:team.team.idraces});
     res.status(404).send();
   }
@@ -186,7 +186,7 @@ class ClanBuildingApi{
 
 
     this.router.get('/me',this.ensureAuthenticated ,  this._getMe.bind(this));
-    this.router.get('/coach/:coach/team',this.ensureAuthenticated , util.cache(60*10)/*apiRateLimiter*/, this._getReturningTeam.bind(this));
+    this.router.get('/coach/team',this.ensureAuthenticated , util.cache(60*10)/*apiRateLimiter*/, this._getReturningTeam.bind(this));
     this.router.get('/coach/',this.ensureAuthenticated ,  this._getCoach.bind(this));
     this.router.get('/team/:teamId/players',this.ensureAuthenticated ,  this._getReturningTeamPlayers.bind(this));
     this.router.get('/:clan/validate', this._validateClan.bind(this));

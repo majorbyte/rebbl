@@ -72,7 +72,7 @@ tr(data-bind="visible: player.visible")
   td(colspan='10') 
     span &nbsp;
   // /ko
-  // ko if: id < 1 || player.dice
+  // ko if: (!$parent.isReturningTeam && id < 1) || player.dice
   td
     span skills
   td(colspan='9')

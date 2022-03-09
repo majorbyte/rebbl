@@ -92,7 +92,7 @@ script.
       if (!coach) return;
 
       if (!this.returningTeam){
-        let response = await fetch(`/api/v2/clan/build/coach/${coach}/team`);
+        let response = await fetch(`/api/v2/clan/build/coach/team?coach=${encodeURIComponent(coach)}`);
         if (!response.ok) return;
     
         this.returningTeam = await response.json();
