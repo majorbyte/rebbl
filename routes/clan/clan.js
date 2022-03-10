@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require("express")
+, accountService = require('../../lib/accountService.js')
 , util = require("../../lib/util.js");
 
 class Clan{
@@ -16,11 +17,10 @@ class Clan{
   _standings(req,res){
     res.render("clan/standings");
   }
-  _clan(req,res){
-    res.render("clan/build", {clan:req.params.clan});
-  }
-  _team(req,res){
-    res.render("clan/team",{clan:"MAJOR", team:req.params.team});
+  async _clan(req,res){
+    const account = await accountService.getAccount(req.user.name);
+    if (account?.roles.includes("clanadmin")) res.render("clan/build", {clan:req.params.clan});
+    else res.render("clan/build");
   }
   _schedule(req,res){
     res.render("clan/schedule");
@@ -34,9 +34,9 @@ class Clan{
     this.router.get("/build/:template", this._template);
     this.router.get("/divisions",util.cache(2), this._root);
     this.router.get("/clan",util.cache(2), this._clan);
-    this.router.get("/clan/team",util.cache(2), this._team);
-    this.router.get("/clan/team/:team",util.cache(2), this._team);
-    this.router.get("/clan/:clan",util.cache(2), this._clan);
+    //this.router.get("/clan/team",util.cache(2), this._team);
+    //this.router.get("/clan/team/:team",util.cache(2), this._team);
+    this.router.get("/clan/:clan",util.ensureAuthenticated, util.cache(2), this._clan);
     this.router.get("/schedule/:s/:d",util.cache(2), this._schedule);
     this.router.get("/:season/:division/:round/:house",util.cache(2), this._matchup);
     

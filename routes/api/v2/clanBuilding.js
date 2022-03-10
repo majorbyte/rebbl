@@ -88,17 +88,20 @@ class ClanBuildingApi{
 
   async _registerClan(req,res){
     const account = await accountService.getAccount(req.user.name);
-
-    if (!/^[A-Z|0-9]+$/.test(req.params.clan)){
-      return res.status(400).json({error:"invalid clan name"});
+    let clan = await clanService.getNewClanByUser(account.coach);
+    
+    if (!clan){
+      if (!/^[A-Z|0-9]+$/.test(req.params.clan)){
+        return res.status(400).json({error:"invalid clan name"});
+      }
+  
+      clan = clanService.createClan(req.params.clan, {
+        coach: account.coach,
+        coachId: account.coachId || 0,
+        reddit: account.reddit,
+        discord: account.discord
+      });
     }
-
-    const clan = clanService.createClan(req.params.clan, {
-      coach: account.coach,
-      coachId: account.coachId || 0,
-      reddit: account.reddit,
-      discord: account.discord
-    });
     res.json(clan);
   }
 
