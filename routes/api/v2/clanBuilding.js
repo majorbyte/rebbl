@@ -66,7 +66,7 @@ class ClanBuildingApi{
     res.json(clan);
   }
   async _getClanByName(req,res){
-    let clan = await clanService.getNewClanByName(req.paramsgit .clan);
+    let clan = await clanService.getNewClanByName(req.params.clan);
     res.json(clan);
   }
 
