@@ -110,7 +110,7 @@ script.
       this.editClan = false;
       this.editTeam = false;
       let [clan, _me, _skills, skillDescriptions, _playerTypes, _races] = await Promise.all([
-          fetch('/api/v2/clan/build').then(response =>{ 
+          fetch('/api/v2/clan/build/#{clan}').then(response =>{ 
             if (response.redirected) window.location.assign(response.url) ;
             else if (response.ok) return response.json();
             return;

@@ -65,6 +65,10 @@ class ClanBuildingApi{
     let clan = await clanService.getNewClanByUser(account.coach);
     res.json(clan);
   }
+  async _getClanByName(req,res){
+    let clan = await clanService.getNewClanByName(req.paramsgit .clan);
+    res.json(clan);
+  }
 
   _validateClan = async (req,res) => res.json(await clanValidationService.validate(req.params.clan));
 
@@ -209,6 +213,7 @@ class ClanBuildingApi{
     this.router.get('/:clan/validate', this._validateClan.bind(this));
     this.router.get('/:clan/lock', this.isClanLeader, this._lockClan.bind(this));
     this.router.get('/:clan/:team', this.ensureAuthenticated ,  this._getTeam.bind(this));
+    this.router.get('/:clan', util.hasRole("clanadmin"), this._getClanByName.bind(this));
     this.router.get('/', this.ensureAuthenticated, this._getClan.bind(this));
 
     this.router.post('/:clan', util.hasRole('clanleader'), this._registerClan.bind(this));

@@ -17,7 +17,7 @@ class Clan{
     res.render("clan/standings");
   }
   _clan(req,res){
-    res.render("clan/build");
+    res.render("clan/build", {clan:req.params.clan});
   }
   _team(req,res){
     res.render("clan/team",{clan:"MAJOR", team:req.params.team});
