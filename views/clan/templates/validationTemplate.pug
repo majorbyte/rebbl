@@ -118,7 +118,15 @@
           // ko foreach: {data:messages, as:'msg'}
           tr 
             td(data-bind="text:team.team")
+            // ko if: msg.startsWith('Could not find player')
+            td  
+              span Could not find player&nbsp;
+                kbd(data-bind="text:msg.replace('Could not find player ','')")
+                | .
+            // /ko
+            // ko ifnot: msg.startsWith('Could not find player')
             td(data-bind="text:msg")
+            // /ko
           // /ko
           // /ko
 
