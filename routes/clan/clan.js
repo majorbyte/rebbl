@@ -34,8 +34,6 @@ class Clan{
     this.router.get("/build/:template", this._template);
     this.router.get("/divisions",util.cache(2), this._root);
     this.router.get("/clan",util.cache(2), this._clan);
-    //this.router.get("/clan/team",util.cache(2), this._team);
-    //this.router.get("/clan/team/:team",util.cache(2), this._team);
     this.router.get("/clan/:clan",util.ensureAuthenticated, util.cache(2), this._clan);
     this.router.get("/schedule/:s/:d",util.cache(2), this._schedule);
     this.router.get("/:season/:division/:round/:house",util.cache(2), this._matchup);

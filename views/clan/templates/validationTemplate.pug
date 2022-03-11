@@ -121,10 +121,16 @@
             // ko if: msg.startsWith('Could not find player')
             td  
               span Could not find player&nbsp;
-                kbd(data-bind="text:msg.replace('Could not find player ','')")
-                | .
+                kbd(data-bind="text:msg.replace('Could not find player ','').replace(' on the BB2 team','')")
+              span &nbsp;on the BB2 team  
             // /ko
-            // ko ifnot: msg.startsWith('Could not find player')
+            // ko if: msg.indexOf(' can not be found on the ledger') > -1
+            td  
+              span Player&nbsp;
+                kbd(data-bind="text:msg.replace(' can not be found on the ledger','').replace('Player ','')")
+              span &nbsp;can not be found on the ledger
+            // /ko
+            // ko ifnot: msg.startsWith('Could not find player') || msg.indexOf(' can not be found on the ledger') > -1
             td(data-bind="text:msg")
             // /ko
           // /ko
