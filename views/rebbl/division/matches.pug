@@ -3,16 +3,24 @@
 - let hasDate = dates.find(x => x.id === match.contest_id)
 - if (match.opponents)
   a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
-    div(class="MatchRow-team")
-      div(class="TeamLabel TeamLabel--reverse")
-        div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
-        div(class="TeamLabel-info TeamLabel-info--noScore")
-          - let tn = match.opponents[0].team.name
-          - if (tn.indexOf('[colour=') > -1)
-            div(class="TeamLabel-name " style=("color:#" + tn.substr(11,6)) )= tn.substr(19, tn.length-17)
-          -else
-            div(class="TeamLabel-name ")= tn
-          div(class="TeamLabel-coach ")= match.opponents[0].coach.name
+    - if (match.opponents[0].team.id > 0)
+      div(class="MatchRow-team")
+        div(class="TeamLabel TeamLabel--reverse")
+          div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+          div(class="TeamLabel-info TeamLabel-info--noScore")
+            - let tn = match.opponents[0].team.name
+            - if (tn.indexOf('[colour=') > -1)
+              div(class="TeamLabel-name " style=("color:#" + tn.substr(11,6)) )= tn.substr(19, tn.length-17)
+            -else
+              div(class="TeamLabel-name ")= tn
+            div(class="TeamLabel-coach ")= match.opponents[0].coach.name
+    - else 
+      div(class="MatchRow-team")
+        div(class="TeamLabel TeamLabel--reverse")
+          div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_01.png" alt="" class="TeamLabel-logo")
+          div(class="TeamLabel-info TeamLabel-info--noScore")
+            div(class="TeamLabel-name ") no team slotted
+            div(class="TeamLabel-coach ") no team slotted
     div(class="MatchRow-status")
       span(class="MatchStatus MatchStatus--transparent")
         span
@@ -39,12 +47,19 @@
               span(class="MatchStatus-score") -
             span(class="MatchStatus-score")= match.opponents[1].team.score
     div(class="MatchRow-team")
-      div(class="TeamLabel")
-        div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
-        div(class="TeamLabel-info TeamLabel-info--noScore")
-          - let on = match.opponents[1].team.name
-          - if (on.indexOf('[colour=') > -1)
-            div(class="TeamLabel-name " style=("color:#" + on.substr(11,6) ) )= on.substr(19, on.length-17)
-          -else
-            div(class="TeamLabel-name ")= on
-          div(class="TeamLabel-coach ")= match.opponents[1].coach.name
+      - if (match.opponents[1].team.id > 0)    
+        div(class="TeamLabel")
+          div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+          div(class="TeamLabel-info TeamLabel-info--noScore")
+            - let on = match.opponents[1].team.name
+            - if (on.indexOf('[colour=') > -1)
+              div(class="TeamLabel-name " style=("color:#" + on.substr(11,6) ) )= on.substr(19, on.length-17)
+            -else
+              div(class="TeamLabel-name ")= on
+            div(class="TeamLabel-coach ")= match.opponents[1].coach.name
+      - else
+        div(class="TeamLabel")
+          div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_neutre_01.png" alt="" class="TeamLabel-logo")
+          div(class="TeamLabel-info TeamLabel-info--noScore")
+            div(class="TeamLabel-name ") no team slotted
+            div(class="TeamLabel-coach ") no team slotted
