@@ -18,9 +18,10 @@ class Clan{
     res.render("clan/standings");
   }
   async _clan(req,res){
-    const account = await accountService.getAccount(req.user.name);
-    if (account?.roles.includes("clanadmin")) res.render("clan/build", {clan:req.params.clan});
-    else res.render("clan/build");
+    //const account = await accountService.getAccount(req.user.name);
+    //if (account?.roles.includes("clanadmin")) res.render("clan/build", {clan:req.params.clan});
+    //else res.render("clan/build");
+    res.render("clan/clan")
   }
   _schedule(req,res){
     res.render("clan/schedule");
