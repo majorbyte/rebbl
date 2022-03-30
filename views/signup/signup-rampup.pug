@@ -59,12 +59,11 @@ block content
           - if (user.error && user.error.team)
             p(class="error my-0")= user.error.team            
         div
-          span.warning Currently rampup GMAN is closed
           label(for="league") League
           select(name="league" id="league" required value=user.league)
             option(value="" disabled selected style="color: #9b959166;") Select your league
             //option(value="BIG O") BIG O
-            //option(value="GMAN") RAMPUP GMAN
+            option(value="GMAN") RAMPUP GMAN
             option(value="REL") RAMPUP REL
         div
           h3 By pressing complete, you confirm that you have read and will abide by our rules

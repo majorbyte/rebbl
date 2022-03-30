@@ -56,7 +56,7 @@ class Signup{
 
     this.router.get('/discord/callback', this._authDiscordCallback);
     
-    /*this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));*/
+    this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
 
     /*this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
 

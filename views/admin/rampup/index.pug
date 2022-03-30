@@ -149,7 +149,7 @@ block scripts
       },
       watch:{
         selectedLeague: async function(val){
-          let response = await fetch(`/api/v2/division/${val} Rampup/season 18/${val} Rampup/slim`);
+          let response = await fetch(`/api/v2/division/${val} Rampup/season 19/${val} Rampup/slim`);
           this.played = await response.json();
           let count = Math.ceil(this.coaches.filter(x => x.league === this.selectedLeague).length / 2);
           let len = count + count%2;
