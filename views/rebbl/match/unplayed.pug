@@ -162,7 +162,7 @@ block content
                   div(class="col-1")
                     btn(class="hidden btn btn-danger unstream"  id=`unstream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
                     btn(class="btn btn-success stream" id=`stream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
-            - if(!user && match.date)
+            - if(match.date)
               p planned match start:&nbsp;
                 span(id="matchTime")= match.date.date
               - if(match.date.stream)
