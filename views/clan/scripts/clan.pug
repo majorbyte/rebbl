@@ -10,6 +10,7 @@ script.
       this.loading = false;
       this.skilling = false;
       this.team = null;
+      this.newBloodTeam = null;
       this.map(data || {});
       this._reset = () => this.map(data);
       this.isDirty.bind(this);
@@ -27,7 +28,7 @@ script.
       this.members = data.members?.map(x => new MemberModel(x)) ||[];
       this.editClan = this.name.length > 1;
       this.registerClan = !this.editClan;
-
+      this.powers = data.powers;
       while (this.members.length < 5) this.members.push(new MemberModel());
     }
     onEditTeam = (team) => {
@@ -85,6 +86,11 @@ script.
         $('#toast-error-message').text(data.error);
         $('#toast-error').toast('show');
       }
+    }
+
+    onNewBloodTeam = (team) => {
+      this.newBloodTeam = team;
+      $('#newBloodTeam').modal('show')
     }
 
     isClanLeader = () => me.isClanLeader;

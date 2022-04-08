@@ -53,6 +53,7 @@ tr
     span(data-bind="text: new Intl.NumberFormat('en-US').format($parent.superstarPlayerTax(player))")
     // /ko
   td.left-align
+    // ko if: !$root.locked
     .flex-container
       // ko if: (id > 0 && !player.dice) || id === 0
       button.btn.btn-danger.btn-sm.pull-right(title='Remove player', data-bind="click: $parent.removePlayer.bind($parent)")
@@ -64,6 +65,7 @@ tr
       // /ko
       button.btn.btn-sm.btn-info.pull-right(data-bind="click: player.toggleEdit")
         i.fa.fa-pencil-square-o
+    // /ko
 
 tr(data-bind="visible: player.visible")
   td.left-align

@@ -118,7 +118,7 @@ block scripts
 
         },
         addMatchup: function(){
-          const name = `${this.selectedLeague} S18 W${this.round} GAME ${this.matchups.filter(x => x.league === this.selectedLeague).length+1}`
+          const name = `${this.selectedLeague} S19 W${this.round} GAME ${this.matchups.filter(x => x.league === this.selectedLeague).length+1}`
           this.matchups.push({home:{},away:{},league:this.selectedLeague, competitionName:name});
         },
         removeMatchup: function(matchup){

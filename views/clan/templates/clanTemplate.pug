@@ -59,9 +59,17 @@
             //ko if: !$root.locked
             button.btn.btn-success.btn-sm.pull-right(title='save team', data-bind="click:$root.onSaveTeam, attr:{disabled: !isDirty()}")
               i.fa.fa-save
-            // /ko  
             button.btn.btn-sm.btn-info.pull-right(title='Edit team' data-bind="click:$root.onEditTeam")
               i.fa.fa-pencil-square-o
+            // /ko  
+            //ko if: $root.locked
+            //ko if: $root.powers?.newBlood > 0
+            button.btn.btn-danger.btn-sm.pull-right(title='New Blood', data-bind="click:$root.onNewBloodTeam")
+              i.fa.fa-recycle
+            // /ko                
+            button.btn.btn-sm.btn-info.pull-right(title='Edit team' data-bind="click:$root.onEditTeam")
+              i.fa.fa-info
+            // /ko  
             
         // /ko  
         // ko if: !$root.getMemberTeam($index())
@@ -116,3 +124,23 @@
       .modal-footer
         button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
         button(type="button" class="btn btn-primary" data-bind="click: lock") Proceed &amp; Lock
+.modal.fade#newBloodTeam(aria-labelledby="newBloodLabel" aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h5.modal-title(id="newBloodLabel" data-bind="text: `You are about to use New Blood on team ${newBloodTeam?.name}`")  
+        button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+          <span aria-hidden="true">&times;</span>
+      .modal-body
+        div.alert.alert-danger 
+          p 
+            b This is a permanent action! 
+          p You will not be able to undo this, and more important you would need to complete the ledger within 48 hours of the teams match.
+
+        p If you proceed, a server side registration of the one-time use for this power will be made.
+        
+        p.alert.alert-info You have 23 hours remaining to complete the new ledger, otherwise the New Blood will be processed after the current team's next game
+
+      .modal-footer
+        button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
+        button(type="button" class="btn btn-primary" data-bind="click: lock") Proceed
