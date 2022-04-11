@@ -18,14 +18,13 @@ class Clan{
     res.render("clan/standings");
   }
   async _clan(req,res){
-    //const account = await accountService.getAccount(req.user.name);
-    //if (account?.roles.includes("clanadmin")) res.render("clan/build", {clan:req.params.clan});
-    //else res.render("clan/build");
     res.render("clan/clan",  {clan:req.params.clan})
   }
 
   async _build(req,res){
-    res.render("clan/build")
+    const account = await accountService.getAccount(req.user.name);
+    if (account?.roles.includes("clanadmin")) res.render("clan/build", {clan:req.params.clan});
+    else res.render("clan/build");
   }
 
   _schedule(req,res){
@@ -41,6 +40,7 @@ class Clan{
     this.router.get("/divisions",util.cache(2), this._root);
     this.router.get("/clan",util.cache(2), this._clan);
     this.router.get("/clan/build",util.ensureAuthenticated, util.cache(2), this._build);
+    this.router.get("/clan/build/:clan",util.ensureAuthenticated, util.cache(2), this._build);
     this.router.get("/clan/:clan",util.ensureAuthenticated, util.cache(2), this._clan);
     this.router.get("/schedule/:s/:d",util.cache(2), this._schedule);
     this.router.get("/:season/:division/:round/:house",util.cache(2), this._matchup);
