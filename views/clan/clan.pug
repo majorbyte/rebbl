@@ -95,7 +95,8 @@ block scripts
           }
 
           let path = window.location.pathname.split("/");
-          let response = await fetch(`/api/v2/clan${path[path.length-1] !== "clan" ? "/"+path[path.length-1] : ""}`);
+          console.log(path);
+          let response = await fetch(`/api/v2/clan${path[path.length-1] !== "clan" ? "/season/"+path[path.length-2]+"/"+path[path.length-1] : ""}`);
           const data = await response.json();
           this.clan = Object.assign({},this.clan,data.clan);
           this.clanLeader = data.leader;

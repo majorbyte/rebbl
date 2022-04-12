@@ -20,6 +20,9 @@ class Clan{
   async _clan(req,res){
     res.render("clan/clan",  {clan:req.params.clan})
   }
+  async _seasonclan(req,res){
+    res.render("clan/clan",  {clan:req.params.clan, season:req.params.season})
+  }
 
   async _build(req,res){
     const account = await accountService.getAccount(req.user.name);
@@ -42,6 +45,7 @@ class Clan{
     this.router.get("/clan/build",util.ensureAuthenticated, util.cache(2), this._build);
     this.router.get("/clan/build/:clan",util.ensureAuthenticated, util.cache(2), this._build);
     this.router.get("/clan/:clan",util.ensureAuthenticated, util.cache(2), this._clan);
+    this.router.get("/clan/season/:season/:clan",util.cache(2), this._seasonclan);    
     this.router.get("/schedule/:s/:d",util.cache(2), this._schedule);
     this.router.get("/:season/:division/:round/:house",util.cache(2), this._matchup);
     

@@ -371,10 +371,17 @@ class ClanApi{
       res.json(coaches);
     });
 
+    this.router.get("/season/:season/:clan", async function(req, res){
+      const clan = await clanService.getClanByNameAndSeason(req.params.clan,req.params.season); 
+      res.json({ clan:clan, leader:false} );
+    });
+
     this.router.get("/:clan", async function(req, res){
       const clan = await clanService.getClanByName(req.params.clan); 
       res.json({ clan:clan, leader:false} );
     });
+
+
 
     this.router.put("/:season/:division/:round/:house/:clan/usepower/:power", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
       let schedule = await dataService.getSchedule({
