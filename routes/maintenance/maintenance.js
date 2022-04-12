@@ -4,7 +4,7 @@ const
   , campingService = require("../../lib/CampingService.js")
   , clanService = require("../../lib/ClanService.js")
   , configurationService = require("../../lib/ConfigurationService.js")
-  , offseasonService = require('../../lib/OffseasonService.js')
+  , offseasonService = require('../../lib/OffSeasonService.js')
   , ds = require("../../lib/DraftService.js")
   , dataService = require("../../lib/DataService.js").rebbl
   , express = require('express')
