@@ -114,7 +114,7 @@ block content
           .col-12.row.justify-content-center
             h1 Matches
           template(v-for="match in schedule.matches")
-            a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
+            a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : `/clan/match/unplayed/${match.contest_id}`" target="_blank")
               .MatchRow-team
                 .TeamLabel.TeamLabel--reverse
                   div: img.TeamLabel-logo(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" )
