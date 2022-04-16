@@ -26,7 +26,7 @@ block content
             div(class="col-10 media text-center d-flex flex-wrap align-items-center")
               div(class="media-body")
                 h1 
-                  a(v-bind:href="`/clan/clan/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
+                  a(v-bind:href="`/clan/clan/season/${schedule.season}/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
               img(v-bind:src="`https://cdn2.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
             div(class="col-2 text-right")
               h1 {{schedule.home.win}}
@@ -40,7 +40,7 @@ block content
               img(v-bind:src="`https://cdn2.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
               div(class="media-body")
                 h1 
-                  a(v-bind:href="`/clan/clan/${schedule.away.clan.name}`") {{schedule.away.clan.name}}          
+                  a(v-bind:href="`/clan/clan/season/${schedule.season}/${schedule.away.clan.name}`") {{schedule.away.clan.name}}          
       template(v-if="!schedule.drafted && powers.length > 0")          
         div(class="col-12 row")
           div(class="col-12 row  justify-content-center")
