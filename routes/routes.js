@@ -53,6 +53,7 @@ class Routes{
 
     await Promise.all(data.upcoming.map(async function(match) {
       let date = d.find(s => s.id === match.contest_id);
+      if (!date) return;
       match.date = date.date;
       if(date.stream)
       match.stream=date.stream;
