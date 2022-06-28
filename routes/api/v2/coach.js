@@ -43,6 +43,7 @@ class CoachApi{
   }
 
   async _search(coachName){
+    coachName += '';
     const account = await dataService.getAccount({"coach": {$regex: new RegExp(`^${coachName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i")}});
 
     if (account){
