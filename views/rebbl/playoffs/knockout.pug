@@ -176,8 +176,8 @@ block content
           // /ko
           // ko with: model.matches['5'][1]
           div(class="gameinfo semis-r" style="width: 121%;margin-top: -86px;" )
-            div(class="round-details" style="font-size: 20px;" data-bind="{css: $data.winner && $data.winner.coach &&  $data.round === model.round  ? 'spoiler played': ''}") semifinals
-            ul(class ="matchup championship" style="padding:0px")
+            div(class="round-details" style="font-size: 20px;") semifinals
+            ul(class ="matchup championship" style="padding:0px" data-bind="{css: $data.winner && $data.winner.coach &&  $data.round === model.round  ? 'spoiler played': ''}")
               // ko if:  $data.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && $data.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
               li(class=`team team-top` data-bind="{css: $data.winner && $data.winner.coach && $data.winner.coach.id === $data.opponents[1].coach.id ? 'looser' :''  }")
                 //ko if: $data.opponents[0].team.logo.length > 0
@@ -295,8 +295,8 @@ block content
       div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
 
   script(type="text/html" id="knockoutTemplateRev")
-    div(class="gameinfo" data-bind="{css: match.winner && match.winner.coach && match.round === model.round ? 'spoiler played': ''}")
-      ul(class="matchup" )
+    div(class="gameinfo")
+      ul(class="matchup" data-bind="{css: match.winner && match.winner.coach && match.round === model.round ? 'spoiler played': ''}")
         // ko if:  match.opponents[0].team.name.toLowerCase().indexOf("admin") === -1 && match.opponents[1].team.name.toLowerCase().indexOf("admin") === -1  
         li(class=`team team-top` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id === match.opponents[1].coach.id ? 'looser' :''  }")
           div(class="score") 
