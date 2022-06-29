@@ -20,7 +20,7 @@ const { v4: uuidv4 } = require('uuid');
 class Server{
   constructor(){
     if (process.env.NODE_ENV === 'production'){
-      this.appInsights = require("applicationinsights");
+/*      this.appInsights = require("applicationinsights");
       this.appInsights.setup(process.env["ApplicationInsights"])
         .setAutoDependencyCorrelation(true)
         .setAutoCollectRequests(true)
@@ -29,7 +29,7 @@ class Server{
         .setAutoCollectDependencies(true)
         .setAutoCollectConsole(true)
         .setUseDiskRetryCaching(false)
-        .start();
+        .start();*/
     }
     this.passport = require('passport');
 
