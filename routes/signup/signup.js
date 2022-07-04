@@ -404,11 +404,11 @@ class Signup{
     if (cyanideEnabled){
       team = await cyanideService.team({platform:"pc",name:signup.team});
 
-      if (!team) error.team = `Team ${signup.team} not found.`;
+      if (!team.team) error.team = `Team ${signup.team} not found.`;
 
-      if (team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${signup.team} does not belong to this coach.`;
+      if (team.team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${signup.team} does not belong to this coach.`;
 
-      if (team){
+      if (team.team){
         signup.teamCreated = team.team.created;
         signup.lastPlayed = team.team.datelastmatch;
         const race = this.races.find(x => x.id === team.team.idraces);
