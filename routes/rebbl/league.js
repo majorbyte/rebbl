@@ -42,27 +42,14 @@ class League{
           return;
       }
       let season = "";
-      if(league === "off season international"){
-        league = new RegExp(`^ReBBL Open Invitational`, 'i');
-        season = "season 19";
-      } else if (league === "playins - s10"){
-        league = new RegExp(`^ReBBL Playoffs`,'i');
-        comp = "Play-Ins Qualifier";
-      } else if(league.toLowerCase() === "greenhorn cup") {
+      if(league.toLowerCase() === "greenhorn cup") {
         league = new RegExp(`^Greenhorn Cup`,'i');
         comp ="Greenhorn Cup$";
-        season ="season 19";
+        season ="season 20";
       } else if (league.toLowerCase().indexOf("rebbrl") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "rebbll " && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer" ){
         league = new RegExp(`^REBBL[\\s-]+${league}`, 'i');
       }  
       else {
-        if (league === "rabble"){
-          league = "the rebbl rabble mixer";
-        }
-        if (league === "eurogamer"){
-          league = "REBBL Eurogamer Open";
-        }
-    
         league = new RegExp(`^${league}`, 'i');
       }
     

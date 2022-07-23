@@ -36,7 +36,7 @@ class Division{
       leagueRegex = new RegExp(`One Minute League$`, 'i');  
     } else if(league.toLowerCase() === "greenhorn cup") {
       leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
-      season = "season 19";
+      season = "season 20";
       divRegex =new RegExp(`^${req.params.division}$`, 'i');
     } else if (league.toLowerCase().indexOf("hjmc") === -1 && league.toLowerCase().indexOf("rebbrl") === -1 && league.toLowerCase().indexOf("rebbl -") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "rebbll " && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
       leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
@@ -89,22 +89,14 @@ class Division{
       let leagueRegex;
       let league = req.params.league;
       let season = "";
-      if (league.toLowerCase().endsWith("one minute league")){
-        leagueRegex = new RegExp(`One Minute League$`, 'i');  
-      } else if(league.toLowerCase() === "greenhorn cup") {
+      if (league.toLowerCase() === "greenhorn cup") {
         leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
-        season = "season 19";
+        season = "season 20";
         divRegex =new RegExp(`^${req.params.division}$`, 'i');
       } else if (league.toLowerCase().indexOf("rebbrl") === -1 && league.toLowerCase().indexOf("rebbl -") === -1 && league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "rebbll " && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
         leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
       } else {
-        if (league === "rabble"){
-          league = "the rebbl rabble mixer";
-        }
-        if (league === "eurogamer"){
-          league = "REBBL Eurogamer Open";
-        }
-          leagueRegex = new RegExp(`^${league}`, 'i');
+        leagueRegex = new RegExp(`^${league}`, 'i');
       }
         
       let divRegex = null;
