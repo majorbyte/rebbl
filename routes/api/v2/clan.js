@@ -180,7 +180,7 @@ class ClanApi{
 
     this.router.get("/powers", function(req,res){
       res.json( [
-      {key:"version13.0",description:13.0},
+      {key:"version13.1",description:13.1},
       {
         key: "miscommunication",
         name: "Miscommunication!",
@@ -205,18 +205,13 @@ class ClanApi{
         cost: 0,
         quantitiy: 1,
         description: `Deadlines:
-        Call power: Within 24 hours of game ending
-        Submit ledger: Within 48 hours of game ending, and before next draft.
+        Call power & Submit ledger: Within 48 hours of game ending, and before next draft.
         
-        Within 24 hours after the team played its last match (and before the next draft), the clan leader can nominate that team to be removed from the league permanently and replaced with a new team costing the same in gold as the original team did AT THE START OF THE SEASON.
+        The clan leader (or nominated deputy) can use the New Blood power, thereby removing the target team from the league permanently and replacing it with a new team costing the same in gold as the original team did AT THE START OF THE SEASON. 
 
-        This new team follows the same rules for buying players and skills as any new team. The new team may be of a different race if so desired, but still must be unique to the clan. If the new team is the same race as the original team, a single player from the original roster may be kept as a legacy player. This legacy player costs the same in gold as he is listed as valued in-game. This legacy player counts towards the number of superstars on the new team (as the team’s first superstar, although his 10k superstar tax is considered part of the price paid for him already). The legacy player also counts towards the number of statistic increased players AND number of doubles players (if the legacy player has any stats or doubles). For instance, a legacy +ST and +AG dorf runner with dodge and sidestep would thus consume both the statistic and double quota of the new blood:ed Dorf team. He would still be legal, however, as he earned those stats and doubles the hard way! A second superstar on that Dorf team would cost 20k tax, a third 30k, etc, as per the rules on superstars.
+        Clan leaders may use the New Blood button next to one of their teams in the Clan Builder tool to test and consider if they want to use New Blood or not. The power is only called once the Clan Leader locks in a fully validated team within 48 hours of the target team’s last game ending. The New Blood team follows the same rules for buying players and skills as any new team. The new team may be of a different race if so desired, but still must be unique to the clan. If the new team is the same race as the original team, a single player from the original team may be kept as a legacy player (retaining skills and injuries). 
 
-        Please use the ledger from the start of the season, and make sure you list the correct name on a legacy player and list the actual value of this player as cost. Please use the separate New Blood tab in the ledger, where the potential legacy player has a separate spot at the top for cost, rolls selected and skill-ups! After the ledger comes to the same price as the previous team, create the team in-game according to the new team rules. The new team ledger (and in-game team created) must be provided within 48 hours of the match being over to the admin team for review.
-
-        NOTE: If you miss the first deadline, the power use is not counted. If you miss the second deadline, then the power will be processed one round later than intended. If you are drafting before the New Blood! has been fully validated, then the power will not be processed until one round later than intended.
-
-        You cannot switch tiers upwards when using this power, if you move downwards a tier you DO NOT receive any tax rebate associated with that tier. You cannot use this power on a team that started the season under 1100 TV. 
+        You cannot switch tiers upwards when using this power, if you move downwards a tier you DO NOT receive any tax rebate associated with that tier. You cannot use this power on a team that started the season under 1100 TV. After your New Blood team comes to the same price (in Gold Pieces) as the previous team, create the team in-game according to the New Blood tab and submit the new team ledger (plus team created in-game) to a division admin over PM for review. 
         `
       },{
         key: "assassination",
@@ -566,7 +561,7 @@ class ClanApi{
     });
 
     this.router.post("/:clan/applynewblood/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
-      await clanService.newBlood(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
+      await clanService.newBloodAdmin(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
 
       res.status(200).send();
     });

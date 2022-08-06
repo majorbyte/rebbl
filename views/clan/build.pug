@@ -65,10 +65,18 @@ block content
     // ko template: { name: 'clanTemplate' }
     // /ko
     // /ko
+
     // ko if: editTeam && team
     // ko template: { name: 'teamTemplate', data: team }
     // /ko
     // /ko
+
+    // ko if: editTeam && newBloodTeam
+    // ko template: { name: 'newBloodTemplate', data: newBloodTeam }
+    // /ko
+    // /ko
+
+
     // ko if: showValidation
     // ko template: { name: 'validationTemplate', data: validationResult }
     // /ko
@@ -125,7 +133,7 @@ block scripts
     ];
 
     const TierTax = [
-      {race:'Lizardman', tier:	1, cost: 150_000},
+      {race:'Lizardman', tier:	1, cost: 150_000,},
       {race:'Necromantic', tier:	1, cost: 150_000},
 
       {race:'Amazon', tier:	2, cost: 100_000},

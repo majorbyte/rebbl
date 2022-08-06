@@ -10,7 +10,7 @@ script.
       
       ko.track(this);
       ko.getObservable(this, 'coach').subscribe(this.onCoachChange.bind(this));
-      this.getReturningTeam(this.coach);
+      if (this.isReturningTeam) this.getReturningTeam(this.coach);
     }
     map(data){
       this.skillModel = new SkillModel();
@@ -30,6 +30,12 @@ script.
       this.cost = data.cost || 0;
       this.tier = data.tier || 0;
       this.isReturningTeam = data.isReturningTeam || false;
+      
+      this.isNewBloodTeam = data.isNewBloodTeam || false;
+      this.isNewBloodOk = data.isNewBloodOk || false;
+      this.newBloodValidationData = null;
+      this.newBloodValidationError = null;
+
       this.returningTeam = data.returningTeam ||null;
       this.returningPlayers = [];
       this.returningPlayer = new PlayerModel();
@@ -57,29 +63,44 @@ script.
     subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + Math.max(Number(this.fanfactor) - 5,0)) * 10000 + (this.apothecary ? 50000 : 0);
     rerollCost = () => this.race ? this.race.reroll : 50000;
     playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
+    hasLegacyPlayer = () => this.roster.some(player => player.id > 0);
     positions = () => {
       if (!this.race || this.roster.length >= 16) return [];
 
       const types = playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b);
       return types.filter(t => this.roster.filter(x => x.playerType.type === t.type).length < t.allowed);
     }
-    availableReturningPlayers = () => this.roster.length < 16 ? this.returningPlayers.filter(x => !this.roster.find(p => p.id === x.id)) : [];
+    availableReturningPlayers = () => {
+      if (this.isNewBloodTeam) {
+        if (this.returningTeam?.race?.id !== this.race?.id) return [];
+        const players = this.roster.filter(x => this.returningPlayers.find(p => p.id === x.id));
+        if (players.length === 0 ) return this.returningPlayers;
+        return [];
+      }  
+      
+      if (this.roster.length < 16) return this.returningPlayers.filter(x => !this.roster.find(p => p.id === x.id)) 
+      
+      return [];
+    };
     teamValue = () => this.playerCost() + this.subTotalRerolls() + (this.fanfactor < 5 ? this.fanfactor * 10000  : 50000);
     teamCost = () => this.playerCost() + this.subTotalRerolls() + this.superstarTax();
     teamTax = () => TierTax.find(x => x.race === this.race?.name)?.cost || 0;
     teamTier = () => TierTax.find(x => x.race === this.race?.name)?.tier;
     teamTotal = () => this.teamCost() + this.teamTax();
 
-    isTeamCostValid = () => this.teamCost () >= (this.teamTier() < 7 ? 1_200_000 : 900_000);
+    isTeamCostValid = () => this.isNewBloodTeam ?  this.teamTotal() >= this.returningTeam.teamTotal() : this.teamCost() >= this.teamTier() < 7 ? 1_200_000 : 900_000;
+
+    targetTeamCost = () =>  this.isNewBloodTeam ? (this.returningTeam.teamCost() - this.teamTax()) : this.teamTier() < 7 ? 1_200_000 : 900_000;
 
     rookieCount = () => this.roster.filter(x => !x.skill1).length;
     superstarCount = () => this.roster.filter(x => x.skill1 && x.skill2).length;
 
     superstarTax = () => this.roster.filter(x => x.isSuperstar() || x.isSkilled()).reduce((p,c,i) => {
+      
       if (c.isSkilled()) p += 10;
-      else p = p + 10*(i+1);
+      else p = p + 10*( i + (this.isNewBloodTeam && this.hasLegacyPlayer() ? 2 : 1));
       return p;
-      }, 0) * 1000
+    }, 0) * 1000
     
     sppSurplus = () => this.roster.reduce((p,c) => p+c.sppSurplus,0);
     spentSPP = () => this.roster.reduce((p,c) => p+c.spentSPP,0);
@@ -110,8 +131,10 @@ script.
     }
 
     superstarPlayerTax(player) {
-      if (player.isSkilled()) return 10_000;
-      return (1 + this.roster.filter(x => x.isSuperstar()).indexOf(player)) * 10_000;
+      const base = this.isNewBloodTeam && this.hasLegacyPlayer() ? 2 : 1;
+
+      if (player.isSkilled()) return base * 10_000;
+      return (base + this.roster.filter(x => x.isSuperstar()).indexOf(player)) * 10_000;
     }
 
     statIncreaseCount = () => this.roster.filter(x => x.hasIncrease()).length;
@@ -128,19 +151,133 @@ script.
       this.newPlayer.playerType = '';
       this.newPlayer.name = '';
     }
+    isDouble = (player,skill) => player.playerType.doubles.includes(SkillDescriptions.find(x => x.name === skill)?.category ||'');
+    isIncrease =  (skill) => SkillDescriptions.filter(x => x.category == 'Increase').map(x => x.name).includes(skill);
+
     addReturningPlayer () {
       this.roster.push(this.returningPlayer);
+      const player = this.returningPlayer;
+      if (this.isNewBloodTeam) {
+        for(let skill of player.skills){
+          if (player.fixedSkills.indexOf(skill)>-1) continue;
+          if (!this.isDouble(player,skill) && !this.isIncrease(skill)) return;
+          if (this.isDouble(player,skill)) this.skillModel.doubleSkills++;
+          switch(SkillDescriptions.find(x => x.name === skill).category){
+            case 'Increase':
+              this.skillModel.statsIncreases.push(skill);
+              break;
+            case 'General':
+              this.skillModel.doubleGeneralSkills.push(skill);
+              break;
+            case 'Agility':
+              this.skillModel.doubleAgilitySkills.push(skill);
+              break;
+            case 'Passing':
+              this.skillModel.doublePassingSkills.push(skill);
+              break;
+            case 'Strength':
+              this.skillModel.doubleStrengthSkills.push(skill);
+              break;
+            case 'Mutation':
+              this.skillModel.doubleMutationSkills.push(skill);
+              break;
+          }
+          /*
+            Special race rules:
+            Undead may only buy 1 double OR 1 statistic on one of their Mummies.
+            Ogres may take either 3 doubles, or 1 double AND 1 statistic, on their Ogres.
+          */
+          switch (player.playerType.type){
+            case 'Undead_Mummy':
+              if (this.isDouble(player,skill) || this.isIncrease(skill) ) this.skillModel.mummyDoubleCount++;
+              break;
+            case 'Ogre_Ogre':
+              if (this.isDouble(player,skill) ) this.skillModel.ogreDoubleCount++;
+              else if (this.isIncrease(skill) ) this.skillModel.ogreStatsCount++;
+              break;
+          }   
+        }       
+      }
     }
 
     removePlayer (player){
       if (player.skill1) player.removeSkillModel(player.skill1);
       if (player.skill2) player.removeSkillModel(player.skill2);
       this.roster.splice(this.roster.indexOf(player),1);
+      if (this.isNewBloodTeam && player.id > 0){
+        for(let skill of player.skills){
+          if (player.fixedSkills.indexOf(skill)>-1) continue;
+          if (!this.isDouble(player,skill) && !this.isIncrease(skill)) return;
+          if (this.isDouble(player,skill)) this.skillModel.doubleSkills--;
+          switch(SkillDescriptions.find(x => x.name === skill).category){
+            case 'Increase':
+              this.skillModel.statsIncreases.splice(this.skillModel.statsIncreases.indexOf(skill),1);
+              break;
+            case 'General':
+              this.skillModel.doubleGeneralSkills.splice(this.skillModel.doubleGeneralSkills.indexOf(skill),1);
+              break;
+            case 'Agility':
+              this.skillModel.doubleAgilitySkills.splice(this.skillModel.doubleAgilitySkills.indexOf(skill),1);
+              break;
+            case 'Passing':
+              this.skillModel.doublePassingSkills.splice(this.skillModel.doublePassingSkills.indexOf(skill),1);
+              break;
+            case 'Strength':
+              this.skillModel.doubleStrengthSkills.splice(this.skillModel.doubleStrengthSkills.indexOf(skill),1);
+              break;
+            case 'Mutation':
+              this.skillModel.doubleMutationSkills.splice(this.skillModel.doubleMutationSkills.indexOf(skill),1);
+              break;
+          }
+          switch (player.playerType.type){
+            case 'Undead_Mummy':
+              if (this.isDouble(player,skill) || this.isIncrease(skill) ) this.skillModel.mummyDoubleCount--;
+              break;
+            case 'Ogre_Ogre':
+              if (this.isDouble(player,skill) ) this.skillModel.ogreDoubleCount--;
+              else if (this.isIncrease(skill) ) this.skillModel.ogreStatsCount--;
+              break;
+          }
+        }
+      }
     }
 
     showSkillPlayerModal(player){
       this.skillingPlayer = player;
       $('#skillPlayerModal').modal('show');
+    }
+
+    async onNewBloodValidateClick(vm, e){
+      var context = ko.contextFor(e.target);
+      const result = await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}/newblood/validate` ,{
+        method:'POST',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(this)
+      });
+      if (result.ok) this.isNewBloodOk = true;
+      else if (result.status === 400){
+        this.newBloodValidationData = await result.json();
+      } else {
+        this.newBloodValidationError = await result.json();
+      }
+      if (!result.ok){
+        $('#newBloodTeamValidation').modal('show');
+      }
+    }
+
+    async useNewBlood(vm, e){
+      this.newBloodValidationData = null;
+      this.newBloodValidationError = null;
+      var context = ko.contextFor(e.target);
+      const result = await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}/newblood` ,{
+        method:'POST',
+        headers:{ 'Content-Type': 'application/json'},
+        body: JSON.stringify(this)
+      });
+    }
+
+    onShowModalClick(){
+      $('#newBloodTeam').modal('show');
     }
 
     async skillPlayer (vm, e){

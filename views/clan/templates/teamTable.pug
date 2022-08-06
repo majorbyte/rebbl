@@ -2,7 +2,7 @@ table.table.table-striped.table-sm.table-responsive
   tr
     th.table-info returning team
     td 
-      // ko if: isReturningTeam
+      // ko if: isReturningTeam && !isNewBloodTeam
       a(data-bind="attr:{href:`https://rebbl.net/team/${returningTeam.id}`}, text:returningTeam.name" target="_blank")        
       // /ko
   tr

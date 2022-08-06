@@ -53,13 +53,13 @@ tr
     span(data-bind="text: new Intl.NumberFormat('en-US').format($parent.superstarPlayerTax(player))")
     // /ko
   td.left-align
-    // ko if: !$root.locked
+    // ko if: !$root.locked || $parent.isNewBloodTeam
     .flex-container
       // ko if: (id > 0 && !player.dice) || id === 0
       button.btn.btn-danger.btn-sm.pull-right(title='Remove player', data-bind="click: $parent.removePlayer.bind($parent)")
         i.fa.fa-times-rectangle-o
       // /ko
-      // ko if: id > 0 && levelEligible && $parent.isPlayerEligable(player)
+      // ko if: !$parent.isNewBloodTeam && id > 0 && levelEligible && $parent.isPlayerEligable(player)
       button.btn.btn-sm.btn-success.pull-right(data-bind="click: $parent.showSkillPlayerModal.bind($parent)")
         img(src="https://cdn2.rebbl.net/images/level.png" style="width: 20px;")
       // /ko

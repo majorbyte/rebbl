@@ -89,8 +89,30 @@ script.
     }
 
     onNewBloodTeam = (team) => {
-      this.newBloodTeam = team;
-      $('#newBloodTeam').modal('show')
+      this.editClan = !this.editClan;
+      this.editTeam = !this.editTeam;
+      this.showValidation = false;
+
+      team.isReturningTeam = false;
+
+      this.newBloodTeam = new TeamModel(team);
+      this.newBloodTeam.returningTeam = team;
+
+      this.newBloodTeam.isReturningTeam = false;
+      this.newBloodTeam.isNewBloodTeam = true;
+
+      const roster = team.roster.map(player => {
+        if (player.skill1) player.skills.push(player.skill1);
+        if (player.skill2) player.skills.push(player.skill2);
+
+        player.skill1 = player.skill2 = undefined;
+        player.dice = undefined;
+        player.spentSPP = player.sppSurplus = 0;
+
+      });
+
+      this.newBloodTeam.returningPlayers = team.roster;
+      this.newBloodTeam.roster = [];
     }
 
     isClanLeader = () => me.isClanLeader;

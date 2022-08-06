@@ -124,23 +124,3 @@
       .modal-footer
         button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
         button(type="button" class="btn btn-primary" data-bind="click: lock") Proceed &amp; Lock
-.modal.fade#newBloodTeam(aria-labelledby="newBloodLabel" aria-hidden="true")
-  .modal-dialog
-    .modal-content
-      .modal-header
-        h5.modal-title(id="newBloodLabel" data-bind="text: `You are about to use New Blood on team ${newBloodTeam?.name}`")  
-        button(type="button" class="close" data-dismiss="modal" aria-label="Close")
-          <span aria-hidden="true">&times;</span>
-      .modal-body
-        div.alert.alert-danger 
-          p 
-            b This is a permanent action! 
-          p You will not be able to undo this, and more important you would need to complete the ledger within 48 hours of the teams match.
-
-        p If you proceed, a server side registration of the one-time use for this power will be made.
-        
-        p.alert.alert-info You have 23 hours remaining to complete the new ledger, otherwise the New Blood will be processed after the current team's next game
-
-      .modal-footer
-        button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
-        button(type="button" class="btn btn-primary" data-bind="click: lock" disabled) Proceed

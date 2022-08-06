@@ -134,6 +134,29 @@ class ClanBuildingApi{
     }
   }
 
+  async _validateNewBlood(req,res){
+    try{
+      const validationResult = await clanValidationService.validateNewBlood(req.params.clan,req.params.team,req.body);
+      if (validationResult.length > 0) res.status(400).send(validationResult);
+      res.status(200).send();
+    } catch (ex) {
+      res.status(500).send({error: ex.message});
+    }
+  }
+
+  async _newBlood(req,res){
+    try{
+      const validationResult = await clanValidationService.validateNewBlood(req.params.clan,req.params.team,req.body);
+      if (validationResult.length > 0) res.status(400).send(validationResult);
+
+      await clanService.newBloodClanLeader(req.params.clan,req.params.team,req.body.name);
+
+      res.status(200).send();
+    } catch (ex) {
+      res.status(500).send({error: ex.message});
+    }
+  }
+
   async teamSaveAllowed(req, res, next) {
     const account = await accountService.getAccount(req.user.name);
     //const clan = await clanService.getNewClanByUser(account.coach);
@@ -168,7 +191,7 @@ class ClanBuildingApi{
     const clan = req.params.clan ? await clanService.getClanByName(req.params.clan) :  await clanService.getNewClanByUser(account.coach); 
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
-    if(clan.locked) return res.status(400).send({error:'No more updates allowed'});
+    //if(clan.locked) return res.status(400).send({error:'No more updates allowed'});
 
     const isClanLeader = clan.leader === account.coach;
 
@@ -216,10 +239,13 @@ class ClanBuildingApi{
     this.router.get('/:clan/lock', this.isClanLeader, this._lockClan.bind(this));
     this.router.get('/:clan/:team', this.ensureAuthenticated ,  this._getTeam.bind(this));
     this.router.get('/:clan', util.hasRole("clanadmin"), this._getClanByName.bind(this));
-    this.router.get('/', this.ensureAuthenticated, this._getClan.bind(this));
+    this.router.get('/', this.ensureAuthenticated, this._getClan.bind(this)); 
 
     this.router.post('/:clan', util.hasRole('clanleader'), this._registerClan.bind(this));
+    this.router.post('/:clan/:team/newblood/validate', this.isClanLeader, this._validateNewBlood.bind(this));
+    this.router.post('/:clan/:team/newblood', this.isClanLeader, this._newBlood.bind(this));
     this.router.post('/:clan/:team/skill', this.isClanLeader, this._skillPlayer.bind(this));
+
 
     this.router.put('/:clan/members', this.isClanLeader, this._saveMembers.bind(this));
     this.router.put('/:clan/:team/skill', this.teamSaveAllowed, this._saveTeamSkill.bind(this));

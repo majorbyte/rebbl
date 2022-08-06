@@ -1,5 +1,5 @@
 tr.add-player-row
-  // ko if: isReturningTeam && availableReturningPlayers().length > 0
+  // ko if: (isReturningTeam || isNewBloodTeam) && availableReturningPlayers().length > 0
   td.left-align
     span(data-bind="text: returningPlayer.name")
   td.left-align
