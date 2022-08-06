@@ -1,0 +1,47 @@
+button.btn.btn-primary.pull-right.mx-2(data-bind="click:$root.onTeamDoneClick") Done
+// ko if: race
+table.table.table-sm.table-borderless
+  thead
+    tr.table-info
+      td(colspan='1' title='Name') Name 
+      td(colspan='1' title='Position') Position 
+      td(colspan='1' title='Movement Allowance') MA 
+      td(colspan='1' title='Strength') ST 
+      td(colspan='1' title='Agility') AG 
+      td(colspan='1' title='Armour Value') AV 
+      td(colspan='1' title='Armour Value') SPP+ 
+      td(colspan='1' title='Skills') Skills 
+      td(colspan='1' title='Casualties') Casualties
+      td.data(colspan='1' title='Current Value') Player Cost 
+      td.data(colspan='1' title='Current Value')
+  tbody
+    // ko template: { name: 'addNewPlayerTemplate' }
+    // /ko
+br        
+table(style="width:100%")
+  thead
+    tr.table-info
+      td(colspan='1' title='Name') Name 
+      td(colspan='1' title='Position') Position 
+      td(colspan='1' title='Movement Allowance') MA 
+      td(colspan='1' title='Strength') ST 
+      td(colspan='1' title='Agility') AG 
+      td(colspan='1' title='Armour Value') AV 
+      td(colspan='1' title='SPP') SPP 
+      td(colspan='1' title='SPP Surplus') SPP+ 
+      td(colspan='1' title='SPP Spent on skilling') SPP- 
+      td(colspan='1' title='Skills') Skills 
+      td(colspan='1' title='Casualties') Casualties
+      td.data(colspan='1' title='Current Value') Player Cost 
+      td.data(colspan='1' title='Superstar Tax') Skill Tax 
+      td(colspan='1' title='Controls')  
+  tbody(data-bind="template: { name: 'playerTemplate', foreach: roster, as: 'player' }")
+// /ko
+
+.tables
+  // ko template: { name: 'teamTable' }
+  // /ko
+  // ko template: { name: 'rerollsTable' }
+  // /ko
+  // ko template: { name: 'costTable' }
+  // /ko

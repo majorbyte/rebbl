@@ -53,7 +53,7 @@ tr
     span(data-bind="text: new Intl.NumberFormat('en-US').format($parent.superstarPlayerTax(player))")
     // /ko
   td.left-align
-    // ko if: !$root.locked
+    // ko if: !$root.locked || $parent.isNewBloodTeam
     .flex-container
       // ko if: (id > 0 && !player.dice) || id === 0
       button.btn.btn-danger.btn-sm.pull-right(title='Remove player', data-bind="click: $parent.removePlayer.bind($parent)")

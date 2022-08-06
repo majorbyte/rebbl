@@ -89,8 +89,17 @@ script.
     }
 
     onNewBloodTeam = (team) => {
-      this.newBloodTeam = team;
-      $('#newBloodTeam').modal('show')
+      this.editClan = !this.editClan;
+      this.editTeam = !this.editTeam;
+      this.showValidation = false;
+
+      this.newBloodTeam = new TeamModel(team);
+      this.newBloodTeam.returningTeam = team;
+
+      this.newBloodTeam.isReturningTeam = false;
+      this.newBloodTeam.isNewBloodTeam = true;
+      this.newBloodTeam.roster = [];
+      //$('#newBloodTeam').modal('show')
     }
 
     isClanLeader = () => me.isClanLeader;

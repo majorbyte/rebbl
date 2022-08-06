@@ -556,7 +556,7 @@ class ClanApi{
     });
 
     this.router.post("/:clan/applynewblood/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
-      await clanService.newBlood(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
+      await clanService.newBloodAdmin(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
 
       res.status(200).send();
     });

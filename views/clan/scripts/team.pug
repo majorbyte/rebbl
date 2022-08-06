@@ -30,6 +30,7 @@ script.
       this.cost = data.cost || 0;
       this.tier = data.tier || 0;
       this.isReturningTeam = data.isReturningTeam || false;
+      this.isNewBloodTeam = data.isNewBloodTeam || false;
       this.returningTeam = data.returningTeam ||null;
       this.returningPlayers = [];
       this.returningPlayer = new PlayerModel();
@@ -63,14 +64,27 @@ script.
       const types = playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b);
       return types.filter(t => this.roster.filter(x => x.playerType.type === t.type).length < t.allowed);
     }
-    availableReturningPlayers = () => this.roster.length < 16 ? this.returningPlayers.filter(x => !this.roster.find(p => p.id === x.id)) : [];
+    availableReturningPlayers = () => {
+      if (this.isNewBloodTeam) {
+        if (this.returningTeam?.race?.id !== this.race?.id) return [];
+        const players = this.roster.filter(x => this.returningPlayers.find(p => p.id === x.id));
+        if (players.length === 0 ) return this.returningPlayers;
+        return [];
+      }  
+      
+      if (this.roster.length < 16) return this.returningPlayers.filter(x => !this.roster.find(p => p.id === x.id)) 
+      
+      return [];
+    };
     teamValue = () => this.playerCost() + this.subTotalRerolls() + (this.fanfactor < 5 ? this.fanfactor * 10000  : 50000);
     teamCost = () => this.playerCost() + this.subTotalRerolls() + this.superstarTax();
     teamTax = () => TierTax.find(x => x.race === this.race?.name)?.rebate || 0;
     teamTier = () => TierTax.find(x => x.race === this.race?.name)?.tier;
     teamTotal = () => this.teamCost() + this.teamTax();
 
-    isTeamCostValid = () => this.teamCost () >= (this.teamTier() < 7 ? 1_200_000 : 900_000);
+    isTeamCostValid = () => this.teamCost () >= (this.isNewBloodTeam ? this.returningTeam.teamCost() : this.teamTier() < 7 ? 1_200_000 : 900_000);
+
+    targetTeamCost = () =>  this.isNewBloodTeam ? this.returningTeam.teamCost() : this.teamTier() < 7 ? 1_200_000 : 900_000;
 
     rookieCount = () => this.roster.filter(x => !x.skill1).length;
     superstarCount = () => this.roster.filter(x => x.skill1 && x.skill2).length;

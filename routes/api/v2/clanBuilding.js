@@ -138,6 +138,15 @@ class ClanBuildingApi{
     }
   }
 
+  async _validateNewBlood(req,res){
+    try{
+      const player = await clanService.validateNewBlood()
+      res.json(player);
+    } catch (ex) {
+      res.status(400).send({error: ex.message});
+    }
+  }
+
   async teamSaveAllowed(req, res, next) {
     const account = await accountService.getAccount(req.user.name);
     const clan = await clanService.getNewClanByUser(account.coach);
@@ -217,7 +226,7 @@ class ClanBuildingApi{
     this.router.get('/:clan/lock', this.isClanLeader, this._lockClan.bind(this));
     this.router.get('/:clan/:team', this.ensureAuthenticated ,  this._getTeam.bind(this));
     this.router.get('/:clan', util.hasRole("clanadmin"), this._getClanByName.bind(this));
-    this.router.get('/', this.ensureAuthenticated, this._getClan.bind(this));
+    this.router.get('/', this.ensureAuthenticated, this._getClan.bind(this)); 
 
     this.router.post('/:clan', util.hasRole('clanleader'), this._registerClan.bind(this));
     this.router.post('/:clan/:team/skill', this.isClanLeader, this._skillPlayer.bind(this));

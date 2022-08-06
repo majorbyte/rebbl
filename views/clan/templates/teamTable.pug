@@ -2,7 +2,7 @@ table.table.table-striped.table-sm.table-responsive
   tr
     th.table-info returning team
     td 
-      // ko if: isReturningTeam
+      // ko if: isReturningTeam && !isNewBloodTeam
       a(data-bind="attr:{href:`https://rebbl.net/team/${returningTeam.id}`}, text:returningTeam.name" target="_blank")        
       // /ko
   tr
@@ -12,7 +12,7 @@ table.table.table-striped.table-sm.table-responsive
   tr
     th.table-info team name
     td
-      input(data-bind="textInput: name, attr:{pattern:`\\\\u{5B}${$root.name}\\\\u{5D}.*S13`}" required maxlength="25")
+      input(data-bind="textInput: name, attr:{pattern:`\\\\u{5B}${$root.name}\\\\u{5D}.*S14`}" required maxlength="25")
   tr
     th.table-info race
     // ko if: race && roster.length > 0
