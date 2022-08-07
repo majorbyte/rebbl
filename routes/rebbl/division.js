@@ -53,7 +53,7 @@ class Division{
     if( req.params.league.toLowerCase() === "rampup"){
       leagueRegex = new RegExp(`${league}$`, 'i');
       divRegex = new RegExp(`^${req.params.division}`, 'i');
-      season = "season 19";
+      season = "season 20";
     } 
     
     if (season !== "")
@@ -111,7 +111,7 @@ class Division{
       if( req.params.league.toLowerCase() === "rampup"){
         leagueRegex = new RegExp(`${league}$`, 'i');
         divRegex = new RegExp(`^${req.params.division}`, 'i');
-        season = "season 19";
+        season = "season 20";
       }
 
       if (season !== "")
