@@ -94,13 +94,16 @@ block scripts
             storage.setItem('powers', JSON.stringify(this.powers));    
           }
 
-          let path = window.location.pathname.split("/");
+          let pathName = window.location.pathname;
+          if (!pathName.endsWith("/")) pathName += "/";
+          let path = pathName.split("/");
           let uri = '';
           if (path.length === 4){
             uri = `/api/v2/clan/${path[path.length-1]}`;
           } else if (path.length === 6) {
             uri = `/api/v2/clan/season/${path[path.length-2]}/${path[path.length-1]}`;
           }
+          
           let response = await fetch(uri);
           const data = await response.json();
           this.clan = Object.assign({},this.clan,data.clan);
