@@ -26,7 +26,7 @@ class Clan{
 
   async _build(req,res){
     const account = await accountService.getAccount(req.user.name);
-    if (account?.roles.includes("clanadmin")) res.render("clan/build", {clan:req.params.clan});
+    if (account?.roles?.includes("clanadmin")) res.render("clan/build", {clan:req.params.clan});
     else res.render("clan/build");
   }
 
