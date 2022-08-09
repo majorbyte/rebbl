@@ -40,9 +40,9 @@ tr.add-player-row
   td.left-align
     select(aria-labelledby='position-header' data-bind="options: positions(),optionsText: 'displayName', value:newPlayer.playerType")
   td
-    span(data-bind="text:newPlayer.playerType?.st")
-  td
     span(data-bind="text:newPlayer.playerType?.ma")
+  td
+    span(data-bind="text:newPlayer.playerType?.st")
   td
     span(data-bind="text:newPlayer.playerType?.ag")
   td
