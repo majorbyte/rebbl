@@ -544,7 +544,7 @@ class Standings{
           if (standing.logo) continue;
   
           const team = await dataService.getTeam({'team.id': standing.teamId});
-          standing.logo = team.team.logo;
+          if (team) standing.logo = team.team.logo;
         }
 
         for(let x in [0,1])
