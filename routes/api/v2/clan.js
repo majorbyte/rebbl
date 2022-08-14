@@ -105,6 +105,9 @@ class ClanApi{
       delete schedule.home.clan.ledger;
       delete schedule.away.clan.ledger;
 
+      const coaches = schedule.home.clan.members.map(x => x.coach).concat(schedule.away.clan.members.map(x => x.coach));
+      const donations = await dataService.getAccounts({coach:{$in:coaches},"showDonation":true},{projection:{coach:1}});
+      schedule.donations = donations;
       res.json(schedule);
     });
 
