@@ -100,6 +100,8 @@ block scripts
           let uri = '';
           if (path.length === 5){
             uri = `/api/v2/clan/${path[path.length-2]}`;
+          } else if (path.length === 4){
+            uri = `/api/v2/clan`;
           } else if (path.length === 7) {
             uri = `/api/v2/clan/season/${path[path.length-3]}/${path[path.length-2]}`;
           }
