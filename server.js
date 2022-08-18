@@ -11,7 +11,7 @@ const express = require('express')
   , methodOverride = require('method-override')
   , bodyParser = require("body-parser")
   , MongoDBStore = require('connect-mongodb-session')(session)
-  , RedditStrategy = require('passport-reddit').Strategy
+  , RedditStrategy = require('./strategies/reddit.js')
   , dataService = require("./lib/DataService.js")
   , configurationService = require("./lib/ConfigurationService.js");
 

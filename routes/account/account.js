@@ -15,7 +15,14 @@ class Account{
 
   routesConfig(){
     this.router.get('/login', function(req, res){res.render('account/login');});
-    this.router.get('/logout', function(req, res){req.logout(); res.redirect('/');});
+    //this.router.get('/logout', function(req, res){req.logout(); res.redirect('/');});
+    this.router.get('/logout', function(req, res, next) {
+      req.logout(function(err) {
+        if (err) { return next(err); }
+        req.session.destroy();
+        res.redirect('/');
+      });
+    });    
 
     this.router.get('/create', util.ensureLoggedIn, this._getCreateAccount);
     this.router.post('/create', util.ensureLoggedIn, this._createAccount);
