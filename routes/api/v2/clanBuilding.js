@@ -106,26 +106,22 @@ class ClanBuildingApi{
   }
 
   async _saveMembers(req,res){
-    const account = res.locals.account;
-    clanService.updateMembers(account.coach, req.body);
+    clanService.updateMembers(req.body, res.locals.clan);
     res.sendStatus(200);
   }
 
   async _saveTeam(req,res){
-    const account = res.locals.account;
-    clanService.updateTeam(account.coach, Number(req.params.team), req.body,true);
+    clanService.updateTeam(Number(req.params.team), req.body,true, res.locals.clan);
     res.sendStatus(200);
   }
 
   async _saveTeamSkill(req,res){
-    const account = res.locals.account;
-    clanService.updateTeam(account.coach, Number(req.params.team), req.body,false);
+    clanService.updateTeam(Number(req.params.team), req.body,false, res.locals.clan);
     res.sendStatus(200);
   }
 
   async _saveClan(req,res){
-    const account = res.locals.account;
-    clanService.updateClan(account.coach, req.body);
+    clanService.updateClan(req.body, res.locals.clan);
     res.sendStatus(200);
   }
 
@@ -140,14 +136,15 @@ class ClanBuildingApi{
 
   async teamSaveAllowed(req, res, next) {
     const account = await accountService.getAccount(req.user.name);
-    const clan = await clanService.getNewClanByUser(account.coach);
+    //const clan = await clanService.getNewClanByUser(account.coach);
+    const clan = req.params.clan ? await clanService.getClanByNameAndSeason(req.params.clan, "season 14") :  await clanService.getNewClanByUser(account.coach); 
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
     if(clan.locked) return res.status(400).send({error:'No more updates allowed'});
     res.locals.clan = clan;
     res.locals.account = account;
 
-    const isMember = clan.name === req.params.clan;
+    const isMember = clan.leader === account.coach || clan.members.some(x => x.coach === account.coach);
 
     if (!isMember) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
 
@@ -167,18 +164,20 @@ class ClanBuildingApi{
 
   async isClanLeader(req, res, next) {
     const account = await accountService.getAccount(req.user.name);
-    const clan = await clanService.getNewClanByUser(account.coach);
+    
+    const clan = req.params.clan ? await clanService.getClanByName(req.params.clan) :  await clanService.getNewClanByUser(account.coach); 
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
     if(clan.locked) return res.status(400).send({error:'No more updates allowed'});
 
     const isClanLeader = clan.leader === account.coach;
+
+    if (!isClanLeader) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
+
     res.locals.clan = clan;
     res.locals.account = account;
 
-    if (isClanLeader) return next();
-
-    return res.status(403).send({error: 'You are not allowed to make changes to this team'});
+    return next();
   };
 
   ensureAuthenticated = function (req, res, next) {
