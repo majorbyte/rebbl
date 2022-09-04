@@ -179,7 +179,7 @@ class ClanApi{
 
     this.router.get("/powers", function(req,res){
       res.json( [
-      {key:"version12.0",description:12.0},
+      {key:"version13.0",description:13.0},
       {
         key: "miscommunication",
         name: "Miscommunication!",
@@ -314,6 +314,12 @@ class ClanApi{
         cost:20,
         quantitiy:5,
         description:"At the start of the draft, pick one team from your opponent’s clan. This team refuses to be bussed (i.e. offered-up) by their clan leader when it’s that clan’s turn to offer up their FIRST team to the opposing clan leader. Teams selected by this power also become immune to Last Minute Switch! Each Clan may only use this power once per draft. "
+      },{
+        key: "stuntyMiscommunication",
+        name: "Miscommunication! (stunty)",
+        cost: 150,
+        quantitiy: 1,
+        description: "This power causes opponents to \"miscommunicate\" their intended draft day powers, acting as if those powers were never used at all! The use of this power must be stated to a clan admin (who is NOT in your clan) in a PM prior to the draft. Only notify the opposing Clan Leader AFTER the draft is complete of your diabolical ruse! Miscommunication! negates all other powers used by both clans for that draft. Such negated powers are still available for the next draft. Post-game powers are still ok to use even if Miscommunication! was called as they do not happen during the draft. If BOTH clans attempted to use Miscommunication!, both clans use up one charge of this power."
       },{
         key:"financialFairPlay",
         name:"Financial Fair Play",
