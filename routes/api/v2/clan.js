@@ -89,6 +89,7 @@ class ClanApi{
         round:Number(req.params.round),
         house:Number(req.params.house)
       });
+      if (!schedule) return {};
       let clans = await dataService.getClans({name:{$in:[ RegExp(`^${schedule.home.clan}$`,"i"),RegExp(`^${schedule.away.clan}$`,"i")]},season:req.params.season});
 
       schedule.home.clan = clans.find(c => c.name.localeCompare(schedule.home.clan,undefined,{sensitivity:"base"}) === 0);
