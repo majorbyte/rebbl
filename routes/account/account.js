@@ -58,7 +58,7 @@ class Account{
             let schedule = await dataService.getSchedule({"opponents.coach.id" : account.following[x]});
             if (!schedule) {
               schedule = await dataService.getSchedule({"matches.opponents.coach.id" : account.following[x]});
-              if (!schedule) {
+              if (schedule) {
                 schedule = schedule.matches.find(m => m.opponents.some(o => o.coach.id ===account.following[x]));
               }
             }
