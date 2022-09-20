@@ -138,7 +138,7 @@ class ClanBuildingApi{
     try{
       const validationResult = await clanValidationService.validateNewBlood(req.params.clan,req.params.team,req.body);
       if (validationResult.length > 0) res.status(400).send(validationResult);
-      res.status(200).send();
+      else res.status(200).send();
     } catch (ex) {
       res.status(500).send({error: ex.message});
     }
@@ -148,10 +148,10 @@ class ClanBuildingApi{
     try{
       const validationResult = await clanValidationService.validateNewBlood(req.params.clan,req.params.team,req.body);
       if (validationResult.length > 0) res.status(400).send(validationResult);
-
-      await clanService.newBloodClanLeader(req.params.clan,req.params.team,req.body.name);
-
-      res.status(200).send();
+      else {
+        await clanService.newBloodClanLeader(req.params.clan,req.params.team,req.body.name);
+        res.status(200).send();
+      }
     } catch (ex) {
       res.status(500).send({error: ex.message});
     }

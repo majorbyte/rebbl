@@ -268,12 +268,20 @@ script.
     async useNewBlood(vm, e){
       this.newBloodValidationData = null;
       this.newBloodValidationError = null;
+      $('#newBloodTeam').trigger('click');
       var context = ko.contextFor(e.target);
       const result = await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}/newblood` ,{
         method:'POST',
         headers:{ 'Content-Type': 'application/json'},
         body: JSON.stringify(this)
       });
+      if (result.ok){
+        $('#toast-success-message').text(`New Blood applied successfully.`);
+        $('#toast-success').toast('show');
+      } else {
+        $('#toast-error-message').text(`Something went wrong applying new blood.`);
+        $('#toast-error').toast('show');
+      }
     }
 
     onShowModalClick(){
