@@ -30,6 +30,10 @@ script.
       this.spentSPP = data.spentSPP || 0;
       this.dice = data.dice || undefined;
 
+      if (!this.playerType && data.type){
+        this.playerType = playerTypes.find(x => x.type == data.type);
+      }
+
       ko.defineProperty(this, 'ma', function () {
         const cas = this.casualties.filter(x => ['SmashedAnkle','SmashedHip'].includes(x.name) && !x.removed);
         const stats = this.skills.filter(x => x === 'IncreaseMovement');

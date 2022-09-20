@@ -88,7 +88,7 @@ script.
       }
     }
 
-    onNewBloodTeam = (team) => {
+    onNewBloodTeam = async (team) => {
       this.editClan = !this.editClan;
       this.editTeam = !this.editTeam;
       this.showValidation = false;
@@ -101,17 +101,13 @@ script.
       this.newBloodTeam.isReturningTeam = false;
       this.newBloodTeam.isNewBloodTeam = true;
 
-      const roster = team.roster.map(player => {
-        if (player.skill1) player.skills.push(player.skill1);
-        if (player.skill2) player.skills.push(player.skill2);
+      const teamToReplace = this.ledger.teams.find(x => x.team.name === team.name);
+      let response = await fetch(`/api/v2/clan/build/team/${teamToReplace.team.id}/players`);
+      if (response.ok){
+        const data = await response.json();
+        this.newBloodTeam.returningPlayers = data.map(player => new PlayerModel(player));
+      }
 
-        player.skill1 = player.skill2 = undefined;
-        player.dice = undefined;
-        player.spentSPP = player.sppSurplus = 0;
-
-      });
-
-      this.newBloodTeam.returningPlayers = team.roster;
       this.newBloodTeam.roster = [];
     }
 
