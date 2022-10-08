@@ -96,7 +96,7 @@ datastore
 # ignore stuff
 # =========================
 grunk
-
+certificates
 
 #VS Code
 .vscode/
