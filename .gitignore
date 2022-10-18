@@ -1,5 +1,7 @@
 # Docker Files
 /docker/db-volume
+data
+db-dump
 rebbl.tar.gz
 
 # Logs
