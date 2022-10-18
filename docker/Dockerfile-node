@@ -1,4 +1,14 @@
-FROM node:17
-WORKDIR /usr/src/app
+FROM node:16-bullseye-slim AS build
+
+WORKDIR /usr/src/rebbl
 COPY package*.json ./
 RUN npm install
+RUN npm prune --production
+COPY . .
+
+FROM gcr.io/distroless/nodejs:16
+
+WORKDIR /usr/src/rebbl
+COPY --from=build /usr/src/rebbl .
+
+CMD ["server.js"]
