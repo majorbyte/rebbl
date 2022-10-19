@@ -389,7 +389,11 @@ class Signup{
 
 
   async getTeam(signup, cyanideEnabled){
-    let coach = await apiService.findCoach(signup.coach);
+    let coach = await apiService.findCoach(signup.coach).catch(err => console.trace(err));
+    if (!coach) {
+      signup.error = {coach: "Could not check coach"};
+      return signup
+    }
     let coachRecord = null;
     let error = {};
     if (coach.ResponseSearchCoach.Coaches !== ""){
@@ -418,8 +422,12 @@ class Signup{
       }
     } else {
       if (coachRecord){
-        const coach = await apiService.getCoachInfo(coachRecord.IdUser);
-
+        const coach = await apiService.getCoachInfo(coachRecord.IdUser).catch(err => console.trace(err));
+        if (!coach) {
+          signup.error = {coach: "Could not check coach"};
+          return signup
+        }
+    
         if (!Array.isArray(coach.ResponseGetCoachOverview.Teams.Team))
           coach.ResponseGetCoachOverview.Teams.Team = [coach.ResponseGetCoachOverview.Teams.Team];
 
@@ -428,8 +436,11 @@ class Signup{
         else {
           signup.race = this.races.find(x => x.id === Number(team.Row.IdRaces)).name;
 
-          const matches = await apiService.getTeamMatches(team.Row.ID.Value.replace(/\D/g,""));
-
+          const matches = await apiService.getTeamMatches(team.Row.ID.Value.replace(/\D/g,"")).catch(err => console.trace(err));
+          if (!coach) {
+            signup.error = {team: "Could not check team"};
+            return signup
+          }
 
           if (Number(matches.ResponseGetTeamMatchRecords.TotalRecords) === 0){
             signup.teamCreated = signup.lastPlayed = "A";

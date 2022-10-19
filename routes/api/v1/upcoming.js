@@ -131,7 +131,8 @@ router.post("/unstream/:contest_id", util.ensureAuthenticatedApi, async function
 });
 
 router.get("/ongoing", util.cache(60), async function(req,res){
-    let data = await apiService.ongoingGames();
+    let data = await apiService.ongoingGames().catch(err => console.trace(err));
+    if (!data) return;
 
     if (data.ResponseGetWatchableGames.WatchableGames === ''){
       res.json([]);

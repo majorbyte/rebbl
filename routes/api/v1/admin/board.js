@@ -11,10 +11,6 @@ const express = require("express")
     try{
       
       const coach = await api.getCoachInfo(307300);
-
-    
-
-      
       let data = [];
   
       coach.ResponseGetCoachOverview.BoardMemberships.BoardMember.map(member => data.push({
