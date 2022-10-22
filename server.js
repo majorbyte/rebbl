@@ -19,18 +19,6 @@ const { v4: uuidv4 } = require('uuid');
 
 class Server{
   constructor(){
-    if (process.env.NODE_ENV === 'production'){
-/*      this.appInsights = require("applicationinsights");
-      this.appInsights.setup(process.env["ApplicationInsights"])
-        .setAutoDependencyCorrelation(true)
-        .setAutoCollectRequests(true)
-        .setAutoCollectPerformance(true)
-        .setAutoCollectExceptions(true)
-        .setAutoCollectDependencies(true)
-        .setAutoCollectConsole(true)
-        .setUseDiskRetryCaching(false)
-        .start();*/
-    }
     this.passport = require('passport');
 
     this.port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;

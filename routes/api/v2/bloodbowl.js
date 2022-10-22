@@ -57,7 +57,7 @@ class BloodBowlApi{
       res.json(data);
     });
     this.router.get('/legendaryplayers/:id/lastMatch', util.checkCache, async function(req, res){
-      let matches = await dataService.getMatches({"match.teams.roster.id":Number(req.params.id)},{sort:{"match.id":-1},limit:1});
+      let matches = await dataService.getMatches({"match.teams.roster.id":Number(req.params.id)},{sort:{"uuid":-1},limit:1});
 
       res.json(matches[0].uuid);
     });
