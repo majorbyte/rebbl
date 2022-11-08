@@ -260,7 +260,7 @@ script.
       
       const team = JSON.parse(msg);
       let index = model.ledger.teamBuilding.findIndex(x => x.id === team.id);
-      model.ledger.teamBuilding[index] = new TeamModel(team).snap();
+      model.ledger.teamBuilding[index] = new TeamModel(team,true).snap();
 
       $('#toast-information-message').text(`new team data loaded for team ${team.name}`);
       $('#toast-information').toast('show');

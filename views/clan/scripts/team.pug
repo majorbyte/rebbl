@@ -12,7 +12,7 @@ script.
       ko.getObservable(this, 'coach').subscribe(this.onCoachChange.bind(this));
       if (this.isReturningTeam) this.getReturningTeam(this.coach);
     }
-    map(data){
+    map(data, updateSkillModel){
       this.skillModel = new SkillModel();
 
       data.roster?.forEach(x => x.skillModel = this.skillModel);
@@ -48,10 +48,12 @@ script.
       this.skillModel.rookieCount = this.rookieCount;
       this.skillModel.superstarCount = this.superstarCount;
       this.proceedDisabled = false;
-      this.roster.forEach(x => {
-        if (x.skill1) x.updateSkillModel(x.skill1);
-        if (x.skill2) x.updateSkillModel(x.skill2);
-      });
+      if (updateSkillModel){
+        this.roster.forEach(x => {
+          if (x.skill1) x.updateSkillModel(x.skill1);
+          if (x.skill2) x.updateSkillModel(x.skill2);
+        });
+      }
     }
     isTeamOwner = () => this.coach === me.coach;
     toggleApo = () => this.apothecary = !this.apothecary;
