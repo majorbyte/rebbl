@@ -81,9 +81,9 @@ class Maintenance{
           });
         });
       */
-        await ts.checkTickets();
+        //await ts.checkTickets();
 
-        //reddit.check();
+        reddit.check();
 
 
         res.redirect('/');
