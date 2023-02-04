@@ -1,7 +1,7 @@
 extends ../no-cache-sub-relayout.pug
 
 block vars
-  - let options = {active: league, title: "REBBL season 14", company:"clan"}
+  - let options = {active: league, title: "REBBL season 15", company:"clan"}
   - let company = "clan";
 
 block head  
@@ -12,7 +12,9 @@ block head
 block content
   div(class=`container` id="app")
     img(v-if="clan.logo != null" :src="'https://cdn2.rebbl.net/' + clan.logo" style="float:right;width:128px")
+    
     h2(style="text-transform:none") {{clan.name}}
+      a.btn.btn-sm.btn-primary.text-align-center(href="/clan/clan/build" style="margin-left:15px;margin-top:-15px") Build Clan
     h2(style="text-transform:none") Leader:&nbsp;
       a(:href="'/coach/' + clan.leader" target="_blank") {{clan.leader}}
     template(v-if="clanLeader == true")
