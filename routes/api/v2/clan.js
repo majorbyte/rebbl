@@ -35,7 +35,7 @@ class ClanApi{
       let clan = await clanService.getClanByUser(account.coach); 
       if (!clan) clan = await clanService.getClanByLeader(account.coach);
       const leader = await accountService.hasRole(req.user.name, "clanleader");
-      res.json({ clan:clan, leader:leader && account.coach.toLowerCase() === clan.leader.toLowerCase() } );
+      res.json({ clan:clan, leader:leader && account.coach.toLowerCase() === clan.leader?.toLowerCase() } );
     });
 
     this.router.use("/build", new clanBuildingApi().routesConfig());
@@ -117,8 +117,8 @@ class ClanApi{
       let clans = await dataService.getClans({division:new RegExp(req.params.division,"i"), season:req.params.season});
 
       schedules.map(x =>{
-        x.home.logo = clans.find(c => c.name.localeCompare(x.home.clan,undefined,{sensitivity:"base"}) === 0).logo;
-        x.away.logo = clans.find(c => c.name.localeCompare(x.away.clan,undefined,{sensitivity:"base"}) === 0).logo;
+        x.home.logo = clans.find(c => c.name.localeCompare(x.home.clan,undefined,{sensitivity:"base"}) === 0)?.logo;
+        x.away.logo = clans.find(c => c.name.localeCompare(x.away.clan,undefined,{sensitivity:"base"}) === 0)?.logo;
       });
 
       res.json(schedules);

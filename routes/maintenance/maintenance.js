@@ -132,6 +132,7 @@ class Maintenance{
           //await ts.checkTickets();
         }
         catch(e){
+          console.dir(e);
           loggingService.error(e);
         }
         try{
@@ -139,6 +140,7 @@ class Maintenance{
           await maintenanceService.getContests(req.query.league);
         }
         catch(e){
+          console.dir(e);
           loggingService.error(e);
         }
         /*try{
@@ -151,18 +153,21 @@ class Maintenance{
           await clanService.getContestData();
         }
         catch(e){
+          console.dir(e);
           loggingService.error(e);
         }
         try{
           await clanService.getMatchData();
         }
         catch(e){
+          console.dir(e);
           loggingService.error(e);
         }
         try{
           clanService.calculateStandings();
         }
         catch(e){
+          console.dir(e);
           loggingService.error(e);
         }
         
@@ -170,21 +175,23 @@ class Maintenance{
           reddit.check();
         }
         catch(e){
+          console.dir(e);
           loggingService.error(e);
         }
         try{
           reddit.getAnnouncements();
         }
         catch(e){
+          console.dir(e);
           loggingService.error(e);
         }
         try{
           signupService.checkTeams();
         }
         catch(e){
+          console.dir(e);
           loggingService.error(e);
         }  
-        
       }
     };
 

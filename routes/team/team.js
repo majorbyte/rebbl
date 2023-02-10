@@ -1,8 +1,12 @@
 'use strict';
 const 
-  cache = require("memory-cache")
+  accountService = require("../../lib/accountService.js")
   , dataService = require('../../lib/DataService.js').rebbl
+  , teamService = require('../../lib/teamservice.js')
+  , cache = require("memory-cache")
   , express = require('express')
+  , rateLimit = require("express-rate-limit")
+  , util = require('../../lib/util.js')
   , router = express.Router({mergeParams:true});
 
 router.get('/:team_id', /*util.cache(10*60),*/ async function(req, res){
@@ -29,6 +33,39 @@ router.get('/:team_id', /*util.cache(10*60),*/ async function(req, res){
       res.render('team/team',{company:req.params.company});
     }
   }
+});
+
+const teamUpdateRateLimiter = rateLimit({
+  windowMs: 600 * 1000, // 10 minute window
+  max: 1, // start blocking after 1 request
+  message:
+    "Too many requests, please wait 10 minutes",
+  keyGenerator: function(req){
+    return req.user.name;
+  }
+
+});
+
+router.get('/:teamId/update', util.ensureAuthenticated, teamUpdateRateLimiter, async function(req, res){
+  try {
+    let account = await accountService.getAccount(req.user.name);
+    let team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
+
+    if (account.coach === team.coach.name){
+      await teamService.updateTeam(Number(req.params.teamId),false);
+      cache.del(`/api/v2/team/${req.params.teamId}`);
+      cache.del(`/api/v2/team/${req.params.teamId}/players`);
+      cache.del(`/api/v2/team/${req.params.teamId}/retiredplayers`);
+      cache.del(`/api/v2/team/${req.params.teamId}/hiredplayers`);
+    }
+
+    res.redirect(`/team/${req.params.teamId}`);
+  }
+  catch (ex){
+    console.error(ex);
+    res.status(500).json({error:'Something something error'});
+  }
+
 });
 
 module.exports = router;

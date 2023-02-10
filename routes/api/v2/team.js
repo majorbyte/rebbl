@@ -1,8 +1,10 @@
 
 'use strict';
+
 const 
   cyanideService = require("../../../lib/CyanideService.js")
   , dataService = require('../../../lib/DataService.js').rebbl
+  , teamService = require('../../../lib/teamservice.js')
   , express = require('express')
   , rateLimit = require("express-rate-limit")
   , util = require('../../../lib/util.js');
@@ -57,7 +59,6 @@ class TeamApi{
       }
     
     });
-    
     
     this.router.get('/:teamId/players', util.cache(600), async function(req, res){
       try {
