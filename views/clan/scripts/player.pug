@@ -38,25 +38,29 @@ script.
         const cas = this.casualties.filter(x => ['SmashedAnkle','SmashedHip'].includes(x.name) && !x.removed);
         const stats = this.skills.filter(x => x === 'IncreaseMovement');
 
-        return this.playerType ? this.playerType.ma - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        const val = this.playerType ? this.playerType.ma - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        return Math.max(1,val);
       });
       ko.defineProperty(this, 'st', function () {
         const cas = this.casualties.filter(x => 'SmashedCollarBone' === x.name && !x.removed);
         const stats = this.skills.filter(x => x === 'IncreaseStrength');
 
-        return this.playerType ? this.playerType.st - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        const val = this.playerType ? this.playerType.st - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        return Math.max(1,val);
       });
       ko.defineProperty(this, 'ag', function () {
         const cas = this.casualties.filter(x => 'BrokenNeck' === x.name && !x.removed);
         const stats = this.skills.filter(x => x === 'IncreaseAgility');
 
-        return this.playerType ? this.playerType.ag - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        const val = this.playerType ? this.playerType.ag - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        return Math.max(1,val);
       });
       ko.defineProperty(this, 'av', function () {
         const cas = this.casualties.filter(x => ['FracturedSkull','SeriousConcussion'].includes(x.name) && !x.removed);
         const stats = this.skills.filter(x => x === 'IncreaseArmour');
 
-        return this.playerType ? this.playerType.av - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        const val = this.playerType ? this.playerType.av - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        return Math.max(1,val);
       });
 
 
