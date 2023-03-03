@@ -1,0 +1,119 @@
+extends ../no-cache-sub-relayout.pug
+include ../nav-link
+include teamStat.pug
+include functions.pug
+
+block append vars
+  -
+    let options = {company:company}
+    const homeTeamStats = match.statistics.homeGamerStatistics.teamStatistics.statistics.aggregatedStatistics
+    const awayTeamStats = match.statistics.awayGamerStatistics.teamStatistics.statistics.aggregatedStatistics
+
+block content
+  div(class=`container`)
+    div(class="row")
+      div(class="ScheduleMatchList col-12")
+        div(class="MatchSchedule row")
+          div(class="MatchRow MatchRow-match MatchRow-header col-12" )= `${match.competition.name}`
+          div(class="MatchRow MatchRow-match col-12" )
+            div(class="MatchRow-team")
+              div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
+                div(class="TeamLabel TeamLabel--reverse")
+                  div(class="TeamLabel-block"): img(src=`https://cdn2.rebbl.net/images/bb3/Logos/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel-info TeamLabel-info--noScore")
+                    div(class="TeamLabel-name ")
+                      - let tn = match.homeTeam.name
+                        a(href=`/bb3/team/${match.homeTeam.id}` )= tn
+                    div(class="TeamLabel-coach ")
+                      a(href=`/coach/${match.homeGamer.name}`)= match.homeGamer.name
+                    div(class="TeamLabel-coach" )= "winnings: " + (match.homeGameResultGain.newTreasury - match.homeGameResultGain.previousTreasury - match.homeGameResultGain.cashSpentDuringMatch)
+                    div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
+            div(class="MatchRow-status")
+              span(class="MatchStatus MatchStatus--transparent")
+                span
+                  if match.homeScore > match.awayScore
+                    span(class="MatchStatus-score is-winner")= match.homeScore
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score")= match.awayScore
+                  else if match.awayScore > match.homeScore
+                    span(class="MatchStatus-score")= match.homeScore
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score is-winner")= match.awayScore
+                  else
+                    span(class="MatchStatus-score")= match.homeScore
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score")= match.awayScore
+            div(class="MatchRow-team")
+              div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
+                div(class="TeamLabel")
+                  div(class="TeamLabel-block"): img(src=`https://cdn2.rebbl.net/images/bb3/Logos/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel-info TeamLabel-info--noScore")
+                    div(class="TeamLabel-name ")
+                      - let on = match.awayTeam.name
+                      a(href=`/bb3/team/${match.awayTeam.id}` )= on
+
+                    div(class="TeamLabel-coach ")
+                      a(href=`/coach/${match.awayGamer.id}`)= match.awayGamer.name
+                    div(class="TeamLabel-coach" )= "winnings: " + (match.awayGameResultGain.newTreasury - match.awayGameResultGain.previousTreasury - match.awayGameResultGain.cashSpentDuringMatch)
+                    div(class="TeamLabel-coach " title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans"
+                - if (match.filename)
+                  div(class="ReplayLinks")
+                    div(class="ReplayLinks-outer")
+                      div(class="ReplayLinks-inner")
+                        a(href=`https://replays.rebbl.net/${match.filename}`)
+                          img(src=`https://cdn2.rebbl.net/images/replay.png` class="ReplayLinks-download" alt="Download replay" title="Download replay")
+                        a(href=`https://dicedornot.vengefulpickle.com/?rebbl=${match.uuid}`)
+                          img(src=`https://cdn2.rebbl.net/images/dicedornot-logo.svg` class="ReplayLinks-view" alt="View replay" title="View replay on DicedOrNot")
+          div(class="col-12")
+            br
+          div(class="col-12 d-flex")
+            div(class="table-responsive-xl col-6 ")
+              table(class="team-stats")
+                thead 
+                  tr 
+                    th statistic 
+                    th= match.homeTeam.name
+                    th= match.awayTeam.name
+
+                tbody
+                  tr
+                    td Team value
+                    td= match.homeTeam.value
+                    td= match.awayTeam.value
+                  +teamStat("Spent on inducements", [67], homeTeamStats, awayTeamStats)
+                  +teamStat("Possession (total / own / oppo)", [63,64,65], homeTeamStats, awayTeamStats)
+                  +teamStat("Pass (try/success/yards)", [40,41,24], homeTeamStats, awayTeamStats)
+                  +teamStat("Catch (try/success)", [52,53], homeTeamStats, awayTeamStats)
+                  +teamStat("Interceptions", [58], awayTeamStats, homeTeamStats)
+                  +teamStat("Dodge (try/success)", [43,44], homeTeamStats, awayTeamStats)
+                  +teamStat("Rush (try/success)", [45,46], homeTeamStats, awayTeamStats)
+            div(class="table-responsive-xl col-6 ")
+              table(class="team-stats")
+                thead 
+                  tr 
+                    th statistic 
+                    th= match.homeTeam.name
+                    th= match.awayTeam.name
+
+                tbody
+                  +teamStat("Blocks succeeded", [26], homeTeamStats, awayTeamStats)
+                  +teamStat("Armour breaks", [61], homeTeamStats, awayTeamStats)
+                  +teamStat("Knockout (inflicted/sustained)", [25,29], homeTeamStats, awayTeamStats)
+                  +teamStat("Casualties (inflicted/sustained)", [19,28], homeTeamStats, awayTeamStats)
+                  +teamStat("Kills / Deaths", [21,31], homeTeamStats, awayTeamStats)
+                  +teamStat("Surfs", [57], homeTeamStats, awayTeamStats)
+                  +teamStat("Fouls / Expulsion", [47,62], homeTeamStats, awayTeamStats)
+                  +teamStat("Throw Team-Mate success", [69], homeTeamStats, awayTeamStats)
+
+          - match.homeTeam.mvp = match.homeMvp
+          - match.homeTeam.roster = match.spp.homeTeamSppResult.playerSppResults.playerSppResult.sort((a,b) => a.player.number - b.player.number)
+          - match.homeTeam.rosterStatistics = match.statistics.homeGamerStatistics.teamStatistics.playerStatistics.playerStatistics
+          - match.awayTeam.mvp = match.awayMvp
+          - match.awayTeam.roster = match.spp.awayTeamSppResult.playerSppResults.playerSppResult.sort((a,b) => a.player.number - b.player.number)
+          - match.awayTeam.rosterStatistics = match.statistics.awayGamerStatistics.teamStatistics.playerStatistics.playerStatistics
+          hr
+          div(class="col-12 table-responsive-md")
+            table(class="match-stats-table" style="width:100%")
+              each team in [match.homeTeam, match.awayTeam]
+                include team.pug
+

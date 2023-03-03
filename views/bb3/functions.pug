@@ -1,0 +1,949 @@
+block append vars
+  -
+    const skills = [
+      {id:1, name: "StripBall", icon:"StripBall.png"},
+      {id:6, name: "Catch", icon:"Catch.png"},
+      {id:7, name: "Dodge", icon:"Dodge.png"},
+      {id:8, name: "Sprint", icon:"Sprint.png"},
+      {id:10, name: "FoulAppearance", icon:"FoulAppearance.png"},
+      {id:100, name: "AnimosityOrcLinemen", icon:"Animosity.png"},
+      {id:1001, name: "BloodGreed", icon:"BloodGreed.png"},
+      {id:1005, name: "Fumblerooskie", icon:"Fumblerooskie.png"},
+      {id:1007, name: "KickTeamMate", icon:"KickTeamMate.png"},
+      {id:1008, name: "Loner3", icon:"Loner.png"},
+      {id:1009, name: "MightyBlow2", icon:"MightyBlow.png"},
+      {id:101, name: "AnimosityBigUnBlockers", icon:"Animosity.png"},
+      {id:1010, name: "MonstrousMouth", icon:"MonstrousMouth.png"},
+      {id:1012, name: "PileDriver", icon:"PileDriver.png"},
+      {id:1015, name: "SafePairOfHands", icon:"SafePairOfHands.png"},
+      {id:1016, name: "Swarming", icon:"Swarming.png"},
+      {id:1017, name: "Swoop", icon:"Swoop.png"},
+      {id:1018, name: "Loner2", icon:"Loner.png"},
+      {id:102, name: "AnimosityUnderworldGoblinLinemen", icon:"Animosity.png"},
+      {id:1020, name: "PlagueRidden", icon:"PlagueRidden.png"},
+      {id:1021, name: "DirtyPlayer2", icon:"DirtyPlayer.png"},
+      {id:1022, name: "Loner5", icon:"Loner.png"},
+      {id:11, name: "Leap", icon:"Leap.png"},
+      {id:12, name: "ExtraArms", icon:"ExtraArms.png"},
+      {id:13, name: "MightyBlow1", icon:"MightyBlow.png"},
+      {id:14, name: "Leader", icon:"Leader.png"},
+      {id:15, name: "Horns", icon:"Horns.png"},
+      {id:16, name: "TwoHeads", icon:"TwoHeads.png"},
+      {id:17, name: "StandFirm", icon:"StandFirm.png"},
+      {id:18, name: "AlwaysHungry", icon:"AlwaysHungry.png"},
+      {id:19, name: "Regeneration", icon:"Regeneration.png"},
+      {id:20, name: "TakeRoot", icon:"TakeRoot.png"},
+      {id:21, name: "Accurate", icon:"Accurate.png"},
+      {id:22, name: "BreakTackle", icon:"BreakTackle.png"},
+      {id:23, name: "SneakyGit", icon:"SneakyGit.png"},
+      {id:25, name: "Chainsaw", icon:"Chainsaw.png"},
+      {id:26, name: "Dauntless", icon:"Dauntless.png"},
+      {id:27, name: "DirtyPlayer1", icon:"DirtyPlayer.png"},
+      {id:28, name: "DivingCatch", icon:"DivingCatch.png"},
+      {id:29, name: "Dumpoff", icon:"DumpOff.png"},
+      {id:30, name: "Block", icon:"Block.png"},
+      {id:31, name: "BoneHead", icon:"BoneHead.png"},
+      {id:32, name: "VeryLongLegs", icon:"VeryLongLegs.png"},
+      {id:33, name: "DisturbingPresence", icon:"DisturbingPresence.png"},
+      {id:34, name: "DivingTackle", icon:"DivingTackle.png"},
+      {id:35, name: "Fend", icon:"Fend.png"},
+      {id:36, name: "Frenzy", icon:"Frenzy.png"},
+      {id:37, name: "Grab", icon:"Grab.png"},
+      {id:38, name: "Guard", icon:"Guard.png"},
+      {id:39, name: "HailMaryPass", icon:"HailMaryPass.png"},
+      {id:40, name: "Juggernaut", icon:"Juggernaut.png"},
+      {id:41, name: "JumpUp", icon:"JumpUp.png"},
+      {id:44, name: "Loner4", icon:"Loner.png"},
+      {id:45, name: "NervesOfSteel", icon:"NervesOfSteel.png"},
+      {id:46, name: "NoHands", icon:"NoHands.png"},
+      {id:47, name: "Pass", icon:"Pass.png"},
+      {id:49, name: "PrehensileTail", icon:"PrehensileTail.png"},
+      {id:50, name: "Pro", icon:"Pro.png"},
+      {id:51, name: "ReallyStupid", icon:"ReallyStupid.png"},
+      {id:52, name: "RightStuff", icon:"RightStuff.png"},
+      {id:53, name: "SafePass", icon:"SafePass.png"},
+      {id:54, name: "SecretWeapon", icon:"SecretWeapon.png"},
+      {id:55, name: "Shadowing", icon:"Shadowing.png"},
+      {id:56, name: "Sidestep", icon:"Sidestep.png"},
+      {id:57, name: "Tackle", icon:"Tackle.png"},
+      {id:58, name: "StrongArm", icon:"StrongArm.png"},
+      {id:59, name: "Stunty", icon:"Stunty.png"},
+      {id:60, name: "SureFeet", icon:"SureFeet.png"},
+      {id:61, name: "SureHands", icon:"SureHands.png"},
+      {id:63, name: "ThickSkull", icon:"ThickSkull.png"},
+      {id:64, name: "ThrowTeamMate", icon:"ThrowTeamMate.png"},
+      {id:67, name: "UnchannelledFury", icon:"UnchannelledFury.png"},
+      {id:68, name: "Wrestle", icon:"Wrestle.png"},
+      {id:69, name: "Tentacles", icon:"Tentacles.png"},
+      {id:70, name: "MultipleBlock", icon:"MultipleBlock.png"},
+      {id:71, name: "Kick", icon:"Kick.png"},
+      {id:74, name: "BigHand", icon:"BigHand.png"},
+      {id:75, name: "Claws", icon:"Claw.png"},
+      {id:76, name: "BallAndChain", icon:"BallAndChain.png"},
+      {id:77, name: "Stab", icon:"Stab.png"},
+      {id:78, name: "HypnoticGaze", icon:"HypnoticGaze.png"},
+      {id:80, name: "Bombardier", icon:"Bombardier.png"},
+      {id:81, name: "Decay", icon:"Decay.png"},
+      {id:83, name: "Titchy", icon:"Titchy.png"},
+      {id:84, name: "AnimalSavagery", icon:"AnimalSavagery.png"},
+      {id:86, name: "AnimosityAllTeamMates", icon:"Animosity.png"},
+      {id:87, name: "TimmmBer", icon:"Timmm-ber.png"},
+      {id:88, name: "Cannoneer", icon:"Cannoneer.png"},
+      {id:89, name: "PogoStick", icon:"PogoStick.png"},
+      {id:90, name: "Defensive", icon:"Defensive.png"},
+      {id:91, name: "ArmBar", icon:"ArmBar.png"},
+      {id:92, name: "IronHardSkin", icon:"IronHardSkin.png"},
+      {id:93, name: "RunningPass", icon:"RunningPass.png"},
+      {id:94, name: "CloudBurster", icon:"CloudBurster.png"},
+      {id:95, name: "ProjectileVomit", icon:"ProjectileVomit.png"},
+      {id:96, name: "Brawler", icon:"Brawler.png"},
+      {id:97, name: "OnTheBall", icon:"OnTheBall.png"},
+      {id:98, name: "AnimosityAllDwarfAndHalflingTeamMates", icon:"Animosity.png"},
+      {id:99, name: "AnimosityAllDwarfAndHumanTeamMates", icon:"Animosity.png"}];
+
+    const stats = [
+      {id: 1, name:"Matches"},
+      {id: 2, name:"Wins"},
+      {id: 3, name:"Draws"},
+      {id: 4, name:"Losses"},
+      {id: 5, name:"Matches (against a specific race)"},
+      {id: 6, name:"Wins (against a specific race)"},
+      {id: 7, name:"Draws (against a specific race)"},
+      {id: 8, name:"Losses (against a specific race)"},
+      {id: 9, name:"Number of competitions participation"},
+      {id: 10, name:"Number of matches in competition"},
+      {id: 11, name:"Number of teams created"},
+      {id: 12, name:"Quantity of custo owned"},
+      {id: 13, name:"Quantity of SPC bought"},
+      {id: 14, name:"Quantity of Inducements bought"},
+      {id: 15, name:"Time spent for a gamer"},
+      {id: 16, name:"Total score"},
+      {id: 18, name:"Touchdowns scored"},
+      {id: 19, name:"Casualties inflicted"},
+      {id: 21, name:"Kills inflicted"},
+      {id: 22, name:"Injuries inflicted"},
+      {id: 23, name:"Yards running"},
+      {id: 24, name:"Yards passing"},
+      {id: 25, name:"KO inflicted"},
+      {id: 26, name:"Blocks succeeded"},
+      {id: 27, name:"Touchdowns sustained"},
+      {id: 28, name:"Casualties sustained"},
+      {id: 29, name:"KO sustained"},
+      {id: 30, name:"Injuries sustained"},
+      {id: 31, name:"Deaths sustained"},
+      {id: 32, name:"Team play time"},
+      {id: 33, name:"Short pass try"},
+      {id: 34, name:"Short pass success"},
+      {id: 35, name:"Long pass try"},
+      {id: 36, name:"Long pass success"},
+      {id: 37, name:"Long bomb try"},
+      {id: 38, name:"Long bomb success"},
+      {id: 39, name:"Death cheat"},
+      {id: 40, name:"Pass try"},
+      {id: 41, name:"Pass success"},
+      {id: 42, name:"Yards rushing"},
+      {id: 43, name:"Dodge try"},
+      {id: 44, name:"Dodge success"},
+      {id: 45, name:"Rush try"},
+      {id: 46, name:"Rush success"},
+      {id: 47, name:"Foul done"},
+      {id: 48, name:"Foul sustained"},
+      {id: 49, name:"Blitz done"},
+      {id: 50, name:"Catch up ball try"},
+      {id: 51, name:"Catch up ball success"},
+      {id: 52, name:"Pass reception try"},
+      {id: 53, name:"Pass reception success"},
+      {id: 54, name:"Interception try"},
+      {id: 55, name:"Interception success"},
+      {id: 56, name:"MVP"},
+      {id: 57, name:"Crowdsurfs inflicted"},
+      {id: 58, name:"Interceptions sustained"},
+      {id: 59, name:"Blocks sustained"},
+      {id: 60, name:"Game missed"},
+      {id: 61, name:"Armour Breaks"},
+      {id: 62, name:"Expulsions"},
+      {id: 63, name:"Ball possession"},
+      {id: 64, name:"Occupation of own half"},
+      {id: 65, name:"Occupation of opponent's half"},
+      {id: 66, name:"Quantity of SPC used"},
+      {id: 67, name:"Quantity of Inducements used"},
+      {id: 68, name:"Quantity of custo existing"},
+      {id: 69, name:"Throw Team-Mate success"},
+      {id: 70, name:"Fireball use"},
+      {id: 71, name:"Zap use"},
+      {id: 72, name:"Starplayer recruited"},
+      {id: 73, name:"Fireball success"},
+      {id: 74, name:"Zap success"},
+      {id: 75, name:"Favor point"}];    
+
+    let getStat = function(statistics, statId){
+      const a = Array.isArray(statistics) ? statistics : [statistics];
+      let x = a.find(x => Number(x.statId) ==statId);
+      return x ? x.value : 0
+    }
+    const positions = [
+        {
+            code: 1, 
+            data: "human_humanLineman",
+            silhouette:"human_humanLineman"
+        }, 
+        {
+            code: 2, 
+            data: "human_humanCatcher",
+            silhouette:"human_humanCatcher"
+        }, 
+        {
+            code: 3, 
+            data: "human_humanThrower",
+            silhouette:"human_humanThrower"
+        }, 
+        {
+            code: 4, 
+            data: "human_humanBlitzer",
+            silhouette:"human_humanBlitzer"
+        }, 
+        {
+            code: 5, 
+            data: "human_ogre",
+            silhouette:"human_ogre"
+        }, 
+        {
+            code: 6, 
+            data: "dwarf_dwarfBlocker",
+            silhouette:"dwarf_dwarfBlocker"
+        }, 
+        {
+            code: 7, 
+            data: "dwarf_dwarfRunner",
+            silhouette:"dwarf_dwarfRunner"
+        }, 
+        {
+            code: 8, 
+            data: "dwarf_dwarfBlitzer",
+            silhouette:"dwarf_dwarfBlitzer"
+        }, 
+        {
+            code: 9, 
+            data: "dwarf_dwarfTrollSlayer",
+            silhouette:"dwarf_dwarfTrollSlayer"
+        }, 
+        {
+            code: 10, 
+            data: "dwarf_dwarfDeathroller",
+            silhouette:"dwarf_dwarfDeathroller"
+        }, 
+        {
+            code: 21, 
+            data: "orc_orcLineman",
+            silhouette:"orc_orcLineman"
+        }, 
+        {
+            code: 22, 
+            data: "orc_goblin",
+            silhouette:"orc_goblin"
+        }, 
+        {
+            code: 23, 
+            data: "orc_orcThrower",
+            silhouette:""
+        }, 
+        {
+            code: 24, 
+            data: "orc_bigUnBlocker",
+            silhouette:"orc_bigUnBlocker"
+        }, 
+        {
+            code: 25, 
+            data: "orc_orcBlitzer",
+            silhouette:"orc_orcBlitzer"
+        }, 
+        {
+            code: 26, 
+            data: "orc_troll",
+            silhouette:"orc_troll"
+        }, 
+        {
+            code: 30, 
+            data: "goblin_goblin",
+            silhouette:"goblin_goblin"
+        }, 
+        {
+            code: 31, 
+            data: "goblin_goblinLooney",
+            silhouette:"goblin_goblinLooney"
+        }, 
+        {
+            code: 32, 
+            data: "chaosChosen_beastmanRunner",
+            silhouette:"chaosChosen_beastmanRunner"
+        }, 
+        {
+            code: 33, 
+            data: "chaosChosen_chosenBlocker",
+            silhouette:"chaosChosen_chosenBlocker"
+        }, 
+        {
+            code: 34, 
+            data: "chaosChosen_minotaur",
+            silhouette:"chaosChosen_minotaur"
+        }, 
+        {
+            code: 44, 
+            data: "goblin_troll",
+            silhouette:""
+        }, 
+        {
+            code: 45, 
+            data: "goblin_goblinPogoer",
+            silhouette:""
+        }, 
+        {
+            code: 46, 
+            data: "goblin_goblinFanatic",
+            silhouette:""
+        }, 
+        {
+            code: 47, 
+            data: "darkElf_darkElfLineman",
+            silhouette:"darkElf_darkElfLineman"
+        }, 
+        {
+            code: 48, 
+            data: "darkElf_darkElfRunner",
+            silhouette:"darkElf_darkElfRunner"
+        }, 
+        {
+            code: 49, 
+            data: "darkElf_darkElfAssassin",
+            silhouette:"darkElf_darkElfAssassin"
+        }, 
+        {
+            code: 50, 
+            data: "darkElf_darkElfBlitzer",
+            silhouette:"'darkElf_darkElfBlitzer"
+        }, 
+        {
+            code: 51, 
+            data: "darkElf_darkElfWitchElf",
+            silhouette:"darkElf_darkElfWitchElf"
+        }, 
+        {
+            code: 60, 
+            data: "halfling_halflingHopeful",
+            silhouette:""
+        }, 
+        {
+            code: 61, 
+            data: "halfling_treeman",
+            silhouette:""
+        }, 
+        {
+            code: 73, 
+            data: "elvenUnion_elfThrower",
+            silhouette:"elvenUnion_elfThrower"
+        }, 
+        {
+            code: 75, 
+            data: "elvenUnion_elfBlitzer",
+            silhouette:"elvenUnion_elfBlitzer"
+        }, 
+        {
+            code: 77, 
+            data: "elvenUnion_elfLineman",
+            silhouette:"elvenUnion_elfLineman"
+        }, 
+        {
+            code: 79, 
+            data: "elvenUnion_elfCatcher",
+            silhouette:"elvenUnion_elfCatcher"
+        }, 
+        {
+            code: 107, 
+            data: "goblin_goblinBomma",
+            silhouette:""
+        }, 
+        {
+            code: 1000, 
+            data: "blackOrc_blackOrc",
+            silhouette:"blackOrc_blackOrc"
+        }, 
+        {
+            code: 1001, 
+            data: "blackOrc_goblinBruiser",
+            silhouette:"blackOrc_goblinBruiser"
+        }, 
+        {
+            code: 1002, 
+            data: "blackOrc_troll",
+            silhouette:"blackOrc_Troll"
+        }, 
+        {
+            code: 1006, 
+            data: "chaosRenegade_darkElf",
+            silhouette:"darkElf_darkElfLineman"
+        }, 
+        {
+            code: 1007, 
+            data: "chaosRenegade_goblin",
+            silhouette:"orc_goblin"
+        }, 
+        {
+            code: 1008, 
+            data: "chaosRenegade_humanLineman",
+            silhouette:"human_humanLineman"
+        }, 
+        {
+            code: 1009, 
+            data: "chaosRenegade_humanThrower",
+            silhouette:"human_humanThrower"
+        }, 
+        {
+            code: 1010, 
+            data: "chaosRenegade_minotaur",
+            silhouette:"chaosRenegade_minotaur"
+        }, 
+        {
+            code: 1011, 
+            data: "chaosRenegade_ogre",
+            silhouette:"chaosRenegade_ogre"
+        }, 
+        {
+            code: 1012, 
+            data: "chaosRenegade_orc",
+            silhouette:"orc_orclineman"
+        }, 
+        {
+            code: 1013, 
+            data: "chaosRenegade_skaven",
+            silhouette:"skaven_skavenLineman"
+        }, 
+        {
+            code: 1014, 
+            data: "chaosRenegade_troll",
+            silhouette:"orc_troll"
+        }, 
+        {
+            code: 1015, 
+            data: "goblin_goblinDoomDiver",
+            silhouette:""
+        }, 
+        {
+            code: 1016, 
+            data: "goblin_goblinOoligan",
+            silhouette:""
+        }, 
+        {
+            code: 1017, 
+            data: "halfling_halflingCatcher",
+            silhouette:""
+        }, 
+        {
+            code: 1018, 
+            data: "halfling_halflingHefty",
+            silhouette:""
+        }, 
+        {
+            code: 1019, 
+            data: "human_halflingHopeful",
+            silhouette:"human_halflingHopeful"
+        }, 
+        {
+            code: 1020, 
+            data: "imperialNobility_humanRetainer",
+            silhouette:"imperialNobility_humanRetainer"
+        }, 
+        {
+            code: 1021, 
+            data: "imperialNobility_humanThrower",
+            silhouette:"imperialNobility_humanThrower"
+        }, 
+        {
+            code: 1022, 
+            data: "imperialNobility_humanNobleBlitzer",
+            silhouette:"imperialNobility_humanNobleBlitzer"
+        }, 
+        {
+            code: 1023, 
+            data: "imperialNobility_humanBodyguard",
+            silhouette:"imperialNobility_humanBodyguard"
+        }, 
+        {
+            code: 1024, 
+            data: "imperialNobility_ogre",
+            silhouette:"imperialNobility_ogre"
+        }, 
+        {
+            code: 1029, 
+            data: "lizardman_skinkRunner",
+            silhouette:"lizardman_skinkRunner"
+        }, 
+        {
+            code: 1030, 
+            data: "lizardman_skinkChameleon",
+            silhouette:"lizardman_skinkChameleon"
+        }, 
+        {
+            code: 1031, 
+            data: "lizardman_saurusBlocker",
+            silhouette:"lizardman_saurusBlocker"
+        }, 
+        {
+            code: 1032, 
+            data: "lizardman_kroxigor",
+            silhouette:"lizardman_kroxigor"
+        }, 
+        {
+            code: 1045, 
+            data: "necromanticHorror_fleshGolem",
+            silhouette:""
+        }, 
+        {
+            code: 1046, 
+            data: "necromanticHorror_ghoulRunner",
+            silhouette:""
+        }, 
+        {
+            code: 1047, 
+            data: "necromanticHorror_werewolf",
+            silhouette:""
+        }, 
+        {
+            code: 1048, 
+            data: "necromanticHorror_wraith",
+            silhouette:""
+        }, 
+        {
+            code: 1049, 
+            data: "necromanticHorror_zombie",
+            silhouette:""
+        }, 
+        {
+            code: 1056, 
+            data: "nurgle_beastmanPestigor",
+            silhouette:"nurgle_beastmanPestigor"
+        }, 
+       
+        {
+            code: 1057, 
+            data: "nurgle_bloater",
+            silhouette:"nurgle_bloater"
+        }, 
+        {
+            code: 1058, 
+            data: "nurgle_rotspawn",
+            silhouette:"nurgle_rotspawn"
+        }, 
+        {
+            code: 1059, 
+            data: "nurgle_rotter",
+            silhouette:"nurgle_rotter"
+        }, 
+        {
+            code: 1063, 
+            data: "oldWorldAlliance_dwarfBlitzer",
+            silhouette:"dwarf_dwarfBlitzer"
+        }, 
+        {
+            code: 1064, 
+            data: "oldWorldAlliance_dwarfBlocker",
+            silhouette:"dwarf_dwarfBlocker"
+        }, 
+        {
+            code: 1065, 
+            data: "oldWorldAlliance_dwarfRunner",
+            silhouette:"dwarf_dwarfRunner"
+        }, 
+        {
+            code: 1066, 
+            data: "oldWorldAlliance_dwarfTrollSlayer",
+            silhouette:"dwarf_dwarfTrollSlayer"
+        }, 
+        {
+            code: 1067, 
+            data: "oldWorldAlliance_halflingHopeful",
+            silhouette:"human_halflingHopeful"
+        }, 
+        {
+            code: 1068, 
+            data: "oldWorldAlliance_humanBlitzer",
+            silhouette:"human_humanBlitzer"
+        }, 
+        {
+            code: 1069, 
+            data: "oldWorldAlliance_humanCatcher",
+            silhouette:"human_humanCatcher"
+        }, 
+        {
+            code: 1070, 
+            data: "oldWorldAlliance_humanLineman",
+            silhouette:"human_humanLineman"
+        }, 
+        {
+            code: 1071, 
+            data: "oldWorldAlliance_humanThrower",
+            silhouette:"human_humanThrower"
+        }, 
+        {
+            code: 1072, 
+            data: "oldWorldAlliance_ogre",
+            silhouette:"human_ogre"
+        }, 
+        {
+            code: 1073, 
+            data: "shamblingUndead_ghoulRunner",
+            silhouette:""
+        }, 
+        {
+            code: 1074, 
+            data: "shamblingUndead_mummy",
+            silhouette:""
+        }, 
+        {
+            code: 1075, 
+            data: "shamblingUndead_skeleton",
+            silhouette:""
+        }, 
+        {
+            code: 1076, 
+            data: "shamblingUndead_wightBlitzer",
+            silhouette:""
+        }, 
+        {
+            code: 1077, 
+            data: "shamblingUndead_zombie",
+            silhouette:""
+        }, 
+        {
+            code: 1078, 
+            data: "skaven_ratOgre",
+            silhouette:"skaven_ratOgre"
+        }, 
+        {
+            code: 1079, 
+            data: "skaven_skavenBlitzer",
+            silhouette:"skaven_skavenBlitzer"
+        }, 
+        {
+            code: 1080, 
+            data: "skaven_skavenGutterRunner",
+            silhouette:"skaven_skavenGutterRunner"
+        }, 
+        {
+            code: 1081, 
+            data: "skaven_skavenLineman",
+            silhouette:"skaven_skavenLineman"
+        }, 
+        {
+            code: 1082, 
+            data: "skaven_skavenThrower",
+            silhouette:"skaven_skavenThrower"
+        }, 
+        {
+            code: 1090, 
+            data: "underworldDenizen_goblin",
+            silhouette:""
+        }, 
+        {
+            code: 1091, 
+            data: "underworldDenizen_skavenBlitzer",
+            silhouette:""
+        }, 
+        {
+            code: 1092, 
+            data: "underworldDenizen_skavenGutterRunner",
+            silhouette:""
+        }, 
+        {
+            code: 1093, 
+            data: "underworldDenizen_skavenLineman",
+            silhouette:""
+        }, 
+        {
+            code: 1094, 
+            data: "underworldDenizen_skavenThrower",
+            silhouette:""
+        }, 
+        {
+            code: 1095, 
+            data: "underworldDenizen_troll",
+            silhouette:""
+        }, 
+        {
+            code: 1098, 
+            data: "woodElf_treeman",
+            silhouette:""
+        }, 
+        {
+            code: 1099, 
+            data: "woodElf_woodElfCatcher",
+            silhouette:""
+        }, 
+        {
+            code: 1100, 
+            data: "woodElf_woodElfLineman",
+            silhouette:""
+        }, 
+        {
+            code: 1101, 
+            data: "woodElf_woodElfThrower",
+            silhouette:""
+        }, 
+        {
+            code: 1102, 
+            data: "woodElf_woodElfWardancer",
+            silhouette:""
+        }, 
+        {
+            code: 1103, 
+            data: "chaosChosen_troll",
+            silhouette:"orc_troll"
+        }, 
+        {
+            code: 1104, 
+            data: "chaosChosen_ogre",
+            silhouette:"human_ogre"
+        }, 
+        {
+            code: 1105, 
+            data: "oldWorldAlliance_treeman",
+            silhouette:"oldWorldAlliance_treeman"
+        }, 
+        {
+            code: 1106, 
+            data: "chaosRenegade_ratOgre",
+            silhouette:"skaven_ratOgre"
+        }, 
+        {
+            code: 1107, 
+            data: "underworldDenizen_ratOgre",
+            silhouette:""
+        }, 
+        {
+            code: 1108, 
+            data: "underworldDenizen_snotling",
+            silhouette:""
+        }, 
+        {
+            code: 1112, 
+            data: "neutral_gobblerStar",
+            silhouette:""
+        }, 
+        {
+            code: 1113, 
+            data: "neutral_griffStar",
+            silhouette:""
+        }, 
+        {
+            code: 1114, 
+            data: "neutral_karlaStar",
+            silhouette:""
+        }, 
+        {
+            code: 1115, 
+            data: "neutral_borakStar",
+            silhouette:""
+        }, 
+        {
+            code: 1116, 
+            data: "neutral_roxannaStar",
+            silhouette:""
+        }, 
+        {
+            code: 1117, 
+            data: "neutral_varagStar",
+            silhouette:""
+        }, 
+        {
+            code: 1118, 
+            data: "neutral_grombrindalStar",
+            silhouette:""
+        }, 
+        {
+            code: 1119, 
+            data: "neutral_morgStar",
+            silhouette:""
+        }, 
+        {
+            code: 1120, 
+            data: "neutral_glartStar",
+            silhouette:""
+        }, 
+        {
+            code: 1121, 
+            data: "neutral_helmutStar",
+            silhouette:""
+        }, 
+        {
+            code: 1122, 
+            data: "neutral_willowStar",
+            silhouette:""
+        }, 
+        {
+            code: 1123, 
+            data: "neutral_gobboStar",
+            silhouette:""
+        }, 
+        {
+            code: 1124, 
+            data: "neutral_hakflemStar",
+            silhouette:""
+        }, 
+        {
+            code: 1125, 
+            data: "neutral_eldrilStar",
+            silhouette:""
+        }, 
+        {
+            code: 1126, 
+            data: "neutral_ironjawStar",
+            silhouette:""
+        }, 
+        {
+            code: 1127, 
+            data: "neutral_zugStar",
+            silhouette:""
+        }, 
+        {
+            code: 1128, 
+            data: "neutral_bugmanStar",
+            silhouette:""
+        }, 
+        {
+            code: 1129, 
+            data: "neutral_bolgrotStar",
+            silhouette:""
+        }, 
+        {
+            code: 1130, 
+            data: "neutral_farblastStar",
+            silhouette:""
+        }, 
+        {
+            code: 1131, 
+            data: "neutral_withergraspStar",
+            silhouette:""
+        }, 
+        {
+            code: 1132, 
+            data: "neutral_frog",
+            silhouette:""
+        }, 
+        {
+            code: 1133, 
+            data: "neutral_kreekStar",
+            silhouette:""
+        }, 
+        {
+            code: 1134, 
+            data: "neutral_kirothStar",
+            silhouette:""
+        }, 
+        {
+            code: 1135, 
+            data: "neutral_cindyStar",
+            silhouette:""
+        }, 
+        {
+            code: 1136, 
+            data: "neutral_asperonStar",
+            silhouette:""
+        }, 
+        {
+            code: 1137, 
+            data: "neutral_heartripperStar",
+            silhouette:""
+        }, 
+        {
+            code: 1138, 
+            data: "neutral_ivanStar",
+            silhouette:""
+        }, 
+        {
+            code: 1139, 
+            data: "neutral_curnothStar",
+            silhouette:""
+        }, 
+        {
+            code: 1140, 
+            data: "neutral_fungusStar",
+            silhouette:""
+        }, 
+        {
+            code: 1141, 
+            data: "neutral_freshbreezeStar",
+            silhouette:""
+        }, 
+        {
+            code: 1142, 
+            data: "neutral_anqiStar",
+            silhouette:""
+        }, 
+        {
+            code: 1143, 
+            data: "neutral_glotlStar",
+            silhouette:""
+        }, 
+        {
+            code: 1145, 
+            data: "neutral_valenStar",
+            silhouette:""
+        }, 
+        {
+            code: 1444, 
+            data: "neutral_lucienStar",
+            silhouette:""
+        }, 
+        {
+            code: 1445, 
+            data: "neutral_bilerotStar",
+            silhouette:""
+        }, 
+        {
+            code: 1446, 
+            data: "neutral_dribblesnotStar",
+            silhouette:""
+        }, 
+        {
+            code: 1447, 
+            data: "neutral_puggyStar",
+            silhouette:""
+        }, 
+        {
+            code: 1448, 
+            data: "neutral_drullStar",
+            silhouette:""
+        }, 
+        {
+            code: 1449, 
+            data: "neutral_driblStar",
+            silhouette:""
+        }, 
+        {
+            code: 1450, 
+            data: "neutral_glorielStar",
+            silhouette:""
+        }, 
+        {
+            code: 1451, 
+            data: "neutral_gretchenStar",
+            silhouette:""
+        }, 
+        {
+            code: 1452, 
+            data: "neutral_skullHalfheightStar",
+            silhouette:""
+        }, 
+        {
+            code: 1453, 
+            data: "neutral_bryceTheSliceCambuelStar" ,
+            silhouette:""
+        }
+    ]
+
+    let getPosition = function(id){
+      return positions.find(x => x.code === Number(id) ).data;
+    }  
+
+    const getSilhouette = id => `https://cdn2.rebbl.net/images/bb3/Silhouettes/T_${positions.find(x => x.code === Number(id) ).silhouette}_Silhouette.png`;
+
+

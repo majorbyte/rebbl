@@ -82,6 +82,28 @@ class AccountApi{
         res.status(500).send('Something something error');
       }
     });
+    this.router.put("/icon/legacy",util.ensureAuthenticated, async function(req,res){
+      try {
+        await accountService.setIcon(req.user.name, "BB3Legacy");
+
+        res.status(200).send();
+      }
+      catch (ex){
+        console.error(ex);
+        res.status(500).send('Something something error');
+      }
+    });
+    this.router.put("/icon/new",util.ensureAuthenticated, async function(req,res){
+      try {
+        await accountService.setIcon(req.user.name, "BB3Standard");
+
+        res.status(200).send();
+      }
+      catch (ex){
+        console.error(ex);
+        res.status(500).send('Something something error');
+      }
+    });
 
     this.router.get("/me",util.ensureAuthenticated, async function(req,res){
       const account = await accountService.getAccount(req.user.name);
@@ -93,7 +115,7 @@ class AccountApi{
       let schedule = schedules.find(s => regex.test(s.opponents[0].coach.name) && /^(?!\[admin]).+/i.test(s.opponents[0].team.name)); 
       if (!schedule) schedule = schedules.find(s => regex.test(s.opponents[1].coach.name) && /^(?!\[admin]).+/i.test(s.opponents[1].team.name));
 
-      let ret = {coach: account.coach, division:"", league:""};
+      let ret = {coach: account.coach, division:"", league:"", icon:account.icon || "BB3Standard"};
       if (schedule ){
         ret.division = schedule.competition;
         ret.league = schedule.league;

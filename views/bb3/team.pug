@@ -1,0 +1,36 @@
+include player.pug
+
+colgroup
+  col(span="5")
+  col(class="odd")
+  col(class="even")
+  col(class="odd")
+  col(class="even")
+  col(class="odd")
+  col(class="even")
+  col(class="odd")
+thead
+  tr
+    th(colspan="11")
+      h2= team.name
+thead
+  tr
+    th(class="align-center" style="width:50px;") #
+    th(class="align-left") Player
+    th(class="align-left") Position
+    th(class="align-left" style="min-width:160px") Skills
+    th(class="align-center") 
+    th(class="align-center") Comp
+    th(class="align-center") TD
+    th(class="align-center") INT
+    th(class="align-center") CAS
+    th(class="align-center") Foul
+    th(class="align-center") Σ SPP
+- let index = 0
+tbody
+  - let isAdminned = team.mvp != 1
+  - let pageSkills = []
+  each player in team.roster
+    -if (player.player.position)
+      - const stats = team.rosterStatistics.find(x => x.player.id === player.player.id).statistics.aggregatedStatistics ?? []
+      +player(player, stats, team.mvp)

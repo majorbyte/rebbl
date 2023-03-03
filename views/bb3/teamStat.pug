@@ -1,0 +1,7 @@
+mixin teamStat(title, statIds, homeTeamStats, awayTeamStats)
+  - const shouldRender = _ => statIds.reduce((p,c) => p + getStat(homeTeamStats,c),0) + statIds.reduce((p,c) => p + getStat(awayTeamStats,c),0) > 0;
+  - if (shouldRender())
+    tr
+      td= title
+      each stats of [homeTeamStats, awayTeamStats]
+        td= statIds.map(id => `${getStat(stats,id)}`).join(" / ")

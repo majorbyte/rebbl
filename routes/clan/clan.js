@@ -9,8 +9,6 @@ class Clan{
 		this.router = express.Router();
 	}
 
-
-
   _root(req,res){
     res.render("clan/index");
   }

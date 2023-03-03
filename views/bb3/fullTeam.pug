@@ -1,0 +1,176 @@
+extends ../no-cache-sub-relayout.pug
+include functions.pug
+
+block append vars
+  -
+    let options = {company:"Team"}
+    const getPlayerCasualtyIcon = function(cas){
+      switch(cas){
+        case '1': return ["ico_action_badly_hurt.png",""]
+        case '2': return ["ico_action_seriously_hurt.png","MNG"]
+        case '3': return ["ico_action_serious_injury.png","+1 on injury rolls"]
+        case '4': return ["ico_action_lasting_injury.png",""]
+        case '5': return ["ico_action_smashed_knee.png","-1 MV"]
+        case '6': return ["ico_action_head_injury.png","-1 AV"]
+        case '7': return ["ico_action_broken_arm.png","+1 PA"]
+        case '8': return ["ico_action_neck_injury.png","+1 AG"]
+        case '9': return ["ico_action_dislocated_shoulder.png","-1 ST"]
+        case '10': return "ico_action_dead.png";
+      }
+      return false;
+    }
+block head 
+  style.
+    .col-12 table img {width: 40px;height: 40px;}
+    .silhouette-shadow{
+      filter: drop-shadow(0px 0px 1px black);
+    }
+
+block content
+  div(class="container")
+    div(class="row col-12 d-flex flex-wrap align-items-center")
+      img(src=`https://cdn2.rebbl.net/images/bb3/Logos/${team.logo.icon}` class="align-top" style="height:100px")
+      span(class="h1")=team.name
+      div(class="row col-12")
+        h3(style="margin-top: 0px;")
+          i= team.motto
+    div(class="clearfix")
+    div(class="row" style="margin-left:0px")
+      div(class="col-md-2 col-6")
+        strong=`Current TV: ${team.value/1000}`
+      div(class="col-md-2 col-6")
+        strong=`Cash: ${team.treasury}`
+    div(class="row" style="margin-left:0px")
+      div(class="col-md-1 col-6")
+        img(src="https://cdn2.rebbl.net/images/bb3/dedicated_fan.png")
+        strong=team.improvements[3].quantity
+      div(class="col-md-1 col-6")
+        img(src="https://cdn2.rebbl.net/images/bb3/reroll.png")
+        strong=team.improvements[4].quantity
+      div(class="col-md-1 col-6")
+        img(src="https://cdn2.rebbl.net/images/bb3/cheerleader.png")
+        strong=team.improvements[1].quantity
+      div(class="col-md-1 col-6")
+        img(src="https://cdn2.rebbl.net/images/bb3/assistant_coach.png")
+        strong=team.improvements[2].quantity
+      - if (team.improvements[0].quantity > 0)
+        div(class="col-md-1 col-6")
+          img(src="https://cdn2.rebbl.net/images/bb3/apo.png")
+
+    //div(class="row" style="margin-left:0px")
+      div(class="col-12 table-responsive-md")
+        table(class="table table-striped") 
+          thead(class="headerText")
+            tr 
+              th
+              th(class="d-none d-md-table-cell") tackles
+              th(class="d-md-none") Tckl
+              th(class="d-none d-md-table-cell") injuries
+              th(class="d-md-none") Inj
+              th stuns
+              th ko
+              th CAS
+              th dead
+              th(class="d-none d-md-table-cell") running (m)
+              th(class="d-md-none") Run (m)
+              th(class="d-none d-md-table-cell") passing (m)
+              th(class="d-md-none") Pas (m)
+              th(class="d-none d-md-table-cell") passes
+              th(class="d-md-none") Pas
+              th(class="d-none d-md-table-cell") interc.
+              th(class="d-md-none") Int
+              th(class="d-none d-md-table-cell") touchdowns
+              th(class="d-md-none") TDs
+              th surfs
+          tbody
+            tr
+              td inflicted
+              td=getStat(team.statistics, 26)
+              td=getStat(team.statistics, 22)
+              td - 
+              td=getStat(team.statistics, 25)
+              td=getStat(team.statistics, 19)
+              td=getStat(team.statistics, 21)
+              td=getStat(team.statistics, 23)
+              td=getStat(team.statistics, 24)
+              td=getStat(team.statistics, 41)
+              td=getStat(team.statistics, 55)
+              td=getStat(team.statistics, 18)
+              td=getStat(team.statistics, 57)
+            tr  
+              td sustained
+              td=getStat(team.statistics, 59)
+              td=getStat(team.statistics, 30)
+              td - 
+              td=getStat(team.statistics, 29)
+              td=getStat(team.statistics, 28)
+              td=getStat(team.statistics, 31)
+              td -
+              td -
+              td -
+              td=getStat(team.statistics, 58)
+              td=getStat(team.statistics, 27)
+              td -
+
+    br
+    nav(class="col-12")
+      div(class="nav nav-tabs" id="nav-tab" role="tablist")
+        a(class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Players
+        a(class="nav-item nav-link" id="nav-matches-tab" data-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches
+    div(class="tab-content" id="tabContent")
+      div(class="tab-pane fade col-12 show active table-responsive-md" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
+        table(class="table table-striped")
+            thead(class="headerText")
+              tr
+                th(scope="col") #
+                th(scope="col") name
+                th(scope="col") position
+                th(scope="col") MA
+                th(scope="col") ST
+                th(scope="col") AG
+                th(scope="col") PA
+                th(scope="col") AV
+                th(scope="col" style="min-width:160px") Skills
+                th(scope="col") CAS
+                th(scope="col") SPP
+                th(scope="col") Value
+            tbody
+              - for(let player of team.roster)
+                tr(data-bind="attr:{class: cssClass()}") 
+                  td(data-toggle="modal" data-target="#player-dialog")=player.player.number
+                  td(data-toggle="modal" data-target="#player-dialog")
+                    div
+                      img(src=`https://cdn2.rebbl.net/images/skills/${player.player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                      .match-stats-TeamLabel-name=player.player.name
+                  td(data-toggle="modal" data-target="#player-dialog" )
+                    - let p = getPosition(player.player.position)
+                    img.silhouette-shadow(src=getSilhouette(player.player.position) title=p)
+                  - let c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)
+                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)
+                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==2)
+                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==3)
+                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==4)
+                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  td(class="td-prevent")
+                    - for(let skill of Array.isArray(player.player.skills.skillsItem) ? player.player.skills.skillsItem : [player.player.skills.skillsItem] )
+                      - let s = skills.find(x => x.id == skill)
+                      - if (s)
+                        img(src=`https://cdn2.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
+                  td(data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)").pull-right
+                    each cas in Array.isArray(player.player.casualties.casualtiesItem) ? player.player.casualties.casualtiesItem:[player.player.casualties.casualtiesItem]
+                      -let d = getPlayerCasualtyIcon(cas)
+                      if d
+                        img(src=`https://cdn2.rebbl.net/images/bb3/Icons_Casualty/${d[0]}` title=d[1])
+                    if player.player.missNextGame == "1"
+                        img(src=`https://cdn2.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
+                   
+                  td(data-toggle="modal" data-target="#player-dialog" )=player.player.spp
+                  td(data-bind="text:value")=player.player.value
+      div(class="tab-pane fade col-12 show table-responsive-md" id="nav-matches" role="tabpanel" aria-labelledby="nav-matches-tab")
+        each match of matches.reverse()
+          include matchOverview
+ 

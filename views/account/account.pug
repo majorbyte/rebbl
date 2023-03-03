@@ -5,6 +5,7 @@ block append vars
 
 block append scripts
   script.
+    let icon = "#{user.icon || 'BB3Standard'}"
     $(document).ready(function(){
       $("#timezone").on('change', function(e){
         $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
@@ -47,6 +48,20 @@ block append scripts
       const storage = window.localStorage;
       if(storage) storage.clear();
     }
+    const toggle = async function(){
+      let result;
+      if (icon == "BB3Standard") result  = await fetch(`/api/v2/account/icon/legacy`,{method:"PUT"});
+      if (icon == "BB3Legacy") result  = await fetch(`/api/v2/account/icon/new`,{method:"PUT"});
+
+      if (result.ok){
+        icon = icon == "BB3Standard" ? "BB3Legacy" : "BB3Standard";
+        let e = document.getElementById("btnIcon");
+        e.innerHTML = `Current style is: ${icon ||"BB3Standard"}`;
+        let i = document.getElementById("imgIcon");
+        i.src = `https://cdn2.rebbl.net/images/skills/${icon}/Dodge.png`;
+      }
+    }
+
 
 block content
   .container
@@ -95,6 +110,10 @@ block content
       .col
         h3 Local data:
         button.btn.btn-primary.btn-sm(type="button" onclick="clearLocalStorage()") Clear local storage
+        h3 BB3:
+        button.btn.btn-primary.btn-sm.my-1(type="button" onclick=`toggle()` id="btnIcon")= `Current style is: ${user.icon ||"BB3Standard"}`
+        br
+        img(src=`https://cdn2.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/Dodge.png` id="imgIcon")
         -if (user.following)
           h3 Following:
           each follow in user.following
