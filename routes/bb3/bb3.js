@@ -10,7 +10,8 @@ class BB3{
 	}
 
   match = async (req,res) => res.render("bb3/match", {match:await dataService.getMatch({matchId:req.params.id})});
-  standings = async (req,res) => res.render("bb3/standings", {rankings:await dataService.getRankings({})});
+  standings = async (req,res) => res.render("bb3/standings", {rankings:await dataService.getRankings({competitionId:"2b791aa6-b14d-11ed-80a8-020000a4d571"})});
+  rookieStandings = async (req,res) => res.render("bb3/standings", {rankings:await dataService.getRankings({competitionId:"5d031521-b151-11ed-80a8-020000a4d571"})});
 
   team = async (req,res) => {
     const team = await dataService.getTeam({id:req.params.id});
@@ -20,6 +21,7 @@ class BB3{
 
   routesConfig(){
     this.router.get("/", util.cache(1), util.checkAuthenticated, this.standings);
+    this.router.get("/rookies", util.cache(1), util.checkAuthenticated, this.rookieStandings);
     this.router.get("/team/:id", util.cache(1), util.checkAuthenticated, this.team);
     this.router.get("/match/:id", util.cache(1), util.checkAuthenticated, this.match);
 

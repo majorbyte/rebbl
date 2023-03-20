@@ -5,8 +5,7 @@ const
   , datingService = require("../../lib/DatingService.js")
   , util = require('../../lib/util.js')
   , express = require('express')
-  , router = express.Router({mergeParams:true})
-  , bloodbowlService = require("../../lib/bloodbowlService.js");
+  , router = express.Router({mergeParams:true});
 
 router.get('/unplayed/:match_id', async function(req, res){
   try{
@@ -46,7 +45,7 @@ router.get('/:match_id', util.cache(600), async function(req, res, next){
 
   data.skills =[];
 
-  let skillDescriptions = await bloodbowlService.getSkillDescriptions();
+  let skillDescriptions = await bloodBowlService.getSkillDescriptions();
 
   if (data.match.teams[0].roster) {
     await data.match.teams[0].roster.map(async player => {

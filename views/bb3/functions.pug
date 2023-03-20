@@ -178,7 +178,7 @@ block append vars
 
     let getStat = function(statistics, statId){
       const a = Array.isArray(statistics) ? statistics : [statistics];
-      let x = a.find(x => Number(x.statId) ==statId);
+      let x = a.filter(x => x).find(x => Number(x.statId) ==statId);
       return x ? x.value : 0
     }
     const positions = [
