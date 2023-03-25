@@ -73,7 +73,7 @@ class LeagueApi{
             awayCoachId, awayCoachName, awayTeamId, awayTeamName, awayTeamRace, awayScore };
         });
 
-        res.json(ret.sort((a,b)=> a.division > b.division ? 1 : -1).sort((a,b) => a.round - b.round));
+        res.json(ret.sort((a,b)=> a.division > b.division ? 1 : -1).sort((a,b) => b.round - a.round));
       }
       catch (ex){
         console.error(ex);

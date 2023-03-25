@@ -309,6 +309,8 @@ block scripts
         this.standings={};
         this.loadTickets();
         this.loadAdmins();
+        this.schedules = [];
+        this.loadSchedules();
 
         let response = await fetch(`/api/v2/standings/${this.league}/${this.season}`);
         if (response.ok){
