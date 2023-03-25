@@ -7,6 +7,14 @@ block vars
 block head
   style.
     h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
+    .schedule-row{margin:0}
+    .square{float: left;height: 2px;width: 15px;margin-left:1px;margin-bottom: 1px;}
+    .square.green {background-color: #00bd12;}
+    .square.red {background-color: #bd0012;}
+    .square.orange {background-color: #bda000;}
+    .highlighted {color: #badbad }
+    
+
 
 block navigation
   li.nav-item.dropdown.mr-3
@@ -40,7 +48,7 @@ block content
             div(class="col" ) Team
         div(class="col-2 d-none d-md-block" style="font-size:1.25em") Race
         div(class="col-4" style="font-size:1.25em")
-          div(class="row")
+          div(class="row no-gutters")
             div(class="col-4 col-md-2" ) Pts.
             div(class="col-2 d-none d-md-block") W  
             div(class="col-2 d-none d-md-block") D  
@@ -64,7 +72,12 @@ block content
               // /ko
             // /ko
             div(class="col" style=";overflow:hidden") 
+              // ko if: highlighted
+              a.highlighted(data-bind="text: name, attr:{href:`/coach/${id}`}")
+              // /ko
+              // ko if: !highlighted
               a(data-bind="text: name, attr:{href:`/coach/${id}`}")
+              // /ko
               // ko if: $root.isDonator($data.name)
               | &nbsp; &nbsp; 
               img(src="/images/gold.png" style="width:25px;float:right;margin-top: 2px;" title="donator")
@@ -76,15 +89,26 @@ block content
               // /ko
               // /ko
             div(class="col" style=";overflow:hidden") 
+              // ko if: highlighted
+              a.highlighted(data-bind="text: teamName(),attr:{href:`/team/${teamId}`}")
+              // /ko
+              // ko if: !highlighted
               a(data-bind="text: teamName(),attr:{href:`/team/${teamId}`}")
+              // /ko
         div(class="col-2 d-none d-md-block" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
         div(class="col-4" )
-          div(class="row")
+          div(class="row no-gutters")
             div(class="col-4 col-md-2" data-bind="text:points")
-            div(class="col-2 d-none d-md-block" data-bind="text:win")
-            div(class="col-2 d-none d-md-block" data-bind="text:draw")
-            div(class="col-2 d-none d-md-block" data-bind="text:loss")
-            div(class="col-4 col-md-2" data-bind="text:games")
+            div.col.row.no-gutters
+              div.col-3.d-none.d-md-block(data-bind="text:win")
+              div.col-3.d-none.d-md-block(data-bind="text:draw")
+              div.col-3.d-none.d-md-block(data-bind="text:loss")
+              div.col-3.col-md-3(data-bind="text:games")
+              div.schedule-row.d-none.d-md-block
+                //ko foreach: {data:$root.getSchedule($data.teamId), as: 'schedule'}
+                a(data-bind="attr:{href:`/rebbl/match/${schedule.match_uuid}`}" target="_blank")
+                  div.square(data-bind="css:schedule.scheduleColor($parent.teamId), event: { mouseover: function(data,event) { toggle($root, $parent.teamId,true)} , mouseout: function(data,event) { toggle($root, $parent.teamId, false) } }")
+                // /ko
             div(class="col-4 col-md-2 text-right" data-bind="text:tddiff")
       // ko if: $index()+1 === $root.tickets[$parentContext.$index()]
       div(class="row col-12 season-table-row" style="padding:0.5em 0")
@@ -154,6 +178,7 @@ block scripts
     class StandingsModel{
       constructor(data){
         this.map(data);
+        this.highlighted = false;
         ko.track(this);
       }
       map(data){
@@ -179,6 +204,38 @@ block scripts
         }
         return this.team;
       }
+
+      highlight(state){
+        this.highlighted = state;
+      }
+    }
+
+    class ScheduleModel{
+      constructor(data){
+        this.map(data);
+        ko.track(this);
+      }
+      map(data){
+        if(data){
+          delete data._id;
+          Object.assign(this, data);
+        }
+      }
+
+      scheduleColor(teamId){
+        if (this.homeScore === this.awayScore) return "orange";
+        const isHome = this.homeTeamId === teamId;
+        const homeWinner = this.homeScore > this.awayScore;
+        return (isHome && homeWinner) || (!isHome && !homeWinner) ? "green" : "red" // XOR
+      }
+
+      toggle(root, teamId, show){
+        console.log(teamId);
+        console.dir(this);
+        const isHome = this.homeTeamId == teamId;
+        console.log(isHome ? this.awayTeamName : this.homeTeamName);
+        root.highlight(isHome ? this.awayTeamId : this.homeTeamId, show);
+      }
     }
 
 
@@ -189,11 +246,13 @@ block scripts
         this.season = "";
         this.seasons = [];
         this.standings = {};
+        this.schedules = [];
         this.tickets = [];
         this.admins = [];
         this.challenger =[];
         this.trophies =[];
         this.me = {};
+
 
         this.collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base", ignorePunctuation:true});
         ko.track(this);
@@ -230,6 +289,20 @@ block scripts
         return admin ? admin.admin : "";
       }
 
+      getSchedule(teamId){
+        return this.schedules.filter(x => x.match_uuid).filter(x => x.homeTeamId === teamId || x.awayTeamId === teamId);
+      }
+
+      highlight(teamId, state){
+        let team = null;
+        for (const key of Object.keys(this.standings)){
+          team = this.standings[key].find(x => x.teamId === teamId);
+          if (team) break;
+        }
+        if (!team) return;
+        team.highlight(state);
+      }
+
       async loadSeason(season){
         if (season) model.season = season;
 
@@ -243,9 +316,19 @@ block scripts
           data = data.map(x => new StandingsModel(x));
           data = this._groupBy(data,"competition");
 
-
           this.standings=data;
-        }        
+        }    
+
+      }
+
+      async loadSchedules(){
+        if (this.me.doNotLoadSchedules) return;
+        let response = await fetch(`/api/v2/league/${this.league}/${this.season}/slim/all`);
+        if (response.ok){
+          let data  = await response.json();
+          this.schedules = data.map(x => new ScheduleModel(x));
+        }
+
       }
 
       async loadAdmins(){
@@ -275,12 +358,15 @@ block scripts
           let seasons =  await response.json();
           this.seasons = seasons.sort(this.collator.compare)
           this.season = seasons[seasons.length-1];
+          await this.loadMe();
           await Promise.all([
             this.loadSeason(),
+            this.loadSchedules(),
             this.loadTrophies(),
             this.loadDonators(),
-          ])
-          this.loadMe();
+          ]);
+          this.scrollDivision();
+          
         }
       }
 
@@ -299,22 +385,24 @@ block scripts
       }
 
       async loadMe(){
+        const response = await fetch("/api/v2/account/me");
+
+        if (response.ok && !response.redirected) {
+          this.me = await response.json();
+        }
+      }
+
+      scrollDivision(){
         let division = "";
         if (window.location.hash !== ""){
           division = decodeURI(window.location.hash.replace("#",""));
         } else {
-          const response = await fetch("/api/v2/account/me");
-
-          if (response.ok) {
-            this.me = await response.json();
-            if (!this.me.league.startsWith(decodeURI(this.league))) return;
-            division = this.me.division;
-          }
+          if (!this.me.league.startsWith(decodeURI(this.league))) return;
+          division = this.me.division;
         }
         const el = document.getElementById(division);
         const y = el.getBoundingClientRect().top + window.pageYOffset -70 ;
         window.scrollTo({top: y});
-
       }
 
       showTrophy(e){

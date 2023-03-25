@@ -82,6 +82,18 @@ class AccountApi{
         res.status(500).send('Something something error');
       }
     });
+    this.router.put("/schedule",util.ensureAuthenticated, async function(req,res){
+      try {
+        await accountService.toggleSchedule(req.user.name);
+
+        res.status(200).send();
+      }
+      catch (ex){
+        console.error(ex);
+        res.status(500).send('Something something error');
+      }
+    });
+
     this.router.put("/icon/legacy",util.ensureAuthenticated, async function(req,res){
       try {
         await accountService.setIcon(req.user.name, "BB3Legacy");
@@ -115,7 +127,7 @@ class AccountApi{
       let schedule = schedules.find(s => regex.test(s.opponents[0].coach.name) && /^(?!\[admin]).+/i.test(s.opponents[0].team.name)); 
       if (!schedule) schedule = schedules.find(s => regex.test(s.opponents[1].coach.name) && /^(?!\[admin]).+/i.test(s.opponents[1].team.name));
 
-      let ret = {coach: account.coach, division:"", league:"", icon:account.icon || "BB3Standard"};
+      let ret = {coach: account.coach, division:"", league:"", icon:account.icon || "BB3Standard", doNotLoadSchedules:account.doNotLoadSchedules || false};
       if (schedule ){
         ret.division = schedule.competition;
         ret.league = schedule.league;

@@ -500,7 +500,7 @@ class Standings{
   
 
   routesConfig(){
-    this.router.get('/:league', util.cache(300), async function(req, res){
+    this.router.get('/:league', util.cache(1), async function(req, res){
       let data = {company:req.params.company};
       if(data.company ==='hjmc')
         res.render('rebbl/standings/hjmc', data);

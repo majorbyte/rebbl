@@ -6,6 +6,7 @@ block append vars
 block append scripts
   script.
     let icon = "#{user.icon || 'BB3Standard'}"
+    let schedule = #{user.doNotLoadSchedules || false};
     $(document).ready(function(){
       $("#timezone").on('change', function(e){
         $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
@@ -47,6 +48,15 @@ block append scripts
       debugger;
       const storage = window.localStorage;
       if(storage) storage.clear();
+    }
+    const toggleSchedule = async function(){
+      let result = await fetch(`/api/v2/account/schedule`,{method:"PUT"});
+
+      if (result.ok){
+        schedule = !schedule
+        let e = document.getElementById("btnSchedule");
+        e.innerHTML = schedule ? "yes" : "no";
+      }
     }
     const toggle = async function(){
       let result;
@@ -110,6 +120,8 @@ block content
       .col
         h3 Local data:
         button.btn.btn-primary.btn-sm(type="button" onclick="clearLocalStorage()") Clear local storage
+        h3 Do not show schedule in standings: 
+        button.btn.btn-primary.btn-sm.my-1(type="button" onclick=`toggleSchedule()` id="btnSchedule")= user.doNotLoadSchedules ? "yes" : "no"
         h3 BB3:
         button.btn.btn-primary.btn-sm.my-1(type="button" onclick=`toggle()` id="btnIcon")= `Current style is: ${user.icon ||"BB3Standard"}`
         br

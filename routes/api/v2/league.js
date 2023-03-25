@@ -37,10 +37,14 @@ class LeagueApi{
       try {
         let {league,season, round} = req.params;
 
-        let data = await dataService.getSchedules({league:league,season:season,round:Number(round),competition:/^(?!S13.*$)/i});
+        let param = {league:new RegExp(league,'i'),season:new RegExp(season,'i'),competition:/^(?!S13.*)/i}
+        if (round !== "all") param.round = Number(round);
+
+        let data = await dataService.getSchedules(param);
         let split = [];
         if (round > 8){
-          split = await dataService.getSchedules({league:league,season:season,round:Number(round)-8,competition:/^S13/i});
+          param.round = Number(round)-8
+          split = await dataService.getSchedules(param);
           split.map(x => x.round += 8);
         }
         data = data.concat(split);
@@ -69,7 +73,7 @@ class LeagueApi{
             awayCoachId, awayCoachName, awayTeamId, awayTeamName, awayTeamRace, awayScore };
         });
 
-        res.json(ret.sort((a,b)=> a.division > b.division ? 1 : -1));
+        res.json(ret.sort((a,b)=> a.division > b.division ? 1 : -1).sort((a,b) => a.round - b.round));
       }
       catch (ex){
         console.error(ex);
