@@ -363,7 +363,6 @@ block scripts
           await this.loadMe();
           await Promise.all([
             this.loadSeason(),
-            this.loadSchedules(),
             this.loadTrophies(),
             this.loadDonators(),
           ]);
@@ -399,7 +398,7 @@ block scripts
         if (window.location.hash !== ""){
           division = decodeURI(window.location.hash.replace("#",""));
         } else {
-          if (!this.me.league.startsWith(decodeURI(this.league))) return;
+          if (!this.me.league?.startsWith(decodeURI(this.league))) return;
           division = this.me.division;
         }
         const el = document.getElementById(division);
