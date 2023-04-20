@@ -15,6 +15,14 @@ router.get('/:division', util.cache(10*60), async function(req,res) {
 
   let missing = ['2','3','4','5','6'];
   let sizes = [32,16,8,4,2,1];
+
+  if (data.matches['1'].length < 32){
+    for(let k of Object.keys(data.matches).sort((a,b) => b-a)){
+      data.matches[`${parseInt(k)+1}`] = data.matches[k];
+    }
+    data.matches['1'] = [];
+  }
+
   let dummy = {"opponents":[{
     "coach":{"id":null,"name":"","twitch":null,"youtube":null,"country":"","lang":""},
     "team":{"id":null,"name":"","logo":"","value":null,"motto":"","score":null,"death":null,"race":""}
