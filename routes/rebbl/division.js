@@ -36,7 +36,7 @@ class Division{
       leagueRegex = new RegExp(`One Minute League$`, 'i');  
     } else if(league.toLowerCase() === "greenhorn cup") {
       leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
-      season = "season 21";
+      season = "season 22";
       divRegex =new RegExp(`^${req.params.division}$`, 'i');
     } else if (league.toLowerCase().indexOf("hjmc") === -1 && league.toLowerCase().indexOf("rebbrl") === -1 && league.toLowerCase().indexOf("rebbl -") === -1 && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "rebbll " && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
       leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
@@ -53,7 +53,7 @@ class Division{
     if( req.params.league.toLowerCase() === "rampup"){
       leagueRegex = new RegExp(`${league}$`, 'i');
       divRegex = new RegExp(`^${req.params.division}`, 'i');
-      season = "season 21";
+      season = "season 22";
     } 
     
     if (season !== "")
@@ -91,7 +91,7 @@ class Division{
       let season = "";
       if (league.toLowerCase() === "greenhorn cup") {
         leagueRegex = new RegExp(`^Greenhorn Cup`,'i');
-        season = "season 21";
+        season = "season 22";
         divRegex =new RegExp(`^${req.params.division}$`, 'i');
       } else if (league.toLowerCase().indexOf("rebbrl") === -1 && league.toLowerCase().indexOf("rebbl -") === -1 && league.toLowerCase() !== "greenhorn cup" && league.toLowerCase() !== "rebbll" && league.toLowerCase() !== "rebbll " && league.toLowerCase() !== "xscessively elfly league" && league.toLowerCase() !== "rabble" && league.toLowerCase() !== "eurogamer"){
         leagueRegex = new RegExp(`REBBL[\\s-]+${req.params.league}`, 'i');
@@ -111,7 +111,7 @@ class Division{
       if( req.params.league.toLowerCase() === "rampup"){
         leagueRegex = new RegExp(`${league}$`, 'i');
         divRegex = new RegExp(`^${req.params.division}`, 'i');
-        season = "season 21";
+        season = "season 22";
       }
 
       if (season !== "")

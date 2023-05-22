@@ -30,7 +30,7 @@ class Routes{
     //let c = new RegExp(`^(^Season 20)|(^REL Rampup)|(^GMAN Rampup)`, "i");
     let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
 
-    let docs = await dataService.getSchedulesChain({ "league":{"$regex":l}, "season":"season 21" }).sort({ match_uuid: -1 }).limit(20).toArray();
+    let docs = await dataService.getSchedulesChain({ "league":{"$regex":l}, "season":"season 22" }).sort({ match_uuid: -1 }).limit(20).toArray();
 
     data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
 

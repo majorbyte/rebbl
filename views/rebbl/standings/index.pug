@@ -105,7 +105,7 @@ block content
               div.col-3.d-none.d-md-block(data-bind="text:loss")
               div.col-3.col-md-3(data-bind="text:games")
               div.schedule-row.d-none.d-md-block
-                //ko foreach: {data:$root.getSchedule($data.teamId), as: 'schedule'}
+                //ko foreach: {data:$root.getSchedule($data.competition, $data.teamId), as: 'schedule'}
                 a(data-bind="attr:{href:`/rebbl/match/${schedule.match_uuid}`}" target="_blank")
                   div.square(data-bind="css:schedule.scheduleColor($parent.teamId), event: { mouseover: function(data,event) { toggle($root, $parent.teamId,true)} , mouseout: function(data,event) { toggle($root, $parent.teamId, false) } }")
                 // /ko
@@ -289,8 +289,8 @@ block scripts
         return admin ? admin.admin : "";
       }
 
-      getSchedule(teamId){
-        return this.schedules.filter(x => x.match_uuid).filter(x => x.homeTeamId === teamId || x.awayTeamId === teamId);
+      getSchedule(division, teamId){
+        return this.schedules.filter(x => x.match_uuid && x.division == division).filter(x => x.homeTeamId === teamId || x.awayTeamId === teamId);
       }
 
       highlight(teamId, state){
