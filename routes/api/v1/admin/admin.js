@@ -17,6 +17,8 @@ router.use('/trophies', require(`./trophies.js`));
 
 router.use('/divisions', require(`./divisions.js`));
 
+router.use('/templates', require(`./templates.js`));
+
 router.use('/board', require(`./board.js`));
 
 router.use('/rampup', require(`./rampup.js`));

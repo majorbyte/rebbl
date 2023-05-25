@@ -54,44 +54,7 @@ class Maintenance{
     });
 
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
-      //cracker.registerTeam("majorbyte", "MajorTest2")
-      //cracker.getCheaters();
-      //cracker.fixRebuilders();
       try{
-        //await perpetualService.getMatches();
-        //await maintenanceService.getRebblData(req.query.league);
-        //clanService.calculateStandings();
-        //await maintenanceService.getContests(req.query.league);
-        //await maintenanceService.getRebblData(req.query.league);
-
-        //await maintenanceService.getContests(req.query.league);
-        /*
-        const draft = await dataService.getDraft({
-          house: 3,
-          round: 9,
-          competition: "Division 2a",
-          season: "season 11"
-        });
-        ds.confirmDraft("minorbyte",draft);
-      */
-        /*let seasons = [configurationService.getActiveSeason()];
-        seasons.map(season => {
-          season.leagues.map(league =>{
-            league.divisions.map(division => standingsService.updateStandings(league.name,division));
-  
-            cache.keys().map(key => {
-              if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
-                cache.del(key);
-              }
-            });
-          });
-        });
-      */
-        //await ts.checkTickets();
-
-        //reddit.check();
-
-
         res.redirect('/');
       }
       catch(e){
@@ -107,6 +70,47 @@ class Maintenance{
 
     this.router.get('/updateleague/admininit', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
       if (req.query.league && req.app.locals.cyanideEnabled) maintenanceService.getRebblData(req.query.league, req.query.comp);
+      res.redirect('/');
+    });
+
+    this.router.get('/schedules' , util.verifyMaintenanceToken, async function(req,res){
+    
+      if (req.query.key){
+        const template = await dataService.getScheduleTemplate({key:req.query.key});
+
+        let r = await reddit.postData(template);
+        await reddit.updateSidebar(template,r[0]);
+
+        dataService.updateScheduleTemplate({key:template.key},{$set:{round:template.round+1}});
+      }else{
+        const templates = await dataService.getScheduleTemplates({key:{$ne:"CLAN"},active:true});
+        for (const template of templates){
+          let r = await reddit.postData(template);
+          await reddit.updateSidebar(template,r[0]);
+  
+          dataService.updateScheduleTemplate({key:template.key},{$set:{round:template.round+1}});
+        }
+      }
+      res.redirect('/');
+    });
+
+
+    this.router.get('/scheduleClan' , util.verifyMaintenanceToken, async function(req,res){
+      const week = util.getISOWeek();
+
+      if (week % 2 === 1) {
+        const template = await dataService.getScheduleTemplate({key:"CLAN"});
+        if (template && template.active){
+          let date = new Date(Date.now());
+          date.setDate(date.getDate() + 15);
+      
+          let r = await reddit.postData(template, date.toDateString());
+          await reddit.updateSidebar(template,r[0]);
+    
+          dataService.updateScheduleTemplate({key:template.key},{$set:{round:template.round+1}});
+        }
+      }
+  
       res.redirect('/');
     });
 

@@ -1,0 +1,135 @@
+extends ../layout.pug
+
+block scripts
+  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
+  script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  script.
+
+    function Template(data){
+      const self = this;
+      this.map = (data) => {
+        if (!data) return;
+        self.error = null;
+        self.name = data.name;
+        self.key = data.key;
+        self.active = data.active;
+        self.round = data.round;
+        self.title = data.title;
+        self.flair = data.flair;
+        self.template = data.template;
+        self.editable=false
+      };      
+
+      self.toggleEdit = () => {
+        self.editable = !self.editable;
+      }
+
+      self.cancel = () => {
+        self.rollback();
+      }
+
+      self.save = async () => {
+        let response = await fetch(`/api/v1/admin/templates/${self.key}`,{
+          method:"PUT",
+          headers:{'Content-Type': 'application/json',},
+          body: JSON.stringify({key:self.key, active:self.active, round:self.round, title:self.title, template:self.template})
+        });
+        self.snap();
+        self.editable = false;
+      }
+
+      self.snap = () => {
+        self._original = Object.assign({},self);
+      };
+      self.commit = () => {
+        if (self._original != null) {
+            return self._original.map(self);
+        }
+      };
+      self.rollback = () => {
+        if (self._original != null) {
+            self.map(self._original);
+        }
+      };
+      self.map(data);
+      self.snap();
+      ko.track(this);
+
+    }  
+
+    function Model(data){
+      const self = this;
+      self.map = function(data){
+        self.templates = data.map(x => new Template(x));
+      }
+      self.map(data);
+    }
+
+    let model;
+    $(document).ready(async function(){
+        let response = await fetch(`/api/v1/admin/templates`);
+
+        if(response.ok){
+          model = new Model(await response.json());  
+          ko.applyBindings(model);
+        }
+    });
+
+block content
+  .container
+    .row.col-12.alert.alert-warning
+      p All schedules <b>except</b> CLAN will run on Tuesdays at 13:00 UTC, CLAN will run on Sundays at 13:00 UTC, but will skip a week. <br/> <i>Round</i> is the number that will be used for the next schedule post
+ 
+    .row.col-12
+      .col-2
+        h3 Key
+      .col-2
+        h3 Name
+      .col-2 
+        h3 Active
+      .col-2 
+        h3 Round
+      .col-3 
+        h3 Title
+      .col-1  
+    //ko foreach: templates
+    //ko if: !$data.editable
+    .row.col-12
+      .col-2
+        span(data-bind="text: key")
+      .col-2
+        span(data-bind="text: name")
+      .col-2
+        input(type="checkbox" data-bind="checked: active" disabled)
+      .col-2
+        span(data-bind="text: round")
+      .col-3
+        span(data-bind="text: title")
+      .col-1
+        button.btn-sm.btn-default(data-bind="click:$data.toggleEdit") 
+          i(class="fa fa-edit")
+    // /ko
+    //ko if: $data.editable
+    .row.col-12
+      .col-2
+        span(data-bind="text: key")
+      .col-2
+        span(data-bind="text: name")
+      .col-2
+        input(type="checkbox" data-bind="checked: active")
+      .col-2
+        input(type="number" data-bind="value: round")
+      .col-3
+        input(type="text" data-bind="value: title")
+      .col-1
+        button.btn-sm.btn-success(data-bind="click:$data.save")
+          i(class="fa fa-save")
+        button.btn-sm.btn-secondary(data-bind="click:$data.cancel")
+          i(class="fa fa-undo")
+      .col-12
+        textarea(data-bind="value: template" style="width:100%;" rows="14")
+    // /ko
+
+    // /ko
+          
