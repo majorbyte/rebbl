@@ -1,9 +1,9 @@
 extends ../layout.pug
 
 block scripts
-  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-  script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   script.
     function Coach(data){
       let self = this;
@@ -196,7 +196,7 @@ block content
     div.row.col-12
       div.col-4       
         div.card(style="width: 18rem;margin-top:40px")
-          img.card-img-top(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/256x256/logo_${selectedLeague.logo.toLowerCase()}.png`}")
+          img.card-img-top(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/256x256/logo_${selectedLeague.logo.toLowerCase()}.png`}")
           div.card-body
             h5.card-title(data-bind="text:selectedLeague.name")
             h6.card-subtitle.mb-2.text-muted(data-bind="text:selectedLeague.description")

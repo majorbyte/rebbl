@@ -1,7 +1,7 @@
 <html>
     <head>
-        <link rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn2.rebbl.net/styles/font-awesome.css">
+        <link rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.rebbl.net/styles/font-awesome.css">
     </head>
     <body>
         <nav class="navbar navbar-dark bg-dark">
@@ -119,7 +119,7 @@
                     <div data-bind="foreach: pagedPlayers">
                         <div class="row" style="font-size:13px">
                             <div class="col-3 text-truncate" >
-                                <img data-bind='attr: {src:"https://cdn2.rebbl.net/images/skills/" +level + ".png"}' style="width:32px;height:32px;" />
+                                <img data-bind='attr: {src:"https://cdn.rebbl.net/images/skills/" +level + ".png"}' style="width:32px;height:32px;" />
                                 <span data-bind="text: name, attr:{title: name}"></span>
                             </div>
                             <div class="col-2" data-bind="text: type.replace(/([A-Z])/g, ' $1').replace('_', ' ')"></div>
@@ -133,7 +133,7 @@
                             </div>
                             <div class="col-4" >
                                 <div data-bind='foreach: skills.concat(casualties_state)' style="display:flex;flex-flow:wrap">
-                                    <img data-bind='attr: {src:"https://cdn2.rebbl.net/images/skills/" + $data + ".png"}' style="padding:unset;width:32px;height:32px;" />
+                                    <img data-bind='attr: {src:"https://cdn.rebbl.net/images/skills/" + $data + ".png"}' style="padding:unset;width:32px;height:32px;" />
                                 </div>
                             </div>
                             <div class="col-1" data-bind="text: value">
@@ -198,7 +198,7 @@
                             <div data-bind="foreach: players">
                                     <div class="row" style="font-size:13px">
                                         <div class="col-3 text-truncate" >
-                                            <img data-bind='attr: {src:"https://cdn2.rebbl.net/images/skills/" +level + ".png"}' style="width:32px;height:32px;" />
+                                            <img data-bind='attr: {src:"https://cdn.rebbl.net/images/skills/" +level + ".png"}' style="width:32px;height:32px;" />
                                             <span data-bind="text: name, attr:{title: name}"></span>
                                         </div>
                                         <div class="col-2" data-bind="text: type.replace(/([A-Z])/g, ' $1').replace('_', ' ')"></div>
@@ -212,7 +212,7 @@
                                         </div>
                                         <div class="col-4" >
                                             <div data-bind='foreach: skills.concat(casualties_state)' style="display:flex;flex-flow:wrap">
-                                                <img data-bind='attr: {src:"https://cdn2.rebbl.net/images/skills/" + $data + ".png"}' style="padding:unset;width:32px;height:32px;" />
+                                                <img data-bind='attr: {src:"https://cdn.rebbl.net/images/skills/" + $data + ".png"}' style="padding:unset;width:32px;height:32px;" />
                                             </div>
                                         </div>
                                         <div class="col-1" data-bind="text: value">
@@ -230,11 +230,11 @@
                 </div>
             </div>
         </div>
-        <script src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://cdn2.rebbl.net/scripts/popper-1.14.3.min.js"></script>
-        <script src="https://cdn2.rebbl.net/scripts/bootstrap.min.js"></script>
-        <script src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js"></script>
-        <script src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js"></script>
+        <script src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdn.rebbl.net/scripts/popper-1.14.3.min.js"></script>
+        <script src="https://cdn.rebbl.net/scripts/bootstrap.min.js"></script>
+        <script src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js"></script>
+        <script src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js"></script>
         <script src="scripts/rabbl.js"></script>
     </body>
 </html>

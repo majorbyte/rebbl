@@ -35,17 +35,17 @@ mixin player(player, stats, mvp)
         - for(let skill of playerSkills)
           - let s = skills.find(x => x.id == skill)
           - if (s)
-            img(src=`https://cdn2.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
+            img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
         if playerSkills.filter(s => s).length > 0
           span.style(style="margin-left: 32px")
 
     td.text-center
       if player.player.id === mvp.id
-        img(src="https://cdn2.rebbl.net/images/bb3/mvp.png" title="MVP")
+        img(src="https://cdn.rebbl.net/images/bb3/mvp.png" title="MVP")
       if getStat(stats,62) > 0
-        img(src=`https://cdn2.rebbl.net/images/bb3/ico_action_expelled_.png`)
+        img(src=`https://cdn.rebbl.net/images/bb3/ico_action_expelled_.png`)
       if getCasualtyIcon()
-        img(src=`https://cdn2.rebbl.net/images/bb3/Icons_Casualty/${getCasualtyIcon()}`)
+        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${getCasualtyIcon()}`)
 
     each id in [53,18,55,19,47]
       td(class="match-stats")

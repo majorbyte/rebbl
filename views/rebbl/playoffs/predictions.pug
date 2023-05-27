@@ -4,10 +4,10 @@ extends ../../no-cache-sub-relayout.pug
 block append scripts
 
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
-    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/knockout.css")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/knockout.css")
 
   - else
     script(src="/scripts/knockout-3.4.2.js")
@@ -156,7 +156,7 @@ block content
       ul(class="" )
         li(class=`team team-top` data-bind="{css: $root.getCss(match.opponents[0].coach)  }")
           //ko if: match.opponents[0].team.logo.length > 0
-          img(class="" style="max-height:24px;max-width:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`}}")
+          img(class="" style="max-height:24px;max-width:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`}}")
           // /ko
           //ko if: match.opponents[0].team.id > 0
           div(class="teamname" data-bind="{attr: {title:match.opponents[0].team.name}}")
@@ -167,7 +167,7 @@ block content
           // /ko
         li(class=`team team-bottom ` data-bind="{css: $root.getCss(match.opponents[1].coach) }")
           // ko if: match.opponents[1].team.logo.length > 0
-          img(class="" style="max-height:24px;max-width:24px"  data-bind="{attr: {src:`https://cdn2.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`}}")
+          img(class="" style="max-height:24px;max-width:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`}}")
           // /ko
           //ko if: match.opponents[1].team.id > 0
           div(class="teamname" data-bind="{attr: {title:match.opponents[1].team.name}}")

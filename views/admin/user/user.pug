@@ -5,12 +5,12 @@ block append vars
 
 block append scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/moment.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/moment-timezone.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/moment.min.js")
+    script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
+    script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   - else
     script(src="/scripts/moment.min.js")
     script(src="/scripts/moment-timezone.min.js")
@@ -498,7 +498,7 @@ block content
           div(class="col-3" data-bind="text: name ")
           div(class="col-3" data-bind="text: title ")
           div(class="col-3")
-            img(data-bind="attr:{src: 'https://cdn2.rebbl.net/' + filename }")
+            img(data-bind="attr:{src: 'https://cdn.rebbl.net/' + filename }")
           div(class="col-1")
             button(class="btn btn-danger float-right" data-bind="click: $root.deleteTrophy,clickBubble: false") 
               i(class="fa fa-ban")

@@ -4,9 +4,9 @@ extends ../layout.pug
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")
@@ -53,7 +53,7 @@ block scripts
         self.deleteTrophy = function(data,event){
 
           $("modal-title").text(`Delete trophy ${data.name}?`)
-          $('#modal-image').attr('src', `https://cdn2.rebbl.net/${data.filename}`);
+          $('#modal-image').attr('src', `https://cdn.rebbl.net/${data.filename}`);
 
           var f = function(){
             self.post("/api/v1/admin/trophies/delete", data);
@@ -151,7 +151,7 @@ block content
     div(class="row col-12")
       div(class="col-4" data-bind="text: name" )
       div(class="col-4" data-bind="text: title")
-      img(data-bind="attr:{src: 'https://cdn2.rebbl.net/' + filename }")
+      img(data-bind="attr:{src: 'https://cdn.rebbl.net/' + filename }")
       div(class="col-1")
         button(class="btn btn-danger float-right trophy-toggle" data-bind="click: $root.deleteTrophy,clickBubble: false") 
           i(class="fa fa-ban")      

@@ -7,9 +7,9 @@ tr
   td
     div
       - if( player.xp + xp_gain >= levels[player.level+1] )
-        img(src="https://cdn2.rebbl.net/images/level.png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+        img(src="https://cdn.rebbl.net/images/level.png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
       - else
-        img(src="https://cdn2.rebbl.net/images/skills/" + player.level + ".png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+        img(src="https://cdn.rebbl.net/images/skills/" + player.level + ".png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
       - if (playerName.indexOf('[colour=') > -1)
         div(class="match-stats-TeamLabel-name" style="color:#"+playerName.substr(11,6))= playerName.substr(20, playerName.length-18)
       - else
@@ -22,14 +22,14 @@ tr
     div
       if player && player.skills.length > 0
         each skill in player.skills
-          img(src="https://cdn2.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo-skill" style="margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim()  data-toggle="modal" data-target=`#${skill.toLowerCase()}` )
+          img(src="https://cdn.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo-skill" style="margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim()  data-toggle="modal" data-target=`#${skill.toLowerCase()}` )
   // INJ
   td(class="match-stats")
     if player.eic
       span.badge.badge-success= "EIC!"
     if player.casualties_sustained.length > 0
       each cas in player.casualties_sustained
-        img(src="https://cdn2.rebbl.net/images/skills/" + cas + ".png" alt="", class="TeamLabel-logo" style="margin-top:6px;margin-left:2px;border-radius: 5px;" title=""+cas.replace(/([A-Z])/g, ' $1').trim() )
+        img(src="https://cdn.rebbl.net/images/skills/" + cas + ".png" alt="", class="TeamLabel-logo" style="margin-top:6px;margin-left:2px;border-radius: 5px;" title=""+cas.replace(/([A-Z])/g, ' $1').trim() )
   //Comp
   td(class="match-stats")
     div(style="margin-left:15px")= player.stats.inflictedpasses > 0 ? player.stats.inflictedpasses : ""
@@ -45,7 +45,7 @@ tr
   // MVP
   td(class="match-stats")
     if player.mvp
-      img(src="https://cdn2.rebbl.net/images/skills/MVPCondition.png" style="width:36px; border-radius:5px;" title="MVP")
+      img(src="https://cdn.rebbl.net/images/skills/MVPCondition.png" style="width:36px; border-radius:5px;" title="MVP")
   // SPP
   td(class="match-stats")
     div= xp_gain

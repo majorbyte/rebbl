@@ -85,7 +85,7 @@ block content
               // ko with: $root.getTrophy($data.name)
               // ko if:$data
               | &nbsp; &nbsp; 
-              img(data-bind="attr:{src:`https://cdn2.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
+              img(data-bind="attr:{src:`https://cdn.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
               // /ko
               // /ko
             div(class="col" style=";overflow:hidden") 
@@ -145,9 +145,9 @@ block content
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")
@@ -408,7 +408,7 @@ block scripts
 
       showTrophy(e){
         $('#modal-title').text(e.title + (e.date.length > 0 ? " - " + e.date : "") );
-        $('#modal-image').attr('src',`https://cdn2.rebbl.net/${e.filename}`);
+        $('#modal-image').attr('src',`https://cdn.rebbl.net/${e.filename}`);
         $('#trophy').modal();
       };
 

@@ -4,14 +4,14 @@ html(lang="en")
   head
     meta(name="viewport" content="width=device-width, manimum-scale=1.0, maximum-scale=1.0")
     block title
-    link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/font-awesome.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/font-awesome.css")
     - if (process.env.NODE_ENV === 'production')
       - if (user && user.useDark || user && user.account && user.account.useDark) 
-        link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.dark.min.css")
-        link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.dark.css")
+        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.dark.min.css")
+        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/style.dark.css")
       - else
-        link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css")
-        link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.css")
+        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.min.css")
+        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/style.css")
     - else
       - if (user && user.useDark || user && user.account && user.account.useDark) 
         link(rel="stylesheet" href="/styles/bootstrap.dark.min.css")
@@ -76,11 +76,11 @@ html(lang="en")
         div( style="float:right;")
           span(class="margin-right:7px") Donate:
           a(href="https://www.paypal.me/rebblnet" target="_blank")
-            img(src="https://cdn2.rebbl.net/images/donate.png" title="Donate")  
+            img(src="https://cdn.rebbl.net/images/donate.png" title="Donate")  
           | &nbsp; &nbsp; &nbsp; 
           a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
         p(style="padding:10px") &nbsp; <i class="fa fa-copyright fa-flip-horizontal"></i>  &nbsp; &nbsp; &nbsp;
-      script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-      script(src="https://cdn2.rebbl.net/scripts/popper-1.14.7.min.js")
-      script(src="https://cdn2.rebbl.net/scripts/bootstrap.min.js")        
+      script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+      script(src="https://cdn.rebbl.net/scripts/popper-1.14.7.min.js")
+      script(src="https://cdn.rebbl.net/scripts/bootstrap.min.js")        
       block scripts

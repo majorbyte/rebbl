@@ -4,7 +4,7 @@ div(class="MatchRow MatchRow-match" )
   a(href=`/bb3/match/${match.matchId}` class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" target="_blank")
     div(class="MatchRow-team")
       div(class="TeamLabel TeamLabel--reverse")
-        div(class="TeamLabel-block"): img(src=`https://cdn2.rebbl.net/images/bb3/Logos/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
+        div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
         div(class="TeamLabel-info TeamLabel-info--noScore")
           div(class="TeamLabel-name ")=match.homeTeam.name
           div(class="TeamLabel-coach ")=match.homeGamer.name
@@ -25,7 +25,7 @@ div(class="MatchRow MatchRow-match" )
             span(class="MatchStatus-score")=match.awayScore
     div(class="MatchRow-team")
       div(class="TeamLabel")
-        div(class="TeamLabel-block"): img(src=`https://cdn2.rebbl.net/images/bb3/Logos/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
+        div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
         div(class="TeamLabel-info TeamLabel-info--noScore")
           div(class="TeamLabel-name ")=match.awayTeam.name
           div(class="TeamLabel-coach ")=match.awayGamer.name

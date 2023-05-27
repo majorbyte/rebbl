@@ -9,7 +9,7 @@
 - let cls = (player.active && player.casualties_sustained && (player.casualties_sustained.length === 1 && player.casualties_sustained[0] !== "BadlyHurt" )) ? "player-out" : ""
 - let imagePath = "/images/"
 - if (process.env.NODE_ENV === 'production')
-  - imagePath = `https://cdn2.rebbl.net${imagePath}`
+  - imagePath = `https://cdn.rebbl.net${imagePath}`
 tr(class="stats "+cls ) 
   td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.number
   td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)

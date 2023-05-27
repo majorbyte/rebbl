@@ -38,16 +38,16 @@ block content
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:number" style="cursor:pointer")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root)" style="cursor:pointer")
         div
-          img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${level}.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+          img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${level}.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
           div(class="" data-bind="text: playerName()" class="highlight" )
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()" style="cursor:pointer")
       td
-        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/logo_${teamLogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
+        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/logo_${teamLogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
         a(data-bind="attr:{href:`/team/${teamId}`}, text:teamName" target="_blank")
 
       td(class="td-prevent d-none d-lg-table-cell")
         // ko foreach: skills
-        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
+        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
         // /ko
       td(class=" d-none d-lg-table-cell" data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
         // ko foreach: casualties_state
@@ -56,7 +56,7 @@ block content
         // /ko
         // /ko
         // ko if: ((casualties_sustained && casualties_sustained[0] === "Dead") &&( casualties_state && casualties_state.indexOf("Dead") === -1) )    
-        img(src="https://cdn2.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
+        img(src="https://cdn.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
         // /ko
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
 
@@ -91,7 +91,7 @@ block content
             tr              
               td(class="td-prevent")
                 // ko foreach: skills
-                img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
+                img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
                 // /ko
           table(class="table-striped") 
             tr              
@@ -104,7 +104,7 @@ block content
                 // /ko
                 // /ko
                 // ko if: ((casualties_sustained && casualties_sustained[0] === "Dead") &&( casualties_state && casualties_state.indexOf("Dead") === -1) )    
-                img(src="https://cdn2.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
+                img(src="https://cdn.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
                 // /ko
 
           table(class="table-striped") 
@@ -178,7 +178,7 @@ block content
         div(class="modal-header")
           h5(class="modal-title" data-bind="text: activeSkill.name")
         div(class="modal-body")
-          img( data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
+          img( data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
           p(data-bind="text:activeSkill.description")
         div(class="modal-footer")
           button( type="button" class="btn btn-secondary" data-dismiss="modal" ) Close
@@ -187,9 +187,9 @@ block content
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")
@@ -389,7 +389,7 @@ block scripts
             break;
         }
 
-        return `https://cdn2.rebbl.net/images/skills/${bust}.png`
+        return `https://cdn.rebbl.net/images/skills/${bust}.png`
       }
 
       playerColor(){

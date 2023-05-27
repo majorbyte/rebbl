@@ -24,7 +24,7 @@ block content
               a(class="row col-12 no-gutters col-md-11 col-xl-12 col-lg-12 col-sm-12" v-bind:href="'/clan/'+ schedule(row,col).season + '/' + schedule(row,col).competition + '/' + schedule(row,col).round + '/' + schedule(row,col).house" )
                 .col.row.no-gutters
                   .col.text-left
-                    img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).home.logo" alt="" class="TeamLabelLogo" )
+                    img(v-bind:src="'https://cdn.rebbl.net/' + schedule(row,col).home.logo" alt="" class="TeamLabelLogo" )
                   .col.text-info {{ schedule(row,col).home.clan }}
                 .col.text-center
                   template(v-if="schedule(row,col).home.win > schedule(row,col).away.win")
@@ -49,10 +49,10 @@ block content
                   .col.text-right
                     .text-info {{ schedule(row,col).away.clan }}
                   .col.text-right
-                    img(v-bind:src="'https://cdn2.rebbl.net/' + schedule(row,col).away.logo" alt="" class="TeamLabelLogo")
+                    img(v-bind:src="'https://cdn.rebbl.net/' + schedule(row,col).away.logo" alt="" class="TeamLabelLogo")
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
+    script(src="https://cdn.rebbl.net/scripts/vue-2.6.10.min.js")
   - else
     script(src="/scripts/vue-2.6.10.min.js")
 

@@ -24,7 +24,7 @@ block content
               div(class="col-3" data-bind="text: av")
             div(class="row col-12")
               //ko foreach: $root.getSkills($data)
-              img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="border-radius: 8px;" )
+              img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="border-radius: 8px;" )
               // /ko
         // /ko
   div(class="modal" tabindex="-1" role="dialog" id="skill-dialog")
@@ -34,7 +34,7 @@ block content
         div(class="modal-header")
           h5(class="modal-title" data-bind="text: activeSkill.name")
         div(class="modal-body")
-          img( data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
+          img( data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
           p(data-bind="text:activeSkill.description")
         div(class="modal-footer")
           button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
@@ -44,9 +44,9 @@ block content
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")

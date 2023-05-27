@@ -16,9 +16,9 @@ block content
             div(class="MatchRow-team")
               div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                 - if (match.structstadium && match.structstadium.length > 0)
-                  img(src=`https://cdn2.rebbl.net/images/stadium/${match.structstadium.toLowerCase()}.png`  title=stadiumDescription[match.structstadium.toLowerCase()]  style="margin-top: -2px;margin-left: -6px;")
+                  img(src=`https://cdn.rebbl.net/images/stadium/${match.structstadium.toLowerCase()}.png`  title=stadiumDescription[match.structstadium.toLowerCase()]  style="margin-top: -2px;margin-left: -6px;")
                 div(class="TeamLabel TeamLabel--reverse")
-                  div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let tn = match.teams[0].teamname
@@ -51,7 +51,7 @@ block content
             div(class="MatchRow-team")
               div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                 div(class="TeamLabel")
-                  div(class="TeamLabel-block"): img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let on = match.teams[1].teamname
@@ -72,9 +72,9 @@ block content
                     div(class="ReplayLinks-outer")
                       div(class="ReplayLinks-inner")
                         a(href=`https://replays.rebbl.net/${match.filename}`)
-                          img(src=`https://cdn2.rebbl.net/images/replay.png` class="ReplayLinks-download" alt="Download replay" title="Download replay")
+                          img(src=`https://cdn.rebbl.net/images/replay.png` class="ReplayLinks-download" alt="Download replay" title="Download replay")
                         a(href=`https://dicedornot.vengefulpickle.com/?rebbl=${match.uuid}`)
-                          img(src=`https://cdn2.rebbl.net/images/dicedornot-logo.svg` class="ReplayLinks-view" alt="View replay" title="View replay on DicedOrNot")
+                          img(src=`https://cdn.rebbl.net/images/dicedornot-logo.svg` class="ReplayLinks-view" alt="View replay" title="View replay on DicedOrNot")
           div(class="col-12")
             br
           div(class="table-responsive-xl col-12")
@@ -118,7 +118,7 @@ block content
           div(class="modal-header")
             h5(class="modal-title")= skill.name
           div(class="modal-body")
-            img(src="https://cdn2.rebbl.net/images/skills/" + skill.name.replace(/[ \-']/g,'') + ".png" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
+            img(src="https://cdn.rebbl.net/images/skills/" + skill.name.replace(/[ \-']/g,'') + ".png" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
             p= skill.description
           div(class="modal-footer")
             button( type="button" class="btn btn-secondary" data-dismiss="modal") Close

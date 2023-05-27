@@ -432,7 +432,7 @@ ko.bindingHandlers.toggle = {
 
 $(document).ready(function(){
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://cdn2.rebbl.net/scripts/rabbl/data/teams.v3.json",true)
+    xhr.open("GET", "https://cdn.rebbl.net/scripts/rabbl/data/teams.v3.json",true)
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.responseType = 'json';
 

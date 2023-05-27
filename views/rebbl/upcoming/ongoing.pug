@@ -41,7 +41,7 @@ block content
 
 
 block scripts
-  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
   script.
     function Model() {
       const self = this;
@@ -71,7 +71,7 @@ block scripts
         }
       }
       self.logo = function(logo){
-        return `https://cdn2.rebbl.net/images/logo/logo_${logo.toLowerCase()}.png`;
+        return `https://cdn.rebbl.net/images/logo/logo_${logo.toLowerCase()}.png`;
       }
       self.filterGames = function (league){
         return self.games().filter(x => x.LeagueName === league.league && x.CompetitionName === league.competition);

@@ -108,7 +108,7 @@ block content
                   -let trophy = coach.account.trophies.find(f => f.display)
                   -if(trophy)
                     | &nbsp; &nbsp; 
-                    img(src="https://cdn2.rebbl.net/" + trophy.filename style="width:25px;float:right;margin-top: 2px;cursor:pointer" title=trophy.title class="trophy-toggle" data-target="#trophy" data-date=trophy.date)
+                    img(src="https://cdn.rebbl.net/" + trophy.filename style="width:25px;float:right;margin-top: 2px;cursor:pointer" title=trophy.title class="trophy-toggle" data-target="#trophy" data-date=trophy.date)
               div(class="col-7" style=";overflow:hidden") 
                 -if (coach.team.indexOf("[colour") === 0)
                   a(href=`/team/${coach.teamId}`)= coach.team.substr(19, coach.team.length-17)

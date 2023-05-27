@@ -68,7 +68,7 @@ block append scripts
         let e = document.getElementById("btnIcon");
         e.innerHTML = `Current style is: ${icon ||"BB3Standard"}`;
         let i = document.getElementById("imgIcon");
-        i.src = `https://cdn2.rebbl.net/images/skills/${icon}/Dodge.png`;
+        i.src = `https://cdn.rebbl.net/images/skills/${icon}/Dodge.png`;
       }
     }
 
@@ -125,7 +125,7 @@ block content
         h3 BB3:
         button.btn.btn-primary.btn-sm.my-1(type="button" onclick=`toggle()` id="btnIcon")= `Current style is: ${user.icon ||"BB3Standard"}`
         br
-        img(src=`https://cdn2.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/Dodge.png` id="imgIcon")
+        img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/Dodge.png` id="imgIcon")
         -if (user.following)
           h3 Following:
           each follow in user.following

@@ -19,15 +19,15 @@ block content
           td
             span(data-bind="text: name")
           td
-            img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${name.replace(/ |&/g,'')}.png`}" alt="" title="" )
+            img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${name.replace(/ |&/g,'')}.png`}" alt="" title="" )
           td(data-bind="text: description")
         // /ko
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")

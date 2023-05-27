@@ -4,7 +4,7 @@
 
 You need NodeJS and MongoDB to run this locally
 
-1. [Download rebbl.net dump](https://cdn2.rebbl.net/rebbl.net/rebbl.archive) 
+1. [Download rebbl.net dump](https://cdn.rebbl.net/rebbl.net/rebbl.archive) 
 2. Run the following command: `mongorestore -h localhost -d rebbl --gzip --archive=<path>/rebbl.archive --drop`
 3. Make sure you have the following environment variables availables:
     ```javascript
@@ -45,7 +45,7 @@ You need NodeJS and MongoDB to run this locally
 ⚠️**Important:** Windows 10 hosts must use [Linux containers](https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers).
 
 1. Install [Docker](https://www.docker.com/get-started)
-2. Download the [Rebbel.net dump](https://cdn2.rebbl.net/rebbl.net/rebbl.archive) and store it on `./db-dump/rebbl.archive`
+2. Download the [Rebbel.net dump](https://cdn.rebbl.net/rebbl.net/rebbl.archive) and store it on `./db-dump/rebbl.archive`
 3. Create a `.env` with the follow contents
     ```yml
     port=3000 

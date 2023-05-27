@@ -1,10 +1,10 @@
 extends ../sublayout.pug
 
 block scripts
-  script(src="https://cdn2.rebbl.net/scripts/moment.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/moment-timezone.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn.rebbl.net/scripts/moment.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
   script.
     function DateModel() {
       const self = this;
@@ -103,8 +103,8 @@ block scripts
             date.shortTime = time.format('HH:mm');
             date.shortTimeTitle = time.format('zz(ZZ)');
             date.url = date.match_uuid ? "/rebbl/match/" + date.match_uuid : "/rebbl/match/unplayed/"+date.contest_id;
-            date.homeTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.homeTeamLogo.toLowerCase() + '.png';
-            date.awayTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.awayTeamLogo.toLowerCase() + '.png';
+            date.homeTeamLogo = 'https://cdn.rebbl.net/images/logo/logo_' + date.homeTeamLogo.toLowerCase() + '.png';
+            date.awayTeamLogo = 'https://cdn.rebbl.net/images/logo/logo_' + date.awayTeamLogo.toLowerCase() + '.png';
             date.show = ko.observable(true);
             date.streaming = ko.observable(date.stream ? true: false);
             date.stream = ko.observable(date.stream);
@@ -138,8 +138,8 @@ block scripts
               ret.homeTeam = date.opponents[0].team.name;
               ret.homeTeamValue =  date.opponents[0].team.team.nextMatchTV;
               ret.homeTeamRace = date.opponents[0].team.race;
-              ret.homeTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.opponents[0].team.logo.toLowerCase() + '.png';
-              ret.awayTeamLogo = 'https://cdn2.rebbl.net/images/logo/logo_' + date.opponents[1].team.logo.toLowerCase() + '.png';
+              ret.homeTeamLogo = 'https://cdn.rebbl.net/images/logo/logo_' + date.opponents[0].team.logo.toLowerCase() + '.png';
+              ret.awayTeamLogo = 'https://cdn.rebbl.net/images/logo/logo_' + date.opponents[1].team.logo.toLowerCase() + '.png';
               ret.awayCoach= date.opponents[1].coach.name;
               ret.awayTeam= date.opponents[1].team.name;
               ret.awayTeamValue=  date.opponents[1].team.team.nextMatchTV;
@@ -186,17 +186,17 @@ block content
       // /ko
       button(class="btn btn-twitch-off" data-bind="click:toggle.bind(this,'twitch')" style="margin-right:5px;padding:0px 1rem")
         // ko if: visibleLeagues.indexOf('twitch') > -1
-        img(src="https://cdn2.rebbl.net/images/glitch_white.png" style="height:36px")
+        img(src="https://cdn.rebbl.net/images/glitch_white.png" style="height:36px")
         // /ko         
         // ko if: visibleLeagues.indexOf('twitch') === -1
-        img(src="https://cdn2.rebbl.net/images/glitch.png" style="height:36px")
+        img(src="https://cdn.rebbl.net/images/glitch.png" style="height:36px")
         // /ko         
       button(class="btn btn-following-off" data-bind="click:toggle.bind(this,'following')" style="margin-right:5px;padding:0px 1rem")
         // ko if: visibleLeagues.indexOf('following') > -1
-        img(src="https://cdn2.rebbl.net/images/small-fist.png" style="height:36px")
+        img(src="https://cdn.rebbl.net/images/small-fist.png" style="height:36px")
         // /ko         
         // ko if: visibleLeagues.indexOf('following') === -1
-        img(src="https://cdn2.rebbl.net/images/small-fist-gray.png" style="height:36px")
+        img(src="https://cdn.rebbl.net/images/small-fist-gray.png" style="height:36px")
         // /ko         
 
     // ko foreach: dates

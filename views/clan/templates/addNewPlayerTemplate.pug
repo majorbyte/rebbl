@@ -16,16 +16,16 @@ tr.add-player-row
     span(data-bind="text: returningPlayer.sppSurplus")            
   td.left-align
     // ko foreach: returningPlayer.fixedSkills
-    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
     // /ko
     // ko foreach: returningPlayer.skills
     // ko if: !$parent.returningPlayer.fixedSkills.includes($data)
-    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
     // /ko
     // /ko
   td
     // ko foreach: returningPlayer.casualties
-    img.skill(data-bind="click: toggleCured, css: $data.removed ? 'cured' : '', attr:{title:$data.name.replace(/([A-Z])/g, ' $1').trim(), src:`https://cdn2.rebbl.net/images/skills/${$data.name}.png`}" alt="") 
+    img.skill(data-bind="click: toggleCured, css: $data.removed ? 'cured' : '', attr:{title:$data.name.replace(/([A-Z])/g, ' $1').trim(), src:`https://cdn.rebbl.net/images/skills/${$data.name}.png`}" alt="") 
     // /ko        
   td.data
     span(data-bind="text: new Intl.NumberFormat('en-US').format(returningPlayer?.value * 1000)")

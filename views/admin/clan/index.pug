@@ -63,7 +63,7 @@ block content
                 .MatchRow-contentWrapper.MatchRow-contentWrapper--hover(@click="showMatchup(_schedule(row,col))")
                   .MatchRow-team
                     .TeamLabel.TeamLabel--reverse
-                      div: img(v-bind:src="'https://cdn2.rebbl.net/' + _schedule(row,col).home.logo" alt="" class="TeamLabel-logo" style="width:unset")
+                      div: img(v-bind:src="'https://cdn.rebbl.net/' + _schedule(row,col).home.logo" alt="" class="TeamLabel-logo" style="width:unset")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{ _schedule(row,col).home.clan }}
                   .MatchRow-status
@@ -92,7 +92,7 @@ block content
                           span.MatchStatus-score {{_schedule(row,col).away.win}}
                   .MatchRow-team
                     .TeamLabel
-                      div: img(v-bind:src="'https://cdn2.rebbl.net/' + _schedule(row,col).away.logo" alt="" class="TeamLabel-logo" style="width:unset")
+                      div: img(v-bind:src="'https://cdn.rebbl.net/' + _schedule(row,col).away.logo" alt="" class="TeamLabel-logo" style="width:unset")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{ _schedule(row,col).away.clan }}
 
@@ -109,7 +109,7 @@ block content
                 .media-body
                   h1 
                     a(v-bind:href="`/clan/clan/${schedule.home.clan.name}`" target="_blank") {{ schedule.home.clan.name }}
-                img(v-bind:src="`https://cdn2.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
+                img(v-bind:src="`https://cdn.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
               .col-2.text-right
                 h1 {{schedule.home.win}}
             template(v-if="schedule.matches.length === 0")
@@ -127,9 +127,9 @@ block content
                   template(v-if="team")
                     .p-1
                       a.btn.btn-outline-info.btn-sm(v-bind:href="`/team/${team.team.id}`" target="_blank")
-                        img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
+                        img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                         span.text-info  {{team.team.name}}
-                        img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                        img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                         br
                         span.badge.badge-success /u/{{reddit(schedule.home.clan,team.coach.name)}}
                         span.badge.badge-warning {{team.coach.name}}
@@ -143,7 +143,7 @@ block content
               .col-2.text-left
                 h1  {{schedule.away.win}}
               .col-10.media.text-center.d-flex.flex-wrap.align-items-center
-                img(v-bind:src="`https://cdn2.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
+                img(v-bind:src="`https://cdn.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
                 .media-body
                   h1 
                     a(v-bind:href="`/clan/clan/${schedule.away.clan.name}`" target="_blank") {{schedule.away.clan.name}}
@@ -162,9 +162,9 @@ block content
                   template(v-if="team")
                     .p-1
                       a.btn.btn-outline-info.btn-sm(v-bind:href="`/team/${team.team.id}`" target="_blank")
-                        img(v-bind:src="`https://cdn2.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
+                        img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                         span.text-info  {{team.team.name}}
-                        img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                        img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                         br
                         span.badge.badge-success /u/{{reddit(schedule.away.clan,team.coach.name)}}
                         span.badge.badge-warning {{team.coach.name}}
@@ -237,7 +237,7 @@ block content
                 a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
                   .MatchRow-team
                     .TeamLabel.TeamLabel--reverse
-                      div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      div: img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{ match.opponents[0].team.name }}
                   .MatchRow-status.row
@@ -260,7 +260,7 @@ block content
                         span.badge.badge-success= "EIC!"
                   .MatchRow-team
                     .TeamLabel
-                      div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      div: img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{  match.opponents[1].team.name  }}
                 .col-2
@@ -291,7 +291,7 @@ block content
                 .col-12.MatchRow-contentWrapper.MatchRow-contentWrapper--hover
                   .MatchRow-team
                     .TeamLabel.TeamLabel--reverse
-                      div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[0].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      div: img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.coaches[0].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{ match.coaches[0].teamName }}
                         .TeamLabel-coach
@@ -307,7 +307,7 @@ block content
                           span.MatchStatus-score &nbsp;
                   .MatchRow-team
                     .TeamLabel(v-if="match.coaches.length > 1")
-                      div: img(v-bind:src="`https://cdn2.rebbl.net/images/logo/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      div: img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{  match.coaches[1].teamName  }}
                         .TeamLabel-coach
@@ -481,7 +481,7 @@ block content
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/vue-2.6.10.min.js")
+    script(src="https://cdn.rebbl.net/scripts/vue-2.6.10.min.js")
   - else
     script(src="/scripts/vue-2.6.10.min.js")
 

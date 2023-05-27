@@ -3,9 +3,9 @@ doctype html
 html(lang="en")
   head
     - if (process.env.NODE_ENV === 'production')
-      link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/bootstrap.min.css")
-      link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/font-awesome.css")
-      link(rel="stylesheet" href="https://cdn2.rebbl.net/styles/style.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.min.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/font-awesome.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/style.css")
     - else  
       link(rel="stylesheet" href="/styles/bootstrap.min.css")
       link(rel="stylesheet" href="/styles/font-awesome.css")
@@ -51,14 +51,14 @@ html(lang="en")
       footer(class="footer")
         div( style="float:right;")
           a(href="https://www.paypal.me/rebblnet" target="_blank")
-            img(src="https://cdn2.rebbl.net/images/donate.png" title="Donate (soon)")  
+            img(src="https://cdn.rebbl.net/images/donate.png" title="Donate (soon)")  
           | &nbsp; &nbsp; &nbsp; 
           a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
         p(style="padding:10px") &nbsp; <i class="fa fa-copyright fa-flip-horizontal"></i> majorbyte 2023 &nbsp; &nbsp; &nbsp;
       - if (process.env.NODE_ENV === 'production')
-        script(src="https://cdn2.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-        script(src="https://cdn2.rebbl.net/scripts/popper-1.14.7.min.js")
-        script(src="https://cdn2.rebbl.net/scripts/bootstrap.min.js")        
+        script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+        script(src="https://cdn.rebbl.net/scripts/popper-1.14.7.min.js")
+        script(src="https://cdn.rebbl.net/scripts/bootstrap.min.js")        
       - else
         script(src="/scripts/jquery-3.3.1.slim.min.js")
         script(src="/scripts/popper-1.14.7.min.js")

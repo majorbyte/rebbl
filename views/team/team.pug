@@ -15,21 +15,21 @@ block head
 block content
   div(class="container")
     div(class="row col-12 d-flex flex-wrap align-items-center")
-      img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" class="align-top" style="height:100px")
+      img(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" class="align-top" style="height:100px")
       span(class="h1" data-bind="text: teamName(), style:{color: teamColor()}")
 
       div(class="col text-right")
-        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/races/${idraces}.png`}" class="align-top" style="height:100px")
+        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/races/${idraces}.png`}" class="align-top" style="height:100px")
         // ko if: apothecary > 0
-        img(src=`https://cdn2.rebbl.net/images/apothecary.png` class="align-top" )
+        img(src=`https://cdn.rebbl.net/images/apothecary.png` class="align-top" )
         // /ko
 
         // ko if: isNecro()
-        img(src=`https://cdn2.rebbl.net/images/necromancer.png` class="align-top")
+        img(src=`https://cdn.rebbl.net/images/necromancer.png` class="align-top")
         // /ko
 
         // ko if: stadium()
-        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/stadium/${stadium().name.toLowerCase()}.png`,title:`${stadiumDescription()}`}" class="align-top")
+        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/stadium/${stadium().name.toLowerCase()}.png`,title:`${stadiumDescription()}`}" class="align-top")
         // /ko
       div(class="row col-12")
         h3(style="margin-top: 0px;")
@@ -262,7 +262,7 @@ block content
           a(data-bind="attr:{href: `/rebbl/match/${$parent.uuid}` }" class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" target="_blank")
             div(class="MatchRow-team")
               div(class="TeamLabel TeamLabel--reverse")
-                div(class="TeamLabel-block"): img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/logo_${teams[0].teamlogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
+                div(class="TeamLabel-block"): img(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/logo_${teams[0].teamlogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
                 div(class="TeamLabel-info TeamLabel-info--noScore")
                   div(class="TeamLabel-name " data-bind="text:teams[0].teamname")
                   div(class="TeamLabel-coach " data-bind="text: coaches[0].coachname")
@@ -286,7 +286,7 @@ block content
                   // /ko
             div(class="MatchRow-team")
               div(class="TeamLabel")
-                div(class="TeamLabel-block"): img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/logo/logo_${teams[1].teamlogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
+                div(class="TeamLabel-block"): img(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/logo_${teams[1].teamlogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
                 div(class="TeamLabel-info TeamLabel-info--noScore")
                   div(class="TeamLabel-name " data-bind="text:teams[1].teamname")
                   div(class="TeamLabel-coach " data-bind="text: coaches[1].coachname")
@@ -323,14 +323,14 @@ block content
         div
           // ko if: number > 0
           // ko if: skillUp()
-          img(src=`https://cdn2.rebbl.net/images/level.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+          img(src=`https://cdn.rebbl.net/images/level.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
           // /ko
           // ko ifnot: skillUp()
-          img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${level}.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+          img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${level}.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
           // /ko
           // /ko
           // ko if: number === 0 
-          img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/starplayer.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+          img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/starplayer.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
           // /ko
           div(class="match-stats-TeamLabel-name" data-bind="text: playerName(), style:{color: playerColor()}")
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()")
@@ -342,7 +342,7 @@ block content
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:mvp")
       td(class="td-prevent")
         // ko foreach: $data.playerSkills
-        img(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
+        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
         // /ko
         // ko if: diceRoll
         div(data-bind="attr:{title:`rolled: ${(new Date(diceRoll.date)).toISOString()}, clan: ${diceRoll.clan}`}" style="display:inline")
@@ -364,7 +364,7 @@ block content
         // /ko
         // /ko
         // ko if: ((casualties_sustained && casualties_sustained[0] === "Dead") &&( casualties_state && casualties_state.indexOf("Dead") === -1) )    
-        img(src="https://cdn2.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
+        img(src="https://cdn.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
         // /ko
       td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
       td(data-bind="text:value")
@@ -375,7 +375,7 @@ block content
         div(class="modal-header")
           h5(class="modal-title" data-bind="text: activeSkill.name")
         div(class="modal-body")
-          img( data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
+          img( data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
           p(data-bind="text:activeSkill.description")
         div(class="modal-footer")
           button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
@@ -454,9 +454,9 @@ block content
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")
@@ -813,7 +813,7 @@ block scripts
             break;
         }
 
-        return `https://cdn2.rebbl.net/images/skills/${bust}.png`
+        return `https://cdn.rebbl.net/images/skills/${bust}.png`
       }
 
       playerColor(){

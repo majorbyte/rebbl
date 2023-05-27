@@ -107,7 +107,7 @@ li.highlight {background-color: #e67b00; color:#fff}
 .spoiler .score {opacity:1; transition: opacity 0.5s;}
 .spoiler:not(:hover) .score {opacity: 0;transition: opacity 0.5s;}
 
-.played:after { content:url('https://cdn2.rebbl.net/images/played.png'); position:relative; z-index:1;top:-60px} 
+.played:after { content:url('https://cdn.rebbl.net/images/played.png'); position:relative; z-index:1;top:-60px} 
 .split-one .round-one .played:after {text-align: right;float: right;}
 .split-one .round-two .played:after {text-align: right;float: right;}
 .split-one .round-three .played:after {text-align: right;float: right;}
@@ -126,13 +126,13 @@ li.highlight {background-color: #e67b00; color:#fff}
 .gameinfo .info{opacity: 0;transition: opacity 0.5s}
 .gameinfo:hover .info{opacity: 1;transition: opacity 0.5s}
 .split-two .info {float:right;text-align: right}
-.round-one .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-60px;z-index:1;position: relative;}
-.round-two .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-120px;z-index:1;position: relative;}
-.round-three .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-240px;z-index:1;position: relative;}
-.round-four .info {background-image: url("https://cdn2.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-226px;z-index:1;position: relative;}
+.round-one .info {background-image: url("https://cdn.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-60px;z-index:1;position: relative;}
+.round-two .info {background-image: url("https://cdn.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-120px;z-index:1;position: relative;}
+.round-three .info {background-image: url("https://cdn.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-240px;z-index:1;position: relative;}
+.round-four .info {background-image: url("https://cdn.rebbl.net//images/gameinfo.png");width:34px;height: 53px;top:-226px;z-index:1;position: relative;}
 .round-four .semis-l .info, .round-four .semis-r .info {top:-120px;}
 
-.modal-content:before {content:"";background-image:url("https://cdn2.rebbl.net//images/modal-coach.png");background-size:cover;opacity: 0.5;position: absolute;top:0;right:0;bottom:0;left:0;}
+.modal-content:before {content:"";background-image:url("https://cdn.rebbl.net//images/modal-coach.png");background-size:cover;opacity: 0.5;position: absolute;top:0;right:0;bottom:0;left:0;}
 .modal-header {border-bottom: none !important}
 .modal-footer {border-top: none !important}
 

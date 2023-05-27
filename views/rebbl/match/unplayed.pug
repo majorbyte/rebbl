@@ -6,10 +6,10 @@ block append vars
   -let options = {company:company}
 
 block scripts
-  script(src="https://cdn2.rebbl.net/scripts/moment.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/moment-timezone.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
-  script(src="https://cdn2.rebbl.net/scripts/tempusdominus-bootstrap-4.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
+  script(src="https://cdn.rebbl.net/scripts/tempusdominus-bootstrap-4.min.js")
 
   - if(user)
     script.
@@ -175,9 +175,9 @@ block content
           h3
             a(href=`/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
         div(class="col-2 text-center")
-          img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+          img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
           span -
-          img(src="https://cdn2.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+          img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
         div(class="col-5")
           h3 
             a(href=`/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name

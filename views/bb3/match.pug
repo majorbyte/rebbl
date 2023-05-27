@@ -19,7 +19,7 @@ block content
             div(class="MatchRow-team")
               div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                 div(class="TeamLabel TeamLabel--reverse")
-                  div(class="TeamLabel-block"): img(src=`https://cdn2.rebbl.net/images/bb3/Logos/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let tn = match.homeTeam.name
@@ -46,7 +46,7 @@ block content
             div(class="MatchRow-team")
               div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                 div(class="TeamLabel")
-                  div(class="TeamLabel-block"): img(src=`https://cdn2.rebbl.net/images/bb3/Logos/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
+                  div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let on = match.awayTeam.name
@@ -61,9 +61,9 @@ block content
                     div(class="ReplayLinks-outer")
                       div(class="ReplayLinks-inner")
                         a(href=`https://replays.rebbl.net/${match.filename}`)
-                          img(src=`https://cdn2.rebbl.net/images/replay.png` class="ReplayLinks-download" alt="Download replay" title="Download replay")
+                          img(src=`https://cdn.rebbl.net/images/replay.png` class="ReplayLinks-download" alt="Download replay" title="Download replay")
                         a(href=`https://dicedornot.vengefulpickle.com/?rebbl=${match.uuid}`)
-                          img(src=`https://cdn2.rebbl.net/images/dicedornot-logo.svg` class="ReplayLinks-view" alt="View replay" title="View replay on DicedOrNot")
+                          img(src=`https://cdn.rebbl.net/images/dicedornot-logo.svg` class="ReplayLinks-view" alt="View replay" title="View replay on DicedOrNot")
           div(class="col-12")
             br
           div(class="col-12 d-flex")

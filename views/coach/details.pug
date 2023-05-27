@@ -2,9 +2,9 @@ extends coach.pug
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")
@@ -108,13 +108,13 @@ block content
         - if(coachDetails && coachDetails.discordId && coachDetails.discordAvatar)
           img.text-left.mx-1(style="float:left" src=`https://cdn.discordapp.com/avatars/${coachDetails.discordId}/${coachDetails.discordAvatar}.gif?size=64`)
         - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("admin")>-1)
-          img.text-left.mx-1(style="float:left" src="https://cdn2.rebbl.net/images/skills/StaffMember.png" title="Admin")
+          img.text-left.mx-1(style="float:left" src="https://cdn.rebbl.net/images/skills/StaffMember.png" title="Admin")
         - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("clanleader")>-1)
-          img.text-left.mx-1(style="float:left" src="https://cdn2.rebbl.net/images/skills/CoachSkill.png" title="Clan Leader")
+          img.text-left.mx-1(style="float:left" src="https://cdn.rebbl.net/images/skills/CoachSkill.png" title="Clan Leader")
         - if(coachDetails && coachDetails.twitch)
           div
             a(href=coachDetails.twitch target="_blank")
-              img.text-left.mx-1(src="https://cdn2.rebbl.net/images/glitch.png" style="height:64px", title=coachDetails.twitch)
+              img.text-left.mx-1(src="https://cdn.rebbl.net/images/glitch.png" style="height:64px", title=coachDetails.twitch)
         .row
           .col-12
             h3 Contact Data
@@ -149,10 +149,10 @@ block content
         i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
         // /ko
         //ko if: following === false
-        img(src="https://cdn2.rebbl.net/images/small-fist-gray.png" data-bind="click:follow" style="cursor:pointer" title="Click to follow")
+        img(src="https://cdn.rebbl.net/images/small-fist-gray.png" data-bind="click:follow" style="cursor:pointer" title="Click to follow")
         // /ko
         //ko if: following 
-        img(src="https://cdn2.rebbl.net/images/small-fist.png" data-bind="click:unfollow" style="cursor:pointer" title="Following, click to unfollow")
+        img(src="https://cdn.rebbl.net/images/small-fist.png" data-bind="click:unfollow" style="cursor:pointer" title="Following, click to unfollow")
         // /ko
 
       div(class="col-12 col-lg-9")

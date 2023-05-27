@@ -28,7 +28,7 @@ block content
               div(style="display: table-cell;min-width:120px" class="Standings-header sticky_column") League
               for race in races
                 div(style="display: table-cell" class="Standings-header text-center" title=race)
-                  img.raceIcon(src=`https://cdn2.rebbl.net/images/races/${raceIds.indexOf(race)}.png`) 
+                  img.raceIcon(src=`https://cdn.rebbl.net/images/races/${raceIds.indexOf(race)}.png`) 
             // ko foreach: {data: leagues, as: 'league'}
             div(class="TableRow")
               div(style="display: table-cell;min-width:120px" class="sticky_column" )
@@ -97,9 +97,9 @@ block content
 
 block append scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")

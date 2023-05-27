@@ -26,25 +26,25 @@ tr
     span(data-bind="text: spentSPP")
   td.left-align
     // ko foreach: fixedSkills
-    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
     // /ko
     // ko foreach: skills
     // ko if: !$parent.fixedSkills.includes($data)
-    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
     // /ko
     // /ko
     // ko if: skill1
-    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${skill1.replace(/ /g,'')}.png`,title:skill1.replace(/([A-Z])/g, ' $1').trim()}")
+    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${skill1.replace(/ /g,'')}.png`,title:skill1.replace(/([A-Z])/g, ' $1').trim()}")
     // /ko
     // ko if: skill2
-    img.skill(data-bind="attr:{src:`https://cdn2.rebbl.net/images/skills/${skill2.replace(/ /g,'')}.png`,title:skill2.replace(/([A-Z])/g, ' $1').trim()}")
+    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${skill2.replace(/ /g,'')}.png`,title:skill2.replace(/([A-Z])/g, ' $1').trim()}")
     // /ko
     // ko foreach: dice
     div(data-bind="css: `dice dice-${$data}` ")
     // /ko
   td
     // ko foreach: casualties
-    img.skill(data-bind="click: toggleCured, css: $data.removed ? 'cured' : '', attr:{title:$data.name.replace(/([A-Z])/g, ' $1').trim(), src:`https://cdn2.rebbl.net/images/skills/${$data.name}.png`}" alt="") 
+    img.skill(data-bind="click: toggleCured, css: $data.removed ? 'cured' : '', attr:{title:$data.name.replace(/([A-Z])/g, ' $1').trim(), src:`https://cdn.rebbl.net/images/skills/${$data.name}.png`}" alt="") 
     // /ko
   td.data
     span(data-bind="text: new Intl.NumberFormat('en-US').format(cost())")
@@ -61,7 +61,7 @@ tr
       // /ko
       // ko if: !$parent.isNewBloodTeam && id > 0 && levelEligible && $parent.isPlayerEligable(player)
       button.btn.btn-sm.btn-success.pull-right(data-bind="click: $parent.showSkillPlayerModal.bind($parent)")
-        img(src="https://cdn2.rebbl.net/images/level.png" style="width: 20px;")
+        img(src="https://cdn.rebbl.net/images/level.png" style="width: 20px;")
       // /ko
       button.btn.btn-sm.btn-info.pull-right(data-bind="click: player.toggleEdit")
         i.fa.fa-pencil-square-o

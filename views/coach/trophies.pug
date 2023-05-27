@@ -9,7 +9,7 @@ block content
       -if(coachDetails.trophies && coachDetails.trophies.length > 0)
         each trophy, index in coachDetails.trophies.sort(function(a,b){return a.date < b.date ? -1 : 1;})
           div(class="col-3")
-            img(src="https://cdn2.rebbl.net/" + trophy.filename title=trophy.title style="display:block;margin-left:auto;margin-right:auto")
+            img(src="https://cdn.rebbl.net/" + trophy.filename title=trophy.title style="display:block;margin-left:auto;margin-right:auto")
             br
             h2(style="text-align: center;margin-bottom: 0px;")= trophy.title
             h4(style="text-align: center;margin-top: 0px;")= trophy.date

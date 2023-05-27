@@ -29,7 +29,7 @@ block head
 block content
   div(class="container")
     div(class="row col-12 d-flex flex-wrap align-items-center")
-      img(src=`https://cdn2.rebbl.net/images/bb3/Logos/${team.logo.icon}` class="align-top" style="height:100px")
+      img(src=`https://cdn.rebbl.net/images/bb3/Logos/${team.logo.icon}` class="align-top" style="height:100px")
       span(class="h1")=team.name
       div(class="row col-12")
         h3(style="margin-top: 0px;")
@@ -42,20 +42,20 @@ block content
         strong=`Cash: ${team.treasury}`
     div(class="row" style="margin-left:0px")
       div(class="col-md-1 col-6")
-        img(src="https://cdn2.rebbl.net/images/bb3/dedicated_fan.png")
+        img(src="https://cdn.rebbl.net/images/bb3/dedicated_fan.png")
         strong=team.improvements[3].quantity
       div(class="col-md-1 col-6")
-        img(src="https://cdn2.rebbl.net/images/bb3/reroll.png")
+        img(src="https://cdn.rebbl.net/images/bb3/reroll.png")
         strong=team.improvements[4].quantity
       div(class="col-md-1 col-6")
-        img(src="https://cdn2.rebbl.net/images/bb3/cheerleader.png")
+        img(src="https://cdn.rebbl.net/images/bb3/cheerleader.png")
         strong=team.improvements[1].quantity
       div(class="col-md-1 col-6")
-        img(src="https://cdn2.rebbl.net/images/bb3/assistant_coach.png")
+        img(src="https://cdn.rebbl.net/images/bb3/assistant_coach.png")
         strong=team.improvements[2].quantity
       - if (team.improvements[0].quantity > 0)
         div(class="col-md-1 col-6")
-          img(src="https://cdn2.rebbl.net/images/bb3/apo.png")
+          img(src="https://cdn.rebbl.net/images/bb3/apo.png")
 
     //div(class="row" style="margin-left:0px")
       div(class="col-12 table-responsive-md")
@@ -140,7 +140,7 @@ block content
                   td(data-toggle="modal" data-target="#player-dialog")=player.player.number
                   td(data-toggle="modal" data-target="#player-dialog")
                     div
-                      img(src=`https://cdn2.rebbl.net/images/skills/${player.player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                      img(src=`https://cdn.rebbl.net/images/skills/${player.player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
                       .match-stats-TeamLabel-name=player.player.name
                   td(data-toggle="modal" data-target="#player-dialog" )
                     - let p = getPosition(player.player.position)
@@ -159,14 +159,14 @@ block content
                     - for(let skill of Array.isArray(player.player.skills.skillsItem) ? player.player.skills.skillsItem : [player.player.skills.skillsItem] )
                       - let s = skills.find(x => x.id == skill)
                       - if (s)
-                        img(src=`https://cdn2.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
+                        img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
                   td(data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)").pull-right
                     each cas in Array.isArray(player.player.casualties.casualtiesItem) ? player.player.casualties.casualtiesItem:[player.player.casualties.casualtiesItem]
                       -let d = getPlayerCasualtyIcon(cas)
                       if d
-                        img(src=`https://cdn2.rebbl.net/images/bb3/Icons_Casualty/${d[0]}` title=d[1])
+                        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${d[0]}` title=d[1])
                     if player.player.missNextGame == "1"
-                        img(src=`https://cdn2.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
+                        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
                    
                   td(data-toggle="modal" data-target="#player-dialog" )=player.player.spp
                   td(data-bind="text:value")=player.player.value

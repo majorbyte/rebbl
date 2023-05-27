@@ -15,7 +15,7 @@ block content
       // /ko
     .row.col-12
       h2
-        img(src="https://cdn2.rebbl.net/images/skills/CardSet.png") 
+        img(src="https://cdn.rebbl.net/images/skills/CardSet.png") 
         | &nbsp; Available Cards
       // ko foreach: cards
       .row.col-12(data-bind="css:$data.highlight ? 'highlight': ''")
@@ -68,9 +68,9 @@ block head
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn2.rebbl.net/scripts/knockout-3.4.2.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-mapping.min.js")
-    script(src="https://cdn2.rebbl.net/scripts/knockout-es5.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
     script(src="/scripts/bootstrap-select.min.js")
   - else
     script(src="/scripts/knockout-3.4.2.js")
@@ -156,19 +156,19 @@ block scripts
           switch (skill){
             case "MA+":
             case "+MA":
-              return `https://cdn2.rebbl.net/images/skills/IncreaseMovement.png`;
+              return `https://cdn.rebbl.net/images/skills/IncreaseMovement.png`;
             case "+AG":
             case "AG+":
-              return `https://cdn2.rebbl.net/images/skills/IncreaseAgility.png`;
+              return `https://cdn.rebbl.net/images/skills/IncreaseAgility.png`;
             case "ST+":
             case "+ST":
-              return `https://cdn2.rebbl.net/images/skills/IncreaseStrength.png`;
+              return `https://cdn.rebbl.net/images/skills/IncreaseStrength.png`;
             case "AV+":
             case "+AV":
-              return `https://cdn2.rebbl.net/images/skills/IncreaseArmour.png`;
+              return `https://cdn.rebbl.net/images/skills/IncreaseArmour.png`;
             default:
               if (skill === "Sidestep") skill = "Side Step";
-              return `https://cdn2.rebbl.net/images/skills/${skill.replace(' ','').replace('-','')}.png`;
+              return `https://cdn.rebbl.net/images/skills/${skill.replace(' ','').replace('-','')}.png`;
           }
       }
 
