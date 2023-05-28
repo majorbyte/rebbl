@@ -4,38 +4,26 @@ const express = require('express')
   , trophyService = require("../../../../lib/TrophyService.js")
   , util = require('../../../../lib/util.js')
   , router = express.Router()
-  , multer = require('multer')
-  , inMemoryStorage = multer.memoryStorage()
-  , uploadStrategy = multer({ storage: inMemoryStorage }).single('image')
-
-  , azureStorage = require('azure-storage')
-  , blobService = process.env.storage && azureStorage.createBlobService(process.env.storage)
-
-  , getStream = require('into-stream')
-  , containerName = 'rebbl';
+  , multer = require('multer');
 
 
 const getBlobName = originalName => {
     return `images/trophies/${originalName}`;
 };
 
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images/trophies");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${file.originalname}`);
+  },
+});
+const uploadStrategy = multer({ storage: multerStorage }).single('image');
 
 router.post('/upload', util.ensureAuthenticated, util.hasRole("admin"), uploadStrategy, (req, res) => {
 
-    const
-          blobName = getBlobName(req.file.originalname)
-        , stream = getStream(req.file.buffer)
-        , streamLength = req.file.buffer.length
-    ;
-
-    blobService.createBlockBlobFromStream(containerName, blobName, stream, streamLength, {contentSettings:{contentType:req.file.mimetype}} , err => {
-
-        if(err) {
-            res.status(500).json(err);
-        }
-
-        res.status(200).send(blobName);
-    });
+  res.status(200).send(`images/trophies/${req.file.originalname}`);
 });
 
 router.post('/save', util.ensureAuthenticated, util.hasRole("admin"), async (req, res) => {

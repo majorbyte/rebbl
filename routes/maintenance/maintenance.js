@@ -17,7 +17,7 @@ const
   , hjmc = require("../../lib/TourneyService")
   , loggingService = require("../../lib/loggingService.js")
   , maintenanceService = require('../../lib/MaintenanceService.js')
-  , perpetualService = require('../../lib/PerpetualService.js')
+  , apiService = require('../../lib/apiService.js')
   , rampupService = require("../../lib/Rampup.js")
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
@@ -114,6 +114,11 @@ class Maintenance{
       res.redirect('/');
     });
 
+    this.router.get('/replays', util.verifyMaintenanceToken, async function(req, res){
+      await apiService.getReplays();
+      res.redirect('/');
+    });
+    
     this.router.get('/updatebb3', util.verifyMaintenanceToken, async function(req, res){
       updateBB3();
       res.redirect('/');

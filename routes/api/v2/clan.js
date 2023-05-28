@@ -13,20 +13,12 @@ const express = require('express')
   , rateLimit = require("express-rate-limit")
   , util = require('../../../lib/util.js')
   , multer = require('multer')
-  , inMemoryStorage = multer.memoryStorage()
-  , uploadStrategy = multer({ storage: inMemoryStorage }).single('image')
-
-  , azureStorage = require('azure-storage')
-  , blobService = process.env.storage && azureStorage.createBlobService(process.env.storage)
-
   , getStream = require('into-stream')
-  , containerName = 'rebbl';
+  , fs = require('fs/promises');
 
 class ClanApi{
   constructor(){
     this.router = express.Router({mergeParams: true});
-    this.getBlobName = (originalName) => `images/clanlogos/${originalName}`;
-
   }
 
   routesConfig(){
@@ -456,7 +448,17 @@ class ClanApi{
       }
     });
     
-      
+    const multerStorage = multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, "images/clanlogos");
+      },
+      filename: (req, file, cb) => {
+        const ext = file.mimetype.split("/")[1];
+        cb(null, `${req.params.clan}-${file.originalname}`);
+      },
+    });
+    const uploadStrategy = multer({ storage: multerStorage }).single('image');
+
     this.router.post('/:clan/upload', util.ensureAuthenticated, util.hasRole("clanleader"), uploadStrategy, async (req, res) => {
 
       let clan = await clanService.getClanByName(req.params.clan);
@@ -466,21 +468,11 @@ class ClanApi{
         return;
       }
 
-      const
-          blobName = this.getBlobName(`${req.params.clan}-${req.file.originalname}`)
-        , stream = getStream(req.file.buffer)
-        , streamLength = req.file.buffer.length;
-  
-      blobService.createBlockBlobFromStream(containerName, blobName, stream, streamLength, {contentSettings:{contentType:req.file.mimetype}} , err => {
-        if(err) {
-          res.status(500).send(err);
-          return;
-        }
-        
-        clanService.setLogo(req.params.clan, blobName);
+      const fileName = `${req.params.clan}-${req.file.originalname}`;
 
-        res.status(200).send(blobName);
-      });
+      clanService.setLogo(req.params.clan, `images/clanlogos/${fileName}`);
+
+      res.status(200).send(blobName);
     });
 
     this.router.put("/:season/:division/:round/:house/:clan/score/:win/:draw/:loss", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){

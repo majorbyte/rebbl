@@ -29,8 +29,7 @@ You need NodeJS and MongoDB to run this locally
     rampuphook : "discord hook for stuff"
     errorhook : "discord hook for stuff"
     oiwebhook : "discord hook for stuff"
-    storage : "Azure Storage Account URL"  //Used for uploading trophy images to the CDN  
-
+    
     DB_USER:"user",
     DB_PASS:"pass",
     DB_HOST:"host",
@@ -67,7 +66,6 @@ You need NodeJS and MongoDB to run this locally
     rampuphook= #discord hook for stuff
     errorhook= #discord hook for stuff
     oiwebhook= #discord hook for stuff
-    storage= #Azure Storage Account URL, Used for uploading trophy images to the CDN  
 
     DB_USER=user
     DB_PASS=pass
