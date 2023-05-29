@@ -15,6 +15,38 @@ class Rebbl{
 		this.router = express.Router({mergeParams:true});
 	}
 
+  _mockContest(match){
+
+    const contest = {};
+    contest.match_uuid = match.uuid;
+    contest.opponents = [{
+      coach:{
+        id: match.coaches[0].id,
+        name: match.coaches[0].name,
+      },
+      team:{
+        name: match.match.teams[0].teamname,
+        logo: match.match.teams[0].teamlogo,
+        score: match.match.teams[0].score,
+      }
+    },{
+      coach:{
+        id: match.coaches[1].id,
+        name: match.coaches[1].name,
+      },
+      team:{
+        name: match.match.teams[1].teamname,
+        logo: match.match.teams[1].teamlogo,
+        score: match.match.teams[1].score,
+      }
+    }];
+    contest.league = match.match.leaguename;
+    contest.competition = match.  match.competitionname;
+
+    contest.winner = null;
+    return contest;
+  }
+
   async _root(req, res) {
     let data = {company:req.params.company};
     data.announcements = await dataService.getAnnouncements({});
@@ -51,13 +83,13 @@ class Rebbl{
       case "rebbrl":
         l = new RegExp(`^(ReBBRL College)`, "i");
     
-        docs = await dataService.getSchedulesChain({ "league":{"$regex":l}}).sort({ match_uuid: -1 }).limit(20).toArray();
+        docs = await dataService.getMatchesChain({ "match.leaguename":{"$regex":l}}).sort({ uuid: -1 }).limit(20).toArray();
     
-        data.rebbl = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
-    
+        data.rebbl = docs.map(this._mockContest).sort((a,b) => a.uuid > b.uuid ? -1 : 1);
+
         s = new RegExp("^(ReBBRL Minors)","i");
-        docs = await dataService.getSchedulesChain({ "league":{"$regex":s} }).sort({ match_uuid: -1 }).limit(20).toArray();
-        data.sides = docs.sort((a,b) => a.match_uuid > b.match_uuid ? -1 : 1);
+        docs = await dataService.getMatchesChain({ "match.leaguename":{"$regex":s} }).sort({ uuid: -1 }).limit(20).toArray();
+        data.sides = docs.map(this._mockContest).sort((a,b) => a.uuid > b.uuid ? -1 : 1);
         
         d = d.filter(a => new Date(a.date) > now ).sort((a,b) => a.date < b.date ? -1 : 1).splice(0,20);
     
@@ -106,7 +138,7 @@ class Rebbl{
     this.router.use('/:league', new league().routesConfig());
     this.router.use('/:league/:division', new division().routesConfig());
 
-    this.router.get("/", util.cache(10*60), this._root);
+    this.router.get("/", util.cache(10*60), this._root.bind(this));
 
 
     return this.router;
