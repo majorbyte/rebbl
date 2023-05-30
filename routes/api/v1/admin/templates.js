@@ -2,12 +2,22 @@
 
 const express = require('express')
   , dataService = require("../../../../lib/DataService.js").rebbl
+  , reddit = require("../../../../lib/RedditService.js")
   , util = require('../../../../lib/util.js')
   , router = express.Router();
 
 router.get("/", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
   res.json(await dataService.getScheduleTemplates());
 });
+
+router.post("/:key", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+  const template = await dataService.getScheduleTemplate({key:req.params.key});
+
+  let r = await reddit.postData(template);
+  await reddit.updateSidebar(template,r[0]);
+  res.sendStatus(200);
+});
+
 
 router.put("/:key", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
 

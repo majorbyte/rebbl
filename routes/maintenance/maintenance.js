@@ -98,7 +98,7 @@ class Maintenance{
     this.router.get('/scheduleClan' , util.verifyMaintenanceToken, async function(req,res){
       const week = util.getISOWeek();
 
-      if (week % 2 === 1) {
+      if (week % 2 === 0) {
         const template = await dataService.getScheduleTemplate({key:"CLAN"});
         if (template && template.active){
           let date = new Date(Date.now());

@@ -39,6 +39,13 @@ block scripts
         self.editable = false;
       }
 
+      self.post = async () => {
+        let response = await fetch(`/api/v1/admin/templates/${self.key}`,{
+          method:"POST",
+          headers:{'Content-Type': 'application/json',}
+        });
+      }
+
       self.snap = () => {
         self._original = Object.assign({},self);
       };
@@ -109,6 +116,9 @@ block content
       .col-1
         button.btn-sm.btn-default(data-bind="click:$data.toggleEdit") 
           i(class="fa fa-edit")
+        button.btn-sm.btn-info(data-bind="click:$data.post") 
+          i(class="fa fa-reddit")
+
     // /ko
     //ko if: $data.editable
     .row.col-12
