@@ -862,19 +862,11 @@ block scripts
 
     }
 
-    function _loadPlayers(type, cb){
-      let xhr = new XMLHttpRequest();
+    async function _loadPlayers(type, cb){
       let path = window.location.pathname.split('/');
 
-      xhr.open("GET", "/api/v2/team/" + path[path.length-1] + type  ,true)
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.responseType = 'json';
-
-      xhr.onload  = function() {//Call a function when the state changes.
-        cb(xhr.response)
-      }
-
-      xhr.send();
+      const result = await fetch(`/api/v2/team/${path[path.length-1]}${type}`);
+      cb(await result.json());
     }
 
     function loadCurrentPlayers(){
@@ -916,20 +908,13 @@ block scripts
     }
 
   
-    function loadMatches(id){
+    async function loadMatches(id){
       if (model.matches.length > 0) return;
-      let xhr = new XMLHttpRequest();
-
-      xhr.open("GET", `/api/v2/team/${id}/matches`  ,true)
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.responseType = 'json';
-
-      xhr.onload  = function() {//Call a function when the state changes.
-        model.matches =xhr.response;
+      const result = await fetch(`/api/v2/team/${id}/matches`);
+      if (result.ok){
+        model.matches =await result.json();
         countWinsAndLosses();
       }
-
-      xhr.send();
     }
 
     async function loadSkills(){
@@ -966,37 +951,27 @@ block scripts
       }
     }
 
-    function loadStarPlayers(){
+    async function loadStarPlayers(){
       const storage = window.localStorage;
       let starplayers = null;
   
       if (storage)    
-        starplayers = localStorage.getItem('starplayers');
+        starplayers = localStorage.getItem('starplayers.v1');
 
       if(!starplayers){
-        let xhr = new XMLHttpRequest();
-        let path = window.location.pathname.split('/');
-
-        xhr.open("GET", "/api/v2/bloodbowl/starplayers"  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {//Call a function when the state changes.
-          model.starplayers =xhr.response;
-          const storage = window.localStorage;
-      
-          if (storage)
-            storage.setItem('starplayers', JSON.stringify(xhr.response));    
+        const result = await fetch("/api/v2/bloodbowl/starplayers");
+        if (result.ok) {
+          starplayers = await result.json();
+          storage.setItem('starplayers.v1', JSON.stringify(starplayers));
+          model.starplayers = starplayers.filter(x => x.type.indexOf("Fallback")=== -1);
         }
-
-        xhr.send();
       } else {
-        model.starplayers = JSON.parse(starplayers);
+        model.starplayers = JSON.parse(starplayers).filter(x => x.type.indexOf("Fallback")=== -1);
       }
     }
 
 
-    function loadPlayertypes(id){
+    async function loadPlayertypes(id){
       const storage = window.localStorage;
       let playerTypes = [];
   
@@ -1012,41 +987,24 @@ block scripts
         return;
       }
 
-      let xhr = new XMLHttpRequest();
-      let path = window.location.pathname.split('/');
-
-      xhr.open("GET", "/api/v2/bloodbowl/playertypes/"+id  ,true)
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.responseType = 'json';
-
-      xhr.onload  = function() {//Call a function when the state changes.
-        model.playertypes =xhr.response;
-
+      const response = await fetch("/api/v2/bloodbowl/playertypes");
+      if (response.ok){
+        model.playertypes = result = await response.json();
         const storage = window.localStorage;
     
-        if (storage){
-          let  playerTypes = JSON.parse(localStorage.getItem('playertypes') || "[]");      
-          playerTypes = playerTypes.concat(xhr.response)
-          storage.setItem('playertypes', JSON.stringify(playerTypes));    
-        } 
+        if (storage)
+          storage.setItem('loadPlayers', JSON.stringify(result));    
       }
-      xhr.send();
     }
 
     function loadHistory(id){
       if (model.standings.length > 0) return;
-      let xhr = new XMLHttpRequest();
 
-      xhr.open("GET", "/api/v2/standings/"+id  ,true)
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.responseType = 'json';
-
-      xhr.onload  = function() {//Call a function when the state changes.
-        let data = xhr.response.filter(x => x.season);
-        model.standings =data.sort((a,b) => Number(a.season.replace(/season /i,'')) > Number(b.season.replace(/season /i,'')) ? 1 : -1);
+      const result = await fetch(`/api/v2/standings/${id}`)
+      if (result.ok){
+        let data = (await result.json()).filter(x => x.season);
+        model.standings = data.sort((a,b) => Number(a.season.replace(/season /i,'')) > Number(b.season.replace(/season /i,'')) ? 1 : -1);
       }
-
-      xhr.send();
     }
 
     function countWinsAndLosses(){

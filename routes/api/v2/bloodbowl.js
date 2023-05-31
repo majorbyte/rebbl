@@ -40,19 +40,7 @@ class BloodBowlApi{
     });
         
     this.router.get('/legendaryplayers', util.checkCache, async function(req, res){
-      let data = await dataService.getPlayers({xp:{$gt:175}, xp_gain:{$gt:0}});
-
-      for(var x = 0; x < data.length; x++){
-        let player = data[x];
-        let team = await dataService.getTeam({"team.id":player.teamId});
-        if (team){
-          player.teamName = team.team.name;
-          player.teamLogo = team.team.logo;
-          player.retiredTeam = Date.parse(team.team.datelastmatch) < new Date(Date.now() - 4*7*24*60*60*1000);
-        } else {
-          player.retiredTeam = true;
-        }
-      }
+      let data = await dataService.getLegendayPlayers({});
 
       res.json(data);
     });

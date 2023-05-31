@@ -195,105 +195,9 @@ block scripts
     script(src="/scripts/knockout-mapping.min.js")
     script(src="/scripts/knockout-es5.js")
 
+  include javascript.pug 
+  
   script.
-    const SKILLS = "skills.v3";
-    const SKILLDESCRIPTIONS = "skillDescriptions.v2";
-
-    function loadSkillDescriptions(){
-      const storage = window.localStorage;
-      let skills = null;
-  
-      if (storage)    
-        skills = localStorage.getItem(SKILLDESCRIPTIONS);
-
-      if(!skills){
-        let xhr = new XMLHttpRequest();
-        let path = window.location.pathname.split('/');
-
-        xhr.open("GET", "/api/v2/bloodbowl/skillDescriptions"  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {//Call a function when the state changes.
-          model.skillDescriptions =xhr.response;
-          const storage = window.localStorage;
-      
-          if (storage)
-            storage.setItem(SKILLDESCRIPTIONS, JSON.stringify(xhr.response));    
-          loadSkills();
-        }
-
-        xhr.send();
-      } else {
-        model.skillDescriptions = JSON.parse(skills);
-        loadSkills();
-      }
-    }
-
-    function loadSkills(){
-      const storage = window.localStorage;
-      let skills = null;
-  
-      if (storage)    
-        skills = localStorage.getItem(SKILLS);
-
-      if(!skills){
-        let xhr = new XMLHttpRequest();
-        let path = window.location.pathname.split('/');
-
-        xhr.open("GET", "/api/v2/bloodbowl/skills"  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {//Call a function when the state changes.
-          model.skills =xhr.response;
-          const storage = window.localStorage;
-      
-          if (storage)
-            storage.setItem(SKILLS, JSON.stringify(xhr.response));    
-          
-          loadRaces();
-        }
-
-        xhr.send();
-      } else {
-        model.skills = JSON.parse(skills);
-        loadRaces();
-      }
-    }
-
-    function loadRaces(){
-      const storage = window.localStorage;
-      let races = null;
-  
-      if (storage)    
-        races = localStorage.getItem('races');
-
-      if(!races){
-        let xhr = new XMLHttpRequest();
-        let path = window.location.pathname.split('/');
-
-        xhr.open("GET", "/api/v2/bloodbowl/races"  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {//Call a function when the state changes.
-          model.races =xhr.response;
-          const storage = window.localStorage;
-      
-          if (storage)
-            storage.setItem('races', JSON.stringify(xhr.response));    
-          
-          loadPlayertypes();
-        }
-
-        xhr.send();
-      } else {
-        model.races = JSON.parse(races);
-        loadPlayertypes();
-      }
-    }
-
     class PlayerModel{
       constructor(data, playerType){
         this.map(data);
@@ -489,28 +393,21 @@ block scripts
     }
 
 
-    function loadPlayers(type, cb){
-      let xhr = new XMLHttpRequest();
-      let path = window.location.pathname.split('/');
-
-      xhr.open("GET", "/api/v2/bloodbowl/legendaryplayers"  ,true)
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.responseType = 'json';
-
-      xhr.onload  = function() {//Call a function when the state changes.
-          model.players = xhr.response
-            .sort(function(a,b){
-              if (a.xp > b.xp) return -1;
-              if (a.xp < b.xp) return 1;
-              return a.number > b.number ? 1 : -1}
-            )
-            .map(x => new PlayerModel(x, model.playertypes.find(t => t.type === x.type) ));
+    async function loadPlayers(type, cb){
+      const response = await fetch("/api/v2/bloodbowl/legendaryplayers");
+      if (response.ok){
+        const result = await response.json();
+        model.players = result
+          .sort(function(a,b){
+            if (a.xp > b.xp) return -1;
+            if (a.xp < b.xp) return 1;
+            return a.number > b.number ? 1 : -1})
+          .map(x => new PlayerModel(x, model.playertypes.find(t => t.type === x.type) ));
       }
 
-      xhr.send();
     }
 
-    function loadPlayertypes(){
+    async function loadPlayertypes(){
       const storage = window.localStorage;
       let playerTypes = [];
   
@@ -521,33 +418,25 @@ block scripts
 
       if (playerTypes.length >= 101){
         model.playertypes = playerTypes;
-        loadPlayers();
+        await loadPlayers();
         return;
       }
-
-      let xhr = new XMLHttpRequest();
-      let path = window.location.pathname.split('/');
-
-      xhr.open("GET", "/api/v2/bloodbowl/playertypes/"  ,true)
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.responseType = 'json';
-
-      xhr.onload  = function() {//Call a function when the state changes.
-        model.playertypes =xhr.response;
-
+      const response = await fetch("/api/v2/bloodbowl/playertypes");
+      if (response.ok){
+        model.playertypes = result =await response.json();
         const storage = window.localStorage;
     
-        if (storage){
-          storage.setItem('playertypes', JSON.stringify(xhr.response));    
-        } 
-        loadPlayers();
+        if (storage)
+          storage.setItem('loadPlayers', JSON.stringify(result));    
+        
+        await loadPlayers();
       }
-      xhr.send();
     }
 
     let model = new ViewModel({});
     ko.applyBindings(model);
-    $(document).ready(function(){
+    $(document).ready(async function(){
 
-      loadSkillDescriptions();
+      await loadSkillDescriptions();
+      loadPlayertypes();
     });

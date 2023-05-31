@@ -61,20 +61,12 @@ block append scripts
 
     let model;
 
-    $(document).ready(function(){
-
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", `/api/v1/playoffs/!{division}`,true)
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.responseType = 'json';
-
-      xhr.onload  = function() {//Call a function when the state changes.
-        if(xhr.response && xhr.status === 200){   
-          model = new PlayoffModel(xhr.response); 
-        }
-        ko.applyBindings();
+    $(document).ready(async function(){
+      const result = await fetch (`/api/v1/playoffs/!{division}`);
+      if (result.ok){
+        model = new PlayoffModel(await result.json()); 
       }
-      xhr.send('');
+      ko.applyBindings();
 
       $('li').click(function(e){
         

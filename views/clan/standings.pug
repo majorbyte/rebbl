@@ -136,44 +136,35 @@ block scripts
       competitionUrl(comp){
         return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competition)}`;
       };
-      loadSeason(season){
+      async loadSeason(season){
         if (season) model.season = season;
         this.standings={};
 
-        let xhr = new XMLHttpRequest();
+        const result = await fetch(`/api/v2/standings/${this.league}/${this.season}`);
 
-        xhr.open("GET", `/api/v2/standings/${this.league}/${this.season}`  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {
-          let data = xhr.response.map(x => new StandingsModel(x));
+        if (result.ok){
+          let data = (await result.json()).map(x => new StandingsModel(x));
           data = this._groupBy(data,"division")
 
-          this.standings=data;
-        }.bind(this);
-        xhr.send();
+          this.standings = data;
+        }
       }
       usePoints(){
         return Number(this.season.replace(/\D/g,'')) > 8;
       }
 
 
-      loadSeasons(){
-        let xhr = new XMLHttpRequest();
+      async loadSeasons(){
 
-        xhr.open("GET", `/api/v2/league/${this.league}/seasons`  ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {
-          let seasons = xhr.response.sort(this.collator.compare);
+        const result = await fetch(`/api/v2/league/${this.league}/seasons`);
+        if (result.ok){
+          const data = await result.json();
+          let seasons = data.sort(this.collator.compare);
 
           this.seasons = seasons
           this.season = seasons[seasons.length-1];
-          this.loadSeason();
-        }.bind(this);
-        xhr.send();
+          await this.loadSeason();
+        }
       }
       
       _groupBy(xs, key) {

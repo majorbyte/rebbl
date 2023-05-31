@@ -6,25 +6,14 @@ block title
 block append scripts
   script.
     $(document).ready(function(){
-
-      $("#rebbrl").on("click", function(e){
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/v1/signups/rookie/" + $("#coach").val() ,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {//Call a function when the state changes.
-
-          if(xhr.response && xhr.status === 200){   
-            $("#team").val(xhr.response.team);   
-            $("#race").val(xhr.response.race);
-          } else{
-            $("#error").toggle("hidden");
-          }
+      $("#rebbrl").on("click", async function(e){
+        const result = await fetch(`/api/v1/signups/rookie/${$("#coach").val()}`);
+        if (result.ok){
+          const data = await result.json();
+            $("#team").val(data.team);   
+            $("#race").val(data.race);
         }
-        xhr.send('');
-
-      })
+      });
     });
 
 

@@ -116,60 +116,60 @@ block append scripts
       self.newTrophy = ko.observable(new TrophyModel({"date":"","filename":"","title":"","name":""}));
       self.newNote = ko.observable(new NoteModel({"date":"","text":""}));
 
-      self.toggleBan = function(data,event){
+      self.toggleBan = async function(data,event){
         data.active = !data.active;
-        self.post("/api/v1/admin/user/toggleBan", {reddit:self.reddit(), id:data.id, ban:data});
+        await self.post("/api/v1/admin/user/toggleBan", {reddit:self.reddit(), id:data.id, ban:data});
       }
-      self.addBan = function(data,event){
+      self.addBan = async function(data,event){
         self.bans.push(self.newBan());
-        self.post("/api/v1/admin/user/addBan", {reddit:self.reddit(), ban:self.newBan()});
+        await self.post("/api/v1/admin/user/addBan", {reddit:self.reddit(), ban:self.newBan()});
         self.newBan(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       }
 
-      self.toggle = function(data,event){
+      self.toggle = async function(data,event){
         data.active = !data.active;
-        self.post("/api/v1/admin/user/toggleStrike", {reddit:self.reddit(), id:data.id, strike:data});
+        await self.post("/api/v1/admin/user/toggleStrike", {reddit:self.reddit(), id:data.id, strike:data});
       }
 
-      self.addStrike = function(data,event){
+      self.addStrike = async function(data,event){
         self.strikes.push(self.newStrike());
-        self.post("/api/v1/admin/user/addStrike", {reddit:self.reddit(), strike:self.newStrike()});
+        await self.post("/api/v1/admin/user/addStrike", {reddit:self.reddit(), strike:self.newStrike()});
         self.newStrike(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       }
 
-      self.addWarning = function(data,event){
+      self.addWarning = async function(data,event){
         self.warnings.push(self.newWarning());
-        self.post("/api/v1/admin/user/addWarning", {reddit:self.reddit(), warning:self.newWarning()});
+        await self.post("/api/v1/admin/user/addWarning", {reddit:self.reddit(), warning:self.newWarning()});
         self.newWarning(new StrikeModel({"reason":"","start":"","end":"","active":true}));
       }
       
-      self.addTrophy = function(data,event){
+      self.addTrophy = async function(data,event){
 
         const t = self.availableTrophies().find(x => x.name === self.newTrophy().name);
 
         self.newTrophy().filename = t.filename;
 
         self.trophies.push(self.newTrophy());
-        self.post("/api/v1/admin/user/addTrophy", {reddit:self.reddit(), trophy:self.newTrophy()});
+        await self.post("/api/v1/admin/user/addTrophy", {reddit:self.reddit(), trophy:self.newTrophy()});
         self.newTrophy(new TrophyModel({"date":"","filename":"","title":"","name":""}));
       }
 
-      self.deleteTrophy = function(data,event){
+      self.deleteTrophy = async function(data,event){
 
-        self.post("/api/v1/admin/user/deleteTrophy", {reddit:self.reddit(), trophy:data});
+        await self.post("/api/v1/admin/user/deleteTrophy", {reddit:self.reddit(), trophy:data});
         self.trophies.splice(self.trophies().indexOf(data),1);
       }
       
-      self.addNote = function(data,event){
+      self.addNote = async function(data,event){
         self.notes.push(self.newNote());
-        self.post("/api/v1/admin/user/addNote", {reddit:self.reddit(), note:self.newNote()});
+        await self.post("/api/v1/admin/user/addNote", {reddit:self.reddit(), note:self.newNote()});
         self.newNote(new NoteModel({"date":"","text":""}));
       }
 
-      self.saveNote = function(data,event){
+      self.saveNote = async function(data,event){
         data.editable=false;
         data.commit();
-        self.post("/api/v1/admin/user/updateNote", {reddit:self.reddit(), note:data});
+        await self.post("/api/v1/admin/user/updateNote", {reddit:self.reddit(), note:data});
       }
 
       self.cancelNote = function(data,event){
@@ -180,10 +180,10 @@ block append scripts
       self.edit = function(data,event){
         data.editable=true;
       }
-      self.saveBan = function(data,event){
+      self.saveBan = async function(data,event){
         data.editable=false;
         data.commit();
-        self.post("/api/v1/admin/user/updateBan", {reddit:self.reddit(), ban:data});
+        await self.post("/api/v1/admin/user/updateBan", {reddit:self.reddit(), ban:data});
       }
 
       self.cancelBan = function(data,event){
@@ -191,10 +191,10 @@ block append scripts
         data.rollback();
       }
 
-      self.saveStrike = function(data,event){
+      self.saveStrike = async function(data,event){
         data.editable=false;
         data.commit();
-        self.post("/api/v1/admin/user/updateStrike", {reddit:self.reddit(), strike:data});
+        await self.post("/api/v1/admin/user/updateStrike", {reddit:self.reddit(), strike:data});
       }
 
       self.cancelStrike = function(data,event){
@@ -203,10 +203,10 @@ block append scripts
       }
 
 
-      self.saveWarning = function(data,event){
+      self.saveWarning = async function(data,event){
         data.editable=false;
         data.commit();
-        self.post("/api/v1/admin/user/updateWarning", {reddit:self.reddit(), warning:data});
+        await self.post("/api/v1/admin/user/updateWarning", {reddit:self.reddit(), warning:data});
       }
 
       self.cancelWarning = function(data,event){
@@ -214,48 +214,36 @@ block append scripts
         data.rollback();
       }
 
-      self.removeWarning = function(data,event){
+      self.removeWarning = async function(data,event){
         data.active = false;
-        self.post("/api/v1/admin/user/updateWarning", {reddit:self.reddit(), warning:data});
+        await self.post("/api/v1/admin/user/updateWarning", {reddit:self.reddit(), warning:data});
       }
 
-      self.changeReddit = function(data,event){
-        self.post("/api/v1/admin/user/changeRedditAccount", {reddit:self.reddit(), newReddit:self.newReddit()});
+      self.changeReddit = async function(data,event){
+        await self.post("/api/v1/admin/user/changeRedditAccount", {reddit:self.reddit(), newReddit:self.newReddit()});
         self.reddit(self.newReddit());
       }
 
 
-      self.post = function(url, data){
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", url,true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onreadystatechange = function() {//Call a function when the state changes.
-          if(this.readyState == XMLHttpRequest.DONE && this.status == 500) {
-            console.log(xhr.response);
-          }
-        }
-        
-        xhr.send(JSON.stringify(data));
-
+      self.post = async function(url, data){
+        await fetch(url,{
+          method:"POST",
+          headers:{
+            'Content-Type': 'application/json',
+          },
+          body:JSON.stringify(data)
+        });
       } 
 
-      self.loadAvailableTrophies = function(){
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/v1/admin/trophies",true)      
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-        xhr.onload  = function() {//Call a function when the state changes.
 
-          if(xhr.response && xhr.status === 200){
-            let temp = new UserModel(); 
+      self.loadAvailableTrophies = async function(){
+        const response = await fetch("/api/v1/admin/trophies");
+        if (response.ok){
+          let temp = new UserModel(); 
 
-            temp = ko.mapping.fromJS(xhr.response,mapping,temp);
-            self.availableTrophies(temp.trophies());
-          } 
+          temp = ko.mapping.fromJS(await response.json(),mapping,temp);
+          self.availableTrophies(temp.trophies());          
         }
-        xhr.send('');
       }
     }
 
@@ -356,67 +344,38 @@ block append scripts
     }
     let model = new UserModel(); 
       ko.applyBindings(model);
-    $(document).ready(function(){
+    $(document).ready(async function(){
 
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", "/api/v1/admin/user/#{user}",true)
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.responseType = 'json';
-
-      xhr.onload  = function() {//Call a function when the state changes.
-
-        if(xhr.response && xhr.status === 200){   
-          model = ko.mapping.fromJS(xhr.response,mapping,model);
-          model.newReddit(model.reddit());
-          model.loadAvailableTrophies();
-        } else if(!xhr.response) {
-          model.isEmpty(true);
-        } else {
-          model.isError(true);
-          model.error(xhr.response);
-        }
-
-
-        $("#timezone").on('change', function(e){
-          $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
-        });
-
-        let select = document.getElementById("timezone");
-        let guessed = moment.tz.guess();
-        
-        let names = moment.tz.names();
-        let l = names.length;
-
-        for(let i = 0; i < l; i++){
-          let tz = names[i];
-          let option = document.createElement("option");
-          option.setAttribute("value", tz);
-          option.text = tz;
-          if (tz === model.timezone()){
-            option.setAttribute("selected", "selected")
-          }
-          select.appendChild(option);
-        }
+       const response = await fetch("/api/v1/admin/user/#{user}");
+      if (response.ok){
+        model = ko.mapping.fromJS(await response.json(),mapping,model);
+        model.newReddit(model.reddit());
+        await model.loadAvailableTrophies();
+      } else{
+        model.isError(true);
+        model.error(await response.text());        
       }
-      xhr.send('');
+
+      $("#timezone").on('change', function(e){
+        $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
+      });
 
       let select = document.getElementById("timezone");
-
+      let guessed = moment.tz.guess();
+      
       let names = moment.tz.names();
       let l = names.length;
-      let timezone = "#{user ? user.timezone : ''}";  
+
       for(let i = 0; i < l; i++){
         let tz = names[i];
         let option = document.createElement("option");
         option.setAttribute("value", tz);
         option.text = tz;
-        if (tz === timezone){
+        if (tz === model.timezone()){
           option.setAttribute("selected", "selected")
         }
         select.appendChild(option);
       }
-
-
 
     });
 

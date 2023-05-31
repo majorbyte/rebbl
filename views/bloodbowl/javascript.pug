@@ -1,0 +1,74 @@
+script.
+  const SKILLS = "skills.v3";
+  const SKILLDESCRIPTIONS = "skillDescriptions.v2";
+
+  async function loadSkillDescriptions(){
+    const storage = window.localStorage;
+    let skills = null;
+
+    if (storage)    
+      skills = localStorage.getItem(SKILLDESCRIPTIONS);
+
+    if(!skills){
+      const response = await fetch("/api/v2/bloodbowl/skillDescriptions");
+      if (response.ok){
+        model.skillDescriptions = result = await response.json();
+        const storage = window.localStorage;
+
+        if (storage)
+          storage.setItem(SKILLDESCRIPTIONS, JSON.stringify(result));    
+        await loadSkills();
+      }
+
+    } else {
+      model.skillDescriptions = JSON.parse(skills);
+      await loadSkills();
+    }
+  }
+
+  async function loadSkills(){
+    const storage = window.localStorage;
+    let skills = null;
+
+    if (storage)    
+      skills = localStorage.getItem(SKILLS);
+
+    if(!skills){
+      const response = await fetch("/api/v2/bloodbowl/skills");
+      if (response.ok){
+        model.skills = result = await response.json();
+        const storage = window.localStorage;
+    
+        if (storage)
+          storage.setItem(SKILLS, JSON.stringify(result));    
+        
+        await loadRaces();
+      }
+
+    } else {
+      model.skills = JSON.parse(skills);
+      await loadRaces();
+    }
+  }
+
+  async function loadRaces(){
+    const storage = window.localStorage;
+    let races = null;
+
+    if (storage)    
+      races = localStorage.getItem('races');
+
+    if(!races){
+      const response = await fetch("/api/v2/bloodbowl/races");
+      if (response.ok){
+        model.races = result = await response.json(); 
+        const storage = window.localStorage;
+    
+        if (storage)
+          storage.setItem('races', JSON.stringify(result));    
+      }
+    } else {
+      model.races = JSON.parse(races);
+    }
+  }
+

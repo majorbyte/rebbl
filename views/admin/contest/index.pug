@@ -15,58 +15,14 @@ block scripts
         self.state = ko.observable();
         self.cacheKey = ko.observable();
 
-        self.setLeague = function(league){
-            if (!league) return;
-
-            self.league(league);
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "/api/v1/admin/contest/competitions/"+league,true)
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.responseType = 'json';
-
-            xhr.onload  = function() {//Call a function when the state changes.
-                self.competitions(xhr.response);
-            }
-            xhr.send();
-        };
-
-        self.setCompetition = function(comp){
-            if (!comp) return;
-
-            self.competition(comp);
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "/api/v1/admin/contest/contests/"+self.league()+"/"+self.competition() ,true)
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.responseType = 'json';
-
-            xhr.onload  = function() {//Call a function when the state changes.
-                self.contests(xhr.response);
-            }
-            xhr.send();
-        }
-
-        self.setContest = function(contest){
-            self.contest(contest);
-        }
-
-        self.saveContest = function(){
-            console.log(JSON.stringify(self.contest()));
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/api/v1/admin/contest",true)
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.responseType = 'json';
-
-            xhr.send(JSON.stringify(self.contest()));
-        }
-
-        self.clearCache = function(){
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/api/v1/admin/clearcache",true)
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.responseType = 'json';
-
-            xhr.send(JSON.stringify({key:self.cacheKey()}));
+        self.clearCache = async function(){
+            await fetch("/api/v1/admin/clearcache",{
+              method:"POST",
+              headers:{
+                'Content-Type': 'application/json',
+              },
+              body:JSON.stringify({key:self.cacheKey()})
+            })
         }
         self.reloadConfig =async function(){
           await fetch("/api/v1/admin/contest/reload");
@@ -121,17 +77,6 @@ block scripts
     $(document).ready(async function(){
         ko.applyBindings(model);
         await model.syncState();
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/api/v1/admin/contest/leagues",true)
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.responseType = 'json';
-
-        xhr.onload  = function() {//Call a function when the state changes.
-          model.leagues(xhr.response);
-        }
-
-        xhr.send();
-
     });
 
     
@@ -148,25 +93,3 @@ block content
         input(type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" data-bind="value:cacheKey")
         div(class="input-group-append")
           button(class="btn btn-outline-secondary" type="button" data-bind="click:clearCache") clear cache
-    div(class="row col-12")
-      div(class="btn-group")
-        button(type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") league
-        div(class="dropdown-menu")
-          // ko foreach: leagues
-          a(class="dropdown-item" href="#" data-bind="text:$data,click: $root.setLeague.bind($data)")
-          // /ko
-      div(class="btn-group")
-        button(type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") competition
-        div(class="dropdown-menu")
-          // ko foreach: competitions
-          a(class="dropdown-item" href="#" data-bind="text:$data,click: $root.setCompetition.bind($data)")
-          // /ko        
-      div(class="btn-group")
-        button(type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") contest
-        div(class="dropdown-menu")
-          // ko foreach: contests
-          a(class="dropdown-item" href="#" data-bind="text: $data.round + ': ' + $data.opponents[0].coach.name + '-' + $data.opponents[1].coach.name ,click: $root.setContest.bind($data)")
-          // /ko        
-      button(type="button" class="btn btn-primary" data-bind="click:saveContest" ) Save
-    div(class="row col-12")
-      textarea(name="", cols="50", rows="100" data-bind="json: contest ")

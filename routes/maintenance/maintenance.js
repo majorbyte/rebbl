@@ -119,6 +119,11 @@ class Maintenance{
       res.redirect('/');
     });
     
+    this.router.get('/updateLegends', util.verifyMaintenanceToken, async function(req, res){
+      await maintenanceService.updateLegendaryPlayers();
+      res.redirect('/');
+    });
+    
     this.router.get('/updatebb3', util.verifyMaintenanceToken, async function(req, res){
       updateBB3();
       res.redirect('/');
