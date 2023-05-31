@@ -95,9 +95,9 @@ block scripts
 
       });
 
-      loadHistory();
-      loadFollowing();
-      model.loadFollowers();
+      await loadHistory();
+      await loadFollowing();
+      await model.loadFollowers();
     });
 
 block content
