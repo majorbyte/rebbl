@@ -15,11 +15,15 @@ block head
 block content
   div(class="container")
     div(class="row col-12 d-flex flex-wrap align-items-center")
+      //ko if: teamLoaded
       img(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" class="align-top" style="height:100px")
+      // /ko
       span(class="h1" data-bind="text: teamName(), style:{color: teamColor()}")
 
       div(class="col text-right")
+        //ko if: teamLoaded
         img(data-bind="attr:{src:`https://cdn.rebbl.net/images/races/${idraces}.png`}" class="align-top" style="height:100px")
+        // /ko
         // ko if: apothecary > 0
         img(src=`https://cdn.rebbl.net/images/apothecary.png` class="align-top" )
         // /ko
@@ -516,6 +520,7 @@ block scripts
 
           this.selectedPlayer = null;
 
+          this.teamLoaded = false;
           this.loadingCurrent = false;
           this.loadingPrevious = false;
           this.loadingJourneymen= false;
@@ -568,40 +573,39 @@ block scripts
       selectCurrent(){
         this.playerList = this.roster
       }
-      selectPrevious(){
+      async selectPrevious(){
         if(this.retiredPlayers === null){
           const cb = (data) => {
-            data = data || [];
-            model.retiredPlayers = data
-              .sort(function(a,b){
-                if (a.number > b.number) return 1;
-                if (a.number < b.number) return -1;
-                return a.id > b.id ? 1 : -1})
-              .map(x => new PlayerModel(x, model.playertypes.find(t => t.type === x.type) ));
-            model.playerList = this.retiredPlayers
-            model.loadingPrevious = false;
           }
           this.loadingPrevious = true;
-          _loadPlayers("/retiredplayers", cb)
+          const result = await _loadPlayers("/retiredplayers");
+          result = result || [];
+          model.retiredPlayers = result
+            .sort(function(a,b){
+              if (a.number > b.number) return 1;
+              if (a.number < b.number) return -1;
+              return a.id > b.id ? 1 : -1})
+            .map(x => new PlayerModel(x, model.playertypes.find(t => t.type === x.type) ));
+          model.playerList = this.retiredPlayers
+          model.loadingPrevious = false;
+
         } else {
           this.playerList = this.retiredPlayers
         }
       } 
-      selectJourneymen(){
+      async selectJourneymen(){
         if(this.journeymen === null){
-          const cb = (data) => {
-            data = data || [];
-            model.journeymen = data
-              .sort(function(a,b){
-                if (a.number > b.number) return 1;
-                if (a.number < b.number) return -1;
-                return a.id > b.id ? 1 : -1})
-              .map(x => new PlayerModel(x, x.number == 0 ? model.starplayers.find(s => s.type === x.type)  :   model.playertypes.find(t => t.type === x.type) ));
-            model.playerList = this.journeymen
-            model.loadingJourneymen = false;
-          }
           this.loadingJourneymen = true;
-          _loadPlayers("/hiredplayers", cb)
+          const result = await _loadPlayers("/hiredplayers");
+          model.journeymen = (result || [])
+            .sort(function(a,b){
+              if (a.number > b.number) return 1;
+              if (a.number < b.number) return -1;
+              return a.id > b.id ? 1 : -1})
+            .map(x => new PlayerModel(x, x.number == 0 ? model.starplayers.find(s => s.type.replace("_Fallback","") === x.type.replace("_Fallback",""))  :   model.playertypes.find(t => t.type === x.type) ));
+          model.playerList = this.journeymen
+          model.loadingJourneymen = false;
+
         } else {
           this.playerList = this.journeymen
         }        
@@ -862,17 +866,17 @@ block scripts
 
     }
 
-    async function _loadPlayers(type, cb){
+    async function _loadPlayers(type){
       let path = window.location.pathname.split('/');
 
       const result = await fetch(`/api/v2/team/${path[path.length-1]}${type}`);
-      cb(await result.json());
+      return await result.json();
     }
 
-    function loadCurrentPlayers(){
-
-        const cb = function(data){
-          model.roster = data
+    async function loadCurrentPlayers(){
+        model.loadingCurrent = true;
+        var result = await _loadPlayers("/players");
+        model.roster = result
             .sort(function(a,b){
               if (a.number > b.number) return 1;
               if (a.number < b.number) return -1;
@@ -881,9 +885,7 @@ block scripts
             .map(x => new PlayerModel(x, model.playertypes.find(t => t.type === x.type) ));
           model.playerList = model.roster;
           model.loadingCurrent = false;
-        }
-        model.loadingCurrent = true;
-        _loadPlayers("/players", cb);
+
     }
 
     async function loadTeam(){
@@ -895,10 +897,11 @@ block scripts
         const data = await teamResponse.json();
         model.map(data.team);
         model.stats.map(data.stats);
-        loadPlayertypes(model.idraces);
-        loadSkills();
-        loadStarPlayers();
-        loadCurrentPlayers();
+        model.teamLoaded = true
+        await loadPlayertypes(model.idraces);
+        await loadSkills();
+        await loadStarPlayers();
+        await loadCurrentPlayers();
       }
 
       if (meResponse.ok){
@@ -983,7 +986,7 @@ block scripts
       let found = playerTypes.filter(x => x.race === id);
 
       if (found.length > 0){
-        model.playertypes =found;
+        model.playertypes = playerTypes;
         return;
       }
 
@@ -992,8 +995,12 @@ block scripts
         model.playertypes = result = await response.json();
         const storage = window.localStorage;
     
-        if (storage)
-          storage.setItem('loadPlayers', JSON.stringify(result));    
+        if (storage){
+          let playerTypes = JSON.parse(localStorage.getItem('playertypes') || "[]");
+          playerTypes = playerTypes.concat(result)
+          storage.setItem('playertypes', JSON.stringify(playerTypes));   
+        }
+   
       }
     }
 

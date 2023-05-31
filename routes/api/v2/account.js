@@ -117,7 +117,7 @@ class AccountApi{
       }
     });
 
-    this.router.get("/me",util.ensureAuthenticated, async function(req,res){
+    this.router.get("/me",util.ensureAuthenticatedNoRedirect, async function(req,res){
       const account = await accountService.getAccount(req.user.name);
       const regex = new RegExp(`^${account.coach}$`,"i");
       
