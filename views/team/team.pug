@@ -997,7 +997,7 @@ block scripts
       }
     }
 
-    function loadHistory(id){
+    async function loadHistory(id){
       if (model.standings.length > 0) return;
 
       const result = await fetch(`/api/v2/standings/${id}`)
