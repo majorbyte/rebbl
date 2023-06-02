@@ -579,8 +579,7 @@ block scripts
           }
           this.loadingPrevious = true;
           const result = await _loadPlayers("/retiredplayers");
-          result = result || [];
-          model.retiredPlayers = result
+          model.retiredPlayers = (result || [])
             .sort(function(a,b){
               if (a.number > b.number) return 1;
               if (a.number < b.number) return -1;
@@ -602,7 +601,11 @@ block scripts
               if (a.number > b.number) return 1;
               if (a.number < b.number) return -1;
               return a.id > b.id ? 1 : -1})
-            .map(x => new PlayerModel(x, x.number == 0 ? model.starplayers.find(s => s.type.replace("_Fallback","") === x.type.replace("_Fallback",""))  :   model.playertypes.find(t => t.type === x.type) ));
+            .map(x => {
+              let playerType = model.playertypes.find(t => t.type === x.type);
+              if (!playerType) playerType = model.starplayers.find(s => s.type.replace("_Fallback","") === x.type.replace("_Fallback",""));
+              return new PlayerModel(x, playerType);
+            });
           model.playerList = this.journeymen
           model.loadingJourneymen = false;
 

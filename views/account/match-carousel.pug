@@ -1,0 +1,48 @@
+.carousel-item(class=active ? "active" : "" style="background-color:unset" )
+  .row.justify-content-center.align-items-center
+    .col-2.text-conter
+      img(src="https://cdn.rebbl.net/images/logo/logo_" + opponent.team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+    .col-10
+      h3
+        a(href=`/team/${opponent.team.id}`)= opponent.team.name
+  .row
+    .col-4
+      strong race
+    .col-8= opponent.team.race
+  .row
+    .col-4
+      strong team value
+    -if (opponent.team.team)
+      .col-8= opponent.team.team.nextMatchTV
+    -else
+      .col-8= opponent.team.value
+  .row
+    .col-4
+      strong cash
+    -if (opponent.team.team)
+      .col-8= Math.floor(opponent.team.team.cash/1000) + "k"
+    -else
+      .col-8 -
+  .row
+    .col-4
+      strong coach
+    .col-8= opponent.coach.name
+  .row
+    .col-4
+      strong reddit
+    .col-8.highlight= "/u/" + (opponent.coach.reddit ? opponent.coach.reddit.toLowerCase() :"")
+  .row
+    .col-4
+      strong discord
+    .col-8= opponent.coach.discord
+  .row
+    .col-4
+      strong steam
+    .col-8= opponent.coach.steam
+  .row
+    .col-4
+      strong timezone  
+      div 
+        strong current time
+    .col-8.timezone= opponent.coach.timezone
+      div(class="time")
