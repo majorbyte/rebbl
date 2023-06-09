@@ -2,98 +2,117 @@ include nav-item
 
 mixin nav(company)
   nav.fixed-top.navbar.navbar-dark.navbar-expand-md.bg-dark.pl-0
-    .navbar-brand.px-1
-      a(href="/")
-        img(src=`https://cdn.rebbl.net/images/${logo}` height='30'  )
-    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
-      span.navbar-toggler-icon
-    #navbarSupportedContent.collapse.navbar-collapse.pl-1
-      ul.navbar-nav.mr-auto
-        li.nav-item.dropdown.mr-3(style="cursor: pointer;")
-          a#navbarDropdown.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown') Sites
-          div
-            .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown5')
-              a.px-1.dropdown-item(href="/")
-                img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/skills/CardSet.png')
-                .col.d-inline-block.text-light Frontpage
-              a.px-1.dropdown-item(href="/rebbl")
-                img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/rebbl.png')
-                .col.d-inline-block.text-light ReBBL
-              a.px-1.dropdown-item(href="/rebbrl")
-                img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/rebbrl.png')
-                .col.d-inline-block.text-light ReBBRL
-              a.px-1.dropdown-item(href="/clan")
-                img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/clan.png')
-                .col.d-inline-block.text-light Clan
-              a.px-1.dropdown-item(href="https://bounties.rebbl.net" target="_blank")
-                img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/donate.png' style="max-width:20px")
-                .col.d-inline-block.text-light Bounty Board
-        case company
-          when "rebbl"
+    .container-fluid  
+      .navbar-brand.px-1
+        a(href="/")
+          img(src=`https://cdn.rebbl.net/images/${logo}` height='30'  )
+      button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+        span.navbar-toggler-icon
+      #navbarSupportedContent.collapse.navbar-collapse.pl-1
+        ul.navbar-nav.mr-auto
+          li.nav-item.dropdown.mr-3(style="cursor: pointer;")
+            a#navbarDropdown.nav-link.text-light.dropdown-toggle(alt='' role='button' data-bs-toggle='dropdown') Sites
+            div
+              .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown5')
+                a.px-1.dropdown-item(href="/")
+                  img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/skills/CardSet.png')
+                  .col.d-inline-block.text-light Frontpage
+                a.px-1.dropdown-item(href="/rebbl")
+                  img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/rebbl.png')
+                  .col.d-inline-block.text-light ReBBL
+                a.px-1.dropdown-item(href="/rebbrl")
+                  img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/rebbrl.png')
+                  .col.d-inline-block.text-light ReBBRL
+                a.px-1.dropdown-item(href="/clan")
+                  img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/clan.png')
+                  .col.d-inline-block.text-light Clan
+                a.px-1.dropdown-item(href="https://bounties.rebbl.net" target="_blank")
+                  img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/donate.png' style="max-width:20px")
+                  .col.d-inline-block.text-light Bounty Board
+          case company
+            when "rebbl"
+                li.nav-item.dropdown.mr-3(style="cursor: pointer;")
+                  a#navbarDropdown2.nav-link.text-light.dropdown-toggle(alt='' role='button' data-bs-toggle='dropdown') Main
+                  ul.dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBL - Big O" ) Big O
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBL - GMan") GMan
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBL - REL" ) Rel
+                    li
+                      .dropdown-divider
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/rampup") Rampup
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/Stunty") Stunty
+                li.nav-item.dropdown.mr-3(style="cursor: pointer;")
+                  a#navbarDropdown3.nav-link.text-light.dropdown-toggle(alt='' role='button' data-bs-toggle='dropdown')
+                    | Side leagues
+                  ul.dropdown-menu.bg-dark(aria-labelledby='navbarDropdown3')
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBLL%20" ) Beer
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/[REBBL] One Minute League") One Minute
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/XScessively Elfly League") Elfly
+                li.nav-item.dropdown.mr-3(style="cursor: pointer;")
+                  a#navbarDropdown4.nav-link.text-light.dropdown-toggle(alt='' role='button' data-bs-toggle='dropdown')
+                    | Offseason
+                  ul.dropdown-menu.bg-dark(aria-labelledby='navbarDropdown4')
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/REBBL Playoffs Season 21") Playoffs
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/Challenger's Cup XXI" ) Challenger Cup
+                      //.dropdown-divider
+                      //a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/seeding/playoffs") Playoffs S17 Seeding
+                      //a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/seeding/challengers") Challenger's Cup S17 Seeding
+                    li
+                      .dropdown-divider
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/Greenhorn Cup") Greenhorn
+                    li
+                      .dropdown-divider
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/camping/summer") Summer Camp
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/huge/ladder") HJ Memorial Ladder
+                    li
+                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/camping/winter") Winter Camp
+                block navigation
+            when "rebbrl"
+                +nav-item("Minors", "/rebbrl/ReBBRL Minors League")
+                +nav-item("College", "/rebbrl/ReBBRL College League")
+                +nav-item("Upstarts", "/rebbrl/ReBBRL Upstarts")
+                block navigation
+            when "frontpage"
               li.nav-item.dropdown.mr-3(style="cursor: pointer;")
-                a#navbarDropdown2.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown') Main
-                div
-                  .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBL - Big O" ) Big O
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBL - GMan") GMan
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBL - REL" ) Rel
-                    .dropdown-divider
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/rampup") Rampup
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/Stunty") Stunty
+                a#navbarDropdown2.nav-link.text-light.dropdown-toggle(alt='' role='button' data-bs-toggle='dropdown') Signup
+                ul.dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
+                  li
+                    a.dropdown-item.d-inline-block.text-light(href="/signup" ) Signup
+                  li
+                    a.dropdown-item.d-inline-block.text-light(href="/signup/signups") Signups overview
+              +nav-item("Upcoming games", "/rebbl/upcoming")
+              +nav-item("Ongoing games", "/rebbl/ongoing")
               li.nav-item.dropdown.mr-3(style="cursor: pointer;")
-                a#navbarDropdown3.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
-                  | Side leagues
-                div
-                  .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown3')
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/REBBLL%20" ) Beer
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/standings/[REBBL] One Minute League") One Minute
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/XScessively Elfly League") Elfly
-              li.nav-item.dropdown.mr-3(style="cursor: pointer;")
-                a#navbarDropdown4.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
-                  | Offseason
-                div
-                  .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown4')
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/REBBL Playoffs Season 21") Playoffs
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/Challenger's Cup XXI" ) Challenger Cup
-                    //.dropdown-divider
-                    //a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/seeding/playoffs") Playoffs S17 Seeding
-                    //a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/seeding/challengers") Challenger's Cup S17 Seeding
-                    .dropdown-divider
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/Greenhorn Cup") Greenhorn
-                    .dropdown-divider
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/camping/summer") Summer Camp
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/huge/ladder") HJ Memorial Ladder
-                    a.dropdown-item.d-inline-block.text-light(href="/rebbl/camping/winter") Winter Camp
+                a#navbarDropdown2.nav-link.text-light.dropdown-toggle(alt='' role='button' data-bs-toggle='dropdown') Misc.
+                ul.dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
+                  li
+                    a.dropdown-item.d-inline-block.text-light(href="/bloodbowl/starplayers" ) Star Players
+                  li
+                    a.dropdown-item.d-inline-block.text-light(href="/bloodbowl/skills" ) Skill Descriptions
+                  li
+                    a.dropdown-item.d-inline-block.text-light(href="/bloodbowl/legendaryplayers") Legendary Players
+                  li
+                    a.dropdown-item.d-inline-block.text-light(href="/guides" target="blank") Villey's Guides
               block navigation
-          when "rebbrl"
-              +nav-item("Minors", "/rebbrl/ReBBRL Minors League")
-              +nav-item("College", "/rebbrl/ReBBRL College League")
-              +nav-item("Upstarts", "/rebbrl/ReBBRL Upstarts")
-              block navigation
-          when "frontpage"
-            li.nav-item.dropdown.mr-3(style="cursor: pointer;")
-              a#navbarDropdown2.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown') Signup
-              div
-                .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
-                  a.dropdown-item.d-inline-block.text-light(href="/signup" ) Signup
-                  a.dropdown-item.d-inline-block.text-light(href="/signup/signups") Signups overview
-            +nav-item("Upcoming games", "/rebbl/upcoming")
-            +nav-item("Ongoing games", "/rebbl/ongoing")
-            li.nav-item.dropdown.mr-3(style="cursor: pointer;")
-              a#navbarDropdown2.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown') Misc.
-              div
-                .dropdown-menu.bg-dark(aria-labelledby='navbarDropdown2')
-                  a.dropdown-item.d-inline-block.text-light(href="/bloodbowl/starplayers" ) Star Players
-                  a.dropdown-item.d-inline-block.text-light(href="/bloodbowl/skills" ) Skill Descriptions
-                  a.dropdown-item.d-inline-block.text-light(href="/bloodbowl/legendaryplayers") Legendary Players
-                  a.dropdown-item.d-inline-block.text-light(href="/guides" target="blank") Villey's Guides
-            block navigation
-          when "clan"
-              +nav-item("Clan", "/clan/clan")
-              block navigation
-          default
-              block navigation
-      ul.navbar-nav
-        li.nav-item
-          a.nav-link.text-light(href="/account") Account        
+            when "clan"
+                +nav-item("Clan", "/clan/clan")
+                block navigation
+            default
+                block navigation
+        ul.navbar-nav
+          li.nav-item
+            a.nav-link.text-light(href="/account") Account        
 

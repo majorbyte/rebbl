@@ -10,7 +10,7 @@ block head
 
 block navigation
   li.nav-item.dropdown.mr-3
-    a#navbarSeason.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+    a#navbarSeason.nav-link.text-light.dropdown-toggle(alt='' role='button' data-bs-toggle='dropdown')
       | Season
     div
       .dropdown-menu.bg-dark(aria-labelledby='navbarSeason')
@@ -56,7 +56,7 @@ block content
             // ko with: $root.getTrophy($data.name)
             // ko if:$data
             | &nbsp; &nbsp; 
-            img(data-bind="attr:{src:`https://cdn.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
+            img(data-bind="attr:{src:`https://cdn.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-bs-target="#trophy" )
             // /ko
             // /ko
           div(class="col-7" style=";overflow:hidden") 

@@ -967,7 +967,7 @@ a:focus,a:hover {
 .table-striped{
   display:table;
   border-collapse: collapse;
-  width: 100%;
+  /*width: 100%;*/
   margin-bottom: 15px;
 }
 

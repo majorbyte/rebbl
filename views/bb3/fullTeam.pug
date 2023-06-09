@@ -115,8 +115,8 @@ block content
     br
     nav(class="col-12")
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
-        a(class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Players
-        a(class="nav-item nav-link" id="nav-matches-tab" data-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches
+        a(class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Players
+        a(class="nav-item nav-link" id="nav-matches-tab" data-bs-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches
     div(class="tab-content" id="tabContent")
       div(class="tab-pane fade col-12 show active table-responsive-md" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
         table(class="table table-striped")
@@ -137,30 +137,30 @@ block content
             tbody
               - for(let player of team.roster)
                 tr(data-bind="attr:{class: cssClass()}") 
-                  td(data-toggle="modal" data-target="#player-dialog")=player.player.number
-                  td(data-toggle="modal" data-target="#player-dialog")
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog")=player.player.number
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog")
                     div
                       img(src=`https://cdn.rebbl.net/images/skills/${player.player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
                       .match-stats-TeamLabel-name=player.player.name
-                  td(data-toggle="modal" data-target="#player-dialog" )
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog" )
                     - let p = getPosition(player.player.position)
                     img.silhouette-shadow(src=getSilhouette(player.player.position) title=p)
                   - let c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)
-                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog" )= c ? c.value : "-"
                   - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)
-                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog" )= c ? c.value : "-"
                   - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==2)
-                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog" )= c ? c.value : "-"
                   - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==3)
-                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog" )= c ? c.value : "-"
                   - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==4)
-                  td(data-toggle="modal" data-target="#player-dialog" )= c ? c.value : "-"
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog" )= c ? c.value : "-"
                   td(class="td-prevent")
                     - for(let skill of Array.isArray(player.player.skills.skillsItem) ? player.player.skills.skillsItem : [player.player.skills.skillsItem] )
                       - let s = skills.find(x => x.id == skill)
                       - if (s)
-                        img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
-                  td(data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)").pull-right
+                        img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999" )
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)").pull-right
                     each cas in Array.isArray(player.player.casualties.casualtiesItem) ? player.player.casualties.casualtiesItem:[player.player.casualties.casualtiesItem]
                       -let d = getPlayerCasualtyIcon(cas)
                       if d
@@ -168,7 +168,7 @@ block content
                     if player.player.missNextGame == "1"
                         img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
                    
-                  td(data-toggle="modal" data-target="#player-dialog" )=player.player.spp
+                  td(data-bs-toggle="modal" data-bs-target="#player-dialog" )=player.player.spp
                   td(data-bind="text:value")=player.player.value
       div(class="tab-pane fade col-12 show table-responsive-md" id="nav-matches" role="tabpanel" aria-labelledby="nav-matches-tab")
         each match of matches.reverse()

@@ -5,7 +5,7 @@ extends ../relayout.pug
 block content
   div(class="container")
     .col-12.justify-content-center
-      .btn-group.btn-group-toggle(data-toggle='buttons')
+      .btn-group.btn-group-toggle(data-bs-toggle='buttons')
         label.btn.btn-primary.btn-sm.active(data-bind="click: () => show = 'all'")
           input#option1(type='radio', name='options', autocomplete='off', value="all")
           |  all
@@ -35,21 +35,21 @@ block content
 
   script(type="text/html" id="playerTemplate")
     tr(data-bind="attr:{style: active || $root.show === 'retired' ? '' : 'filter:grayscale(1)'  }")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:number" style="cursor:pointer")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root)" style="cursor:pointer")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:number" style="cursor:pointer")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root)" style="cursor:pointer")
         div
           img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${level}.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
           div(class="" data-bind="text: playerName()" class="highlight" )
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()" style="cursor:pointer")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()" style="cursor:pointer")
       td
         img(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/logo_${teamLogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")
         a(data-bind="attr:{href:`/team/${teamId}`}, text:teamName" target="_blank")
 
       td(class="td-prevent d-none d-lg-table-cell")
         // ko foreach: skills
-        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
+        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
         // /ko
-      td(class=" d-none d-lg-table-cell" data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
+      td(class=" d-none d-lg-table-cell" data-bs-toggle="modal" data-bs-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
         // ko foreach: casualties_state
         //ko if: $data !== "BadlyHurt"
         img(data-bind="attr:{src:$parent.getCASImage($data),title:$data.replace(/([A-Z])/g, ' $1').trim() }"  alt="" style="width:32px;height:32px" )
@@ -58,7 +58,7 @@ block content
         // ko if: ((casualties_sustained && casualties_sustained[0] === "Dead") &&( casualties_state && casualties_state.indexOf("Dead") === -1) )    
         img(src="https://cdn.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
         // /ko
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
 
   div(class="modal" tabindex="-1" role="dialog" id="player-dialog")
     // ko if: selectedPlayer !== null
@@ -91,7 +91,7 @@ block content
             tr              
               td(class="td-prevent")
                 // ko foreach: skills
-                img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
+                img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999;width:42px;cursor:pointer" )
                 // /ko
           table(class="table-striped") 
             tr              

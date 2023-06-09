@@ -106,15 +106,15 @@ block content
       div(class="col-lg-3")
         h1(class="highlight")= coachDetails ? coachDetails.coach : name
         - if(coachDetails && coachDetails.discordId && coachDetails.discordAvatar)
-          img.text-left.mx-1(style="float:left" src=`https://cdn.discordapp.com/avatars/${coachDetails.discordId}/${coachDetails.discordAvatar}.gif?size=64`)
+          img.text-start.mx-1(style="float:left" src=`https://cdn.discordapp.com/avatars/${coachDetails.discordId}/${coachDetails.discordAvatar}.gif?size=64`)
         - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("admin")>-1)
-          img.text-left.mx-1(style="float:left" src="https://cdn.rebbl.net/images/skills/StaffMember.png" title="Admin")
+          img.text-start.mx-1(style="float:left" src="https://cdn.rebbl.net/images/skills/StaffMember.png" title="Admin")
         - if(coachDetails && coachDetails.roles && coachDetails.roles.indexOf("clanleader")>-1)
-          img.text-left.mx-1(style="float:left" src="https://cdn.rebbl.net/images/skills/CoachSkill.png" title="Clan Leader")
+          img.text-start.mx-1(style="float:left" src="https://cdn.rebbl.net/images/skills/CoachSkill.png" title="Clan Leader")
         - if(coachDetails && coachDetails.twitch)
           div
             a(href=coachDetails.twitch target="_blank")
-              img.text-left.mx-1(src="https://cdn.rebbl.net/images/glitch.png" style="height:64px", title=coachDetails.twitch)
+              img.text-start.mx-1(src="https://cdn.rebbl.net/images/glitch.png" style="height:64px", title=coachDetails.twitch)
         .row
           .col-12
             h3 Contact Data

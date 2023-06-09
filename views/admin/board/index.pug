@@ -177,7 +177,7 @@ block content
   div.container
     div.row.col-12
       div.col            
-        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Choose league
+        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Choose league
         div.dropdown-menu(aria-labelledby="dropdownMenuButton" style="max-height: 400px;  overflow-y: auto")
           //ko foreach: leagues
           a.dropdown-item(data-bind="attr:{href:'#'},text:name,click: $parent.getBoardInfo")
@@ -214,7 +214,7 @@ block content
         ul.list-group
           //ko foreach: coaches
           li.list-group-item
-            div.row.no-gutters
+            div.row.g-0
               div.col-12
                 i.fa(data-bind="text: ' ' + user")
                 div.float-right.btn.btn-success.btn-sm(data-bind="click: $parent.addCommisioner" title="add commisioner") 

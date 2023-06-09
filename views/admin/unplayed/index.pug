@@ -126,7 +126,7 @@ block content
       i(class="fa fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
     // /ko
     div(class="row col-12")
-      div(class="btn-group-toggle" data-toggle="buttons")
+      div(class="btn-group-toggle" data-bs-toggle="buttons")
         label(class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - Big O')" style="margin-right: 15px")
           input(type="checkbox" checked autocomplete="off")       
           span Big O
@@ -138,7 +138,7 @@ block content
           span REL
     br  
     div(class="row col-12")
-      div(class="btn-group-toggle" data-toggle="buttons")
+      div(class="btn-group-toggle" data-bs-toggle="buttons")
         // ko foreach: divisions
         label(class="btn btn-outline-primary" data-bind="click: $root.toggleDivision")
           input(type="checkbox" checked autocomplete="off")       
@@ -146,7 +146,7 @@ block content
         // /ko
     br
     div(class="row col-12")
-      div(class="btn-group-toggle" data-toggle="buttons")
+      div(class="btn-group-toggle" data-bs-toggle="buttons")
         // ko foreach: rounds
         label(class="btn btn-outline-primary" data-bind="click: $root.toggleRound")
           input(type="checkbox" checked autocomplete="off")       

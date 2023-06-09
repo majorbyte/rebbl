@@ -7,7 +7,7 @@ block content
   .Background.u-bottomPadding--large.u-topPadding--medium
     .container.navcontainer(data-index="0" id="app" style="max-width:1650px")
       .row.col-12
-        .btn-group-toggle(data-toggle="buttons")
+        .btn-group-toggle(data-bs-toggle="buttons")
           template(v-for="league in ['GMAN','REL']")
             label.btn.btn-outline-primary(style="margin-right: 15px" @click="selectedLeague = league")
               input(type="radio" checked autocomplete="off")       

@@ -18,7 +18,7 @@ block head
 
 block navigation
   li.nav-item.dropdown.mr-3
-    a#navbarSeason.nav-link.text-light.dropdown-toggle(alt='' role='button' data-toggle='dropdown')
+    a#navbarSeason.nav-link.text-light.dropdown-toggle(alt='' role='button' data-bs-toggle='dropdown')
       | Season
     div
       .dropdown-menu.bg-dark(aria-labelledby='navbarSeason')
@@ -48,13 +48,13 @@ block content
             div(class="col" ) Team
         div(class="col-2 d-none d-md-block" style="font-size:1.25em") Race
         div(class="col-4" style="font-size:1.25em")
-          div(class="row no-gutters")
+          div(class="row g-0")
             div(class="col-4 col-md-2" ) Pts.
             div(class="col-2 d-none d-md-block") W  
             div(class="col-2 d-none d-md-block") D  
             div(class="col-2 d-none d-md-block") L
             div(class="col-4 col-md-2") P
-            div(class="col-4 col-md-2 text-right") ΔTD
+            div(class="col-4 col-md-2 text-end") ΔTD
       //ko foreach: $data
       div(class="row season-table-row")
         div(class="col-8 col-md-6")
@@ -85,7 +85,7 @@ block content
               // ko with: $root.getTrophy($data.name)
               // ko if:$data
               | &nbsp; &nbsp; 
-              img(data-bind="attr:{src:`https://cdn.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-target="#trophy" )
+              img(data-bind="attr:{src:`https://cdn.rebbl.net/${$data.filename}`, title:$data.title, 'data-date':$data.date}, click:$root.showTrophy"  style="height:25px;float:right;margin-top: 2px;cursor:pointer" class="trophy-toggle" data-bs-target="#trophy" )
               // /ko
               // /ko
             div(class="col" style=";overflow:hidden") 
@@ -97,9 +97,9 @@ block content
               // /ko
         div(class="col-2 d-none d-md-block" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
         div(class="col-4" )
-          div(class="row no-gutters")
+          div(class="row g-0")
             div(class="col-4 col-md-2" data-bind="text:points")
-            div.col.row.no-gutters
+            div.col.row.g-0
               div.col-3.d-none.d-md-block(data-bind="text:win")
               div.col-3.d-none.d-md-block(data-bind="text:draw")
               div.col-3.d-none.d-md-block(data-bind="text:loss")
@@ -109,7 +109,7 @@ block content
                 a(data-bind="attr:{href:`/rebbl/match/${schedule.match_uuid}`}" target="_blank")
                   div.square(data-bind="css:schedule.scheduleColor($parent.teamId), event: { mouseover: function(data,event) { toggle($root, $parent.teamId,true)} , mouseout: function(data,event) { toggle($root, $parent.teamId, false) } }")
                 // /ko
-            div(class="col-4 col-md-2 text-right" data-bind="text:tddiff")
+            div(class="col-4 col-md-2 text-end" data-bind="text:tddiff")
       // ko if: $index()+1 === $root.tickets[$parentContext.$index()]
       div(class="row col-12 season-table-row" style="padding:0.5em 0")
         div(class="col-1 Standings-divider--flex")

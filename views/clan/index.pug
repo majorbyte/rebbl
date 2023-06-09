@@ -8,7 +8,7 @@ block vars
   - let company = "clan";
 
 block content
-  div(class="container no-gutters" id="app")
+  div(class="container g-0" id="app")
     div(class="row col-12")
       template(v-for="division in divisions")
         a(v-bind:href="`/clan/schedule/season 15/${division}`" target="_blank" )

@@ -69,9 +69,9 @@ block content
       .col-12.row.mt-4
         nav.col-12
           .nav.nav-tabs
-            a.nav-item.nav-link.active(data-toggle="tab" id="nav-cards-tab" href="#nav-cards" aria-controls="nav-cards" role="tab" aria-selected="true") Cards
-            a.nav-item.nav-link(data-toggle="tab" id="nav-comments-tab" href="#nav-comments" aria-controls="nav-comments" role="tab" aria-selected="false") Comments
-            a.nav-item.nav-link(data-toggle="tab" id="nav-review-tab" href="#nav-review" aria-controls="nav-review" role="tab" aria-selected="false") Review
+            a.nav-item.nav-link.active(data-bs-toggle="tab" id="nav-cards-tab" href="#nav-cards" aria-controls="nav-cards" role="tab" aria-selected="true") Cards
+            a.nav-item.nav-link(data-bs-toggle="tab" id="nav-comments-tab" href="#nav-comments" aria-controls="nav-comments" role="tab" aria-selected="false") Comments
+            a.nav-item.nav-link(data-bs-toggle="tab" id="nav-review-tab" href="#nav-review" aria-controls="nav-review" role="tab" aria-selected="false") Review
           .tab-content(id="tabContent")
             .tab-pane.fade.show.active(id="nav-cards" role="tabpanel" aria-labelledby="nav-cards-tab")
               h2
@@ -79,7 +79,7 @@ block content
                 | &nbsp; Available Cards
               // ko foreach: cards
               .row.col-12
-                .col-4(data-bind="click:$root.showDescription.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog")
+                .col-4(data-bind="click:$root.showDescription.bind($data,$root) "  alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog")
                   img(data-bind="{attr:{src:`/images/${$data.rarity}.png`}}" height="25px" style="margin-right:7px")
                   span(data-bind="text:$data.name")
                 .col

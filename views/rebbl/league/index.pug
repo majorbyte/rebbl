@@ -45,7 +45,7 @@ block navigation
     li( class="nav-item active")
       div(class="nav-link") DISPLAY 
     li( class="nav-item dropdown")
-      a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
+      a(class="nav-link dropdown-toggle" href="#" id="dropdownSeason" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false") SEASON
       div(class="dropdown-menu" aria-labelledby="dropdownSeason")
         each season in seasons
           a(class="dropdown-item " + season.replace(' ', '')  href="#")= season.toUpperCase()
@@ -53,7 +53,7 @@ block navigation
     li( class="nav-item active")
       div(class="nav-link") NAVIGATE TO
     li( class="nav-item dropdown")
-      a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
+      a(class="nav-link dropdown-toggle" href="#" id="dropdownDivision" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false") DIVISION
       div(class="dropdown-menu" aria-labelledby="dropdownDivision")
         each round in rounds.sort(collator.compare)
           - let season = round.substr(0,9).replace(' ', '')
@@ -91,10 +91,10 @@ block content
             div(class="col-2") L
             - if (league.toLowerCase() === "eurogamer")              
               div(class="col-2") ΔTD
-              div(class="col-2 text-right") SoS
+              div(class="col-2 text-end") SoS
             - else
               div(class="col-2") P
-              div(class="col-2 text-right") ΔTD
+              div(class="col-2 text-end") ΔTD
         each coach, y in div
           div(class="row col-12 season-table-row")
             div(class="row col-6")
@@ -108,7 +108,7 @@ block content
                   -let trophy = coach.account.trophies.find(f => f.display)
                   -if(trophy)
                     | &nbsp; &nbsp; 
-                    img(src="https://cdn.rebbl.net/" + trophy.filename style="width:25px;float:right;margin-top: 2px;cursor:pointer" title=trophy.title class="trophy-toggle" data-target="#trophy" data-date=trophy.date)
+                    img(src="https://cdn.rebbl.net/" + trophy.filename style="width:25px;float:right;margin-top: 2px;cursor:pointer" title=trophy.title class="trophy-toggle" data-bs-target="#trophy" data-date=trophy.date)
               div(class="col-7" style=";overflow:hidden") 
                 -if (coach.team.indexOf("[colour") === 0)
                   a(href=`/team/${coach.teamId}`)= coach.team.substr(19, coach.team.length-17)
@@ -122,10 +122,10 @@ block content
               div(class="col-2")= coach.loss 
               - if (league.toLowerCase() === "eurogamer")              
                 div(class="col-2 " )= coach.tddiff
-                div(class="col-2 text-right" title=Math.round(coach.strength*100)/100)= Math.round(coach.strengthOfSchedule*100)/100
+                div(class="col-2 text-end" title=Math.round(coach.strength*100)/100)= Math.round(coach.strengthOfSchedule*100)/100
               - else
                 div(class="col-2")= coach.games
-                div(class="col-2 text-right" )= coach.tddiff
+                div(class="col-2 text-end" )= coach.tddiff
           - if (y+1 == cutoff && !cutin)
             div(class="row col-12 season-table-row")
               div(class="col-1 Standings-divider--flex")

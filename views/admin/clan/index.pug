@@ -16,7 +16,7 @@ block content
   .Background.u-bottomPadding--large.u-topPadding--medium
     .container.navcontainer(data-index="0" id="app" style="max-width:1650px")
       .row.col-12
-        .btn-group-toggle(data-toggle="buttons")
+        .btn-group-toggle(data-bs-toggle="buttons")
           template(v-for="division in divisions")
             label.btn.btn-outline-primary(style="margin-right: 15px" @click="load(division)")
               input(type="radio" checked autocomplete="off")       
@@ -97,12 +97,12 @@ block content
                         .text-info {{ _schedule(row,col).away.clan }}
 
       template(v-if="!showCoaches && schedule")
-        .row.col-12.no-gutters
-          .col.text-left
-            button.btn.btn-sm.btn-primary(@click="selectedSide=schedule.home" data-toggle="modal" data-target="#newCoach") Substitute coach
-          .col.text-right
-            button.btn.btn-sm.btn-primary(@click="selectedSide=schedule.away" data-toggle="modal" data-target="#newCoach") Substitute coach      
-        .row.col-12.no-gutters
+        .row.col-12.g-0
+          .col.text-start
+            button.btn.btn-sm.btn-primary(@click="selectedSide=schedule.home" data-bs-toggle="modal" data-bs-target="#newCoach") Substitute coach
+          .col.text-end
+            button.btn.btn-sm.btn-primary(@click="selectedSide=schedule.away" data-bs-toggle="modal" data-bs-target="#newCoach") Substitute coach      
+        .row.col-12.g-0
           .col-5
             .row.col-12.border-bottom.border-info.pb-1
               .col-10.media.text-centerd.-flex.flex-wrap.align-items-center
@@ -110,7 +110,7 @@ block content
                   h1 
                     a(v-bind:href="`/clan/clan/${schedule.home.clan.name}`" target="_blank") {{ schedule.home.clan.name }}
                 img(v-bind:src="`https://cdn.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
-              .col-2.text-right
+              .col-2.text-end
                 h1 {{schedule.home.win}}
             template(v-if="schedule.matches.length === 0")
               br
@@ -118,7 +118,7 @@ block content
                 template(v-for="power in Object.keys(schedule.home.clan.powers)")
                   template(v-if="schedule.home.clan.powers[power] > 0")
                     .p-1
-                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                         | {{powers.find(function(x){return x.key == power}).name}} 
                         span.badge.badge-secondary {{schedule.home.clan.powers[power]}}
               br
@@ -137,10 +137,10 @@ block content
 
           .col.text-center
             h1 - {{schedule.home.draw}} -
-            button.btn.btn-primary.btn-sm(data-toggle="modal" data-target="#clanScore") Change score
+            button.btn.btn-primary.btn-sm(data-bs-toggle="modal" data-bs-target="#clanScore") Change score
           .col-5
             .row.col-12.border-bottom.border-info.pb-1
-              .col-2.text-left
+              .col-2.text-start
                 h1  {{schedule.away.win}}
               .col-10.media.text-center.d-flex.flex-wrap.align-items-center
                 img(v-bind:src="`https://cdn.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
@@ -153,7 +153,7 @@ block content
                 template(v-for="power in Object.keys(schedule.away.clan.powers)")
                   template(v-if="schedule.away.clan.powers[power] > 0")
                     .p-1
-                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                      button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                         | {{powers.find(function(x){return x.key == power}).name}} 
                         span.badge.badge-secondary {{schedule.away.clan.powers[power]}}
               br
@@ -172,55 +172,55 @@ block content
           button.close(type="button" aria-label="Close" style="position: absolute;right: 0;font-size: 2em;" @click="schedule=null")
             span(aria-hidden="true") &times;
 
-        .row.col-12.no-gutters.justify-content-center
+        .row.col-12.g-0.justify-content-center
           .col-12.row.justify-content-center
             h1 Apply failed Draft Step
           .col-12.row.justify-content-center
             a(v-bind:href="`https://rebbl.net/clandraft/?division=${schedule.competition}&round=${schedule.round}&house=${schedule.house}`" target="_blank") draft result
-            button.btn.btn-primary.btn-sm.mx-2(data-toggle="button" @click="doDraftProcess(schedule,'powers')") Powers
-            button.btn.btn-primary.btn-sm.mx-2(data-toggle="button" @click="doDraftProcess(schedule,'matches')") Matches
-            button.btn.btn-primary.btn-sm.mx-2(data-toggle="button" @click="doDraftProcess(schedule,'post')") Reddit Post
+            button.btn.btn-primary.btn-sm.mx-2(data-bs-toggle="button" @click="doDraftProcess(schedule,'powers')") Powers
+            button.btn.btn-primary.btn-sm.mx-2(data-bs-toggle="button" @click="doDraftProcess(schedule,'matches')") Matches
+            button.btn.btn-primary.btn-sm.mx-2(data-bs-toggle="button" @click="doDraftProcess(schedule,'post')") Reddit Post
           .col-12.row.justify-content-center
             h1 Register Powers Used
             .col-12.row.justify-content-center
               .col-5
-                .row.btn-group-toggle(data-toggle="buttons")
+                .row.btn-group-toggle(data-bs-toggle="buttons")
                   template(v-for="power in Object.keys(availablePowers(schedule.home))")
                     template(v-for="t in availablePowers(schedule.home)[power]")
                       .p-1
                         template(v-if="power === 'emergencyIntensiveCare'")
-                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
+                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-bs-toggle="button")
                             | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else-if="power === 'newBlood'")
-                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="selectedSide=schedule.home" data-toggle="modal" data-target="#newBlood")
+                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="selectedSide=schedule.home" data-bs-toggle="modal" data-bs-target="#newBlood")
                             | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else-if="power === 'assassination'")
-                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="selectedSide=schedule.home;oppositeSide=schedule.away" data-toggle="modal" data-target="#assassination")
+                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="selectedSide=schedule.home;oppositeSide=schedule.away" data-bs-toggle="modal" data-bs-target="#assassination")
                             | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else)
-                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="togglePower($event,schedule.home,power)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-toggle="button")
+                          button(type="button" v-bind:class="getClass(schedule.home,power,t)" @click="togglePower($event,schedule.home,power)" v-bind:aria-pressed="powerUsed(schedule.home,power,t) ? 'true':'false'" data-bs-toggle="button")
                             | {{powers.find(function(x){return x.key == power}).name}} 
               .col
               .col-5
-                .row.btn-group-toggle(data-toggle="buttons")
+                .row.btn-group-toggle(data-bs-toggle="buttons")
                   template(v-for="power in Object.keys(availablePowers(schedule.away))")
                     template(v-for="t in availablePowers(schedule.away)[power]")
                       .p-1
                         template(v-if="power === 'emergencyIntensiveCare'")
-                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
+                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-bs-toggle="button")
                             | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else-if="power === 'newBlood'")
-                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="selectedSide=schedule.away" data-toggle="modal" data-target="#newBlood")
+                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="selectedSide=schedule.away" data-bs-toggle="modal" data-bs-target="#newBlood")
                             | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else-if="power === 'assassination'")
-                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="selectedSide=schedule.away;oppositeSide=schedule.home;" data-toggle="modal" data-target="#assassination")
+                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="selectedSide=schedule.away;oppositeSide=schedule.home;" data-bs-toggle="modal" data-bs-target="#assassination")
                             | {{powers.find(function(x){return x.key == power}).name}} 
                         template(v-else)
-                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="togglePower($event,schedule.away,power)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-toggle="button")
+                          button(type="button" v-bind:class="getClass(schedule.away,power,t)" @click="togglePower($event,schedule.away,power)" v-bind:aria-pressed="powerUsed(schedule.away,power,t) ? 'true':'false'" data-bs-toggle="button")
                             | {{powers.find(function(x){return x.key == power}).name}} 
 
         template(v-if="schedule.matches.length > 0")
-          .row.col-12.no-gutters.justify-content-center
+          .row.col-12.g-0.justify-content-center
             .col-12.row.justify-content-center
               h1 Matches
             template(v-for="match in sortedMatches")
@@ -232,7 +232,7 @@ block content
                     template(v-if="isPlayedButUnconfirmed(match)")
                       span.badge.badge-warning unconfirmed   
                     template(v-if="isPlayed(match) && hasEIC(match,0)")
-                      button(type="button" class="btn btn-outline-info btn-sm active float-right" @click="loadEicPlayers(match, 0)"  data-toggle="modal" data-target="#eicUse")
+                      button(type="button" class="btn btn-outline-info btn-sm active float-right" @click="loadEicPlayers(match, 0)"  data-bs-toggle="modal" data-bs-target="#eicUse")
                         | EIC      
                 a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
                   .MatchRow-team
@@ -268,20 +268,20 @@ block content
                     button.mx-1.btn.btn-success.btn-sm(type="button" @click="refreshMatch(match.match_uuid)") 
                       i(class="fa fa-refresh")  
                   template(v-if="isPlayed(match) &&  hasEIC(match, 1)")
-                    button.btn.btn-outline-info.btn-sm.active(type="button" @click="loadEicPlayers(match, 1)"  data-toggle="modal" data-target="#eicUse")
+                    button.btn.btn-outline-info.btn-sm.active(type="button" @click="loadEicPlayers(match, 1)"  data-bs-toggle="modal" data-bs-target="#eicUse")
                       | EIC      
                   template(v-if="match.counted === true && isPlayedButUnconfirmed(match)")
                     button.btn.btn-primary.btn-sm(type="button" @click="resetMatch(match)") Reset Game
                   template(v-if="!match.counted && match.match_uuid === null")
                     button.btn.btn-primary.btn-sm(type="button" @click="abandonMatch(match)") Abandon Game
                   template(v-if="match.counted === true && match.match_uuid !== null")
-                    button.mx-1.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#clanScore" @click="selectedMatch=match") Change score
+                    button.mx-1.btn.btn-primary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#clanScore" @click="selectedMatch=match") Change score
         template(v-if="loadingMissingGames")        
-          .row.col-12.no-gutters.justify-content-center
+          .row.col-12.g-0.justify-content-center
             .col-12.row.justify-content-center
               i(class="fa fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
         template(v-if="missingGames.length > 0")
-          .row.col-12.no-gutters.justify-content-center
+          .row.col-12.g-0.justify-content-center
             .col-12.row.justify-content-center
               h2 Not Started
             template(v-for="match in missingGames")

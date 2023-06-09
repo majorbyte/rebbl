@@ -27,30 +27,32 @@ html(lang="en")
       a(href="/")
         div(class="u-bottomPadding--small-rebbl")
       nav(class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="min-height:80px;z-index:2000;justify-content:unset")
-        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblMainNav" aria-controls="rebblMainNav" aria-expanded="false" aria-label="Toggle navigation")
-          span(class="navbar-toggler-icon")
-        a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= active.toUpperCase()          
-        div(class="collapse navbar-collapse" id="rebblMainNav")
-          ul(class="navbar-nav mr-auto")
-            +nav-link("Big O")
-            +nav-link("Gman")
-            +nav-link("REL")
-            +nav-link("RAMPUP", "/rebbl/rampup")
-            +nav-link("Stunty")
-            +nav-link("Elfly", "/rebbl/XScessively Elfly League")
-            +nav-link("Beer", "/rebbl/standings/REBBLL%20")
-            +nav-link("Account", "/account")
-            block additionalMainNavigation
+        .container-fluid
+          button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#rebblMainNav" aria-controls="rebblMainNav" aria-expanded="false" aria-label="Toggle navigation")
+            span(class="navbar-toggler-icon")
+          a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= active.toUpperCase()          
+          div(class="collapse navbar-collapse" id="rebblMainNav")
+            ul(class="navbar-nav mr-auto")
+              +nav-link("Big O")
+              +nav-link("Gman")
+              +nav-link("REL")
+              +nav-link("RAMPUP", "/rebbl/rampup")
+              +nav-link("Stunty")
+              +nav-link("Elfly", "/rebbl/XScessively Elfly League")
+              +nav-link("Beer", "/rebbl/standings/REBBLL%20")
+              +nav-link("Account", "/account")
+              block additionalMainNavigation
       block navigation
         nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;")
-          button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-            span(class="navbar-toggler-icon")
-          a(class="navbar-brand" href="#") &nbsp;
-          div(class="collapse navbar-collapse" id="rebblSubNav")
-            - if (options && options.img)
-              img(src= options.img style="height:4em;margin: 0 auto" title="sponsored by:")          
-            - else  
-              ul(class="navbar-nav mr-auto")
+          .container-fluid
+            button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+              span(class="navbar-toggler-icon")
+            a(class="navbar-brand" href="#") &nbsp;
+            div(class="collapse navbar-collapse" id="rebblSubNav")
+              - if (options && options.img)
+                img(src= options.img style="height:4em;margin: 0 auto" title="sponsored by:")          
+              - else  
+                ul(class="navbar-nav mr-auto")
       main(role="main")
         block content  
           div(class="jumbotron")
@@ -64,7 +66,12 @@ html(lang="en")
           | &nbsp; &nbsp; &nbsp; 
           a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
         p(style="padding:10px") &nbsp; <i class="fa fa-copyright fa-flip-horizontal"></i> majorbyte 2023 &nbsp; &nbsp; &nbsp;
-      script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-      script(src="https://cdn.rebbl.net/scripts/popper-1.14.7.min.js")
-      script(src="https://cdn.rebbl.net/scripts/bootstrap.min.js")        
+      - if (process.env.NODE_ENV === 'production')
+        script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+        script(src="https://cdn.rebbl.net/scripts/popper.min.js")
+        script(src="https://cdn.rebbl.net/scripts/bootstrap.min.js")        
+      - else 
+        script(src="/scripts/jquery-3.3.1.slim.min.js")
+        script(src="/scripts/popper.min.js")
+        script(src="/scripts/bootstrap.min.js")        
       block scripts

@@ -11,8 +11,8 @@
 - if (process.env.NODE_ENV === 'production')
   - imagePath = `https://cdn.rebbl.net${imagePath}`
 tr(class="stats "+cls ) 
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.number
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.number
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)
     div
       - if( player.xp >= levels[player.level+1] )
         img(src=`${imagePath}level.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
@@ -22,18 +22,18 @@ tr(class="stats "+cls )
         div(class="match-stats-TeamLabel-name" style="color:#"+playerName.match(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i)[1])= playerName.replace(/\[colour='[0-9A-F]{2}([0-9A-F]{6})']/i,'')
       - else
         div(class="match-stats-TeamLabel-name")= playerName
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= playerPos
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.ma
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.st
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.ag
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.av
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.matchplayed
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.mvp
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= playerPos
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.ma
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.st
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.ag
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.attributes.av
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.matchplayed
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= player.mvp
   td(class="td-prevent")
     - if (player.skills)
       each skill in player.skills
-        img(src=`${imagePath}skills/${skill}.png` alt="" title=""+skill.replace(/([A-Z])/g, ' $1').trim() data-toggle="modal" data-target=`#${skill.toLowerCase()}` style="z-index:9999" )
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)
+        img(src=`${imagePath}skills/${skill}.png` alt="" title=""+skill.replace(/([A-Z])/g, ' $1').trim() data-bs-toggle="modal" data-bs-target=`#${skill.toLowerCase()}` style="z-index:9999" )
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)
     -if(player.eic)
       span.badge.badge-success EIC!
     each cas in player.casualties_state
@@ -45,7 +45,7 @@ tr(class="stats "+cls )
       div(title=`rolled: ${new Date(player.diceRoll.date)}, by: ${player.diceRoll.clan}`)
       each dice in player.diceRoll.dice
         div(class="dice dice-"+dice)
-  td(data-toggle="collapse" data-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= `${player.xp}/${levels[player.level+1]}`    
+  td(data-bs-toggle="collapse" data-bs-target="#"+playerId  aria-expanded="false" aria-controls=""+playerId)= `${player.xp}/${levels[player.level+1]}`    
   td= player.value || 0
 include playerstats.pug
         

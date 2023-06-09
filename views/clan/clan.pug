@@ -26,7 +26,7 @@ block content
       template(v-for="power in Object.keys(clan.ledger)")
         template(v-if="clan.ledger[power] > 0")
           div(class="p-1")
-            button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+            button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
               | {{powers.find(function(x){return x.key == power}).name}} 
               span(class="badge badge-secondary") {{clan.ledger[power]}}
     template(v-if="clan.phase != 'building'")
@@ -35,7 +35,7 @@ block content
         template(v-for="power in Object.keys(clan.powers)")
           template(v-if="clan.powers[power] > 0")
             div(class="p-1")
-              button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+              button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                 | {{powers.find(function(x){return x.key == power}).name}} 
                 span(class="badge badge-secondary") {{clan.powers[power]}}
     h3 Teams
@@ -114,7 +114,7 @@ block scripts
           this.clanLeader = data.leader;
           this.me = data.me;
           $(function () {
-            $('[data-toggle="popover"]').popover({ template: '<div class="popover popoverFix" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'})
+            $('[data-bs-toggle="popover"]').popover({ template: '<div class="popover popoverFix" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'})
           });
         },
         newTeam : function(){
