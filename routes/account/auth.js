@@ -36,8 +36,6 @@ class Authentication{
 
 
     this.router.get('/discord', function(req, res, next){
-      console.log(`clientid: ${CLIENT_ID}`);
-      console.log(`process.env['discordClientId']:${process.env['discordClientId']}`);
       if (CLIENT_ID) {
         res.redirect(`https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${REDIRECT_URI}`);
       }
