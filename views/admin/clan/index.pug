@@ -322,7 +322,7 @@ block content
             .modal-header
               slot(name="header")
                 h5.modal-title Change score
-                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
                   span(aria-hidden='true') &times;
             .modal-body
               template(v-if="selectedMatch")
@@ -362,7 +362,7 @@ block content
 
             .modal-footer
               slot(name="footer")
-                button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
+                button.btn.btn-secondary(type='button' data-bs-dismiss='modal' @click="reset") Cancel &amp; Close
                 template(v-if="selectedMatch")
                   button.btn.btn-primary(type='button' @click="saveMatchScore") Save changes
                 template(v-else-if="schedule")
@@ -374,7 +374,7 @@ block content
             .modal-header
               slot(name="header")
                 h5.modal-title Use Emergency Intensive Care for {{selectedSide ? selectedSide.clan.name : ''}}
-                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
                   span(aria-hidden='true') &times;
             .modal-body
               template(v-if="selectedTeam")
@@ -385,7 +385,7 @@ block content
                       option(v-for="player in eicPlayers" v-bind:value="player.id") {{ player.name }}
             .modal-footer
               slot(name="footer")
-                button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
+                button.btn.btn-secondary(type='button' data-bs-dismiss='modal' @click="reset") Cancel &amp; Close
                 button.btn.btn-primary(type='button' @click="saveEICUse") Use                  
 
       .modal.fade(tabindex='-1' role='dialog' id="newBlood")
@@ -395,7 +395,7 @@ block content
               .modal-header
                 slot(name="header")
                   h5.modal-title Apply New Blood for {{`[${selectedSide.clan.name}]`}}
-                  button.close(type='button' data-dismiss='modal' aria-label='Close')
+                  button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
                     span(aria-hidden='true') &times;
               .modal-body
                 .input-group-prepend
@@ -417,7 +417,7 @@ block content
                   
               .modal-footer
                 slot(name="footer")
-                  button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
+                  button.btn.btn-secondary(type='button' data-bs-dismiss='modal' @click="reset") Cancel &amp; Close
                   button.btn.btn-primary(type='button' @click="saveNewBlood" v-bind:disabled="!newBloodOK") Use    
 
       .modal.fade(tabindex='-1' role='dialog' id="assassination")
@@ -427,7 +427,7 @@ block content
               .modal-header
                 slot(name="header")
                   h5.modal-title Apply Assassination for {{`[${selectedSide.clan.name}]`}}
-                  button.close(type='button' data-dismiss='modal' aria-label='Close')
+                  button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
                     span(aria-hidden='true') &times;
               .modal-body
                 .input-group-prepend
@@ -443,7 +443,7 @@ block content
                   
               .modal-footer
                 slot(name="footer")
-                  button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
+                  button.btn.btn-secondary(type='button' data-bs-dismiss='modal' @click="reset") Cancel &amp; Close
                   button.btn.btn-primary(type='button' @click="saveAssassination") Use    
 
       .modal.fade(tabindex='-1' role='dialog' id="newCoach")
@@ -453,7 +453,7 @@ block content
               .modal-header
                 slot(name="header")
                   h5.modal-title Substitute a Coach and Team for {{`[${selectedSide.clan.name}]`}}
-                  button.close(type='button' data-dismiss='modal' aria-label='Close')
+                  button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
                     span(aria-hidden='true') &times;
               .modal-body
                 .input-group-prepend
@@ -475,7 +475,7 @@ block content
                   
               .modal-footer
                 slot(name="footer")
-                  button.btn.btn-secondary(type='button' data-dismiss='modal' @click="reset") Cancel &amp; Close
+                  button.btn.btn-secondary(type='button' data-bs-dismiss='modal' @click="reset") Cancel &amp; Close
                   button.btn.btn-primary(type='button' @click="saveNewCoach" v-bind:disabled="!newBloodOK") Save                      
 
 

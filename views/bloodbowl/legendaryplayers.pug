@@ -167,7 +167,7 @@ block content
                 td(data-bind="text:stats.inflictedpushouts")      
                 td -
         div(class="modal-footer")
-          button( type="button" class="btn btn-secondary" data-dismiss="modal" data-bind="click:$root.selectedPlayer = null") Close
+          button( type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bind="click:$root.selectedPlayer = null") Close
     // /ko
     // /ko
 
@@ -181,7 +181,7 @@ block content
           img( data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
           p(data-bind="text:activeSkill.description")
         div(class="modal-footer")
-          button( type="button" class="btn btn-secondary" data-dismiss="modal" ) Close
+          button( type="button" class="btn btn-secondary" data-bs-dismiss="modal" ) Close
     // /ko
 
 

@@ -410,7 +410,7 @@ a:focus,a:hover {
 
 @media (min-width: 768px) {
   .MatchRow {
-    width:auto;
+    /*width:auto;*/
     left: auto;
     right: auto;
     margin: 0

@@ -15,10 +15,11 @@ block head
 block content
   div(class="container")
     div(class="row col-12 d-flex flex-wrap align-items-center")
-      //ko if: teamLoaded
-      img(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" class="align-top" style="height:100px")
-      // /ko
-      span(class="h1" data-bind="text: teamName(), style:{color: teamColor()}")
+      .col.d-flex
+        //ko if: teamLoaded
+        img.align-top.g-0(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" style="height:100px;width:100px")
+        // /ko
+        span.h1.align-self-center(data-bind="text: teamName(), style:{color: teamColor(), margin:'unset'}")
 
       div(class="col text-end")
         //ko if: teamLoaded
@@ -382,79 +383,80 @@ block content
           img( data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
           p(data-bind="text:activeSkill.description")
         div(class="modal-footer")
-          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+          button( type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
 
   div(class="modal" tabindex="-1" role="dialog" id="player-dialog")
-    // ko if: selectedPlayer !== null
-    //ko with:selectedPlayer
     div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
       div(class="modal-content")
+        // ko if: selectedPlayer !== null      
+        //ko with:selectedPlayer
         div(class="modal-header")
           h5(class="modal-title" data-bind="text: name")
         div(class="modal-body")
-         table(class="table-striped") 
-            thead(class="headerText")
-              tr 
-                th
-                th inflicted
-                th sustained
-            tbody
-              tr
-                td tackles
-                td(data-bind="text:stats.inflictedtackles")
-                td(data-bind="text:stats.sustainedtackles")
-              tr
-                td injuries
-                td(data-bind="text:stats.inflictedinjuries")
-                td(data-bind="text:stats.sustainedinjuries")
-              tr
-                td stuns
-                td(data-bind="text:stats.inflictedstuns")
-                td(data-bind="text:stats.sustainedstuns")
-              tr
-                td ko
-                td(data-bind="text:stats.inflictedko")
-                td(data-bind="text:stats.sustainedko")
-              tr
-                td CAS
-                td(data-bind="text:stats.inflictedcasualties")
-                td(data-bind="text:stats.sustainedcasualties")
-              tr
-                td dead
-                td(data-bind="text:stats.inflicteddead")
-                td(data-bind="text:stats.sustaineddead")
-              tr
-                td running (m)
-                td(data-bind="text:stats.inflictedmetersrunning")
-                td -
-              tr
-                td passing (m)
-                td(data-bind="text:stats.inflictedmeterspassing")
-                td -
-              tr
-                td passes
-                td(data-bind="text:stats.inflictedpasses")
-                td -
-              tr
-                td catch
-                td(data-bind="text:stats.inflictedcatches")
-                td -
-              tr
-                td interc.
-                td(data-bind="text:stats.inflictedinterceptions")
-                td(data-bind="text:stats.sustainedinterceptions")
-              tr
-                td touchdowns
-                td(data-bind="text:stats.inflictedtouchdowns")
-                td -
-              tr
-                td surfs
-                td(data-bind="text:stats.inflictedpushouts")      
-                td -
+          .row.col
+            table(class="table-striped") 
+              thead(class="headerText")
+                tr 
+                  th
+                  th inflicted
+                  th sustained
+              tbody
+                tr
+                  td tackles
+                  td(data-bind="text:stats.inflictedtackles")
+                  td(data-bind="text:stats.sustainedtackles")
+                tr
+                  td injuries
+                  td(data-bind="text:stats.inflictedinjuries")
+                  td(data-bind="text:stats.sustainedinjuries")
+                tr
+                  td stuns
+                  td(data-bind="text:stats.inflictedstuns")
+                  td(data-bind="text:stats.sustainedstuns")
+                tr
+                  td ko
+                  td(data-bind="text:stats.inflictedko")
+                  td(data-bind="text:stats.sustainedko")
+                tr
+                  td CAS
+                  td(data-bind="text:stats.inflictedcasualties")
+                  td(data-bind="text:stats.sustainedcasualties")
+                tr
+                  td dead
+                  td(data-bind="text:stats.inflicteddead")
+                  td(data-bind="text:stats.sustaineddead")
+                tr
+                  td running (m)
+                  td(data-bind="text:stats.inflictedmetersrunning")
+                  td -
+                tr
+                  td passing (m)
+                  td(data-bind="text:stats.inflictedmeterspassing")
+                  td -
+                tr
+                  td passes
+                  td(data-bind="text:stats.inflictedpasses")
+                  td -
+                tr
+                  td catch
+                  td(data-bind="text:stats.inflictedcatches")
+                  td -
+                tr
+                  td interc.
+                  td(data-bind="text:stats.inflictedinterceptions")
+                  td(data-bind="text:stats.sustainedinterceptions")
+                tr
+                  td touchdowns
+                  td(data-bind="text:stats.inflictedtouchdowns")
+                  td -
+                tr
+                  td surfs
+                  td(data-bind="text:stats.inflictedpushouts")      
+                  td -
+        // /ko
+        // /ko
         div(class="modal-footer")
-          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
-    // /ko
-    // /ko
+          button( type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
 
 block scripts
   - if (process.env.NODE_ENV === 'production')

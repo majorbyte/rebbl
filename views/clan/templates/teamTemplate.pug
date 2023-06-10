@@ -53,7 +53,7 @@ table(style="width:100%")
     .modal-content
       .modal-header
         h5.modal-title(id="skillPlayerModalLabel") You are about to trade SPP+
-        button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+        button(type="button" class="close" data-bs-dismiss="modal" aria-label="Close")
           <span aria-hidden="true">&times;</span>
       .modal-body
         p
@@ -69,5 +69,5 @@ table(style="width:100%")
           span &nbsp;You will not be able to undo this, not by changing team for this coach, switching to a non-returning team for this coach or sacking the player.
 
       .modal-footer
-        button(type="button" class="btn btn-secondary" data-dismiss="modal") Cancel
+        button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Cancel
         button(type="button" class="btn btn-primary" data-bind="click: skillPlayer, disabled:proceedDisabled") Proceed

@@ -18,7 +18,7 @@ block body
         span(class="navbar-toggler-icon")
       a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= active.toUpperCase()          
       div(class="collapse navbar-collapse" id="rebblMainNav")
-        ul(class="navbar-nav mr-auto")
+        ul(class="navbar-nav me-auto")
           -if(renderCompany == "")
             li 
               a(href="/rebbl")
@@ -66,7 +66,7 @@ block body
           - if (options && options.img)
             img(src= options.img style="height:4em;margin: 0 auto" title="sponsored by:")          
           - else  
-            ul(class="navbar-nav mr-auto")
+            ul(class="navbar-nav me-auto")
   main(role="main")
     block content  
       div(class="jumbotron")

@@ -85,21 +85,21 @@ block content
     .position-fixed.bottom-0.right-0.p-3(style="z-index: 5; right: 0; top: 50px;")
       .toast.hide.text-white.bg-success(id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
         .toast-header Success
-          button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+          button.ml-2.mb-1.close(type="button" class="" data-bs-dismiss="toast" aria-label="Close")
             span(aria-hidden="true") &times;
         .toast-body#toast-success-message
 
       .toast.hide.text-white.bg-danger(id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
         .toast-header
-          strong.mr-auto Error
-          button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+          strong.me-auto Error
+          button.ml-2.mb-1.close(type="button" class="" data-bs-dismiss="toast" aria-label="Close")
             span(aria-hidden="true") &times;
         .toast-body#toast-error-message    
 
       .toast.hide.text-white.bg-info(id="toast-information" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000")
         .toast-header
-          strong.mr-auto 
-          button.ml-2.mb-1.close(type="button" class="" data-dismiss="toast" aria-label="Close")
+          strong.me-auto 
+          button.ml-2.mb-1.close(type="button" class="" data-bs-dismiss="toast" aria-label="Close")
             span(aria-hidden="true") &times;
         .toast-body#toast-information-message    
 
