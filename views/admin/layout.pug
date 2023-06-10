@@ -3,13 +3,15 @@ doctype html
 html(lang="en")
   head
     - if (process.env.NODE_ENV === 'production')
-      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.min.css")
-      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/font-awesome.css")
-      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/style.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/style.css")
     - else  
-      link(rel="stylesheet" href="/styles/bootstrap.min.css")
-      link(rel="stylesheet" href="/styles/font-awesome.css")
-      link(rel="stylesheet" href="/styles/style.css")
+      link(rel="stylesheet" href="/styles/v2/bootstrap.min.css")
+      link(rel="stylesheet" href="/styles/fontawesome.min.css")
+      link(rel="stylesheet" href="/styles/solid.min.css")
+      link(rel="stylesheet" href="/styles/v2/style.css")
     block head
   block vars
 
@@ -20,29 +22,31 @@ html(lang="en")
       a(href="/")
         div(class="u-bottomPadding--small-rebbl")
       nav(class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="min-height:80px;z-index:2000;justify-content:unset")
-        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblMainNav" aria-controls="rebblMainNav" aria-expanded="false" aria-label="Toggle navigation")
-          span(class="navbar-toggler-icon")
-        a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= active.toUpperCase()          
-        div(class="collapse navbar-collapse" id="rebblMainNav")
-          ul(class="navbar-nav mr-auto")
-            +nav-link("User", "/admin/user")
-            +nav-link("Strikes & Bans", "/admin/strikes")
-            +nav-link("Unplayed", "/admin/unplayed")
-            +nav-link("Manage divisions", "/admin/divisions")
-            +nav-link("Manage board", "/admin/board")
-            +nav-link("Scheduling", "/admin/templates")
-            //+nav-link("Rampup", "/admin/rampup")
-            +nav-link("Clan", "/admin/clan")
-            +nav-link("Trophies", "/admin/trophies")
-            +nav-link("Account", "/account")
-            block additionalMainNavigation
+        .container-fluid
+          button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#rebblMainNav" aria-controls="rebblMainNav" aria-expanded="false" aria-label="Toggle navigation")
+            span(class="navbar-toggler-icon")
+          a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= active.toUpperCase()          
+          div(class="collapse navbar-collapse" id="rebblMainNav")
+            ul(class="navbar-nav me-auto")
+              +nav-link("User", "/admin/user")
+              +nav-link("Strikes & Bans", "/admin/strikes")
+              +nav-link("Unplayed", "/admin/unplayed")
+              +nav-link("Manage divisions", "/admin/divisions")
+              +nav-link("Manage board", "/admin/board")
+              +nav-link("Scheduling", "/admin/templates")
+              //+nav-link("Rampup", "/admin/rampup")
+              +nav-link("Clan", "/admin/clan")
+              +nav-link("Trophies", "/admin/trophies")
+              +nav-link("Account", "/account")
+              block additionalMainNavigation
       block navigation
         nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;")
-          button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-            span(class="navbar-toggler-icon")
-          a(class="navbar-brand" href="#") &nbsp;
-          div(class="collapse navbar-collapse" id="rebblSubNav")
-            ul(class="navbar-nav mr-auto")
+          .container-fluid
+            button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
+              span(class="navbar-toggler-icon")
+            a(class="navbar-brand" href="#") &nbsp;
+            div(class="collapse navbar-collapse" id="rebblSubNav")
+              ul(class="navbar-nav me-auto")
       main(role="main")
         block content  
           div(class="jumbotron")
@@ -54,13 +58,13 @@ html(lang="en")
             img(src="https://cdn.rebbl.net/images/donate.png" title="Donate (soon)")  
           | &nbsp; &nbsp; &nbsp; 
           a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
-        p(style="padding:10px") &nbsp; <i class="fa fa-copyright fa-flip-horizontal"></i> majorbyte 2023 &nbsp; &nbsp; &nbsp;
+        p(style="padding:10px") &nbsp; <i class="fa-solid fa-copyright fa-flip-horizontal"></i> majorbyte 2023 &nbsp; &nbsp; &nbsp;
       - if (process.env.NODE_ENV === 'production')
         script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-        script(src="https://cdn.rebbl.net/scripts/popper-1.14.7.min.js")
-        script(src="https://cdn.rebbl.net/scripts/bootstrap.min.js")        
+        script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
+        script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")        
       - else
         script(src="/scripts/jquery-3.3.1.slim.min.js")
-        script(src="/scripts/popper-1.14.7.min.js")
-        script(src="/scripts/bootstrap.min.js")        
+        script(src="/scripts/v2/popper.min.js")
+        script(src="/scripts/v2/bootstrap.min.js")        
       block scripts

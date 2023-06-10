@@ -181,39 +181,40 @@ block content
   style .btn-following-on {background-color:#4F4F4F}
   div(class="container")
     div(class="row justify-content-center")
-      // ko foreach: leagues
-      button(class="btn btn-secondary btn-sm" data-bind="text: $data, click:$parent.toggle.bind(this, $data)" style="margin-right:5px") 
-      // /ko
-      button(class="btn btn-twitch-off" data-bind="click:toggle.bind(this,'twitch')" style="margin-right:5px;padding:0px 1rem")
-        // ko if: visibleLeagues.indexOf('twitch') > -1
-        img(src="https://cdn.rebbl.net/images/glitch_white.png" style="height:36px")
-        // /ko         
-        // ko if: visibleLeagues.indexOf('twitch') === -1
-        img(src="https://cdn.rebbl.net/images/glitch.png" style="height:36px")
-        // /ko         
-      button(class="btn btn-following-off" data-bind="click:toggle.bind(this,'following')" style="margin-right:5px;padding:0px 1rem")
-        // ko if: visibleLeagues.indexOf('following') > -1
-        img(src="https://cdn.rebbl.net/images/small-fist.png" style="height:36px")
-        // /ko         
-        // ko if: visibleLeagues.indexOf('following') === -1
-        img(src="https://cdn.rebbl.net/images/small-fist-gray.png" style="height:36px")
-        // /ko         
+      .d-grid.gap-2.d-md-block
+        // ko foreach: leagues
+        button(class="btn btn-secondary btn-sm" data-bind="text: $data, click:$parent.toggle.bind(this, $data)" style="margin-right:5px") 
+        // /ko
+        button(class="btn btn-twitch-off" data-bind="click:toggle.bind(this,'twitch')" style="margin-right:5px;padding:0px 1rem")
+          // ko if: visibleLeagues.indexOf('twitch') > -1
+          img(src="https://cdn.rebbl.net/images/glitch_white.png" style="height:36px")
+          // /ko         
+          // ko if: visibleLeagues.indexOf('twitch') === -1
+          img(src="https://cdn.rebbl.net/images/glitch.png" style="height:36px")
+          // /ko         
+        button(class="btn btn-following-off" data-bind="click:toggle.bind(this,'following')" style="margin-right:5px;padding:0px 1rem")
+          // ko if: visibleLeagues.indexOf('following') > -1
+          img(src="https://cdn.rebbl.net/images/small-fist.png" style="height:36px")
+          // /ko         
+          // ko if: visibleLeagues.indexOf('following') === -1
+          img(src="https://cdn.rebbl.net/images/small-fist-gray.png" style="height:36px")
+          // /ko         
 
     // ko foreach: dates
     // ko if: matches.filter(function(m){return m.show()}).length > 0
     div(class="row")
-      div(class="col-10 offset-sm-1")
+      div(class="col-10 offset-sm-1 ")
         h2(data-bind="text: date")
         // ko foreach: matches
         // ko if: show
-        div(class="row col-12")  
+        div(class="d-flex")  
           div(data-bind="text:shortTime, attr: {title: shortTimeTitle}")
           span :&nbsp;
           div() 
             span(data-bind="text: league") 
             span &nbsp;
             i(data-bind="text: competition")
-          div(class="col-1") 
+          div(class="ps-1") 
             //ko if: streaming && stream()
             a(data-bind="attr: {href: stream().url, title: stream().name}" target="_blank")
               img(src="/images/glitch.png" style="width:24px;height:24px")
@@ -221,24 +222,24 @@ block content
             //ko ifnot: streaming
             div(style="min-width:24px") &nbsp;
             // /ko
-        div(class="row col-12")  
+        .row.col-12
           a(data-bind="attr: { href: url}" class=" MatchRow-contentWrapper MatchRow-contentWrapper--hover")
-            div(class="row col-12")
-              div(class="col-12 row no-gutters")
-                div(class="col-5")
-                  div(class="col-12 row no-gutters" style="padding:unset")
-                    div(class="col-12" style="text-align: right;padding-right:5px;")
-                      div(class="float-right d-none d-md-block"): img(data-bind="attr: {src: homeTeamLogo}" alt="" class="TeamLabel-logo" )
+            .row.col-12
+              .col-12.row.g-0
+                .col-5
+                  .row.col.g-0(style="padding:unset")
+                    div(style="text-align: right;padding-right:5px;")
+                      img.pull-right(data-bind="attr: {src: homeTeamLogo}" alt="" class="TeamLabel-logo" )
                       div(data-bind="text: homeTeam" style="font-size:1.2em")
                       div(class="TeamLabel-coach " data-bind="text: homeCoach + ' - ' +  homeTeamValue + ' ' + homeTeamRace " style="margin-top:-7px" )
-                div(class="col-1" style="text-align:center" )
+                .col-1.align-center
                       span(class="MatchStatus-score") &nbsp;
                       span(class="MatchStatus-score") -
                       span(class="MatchStatus-score") &nbsp;
-                div(class="col-5")
-                  div(class="col-12 row no-gutters" style="padding:unset")
-                    div(class="col-12")
-                      div(class="float-left d-none d-md-block" style="padding-right:5px"): img(data-bind="attr: {src: awayTeamLogo}" alt="" class="TeamLabel-logo")
+                .col-5
+                  .row.col.g-0(style="padding:unset")
+                    div(style="text-align:left")
+                      img.pull-left(data-bind="attr: {src: awayTeamLogo}" alt="" class="TeamLabel-logo" style="padding-right:5px")
                       div(data-bind="text: awayTeam"  style="font-size:1.2em")
                       div(class="TeamLabel-coach " data-bind="text: awayCoach + ' - ' + awayTeamValue + ' ' + awayTeamRace" style="margin-top:-7px" )
                 -if(user && user.twitch)

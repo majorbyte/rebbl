@@ -4,16 +4,29 @@ block append vars
   - var activeSubMenu = "match"
 
 block head
-  link(rel="stylesheet" href="https://cdn.rebbl.net/styles/tempusdominus-bootstrap-4.min.css")
-  link(rel="stylesheet" href="https://cdn.rebbl.net/styles/font-awesome.css")
+  - if (process.env.NODE_ENV === 'production')
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/tempusdominus.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
+  - else
+    link(rel="stylesheet" href="/styles/v2/tempusdominus.min.css")
+    link(rel="stylesheet" href="/styles/fontawesome.min.css")
+    link(rel="stylesheet" href="/styles/solid.min.css")
   
 
 block scripts
-  script(src="https://cdn.rebbl.net/scripts/bootstrap.min.js")  
-  script(src="https://cdn.rebbl.net/scripts/moment.min.js")
-  script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
-  script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
-  script(src="https://cdn.rebbl.net/scripts/tempusdominus-bootstrap-4.min.js")
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")  
+    script(src="https://cdn.rebbl.net/scripts/moment.min.js")
+    script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
+    script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/tempusdominus.min.js")
+  - else
+    script(src="/scripts/v2/bootstrap.min.js")  
+    script(src="/scripts/moment.min.js")
+    script(src="/scripts/moment-timezone.min.js")
+    script(src="/scripts/moment-timezone-with-data-10-year-range.min.js")
+    script(src="/scripts/v2/tempusdominus.min.js")
 
 
   - if(user)
@@ -32,7 +45,7 @@ block scripts
         function setCalendarDatetime() {
           $.each($('.calendar-add'), (idx, anchor) => {
             const $anchor = $(anchor);
-            const picker = $anchor.parent().siblings().find('.datetimepicker-input')[0];
+            const picker = $anchor.siblings().find('.datetimepickerInput')[0];
 
             let timezone = "#{user.timezone}" || moment.tz.guess();
             const date =  $(picker).val()
@@ -62,7 +75,7 @@ block scripts
           let id = event.currentTarget.getAttribute("data-contestid");
           let competitionId = event.currentTarget.getAttribute("data-competitionid");
           let clan = event.currentTarget.getAttribute("data-clan");
-          let target =event.currentTarget.getAttribute("data-target");
+          let target =event.currentTarget.getAttribute("data-bs-target");
           
           let timezone = "#{user.timezone}" || moment.tz.guess();
 
@@ -100,19 +113,21 @@ block scripts
         });
         
         let timezone = "#{user.timezone}" || moment.tz.guess();  
-        $(".datetimepicker-input").each(function() {
+        $(".datetimepicker").each(function() {
+          let picker;
           if($(this).val())
-            $(this).datetimepicker({format: "YYYY-MM-DD HH:mm", date: moment.tz(this.defaultValue,"UTC").tz(moment.tz.guess()), useCurrent:false});
+            picker = new tempusDominus.TempusDominus(this,{localization:{format: "yyyy-MM-dd HH:mm"}, date: moment.tz(this.defaultValue,"UTC").tz(moment.tz.guess()), useCurrent:false});
           else
-            $(this).datetimepicker({format: "YYYY-MM-DD HH:mm", useCurrent:true});
+            picker = new tempusDominus.TempusDominus(this,{localization:{format: "yyyy-MM-dd HH:mm"}, useCurrent:false});
 
-          $(this).on("change.datetimepicker", function(e){
-             let btn =e.currentTarget.getAttribute("data-btn");
+          const elm = this;
+          const sub = picker.subscribe(tempusDominus.Namespace.events.change, (e) => {
+            let btn = elm.getAttribute("data-btn");
 
-             $(btn).removeClass("btn-secondary")
-             $(btn).addClass("btn-primary");
-             $(btn).removeAttr("disabled");
-          })  
+            $(btn).removeClass("btn-secondary")
+            $(btn).addClass("btn-primary");
+            $(btn).removeAttr("disabled");
+          });
         });
 
         $(".stream").on("click", async function(event){
@@ -153,31 +168,33 @@ block content
   for match in matches
     .container.h-100
       .row.justify-content-center
-        .row.col-12.justify-content-center
+        .row.col-12.justify-content-center.text-center
           -if(match.admin)
             div 
-              h2(style="margin-bottom:0px")= match.competition + " - week " + match.round
+              h2(style="margin-top:40px;margin-bottom:0px")= match.competition + " - week " + match.round
               .row.justify-content-center(style="margin-bottom:20px")
                 span division admin:&nbsp;
                 a.highlight(href=`/coach/${match.admin}` target="blank")= match.admin
           -if(!match.admin)
-            h2= match.competition + " - week " + match.round
-          .row.col-12.col-sm-10.justify-content-center
+            h2(style="margin-top:40px;margin-bottom:20px")= match.competition + " - week " + match.round
+          .row.col.justify-content-center.text-center
             - if(user)
               span Enter match date in your own local time
-              .row.col-12.justify-content-center
-                .col-12.col-sm-4.col-md-4.col-xl-3
-                  input.form-control.datetimepicker-input.px-0.text-center(type="text" id=`datetimepicker-${match.contest_id}` data-target=`#datetimepicker-${match.contest_id}` data-toggle="datetimepicker" value=(match.date ? match.date.date : null) data-btn=`#btn-${match.contest_id}`  )
-                .col-6.col-sm-4.col-md-4.col-xl-3(style="padding:0;")
-                  button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-contestid=match.contest_id data-competitionid=match.competition_id data-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
+              .row.col.justify-content-center
+                .col-xs-12.col-sm-7.col-md-6.col-lg-4
+                  .input-group.datetimepicker(id=`datetimepicker-${match.contest_id}` data-td-target-input="nearest" data-td-target-toggle="nearest" data-btn=`#btn-${match.contest_id}`)
+                    span.input-group-text(data-td-target=`#datetimepicker-${match.contest_id}` data-td-toggle="datetimepicker")
+                      i.fa-solid.fa-calendar
+                    input.datetimepickerInput.form-control.px-0.text-center(id=`datetimepickerInput-${match.contest_id}` type="text" value=(match.date ? match.date.date : null)  data-td-target=`#datetimepicker-${match.contest_id}`)
+                    button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-contestid=match.contest_id data-competitionid=match.competition_id data-bs-target=`#datetimepickerInput-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
                   a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.opponents[0].team.name data-team-away=match.opponents[1].team.name class="calendar-add") Add to Google Calendar
                 -if (user.twitch)                  
-                  .col-6.col-sm-2
-                    btn.hidden.btn.btn-danger.unstream.pull-right(id=`unstream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
-                    btn.btn.btn-success.stream.pull-right(id=`stream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
+                  .col-xs-12.col-sm-5.col-md-2 
+                    btn.hidden.btn.btn-danger.unstream(id=`unstream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
+                    btn.btn.btn-success.stream(id=`stream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
       .d-none.d-sm-block
         div(class="row justify-content-center align-items-center h-100")
-          div(class="col-5 text-right")
+          div(class="col-5 text-end")
             h3
               a(href=`/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
           div(class="col-2 text-center")
@@ -188,15 +205,15 @@ block content
             h3 
               a(href=`/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
         div(class="row justify-content-center")
-          div(class="col-4 text-right")= match.opponents[0].team.race
+          div(class="col-4 text-end")= match.opponents[0].team.race
           div(class="col-2 text-center") 
             strong race
           div(class="col-4")= match.opponents[1].team.race
         div(class="row justify-content-center")
           -if (match.opponents[0].team.team)
-            div(class="col-4 text-right")= match.opponents[0].team.team.nextMatchTV
+            div(class="col-4 text-end")= match.opponents[0].team.team.nextMatchTV
           -else
-            div(class="col-4 text-right")= match.opponents[0].team.value
+            div(class="col-4 text-end")= match.opponents[0].team.value
           div(class="col-2 text-center") 
             strong team value
           -if (match.opponents[1].team.team)
@@ -205,9 +222,9 @@ block content
             div(class="col-4")= match.opponents[1].team.value
         div(class="row justify-content-center")
           -if (match.opponents[0].team.team)
-            div(class="col-4 text-right")= Math.floor(match.opponents[0].team.team.cash/1000) + "k"
+            div(class="col-4 text-end")= Math.floor(match.opponents[0].team.team.cash/1000) + "k"
           -else
-            div(class="col-4 text-right") -
+            div(class="col-4 text-end") -
           div(class="col-2 text-center") 
             strong cash
           -if (match.opponents[1].team.team)
@@ -215,27 +232,27 @@ block content
           -else
             div(class="col-4") -
         div(class="row justify-content-center")
-          div(class="col-4 text-right")= match.opponents[0].coach.name
+          div(class="col-4 text-end")= match.opponents[0].coach.name
           div(class="col-2 text-center")
             strong coach
           div(class="col-4")= match.opponents[1].coach.name
         div(class="row justify-content-center")
-          div(class="col-4 text-right highlight")= "/u/" + (match.opponents[0].coach.reddit ? match.opponents[0].coach.reddit.toLowerCase() :"")
+          div(class="col-4 text-end highlight")= "/u/" + (match.opponents[0].coach.reddit ? match.opponents[0].coach.reddit.toLowerCase() :"")
           div(class="col-2 text-center")
             strong reddit
           div(class="col-4 highlight")= "/u/" + (match.opponents[1].coach.reddit ? match.opponents[1].coach.reddit.toLowerCase() : "")
         div(class="row justify-content-center")
-          div(class="col-4 text-right")= match.opponents[0].coach.discord
+          div(class="col-4 text-end")= match.opponents[0].coach.discord
           div(class="col-2 text-center")
             strong discord
           div(class="col-4")= match.opponents[1].coach.discord
         div(class="row justify-content-center")
-          div(class="col-4 text-right")= match.opponents[0].coach.steam
+          div(class="col-4 text-end")= match.opponents[0].coach.steam
           div(class="col-2 text-center")
             strong steam
           div(class="col-4")= match.opponents[1].coach.steam
         div(class="row justify-content-center")
-          div(class="col-4 timezone text-right")= match.opponents[0].coach.timezone
+          div(class="col-4 timezone text-end")= match.opponents[0].coach.timezone
             div(class="time")
           div(class="col-2 text-center")
             strong timezone  
@@ -244,10 +261,10 @@ block content
           div(class="col-4 timezone" )= match.opponents[1].coach.timezone
             div(class="time")
       .d-sm-none
-        div.col-12.carousel.slide( id="leftgames"+match.contest_id data-ride="carousel")
+        div.col-12.carousel.slide( id="leftgames"+match.contest_id data-bs-ride="carousel")
           ol.carousel-indicators(style="bottom:unset;top:0px;")
-            li.active(data-target="#leftgames"+match.contest_id data-slide-to="0")
-            li(data-target="#leftgames"+match.contest_id data-slide-to="1" )
+            li.active(data-bs-target="#leftgames"+match.contest_id data-slide-to="0")
+            li(data-bs-target="#leftgames"+match.contest_id data-slide-to="1" )
           br(style="line-height:15px")
           .carousel-inner
               - let active = true

@@ -10,7 +10,7 @@ class AccountApi{
     this.router = express.Router({mergeParams: true});
   }
   routesConfig(){
-    this.router.get("/following",util.ensureAuthenticated, async function(req,res){
+    this.router.get("/following",util.ensureAuthenticatedNoRedirect, async function(req,res){
       try {
         
         const account = await accountService.getAccount(req.user.name);
@@ -45,7 +45,7 @@ class AccountApi{
     });
 
 
-    this.router.get("/following/:coachId",util.ensureAuthenticated, async function(req,res){
+    this.router.get("/following/:coachId",util.ensureAuthenticatedNoRedirect, async function(req,res){
       try {
         
         const account = await accountService.getAccount(req.user.name);

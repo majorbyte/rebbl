@@ -15,12 +15,13 @@ block head
 block content
   div(class="container")
     div(class="row col-12 d-flex flex-wrap align-items-center")
-      //ko if: teamLoaded
-      img(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" class="align-top" style="height:100px")
-      // /ko
-      span(class="h1" data-bind="text: teamName(), style:{color: teamColor()}")
+      .col.d-flex
+        //ko if: teamLoaded
+        img.align-top.g-0(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" style="height:100px;width:100px")
+        // /ko
+        span.h1.align-self-center(data-bind="text: teamName(), style:{color: teamColor(), margin:'unset'}")
 
-      div(class="col text-right")
+      div(class="col text-end")
         //ko if: teamLoaded
         img(data-bind="attr:{src:`https://cdn.rebbl.net/images/races/${idraces}.png`}" class="align-top" style="height:100px")
         // /ko
@@ -154,25 +155,25 @@ block content
     br
     nav(class="col-12")
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
-        a(class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" data-bind="click:selectCurrent") Current &nbsp;
+        a(class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" data-bind="click:selectCurrent") Current &nbsp;
           //ko if: loadingCurrent
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
-        a(class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-profile" aria-selected="false" data-bind="click:selectPrevious") Previous &nbsp;
+        a(class="nav-item nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-profile" aria-selected="false" data-bind="click:selectPrevious") Previous &nbsp;
           //ko if: loadingPrevious
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
-        a(class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-contact" aria-selected="false" data-bind="click:selectJourneymen") Star Players &amp; Loners &nbsp;
+        a(class="nav-item nav-link" id="nav-contact-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-contact" aria-selected="false" data-bind="click:selectJourneymen") Star Players &amp; Loners &nbsp;
           //ko if: loadingJourneymen
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
-        a(class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#nav-history" role="tab" aria-controls="nav-history" aria-selected="false" data-bind="click:selectHistory") History &nbsp;
+        a(class="nav-item nav-link" id="nav-history-tab" data-bs-toggle="tab" href="#nav-history" role="tab" aria-controls="nav-history" aria-selected="false" data-bind="click:selectHistory") History &nbsp;
           //ko if: loadingHistory
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
-        a(class="nav-item nav-link" id="nav-matches-tab" data-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches &nbsp;
+        a(class="nav-item nav-link" id="nav-matches-tab" data-bs-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches &nbsp;
           //ko if: loadingMatches
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko          
     div(class="tab-content" id="tabContent")
       div(class="tab-pane fade col-12 show active table-responsive-md" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
@@ -233,7 +234,7 @@ block content
           div(class="col d-none d-md-block mb-2") &nbsp;
 
         div(class="col-12")
-          button(class="btn btn-primary btn-sm mb-2" type="button" data-toggle="collapse" data-target="#race_win_details" aria-expanded="false" aria-controls="race_win_details") Race Details
+          button(class="btn btn-primary btn-sm mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#race_win_details" aria-expanded="false" aria-controls="race_win_details") Race Details
         
         div(data-bind="foreach: races" class="collapse" id="race_win_details")
           div(class="row mb-2")
@@ -322,8 +323,8 @@ block content
 
   script(type="text/html" id="playerTemplate")
     tr(data-bind="attr:{class: cssClass()}") 
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:number")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root)")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:number")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root)")
         div
           // ko if: number > 0
           // ko if: skillUp()
@@ -337,16 +338,16 @@ block content
           img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/starplayer.png`}" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
           // /ko
           div(class="match-stats-TeamLabel-name" data-bind="text: playerName(), style:{color: playerColor()}")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ma,attr:{class:maColor}")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.st,attr:{class:stColor}")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ag,attr:{class:agColor}")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.av,attr:{class:avColor}")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:matchplayed")
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:mvp")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:position()")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ma,attr:{class:maColor}")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.st,attr:{class:stColor}")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.ag,attr:{class:agColor}")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:attributes.av,attr:{class:avColor}")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:matchplayed")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:mvp")
       td(class="td-prevent")
         // ko foreach: $data.playerSkills
-        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog" style="z-index:9999" )
+        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999" )
         // /ko
         // ko if: diceRoll
         div(data-bind="attr:{title:`rolled: ${(new Date(diceRoll.date)).toISOString()}, clan: ${diceRoll.clan}`}" style="display:inline")
@@ -354,13 +355,13 @@ block content
           div(data-bind="css:`dice dice-${$data}`")
           // /ko
         // /ko
-      td(data-toggle="modal" data-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog"  data-bind="click:$root.selectPlayer.bind($data,$root)")
         //ko if: eic
         span.badge.badge-success EIC!
         // /ko
         //ko if: assassinated
         span.badge.badge-danger(title="The player has been assassinated and cannot be targeted again, unless it's the result of a failed assassination attempt")
-          i.fa.fa-small.fa-crosshairs(style="font-size:24px") 
+          i.fa-solid.fa-small.fa-crosshairs(style="font-size:24px") 
         // /ko        
         // ko foreach: casualties_state
         //ko if: $data !== "BadlyHurt"
@@ -370,7 +371,7 @@ block content
         // ko if: ((casualties_sustained && casualties_sustained[0] === "Dead") &&( casualties_state && casualties_state.indexOf("Dead") === -1) )    
         img(src="https://cdn.rebbl.net/images/skills/Dead.png" alt="" title="Dead" )
         // /ko
-      td(data-toggle="modal" data-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
+      td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
       td(data-bind="text:value")
 
   div(class="modal" tabindex="-1" role="dialog" id="skill-dialog")
@@ -382,79 +383,80 @@ block content
           img( data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${activeSkill.name.replace(/[ \-']/g,'')}.png`}" alt="" style=" float: left;margin-right:20px;width:145px;margin-top:20px")
           p(data-bind="text:activeSkill.description")
         div(class="modal-footer")
-          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+          button( type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
 
   div(class="modal" tabindex="-1" role="dialog" id="player-dialog")
-    // ko if: selectedPlayer !== null
-    //ko with:selectedPlayer
     div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
       div(class="modal-content")
+        // ko if: selectedPlayer !== null      
+        //ko with:selectedPlayer
         div(class="modal-header")
           h5(class="modal-title" data-bind="text: name")
         div(class="modal-body")
-         table(class="table-striped") 
-            thead(class="headerText")
-              tr 
-                th
-                th inflicted
-                th sustained
-            tbody
-              tr
-                td tackles
-                td(data-bind="text:stats.inflictedtackles")
-                td(data-bind="text:stats.sustainedtackles")
-              tr
-                td injuries
-                td(data-bind="text:stats.inflictedinjuries")
-                td(data-bind="text:stats.sustainedinjuries")
-              tr
-                td stuns
-                td(data-bind="text:stats.inflictedstuns")
-                td(data-bind="text:stats.sustainedstuns")
-              tr
-                td ko
-                td(data-bind="text:stats.inflictedko")
-                td(data-bind="text:stats.sustainedko")
-              tr
-                td CAS
-                td(data-bind="text:stats.inflictedcasualties")
-                td(data-bind="text:stats.sustainedcasualties")
-              tr
-                td dead
-                td(data-bind="text:stats.inflicteddead")
-                td(data-bind="text:stats.sustaineddead")
-              tr
-                td running (m)
-                td(data-bind="text:stats.inflictedmetersrunning")
-                td -
-              tr
-                td passing (m)
-                td(data-bind="text:stats.inflictedmeterspassing")
-                td -
-              tr
-                td passes
-                td(data-bind="text:stats.inflictedpasses")
-                td -
-              tr
-                td catch
-                td(data-bind="text:stats.inflictedcatches")
-                td -
-              tr
-                td interc.
-                td(data-bind="text:stats.inflictedinterceptions")
-                td(data-bind="text:stats.sustainedinterceptions")
-              tr
-                td touchdowns
-                td(data-bind="text:stats.inflictedtouchdowns")
-                td -
-              tr
-                td surfs
-                td(data-bind="text:stats.inflictedpushouts")      
-                td -
+          .row.col
+            table(class="table-striped") 
+              thead(class="headerText")
+                tr 
+                  th
+                  th inflicted
+                  th sustained
+              tbody
+                tr
+                  td tackles
+                  td(data-bind="text:stats.inflictedtackles")
+                  td(data-bind="text:stats.sustainedtackles")
+                tr
+                  td injuries
+                  td(data-bind="text:stats.inflictedinjuries")
+                  td(data-bind="text:stats.sustainedinjuries")
+                tr
+                  td stuns
+                  td(data-bind="text:stats.inflictedstuns")
+                  td(data-bind="text:stats.sustainedstuns")
+                tr
+                  td ko
+                  td(data-bind="text:stats.inflictedko")
+                  td(data-bind="text:stats.sustainedko")
+                tr
+                  td CAS
+                  td(data-bind="text:stats.inflictedcasualties")
+                  td(data-bind="text:stats.sustainedcasualties")
+                tr
+                  td dead
+                  td(data-bind="text:stats.inflicteddead")
+                  td(data-bind="text:stats.sustaineddead")
+                tr
+                  td running (m)
+                  td(data-bind="text:stats.inflictedmetersrunning")
+                  td -
+                tr
+                  td passing (m)
+                  td(data-bind="text:stats.inflictedmeterspassing")
+                  td -
+                tr
+                  td passes
+                  td(data-bind="text:stats.inflictedpasses")
+                  td -
+                tr
+                  td catch
+                  td(data-bind="text:stats.inflictedcatches")
+                  td -
+                tr
+                  td interc.
+                  td(data-bind="text:stats.inflictedinterceptions")
+                  td(data-bind="text:stats.sustainedinterceptions")
+                tr
+                  td touchdowns
+                  td(data-bind="text:stats.inflictedtouchdowns")
+                  td -
+                tr
+                  td surfs
+                  td(data-bind="text:stats.inflictedpushouts")      
+                  td -
+        // /ko
+        // /ko
         div(class="modal-footer")
-          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
-    // /ko
-    // /ko
+          button( type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
 
 block scripts
   - if (process.env.NODE_ENV === 'production')

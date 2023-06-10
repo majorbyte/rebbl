@@ -6,13 +6,13 @@ block append scripts
     script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
     script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
     script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
-    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/knockout.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/knockout.css")
 
   - else
     script(src="/scripts/knockout-3.4.2.js")
     script(src="/scripts/knockout-mapping.min.js")
     script(src="/scripts/knockout-es5.js")
-    link(rel="stylesheet" href="/styles/knockout.css")
+    link(rel="stylesheet" href="/styles/v2/knockout.css")
 
   script.
 
@@ -132,13 +132,13 @@ block content
                   div(data-bind="text: $data.opponents[1].team.score")
                   // /ko
               // /ko
-            div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
+            div(class="info" data-bs-toggle="modal" data-bs-target=`#trophy` data-bind="click: model.select")  
           // /ko        
           // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(1,2), as: 'match' }
           // /ko
       div(class="champion")
         div(class="final")
-          i(class="fa fa-trophy")
+          i(class="fa-solid fa-trophy")
           div(class="round-details" data-bind="text: model.getTitle()" ) 
           // ko with: model.matches['6'][0]
           ul(class="matchup championship" data-bind="{css: model.spoiled && $data.winner && $data.winner.coach && $data.round === model.round ? 'spoiler played': ''}")
@@ -196,7 +196,7 @@ block content
                   div(data-bind="text: $data.opponents[1].team.score")
                   // /ko
               // /ko
-            div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
+            div(class="info" data-bs-toggle="modal" data-bs-target=`#trophy` data-bind="click: model.select")  
 
           // /ko  
 
@@ -284,7 +284,7 @@ block content
             div(data-bind="text: match.opponents[1].team.score")
             // /ko
         // /ko    
-      div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
+      div(class="info" data-bs-toggle="modal" data-bs-target=`#trophy` data-bind="click: model.select")  
 
   script(type="text/html" id="knockoutTemplateRev")
     div(class="gameinfo")
@@ -315,4 +315,4 @@ block content
           img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`}}")
           // /ko
         // /ko
-      div(class="info" data-toggle="modal" data-target=`#trophy` data-bind="click: model.select")  
+      div(class="info" data-bs-toggle="modal" data-bs-target=`#trophy` data-bind="click: model.select")  

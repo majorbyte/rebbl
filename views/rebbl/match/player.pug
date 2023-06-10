@@ -22,7 +22,7 @@ tr
     div
       if player && player.skills.length > 0
         each skill in player.skills
-          img(src="https://cdn.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo-skill" style="margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim()  data-toggle="modal" data-target=`#${skill.toLowerCase()}` )
+          img(src="https://cdn.rebbl.net/images/skills/" + skill + ".png" alt="", class="TeamLabel-logo-skill" style="margin-top:6px;margin-left:2px;" title=""+skill.replace(/([A-Z])/g, ' $1').trim()  data-bs-toggle="modal" data-bs-target=`#${skill.toLowerCase()}` )
   // INJ
   td(class="match-stats")
     if player.eic

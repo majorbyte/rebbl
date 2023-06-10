@@ -29,7 +29,7 @@ block content
               div(class="col-2 d-none d-md-block") D  
               div(class="col-2 d-none d-md-block") L
               div(class="col-4 col-md-2") P
-              div(class="col-4 col-md-2 text-right") ΔTD
+              div(class="col-4 col-md-2 text-end") ΔTD
         each coach, y in div
           div(class="row season-table-row")
             div(class="col-8 col-md-6")
@@ -50,7 +50,7 @@ block content
                 div(class="col-2 d-none d-md-block")= coach.draw 
                 div(class="col-2 d-none d-md-block")= coach.loss 
                 div(class="col-4 col-md-2")= coach.games
-                div(class="col-4 col-md-2 text-right" )= coach.tddiff
+                div(class="col-4 col-md-2 text-end" )= coach.tddiff
           - if (y+1 == 1)
             div(class="row col-12 season-table-row")
               div(class="col-1 Standings-divider--flex")

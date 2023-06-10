@@ -7,25 +7,25 @@ block content
   .container
     .row.col-12.text-center(style="font-size:1.5em")
       .col-2
-      .col.row.no-gutters
+      .col.row.g-0
         .col(title="Eurotrasher") 💶
         .col(title="All-American Hero") 💵
         .col(title="Down Under My Boot") 🦘
         .col(title="The Hard Yards") 👟
         .col(title="New Sheriff In Town") 🥇
-      .col.row.no-gutters
+      .col.row.g-0
         .col(title="Flat Track Bully") 🏏
         .col(title="I Miss The Devastational") ☠
         .col(title="#Collusion") 🏈
         .col(title="Hell of a Drug") 💉
         .col(title="Clawgeous") 🦂
-      .col.row.no-gutters
+      .col.row.g-0
         .col(title="You're Not Famous Anymore!") 💯
         .col(title="Referee's a Scrooge") 💰
         .col(title="Channel Surfing") 🏄
         .col(title="Pain to Win") 🩹
         .col(title="Style Guide") 🦮
-      .col.row.no-gutters
+      .col.row.g-0
         .col(title="The Passter") 🧤
         .col(title="Tough Love") 💔
         .col(title="Stunty Double") 🍖
@@ -51,7 +51,7 @@ block content
         // ko if: $data.mainCompetition.indexOf("Division 5") > 0
         i(title="div 5 coach") 🏏
         // /ko
-      .col.row.no-gutters.text-center
+      .col.row.g-0.text-center
         .col( data-bind="{text:$data.badges.eurotrasher ? '🥂' : ''}")
         .col(data-bind="{text:$data.badges.allAmericanHero ? '🥂' : ''}")
         .col(data-bind="{text:$data.badges.downUnderMyBoot ? '🥂' : ''}")
@@ -64,7 +64,7 @@ block content
             .progress-bar.progress-bar-striped.bg-success(role="progressbar" aria-valuemin="0" aria-valuemax="10" data-bind="attr:{'title':`${$data.badges.theHardYards} / 10`, 'aria-valuenow':$data.badges.theHardYards, style:`width:${$data.badges.theHardYards*10}%`}")
         // /ko
         .col(data-bind="{text:$data.badges.newSheriffInTown ? '🥂' : ''}")
-      .col.row.no-gutters.text-center
+      .col.row.g-0.text-center
         .col(data-bind="{text:$data.badges.flatTrackBully ? '🥂' : ''}")
         // ko if: $data.badges.iMissTheDevastational >= 5
         .col 🥂
@@ -84,7 +84,7 @@ block content
         // /ko
         .col(data-bind="{text:$data.badges.hellOfADrug ? '🥂' : ''}")
         .col(data-bind="{text:$data.badges.Clawgeous ? '🥂' : ''}")
-      .col.row.no-gutters.text-center
+      .col.row.g-0.text-center
         .col(data-bind="{text:$data.badges.youreNotFamousAnymore ? '🥂' : ''}")
         .col(data-bind="{text:$data.badges.refereeAScrooge ? '🥂' : ''}")
         // ko if: $data.badges.channelSurfing >= 10
@@ -104,7 +104,7 @@ block content
             .progress-bar.progress-bar-striped.bg-success(role="progressbar" aria-valuemin="0" aria-valuemax="15" data-bind="attr:{'title':`${$data.badges.painToWin} / 25`,'aria-valuenow':$data.badges.painToWin, style:`width:${$data.badges.painToWin*4}%`}")
         // /ko
         .col(data-bind="{text:$data.badges.styleGuide ? '🥂' : ''}")
-      .col.row.no-gutters.text-center
+      .col.row.g-0.text-center
         // ko if: $data.badges.thePasster >= 25
         .col 🥂
         // /ko

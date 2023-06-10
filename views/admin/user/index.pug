@@ -100,14 +100,14 @@ block content
         input(data-bind="textInput : reddit")
     //ko if: loading
     div(class="row col-12 justify-content-center")
-      i(class="fa fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
+      i(class="fa-solid fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
     // /ko
     div(data-bind="foreach: filteredUsers" )
       div(class="user-row row col-12")
         a(class="col-12" data-bind="attr:{href: 'user/' + reddit }")   
           div(style="min-width:25px;margin-left:-25px;")
             //ko if: $data.roles && $data.roles.indexOf('admin') > -1
-            i(class="fa fa-star" style="color: #e67b00;float:left" title="admin")
+            i(class="fa-solid fa-star" style="color: #e67b00;float:left" title="admin")
             // /ko
           div(class="col-12 row" data-bind="foreachprop: $data")
             // ko if: key !== 'roles'

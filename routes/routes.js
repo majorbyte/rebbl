@@ -71,7 +71,7 @@ class Routes{
 
 	routesConfig(){
 		this.router.use("/api", new api().routesConfig() );
-    this.router.get("/test", (req,res) => res.render("relayout"));
+    this.router.get("/test", (req,res) => res.render("test"));
     this.router.get("/guides", (req,res) => res.render("guides"));
     this.router.use("/maintenance", new maintenance().routesConfig());
     this.router.use("/cripple", new cripple().routesConfig());

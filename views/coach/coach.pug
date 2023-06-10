@@ -4,7 +4,7 @@ block prepend vars
   - let options = {active: "coach", title: " ",company:"Coach" }
   
 block navigation
-  .navbar-nav.mr-auto
+  .navbar-nav.me-auto
     +nav-item("Details", "details")
     - if (renderExtra || teams || matches)  
       +nav-item("Teams", "teams")

@@ -132,20 +132,20 @@ block content
   div(class="container")
     div(class="row col-12")
       div.mx-1
-        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bind="text:selectedLeague != '' ? selectedLeague : 'Choose League'")
+        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bind="text:selectedLeague != '' ? selectedLeague : 'Choose League'")
         div.dropdown-menu(aria-labelledby="dropdownMenuButton" style="max-height: 400px;  overflow-y: auto")
           //ko foreach: leagues()
           a.dropdown-item(data-bind="attr:{href:'#'},text:$data,click: $root.toggleLeague.bind($data,$data)")
           // /ko
       div.mx-1
-        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownMenuDivision" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-bind="text:selectedDivision != undefined ? selectedDivision.competition : 'Choose Division'")
+        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownMenuDivision" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-bind="text:selectedDivision != undefined ? selectedDivision.competition : 'Choose Division'")
         div.dropdown-menu(aria-labelledby="dropdownMenuDivision" style="max-height: 400px;  overflow-y: auto")
           //ko foreach: filteredData()
           a.dropdown-item(data-bind="attr:{href:'#'},text:competition,click: $root.toggleDivision")
           // /ko
       // ko if: selectedDivision
       div.mx-1
-        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownAdmin" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-bind="text:selectedDivision &&  selectedDivision.admin ? selectedDivision.admin : 'Choose Admin'")
+        button.btn.btn-sm.btn-secondary.dropdown-toggle(type="button" id="dropdownAdmin" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-bind="text:selectedDivision &&  selectedDivision.admin ? selectedDivision.admin : 'Choose Admin'")
         div.dropdown-menu(aria-labelledby="dropdownAdmin" style="max-height: 400px;  overflow-y: auto")
           //ko foreach: admins
           a.dropdown-item(data-bind="attr:{href:'#', title:$data.redd},text:$data.coach,click: $root.setAdmin")
@@ -156,7 +156,7 @@ block content
     hr
     div(class="row col-12")
       button(data-bind="click:$root.refresh" class="btn btn-small btn-success" style="margin:0px 10px")
-        i(class="fa fa-refresh")
+        i(class="fa-solid fa-refresh")
       span update division for new coaches
     // /ko
     hr
@@ -170,7 +170,7 @@ block content
           span(data-bind="text: team")
         div(class="col-3")
           button(data-bind="click:$root.expel" class="btn btn-small btn-success" style="margin:0px 10px")
-            i(class="fa fa-gavel")
+            i(class="fa-solid fa-gavel")
           span expel
     hr
     div(class="row col-12")
@@ -181,7 +181,7 @@ block content
       div(class="row col-12")
         div(class="col-1")
           button(data-bind="click:$root.reload.bind($data,contest_id)" class="btn btn-small btn-success" style="margin:0px 10px")
-            i(class="fa fa-repeat")
+            i(class="fa-solid fa-repeat")
         div(class="col-6")
           span(data-bind="text: competition")
           span(data-bind="text: ` round ${round}`")

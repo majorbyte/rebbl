@@ -17,13 +17,13 @@ block content
       h1(class="u-no-text-transform u-verticalMargin--xx-small") {{schedules[0] ? schedules[0].competition : ''}}
       div(class="row col-12 justify-content-center" )
         template(v-for="row in numberOfRows")
-          div(class="col-12 col-lg-6 col-xl-4 col-md-6 mx-auto table-striped" style="width:unset;display:unset" )
+          div(class="col-12 col-lg-6 col-xl-4 col-md-6 mx-auto table-striped" style="display:unset" )
             div(class="col-12 TableHeader col-md-11 col-xl-12 col-lg-12 col-sm-12" style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
               div(title="" class="Standings-details Standings-header highlight" ) Round {{row}}
             template(v-for="col in numberOfRounds")
-              a(class="row col-12 no-gutters col-md-11 col-xl-12 col-lg-12 col-sm-12" v-bind:href="'/clan/'+ schedule(row,col).season + '/' + schedule(row,col).competition + '/' + schedule(row,col).round + '/' + schedule(row,col).house" )
-                .col.row.no-gutters
-                  .col.text-left
+              a(class="row col-12 g-0 col-md-11 col-xl-12 col-lg-12 col-sm-12" v-bind:href="'/clan/'+ schedule(row,col).season + '/' + schedule(row,col).competition + '/' + schedule(row,col).round + '/' + schedule(row,col).house" style="padding-left:15px;padding-right:15px")
+                .col.row.g-0
+                  .col.text-start
                     img(v-bind:src="'https://cdn.rebbl.net/' + schedule(row,col).home.logo" alt="" class="TeamLabelLogo" )
                   .col.text-info {{ schedule(row,col).home.clan }}
                 .col.text-center
@@ -45,10 +45,10 @@ block content
                     span(class="") {{schedule(row,col).away.draw}}
                     span(class="") -
                     span(class="") {{schedule(row,col).away.win}}
-                .col.row.no-gutters
-                  .col.text-right
+                .col.row.g-0
+                  .col.text-end
                     .text-info {{ schedule(row,col).away.clan }}
-                  .col.text-right
+                  .col.text-end
                     img(v-bind:src="'https://cdn.rebbl.net/' + schedule(row,col).away.logo" alt="" class="TeamLabelLogo")
 block scripts
   - if (process.env.NODE_ENV === 'production')

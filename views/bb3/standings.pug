@@ -121,7 +121,7 @@ block content
             .col-2.d-none.d-md-block D  
             .col-2.d-none.d-md-block L
             .col-4.col-md-2 P
-            .col-4.col-md-2.text-right ΔTD
+            .col-4.col-md-2.text-end ΔTD
       each rank,index in rankings[0].entries.sort((a,b) => b.score - a.score)
         .row.season-table-row
           .col-8.col-md-6
@@ -139,4 +139,4 @@ block content
               .col-2.d-none.d-md-block=rank.draw
               .col-2.d-none.d-md-block=rank.loss
               .col-4.col-md-2=(Number(rank.win)+Number(rank.loss)+Number(rank.draw))
-              .col-4.col-md-2.text-right=(rank.touchdownFor - rank.touchdownAgainst)
+              .col-4.col-md-2.text-end=(rank.touchdownFor - rank.touchdownAgainst)

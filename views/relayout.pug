@@ -4,28 +4,31 @@ html(lang="en")
   head
     meta(name="viewport" content="width=device-width, manimum-scale=1.0, maximum-scale=1.0")
     block title
-    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/font-awesome.css")
     - if (process.env.NODE_ENV === 'production')
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
       - if (user && user.useDark || user && user.account && user.account.useDark) 
-        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.dark.min.css")
-        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/style.dark.css")
+        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.dark.min.css")
+        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/style.dark.css")
       - else
-        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.min.css")
-        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/style.css")
+        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
+        link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/style.css")
     - else
+      link(rel="stylesheet" href="/styles/fontawesome.min.css")
+      link(rel="stylesheet" href="/styles/solid.min.css")
       - if (user && user.useDark || user && user.account && user.account.useDark) 
-        link(rel="stylesheet" href="/styles/bootstrap.dark.min.css")
-        link(rel="stylesheet" href="/styles/style.dark.css")
+        link(rel="stylesheet" href="/styles/v2/bootstrap.dark.min.css")
+        link(rel="stylesheet" href="/styles/v2/style.dark.css")
       - else
-        link(rel="stylesheet" href="/styles/bootstrap.min.css")
-        link(rel="stylesheet" href="/styles/style.css")
+        link(rel="stylesheet" href="/styles/v2/bootstrap.min.css")
+        link(rel="stylesheet" href="/styles/v2/style.css")
     style.
       body{padding-top: 3rem;padding-bottom: 1rem;}
       main{min-height: calc(100% - 3rem)}
       .navbar{padding: 0rem 1rem}
 
       .dropdown-toggle::after {display: none}
-      .dropdown-toggle::before {display: inline-block;padding: 0rem 0.5rem;font: normal normal normal 12px/1 FontAwesome;content: "\f078";vertical-align:0.5em;}
+      .dropdown-toggle::before {display: inline-block;padding: 0rem 0.5rem;font: normal normal normal 12px/1 'Font Awesome 6 Free';content: "\f078";vertical-align:0.5em;}
       .jiggle {-webkit-animation: jiggle 3s infinite;-moz-animation-duration: 3s;-moz-animation-name: jiggle;-moz-animation-iteration-count: infinite;-webkit-transform: rotate(0deg);-moz-transform: rotate(-0deg);}
 
       @-moz-keyframes jiggle {80% {-moz-transform: rotate(0deg);}84% {-moz-transform: rotate(3deg);}88% {-moz-transform: rotate(-3deg);}92% {-moz-transform: rotate(3deg);}96% {-moz-transform: rotate(-3deg);}100% {-moz-transform: rotate(0deg);}}
@@ -79,8 +82,13 @@ html(lang="en")
             img(src="https://cdn.rebbl.net/images/donate.png" title="Donate")  
           | &nbsp; &nbsp; &nbsp; 
           a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
-        p(style="padding:10px") &nbsp; <i class="fa fa-copyright fa-flip-horizontal"></i>  &nbsp; &nbsp; &nbsp;
-      script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-      script(src="https://cdn.rebbl.net/scripts/popper-1.14.7.min.js")
-      script(src="https://cdn.rebbl.net/scripts/bootstrap.min.js")        
+        p(style="padding:10px") &nbsp; <i class="fa-solid fa-copyright fa-flip-horizontal"></i>  &nbsp; &nbsp; &nbsp;
+      - if (process.env.NODE_ENV === 'production')
+        script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+        script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
+        script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")        
+      - else 
+        script(src="/scripts/jquery-3.3.1.slim.min.js")
+        script(src="/scripts/v2/popper.min.js")
+        script(src="/scripts/v2/bootstrap.min.js")        
       block scripts

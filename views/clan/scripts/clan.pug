@@ -1,8 +1,8 @@
 script.
   class ClanModel extends Tracking{
     constructor(data){
-      $('.toast').toast({autohide:true})
       super(() => new ClanModel(this))
+      this.toast = new bootstrap.Toast($('.toast'),{autohide:true})
       this.registerClan = false;
       this.editClan = false;
       this.editTeam = false;

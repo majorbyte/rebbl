@@ -19,7 +19,7 @@ block content
         | &nbsp; Available Cards
       // ko foreach: cards
       .row.col-12(data-bind="css:$data.highlight ? 'highlight': ''")
-        .col-4(data-bind="click:$root.showDescription.bind($data,$root) "  alt=""  data-toggle="modal" data-target="#skill-dialog")
+        .col-4(data-bind="click:$root.showDescription.bind($data,$root) "  alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog")
           img(data-bind="{attr:{src:`/images/${$data.rarity}.png`}}" height="25px" style="margin-right:7px")
           span(data-bind="text:$data.name")
         .col
@@ -48,7 +48,7 @@ block content
         div(class="modal-body")
           p(data-bind="text:activeCard.description")
         div(class="modal-footer")
-          button( type="button" class="btn btn-secondary" data-dismiss="modal") Close
+          button( type="button" class="btn btn-secondary" data-bs-dismiss="modal") Close
 
   script(type="text/html" id="teamTemplate")
     .col-6
@@ -62,7 +62,7 @@ block content
 
 
 block head
-  link(rel="stylesheet" href="/styles/bootstrap-select.css")
+  link(rel="stylesheet" href="/styles/v2/bootstrap-select.css")
   style.
     .highlight{background-color: #3a2f99;}
 

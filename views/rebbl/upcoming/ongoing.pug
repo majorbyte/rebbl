@@ -3,12 +3,13 @@ extends ../sublayout.pug
 block content
   style .btn-following-on {background-color:#4F4F4F}
   .container
-    .row.justify-content-center.no-gutters
+    .row.justify-content-center.g-0.text-center
       h1 Is there something to watch?
       .row.col-12.justify-content-center
-        // ko foreach: leagues()
-        button.btn.btn-primary.btn-sm(data-bind="text: $data, click:$parent.toggle.bind(this, $data)" style="margin-right:5px") 
-        // /ko
+        .d-grid.gap-2.d-md-block
+          // ko foreach: leagues()
+          button.btn.btn-primary.btn-sm(data-bind="text: $data, click:$parent.toggle.bind(this, $data)" style="margin-right:5px") 
+          // /ko
       // ko foreach: $root.visibleLeagues()
       // ko foreach: $root.filteredCompetitions($data)
       .row.col-12.justify-content-center  
@@ -16,11 +17,11 @@ block content
       // ko foreach: $root.filterGames($data)
       .row.col-12  
         .row.col-12
-          .row.col-12.justify-content-center.no-gutters
+          .row.col-12.justify-content-center.g-0
             .col-5
-              .row.col-12.no-gutters(style="padding:unset")
-                .col-12(style="text-align: right;padding-right:5px;")
-                  .float-right.d-none.d-md-block: img(data-bind="attr: {src: $root.logo(LogoTeam1)}" alt="" class="TeamLabel-logo" )
+              .row.col.g-0(style="padding:unset")
+                div(style="text-align: right;padding-right:5px;")
+                  img.pull-right(data-bind="attr: {src: $root.logo(LogoTeam1)}" alt="" class="TeamLabel-logo" style="padding-left:5px")
                   div(data-bind="text: NameTeam1" style="font-size:1.2em")
                   .TeamLabel-coach(data-bind="text: NameCoach1" style="margin-top:-7px" )
             .col-1.align-center
@@ -29,9 +30,9 @@ block content
               .MatchStatus-score(data-bind="text: ScoreTeam2") 
               .TeamLabel-coach(data-bind="text: `Turn ${CurrentTurn}`" style="margin-top:-7px" )
             .col-5
-              .row.col-12.no-gutters(style="padding:unset")
-                .col-12
-                  div.float-left.d-none.d-md-block(style="padding-right:5px"): img(data-bind="attr: {src: $root.logo(LogoTeam2)}" alt="" class="TeamLabel-logo")
+              .row.col.g-0(style="padding:unset")
+                div(style="text-align:left")
+                  img.pull-left(data-bind="attr: {src: $root.logo(LogoTeam2)}" alt="" class="TeamLabel-logo" style="padding-right:5px")
                   div(data-bind="text: NameTeam2"  style="font-size:1.2em")
                   .TeamLabel-coach(data-bind="text: NameCoach2" style="margin-top:-7px" )
       // /ko
