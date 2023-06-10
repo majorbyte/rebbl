@@ -186,7 +186,7 @@ block content
                     span.input-group-text(data-td-target=`#datetimepicker-${match.contest_id}` data-td-toggle="datetimepicker")
                       i.fa-solid.fa-calendar
                     input.datetimepickerInput.form-control.px-0.text-center(id=`datetimepickerInput-${match.contest_id}` type="text" value=(match.date ? match.date.date : null)  data-td-target=`#datetimepicker-${match.contest_id}`)
-                    button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-contestid=match.contest_id data-competitionid=match.competition_id data-td-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
+                    button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-contestid=match.contest_id data-competitionid=match.competition_id data-bs-target=`#datetimepickerInput-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
                   a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.opponents[0].team.name data-team-away=match.opponents[1].team.name class="calendar-add") Add to Google Calendar
                 -if (user.twitch)                  
                   .col-xs-12.col-sm-5.col-md-2 
