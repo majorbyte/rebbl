@@ -410,7 +410,6 @@ a:focus,a:hover {
   width: 100vw;
   /*height: 60px;*/
   min-width:482px;
-
 }
 
 @media (min-width: 768px) {
@@ -1430,3 +1429,5 @@ body {
 .user-row:hover {border-left:3px solid #e67b00;}
 
 .popover-header h3{margin-top:unset;margin-bottom:unset;}
+
+.carousel-indicators [data-bs-target]{background-color: #4f4c4c !important;}

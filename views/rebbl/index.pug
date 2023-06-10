@@ -267,11 +267,11 @@ block content
         a(href=`/${urlMain}`)
           h2(style="margin-left:50px;margin-top:10px")= titleMain
         div( id="leftgames" class="col-12 carousel slide" data-bs-ride="carousel")
-          ol(class="carousel-indicators" style="bottom:unset;top:0px;")
-            li(data-bs-target="#leftgames" data-bs-slide-to="0" class="active")
-            li(data-bs-target="#leftgames" data-bs-slide-to="1" )
-            li(data-bs-target="#leftgames" data-bs-slide-to="2" )
-            li(data-bs-target="#leftgames" data-bs-slide-to="3" )
+          .carousel-indicators(style="bottom:unset;top:0px;")
+            button(type="button" data-bs-target="#leftgames" data-bs-slide-to="0" class="active")
+            button(type="button" data-bs-target="#leftgames" data-bs-slide-to="1" )
+            button(type="button" data-bs-target="#leftgames" data-bs-slide-to="2" )
+            button(type="button" data-bs-target="#leftgames" data-bs-slide-to="3" )
           br(style="line-height:15px")
           div(class="carousel-inner")
 
@@ -341,11 +341,11 @@ block content
         a(href=`/${urlFix}`)
           h2(style="margin-left:50px;margin-top:10px")= titleSide      
         div( id="rightgames" class="col-12 carousel slide" data-bs-ride="carousel")
-          ol(class="carousel-indicators" style="bottom:unset;top:0px;")
-            li(data-bs-target="#rightgames" data-bs-slide-to="0" class="active" )
-            li(data-bs-target="#rightgames" data-bs-slide-to="1")
-            li(data-bs-target="#rightgames" data-bs-slide-to="2")
-            li(data-bs-target="#rightgames" data-bs-slide-to="3")
+          .carousel-indicators(style="bottom:unset;top:0px;")
+            button(type="button" data-bs-target="#rightgames" data-bs-slide-to="0" class="active" )
+            button(type="button" data-bs-target="#rightgames" data-bs-slide-to="1")
+            button(type="button" data-bs-target="#rightgames" data-bs-slide-to="2")
+            button(type="button" data-bs-target="#rightgames" data-bs-slide-to="3")
           br(style="line-height:15px")
           div(class="carousel-inner")
 
@@ -425,9 +425,9 @@ block content
           h2(style="margin-left:50px;margin-top:10px") UPCOMING GAMES
           div( id="upcoming" class="col-12 carousel slide" data-bs-ride="carousel")
             - var l = Math.floor(data.upcoming.length/5) +1;
-            ol(class="carousel-indicators" style="bottom:unset;top:0px;")
+            .carousel-indicators(style="bottom:unset;top:0px;")
               - for(var x=0; x<l;x++)
-                li(data-bs-target="#upcoming" data-bs-slide-to=x class=(x===0?"active":""))
+                button(type="button" data-bs-target="#upcoming" data-bs-slide-to=x class=(x===0?"active":""))
             br(style="line-height:15px")
             div(class="carousel-inner")
               - for(var x=0; x<l;x++)
