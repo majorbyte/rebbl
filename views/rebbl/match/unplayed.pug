@@ -5,11 +5,27 @@ block append vars
   - var activeSubMenu = "match"
   -let options = {company:company}
 
+block head
+  - if (process.env.NODE_ENV === 'production')
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/tempusdominus.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
+  - else
+    link(rel="stylesheet" href="/styles/tempusdominus.min.css")
+    link(rel="stylesheet" href="/styles/fontawesome.min.css")
+    link(rel="stylesheet" href="/styles/solid.min.css")
+
 block scripts
-  script(src="https://cdn.rebbl.net/scripts/moment.min.js")
-  script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
-  script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
-  script(src="https://cdn.rebbl.net/scripts/tempusdominus-bootstrap-4.min.js")
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn.rebbl.net/scripts/moment.min.js")
+    script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
+    script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
+    script(src="https://cdn.rebbl.net/scripts/tempusdominus.min.js")
+  - else
+    script(src="/scripts/moment.min.js")
+    script(src="/scripts/moment-timezone.min.js")
+    script(src="/scripts/moment-timezone-with-data-10-year-range.min.js")
+    script(src="/scripts/tempusdominus.min.js")
 
   - if(user)
     script.
@@ -27,7 +43,7 @@ block scripts
         function setCalendarDatetime() {
           $.each($('.calendar-add'), (idx, anchor) => {
             const $anchor = $(anchor);
-            const picker = $anchor.parent().siblings().find('.datetimepicker-input')[0];
+            const picker = $anchor.siblings().find('.datetimepickerInput')[0];
 
             let timezone = "#{user.timezone}" || moment.tz.guess();
             const date =  $(picker).val()
@@ -89,19 +105,21 @@ block scripts
         });
         
         let timezone = "#{user.timezone}" || moment.tz.guess();  
-        $(".datetimepicker-input").each(function() {
+        $(".datetimepicker").each(function() {
+          let picker;
           if($(this).val())
-            $(this).datetimepicker({format: "YYYY-MM-DD HH:mm", date: moment.tz(this.defaultValue,"UTC").tz(moment.tz.guess()), useCurrent:false});
+            picker = new tempusDominus.TempusDominus(this,{localization:{format: "yyyy-MM-dd HH:mm"}, date: moment.tz(this.defaultValue,"UTC").tz(moment.tz.guess()), useCurrent:false});
           else
-            $(this).datetimepicker({format: "YYYY-MM-DD HH:mm", useCurrent:true});
+            picker = new tempusDominus.TempusDominus(this,{localization:{format: "yyyy-MM-dd HH:mm"}, useCurrent:false});
 
-          $(this).on("change.datetimepicker", function(e){
-             let btn =e.currentTarget.getAttribute("data-btn");
+          const elm = this;
+          const sub = picker.subscribe(tempusDominus.Namespace.events.change, (e) => {
+            let btn = elm.getAttribute("data-btn");
 
-             $(btn).removeClass("btn-secondary")
-             $(btn).addClass("btn-primary");
-             $(btn).removeAttr("disabled");
-          })  
+            $(btn).removeClass("btn-secondary")
+            $(btn).addClass("btn-primary");
+            $(btn).removeAttr("disabled");
+          }); 
         });
 
         $(".stream").on("click", async function(event){
@@ -140,23 +158,25 @@ block scripts
       });  
 block content
   for match in matches
-    div(class="container h-100")    
-      div(class="row justify-content-center")
-        div(class="row col-12 justify-content-center")
-          h2= match.competition + " - week " + match.round
-          div(class="row col-10 justify-content-center")
+    .container.h-100
+      .row.justify-content-center
+        .row.col-12.justify-content-center.text-center
+          h2(style="margin-top:40px;margin-bottom:20px")= match.competition + " - week " + match.round
+          .row.col.justify-content-center.text-center
             - if(user?.roles?.includes("streamer"))
               span Enter match date in your own local time
-              div(class="row col-12 justify-content-center") 
-                div(class="col-3 col-sm-4 col-md-4 col-xl-3")
-                  input(type="text" class="form-control datetimepicker-input" id=`datetimepicker-${match.contest_id}` data-bs-target=`#datetimepicker-${match.contest_id}` data-bs-toggle="datetimepicker" value=(match.date ? match.date.date : null) data-btn=`#btn-${match.contest_id}`  )
-                div(class="col-3 col-sm-4 col-md-4 col-xl-3" style="padding:0;")
-                  button(class="btn btn-secondary btn-block btn-date" disabled data-clan=match.clan data-contestid=match.contest_id data-competitionid=match.competition_id data-bs-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
+              .row.col.justify-content-center
+                .col-xs-12.col-sm-7.col-md-6.col-lg-4
+                  .input-group.datetimepicker(id=`datetimepicker-${match.contest_id}` data-td-target-input="nearest" data-td-target-toggle="nearest" data-btn=`#btn-${match.contest_id}`)
+                    span.input-group-text(data-td-target=`#datetimepicker-${match.contest_id}` data-td-toggle="datetimepicker")
+                      i.fa-solid.fa-calendar
+                    input.datetimepickerInput.form-control.px-0.text-center(id=`datetimepickerInput-${match.contest_id}` type="text" value=(match.date ? match.date.date : null)  data-td-target=`#datetimepicker-${match.contest_id}`)
+                    button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-contestid=match.contest_id data-competitionid=match.competition_id data-td-target=`#datetimepicker-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
                   a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.opponents[0].team.name data-team-away=match.opponents[1].team.name class="calendar-add") Add to Google Calendar
                 -if (user.twitch)                  
-                  div(class="col-1")
-                    btn(class="hidden btn btn-danger unstream"  id=`unstream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
-                    btn(class="btn btn-success stream" id=`stream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
+                  .col-xs-12.col-sm-5.col-md-2 
+                    btn.hidden.btn.btn-danger.unstream(id=`unstream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
+                    btn.btn.btn-success.stream(id=`stream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
             - if(match.date)
               p planned match start:&nbsp;
                 span(id="matchTime")= match.date.date

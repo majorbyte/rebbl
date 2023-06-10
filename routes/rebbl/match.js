@@ -24,7 +24,7 @@ router.put('/unplayed/:match_id', util.checkAuthenticated, util.hasRole('streame
     if (contest.length === 0) contest = await leagueService.searchLeagues({matches:{$elemMatch:{contest_id:Number(req.params.match_id) }} });
     
     if(contest.length > 0){
-      if (req.body.date.length === 16)
+      if (req.body.date && req.body.date.length === 16)
         datingService.updateDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id), req.body.date);
       else 
         datingService.removeDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id));
