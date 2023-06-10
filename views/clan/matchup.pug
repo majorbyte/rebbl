@@ -45,48 +45,44 @@ block content
         div(class="col-12 row")
           div(class="col-12 row  justify-content-center")
             h1 Available Powers
-          div(class="col-6 row")
+          div(class="col-6")
             template(v-for="power in Object.keys(schedule.home.clan.powers)")
               template(v-if="schedule.home.clan.powers[power] > 0")
-                div(class="p-1")
-                  button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
-                    | {{powers.find(function(x){return x.key == power}).name}} 
-                    span(class="badge badge-secondary") {{schedule.home.clan.powers[power]}}
-          div(class="col-6 row")
+                button.m-1(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                  | {{powers.find(function(x){return x.key == power}).name}} 
+                  span(class="badge text-bg-secondary") {{schedule.home.clan.powers[power]}}
+          div(class="col-6")
             template(v-if="schedule.matches.length === 0  && powers.length > 0")
               template(v-for="power in Object.keys(schedule.away.clan.powers)")
                 template(v-if="schedule.away.clan.powers[power] > 0")
-                  div(class="p-1")
-                    button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
-                      | {{powers.find(function(x){return x.key == power}).name}} 
-                      span(class="badge badge-secondary") {{schedule.away.clan.powers[power]}}
+                  button.m-1(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                    | {{powers.find(function(x){return x.key == power}).name}} 
+                    span(class="badge text-bg-secondary") {{schedule.away.clan.powers[power]}}
         div(class="col-12 row justify-content-center")
           div(class="col-12 row justify-content-center")
             h1 Available Teams
-          div(class="col-6 row")
+          div(class="col-6")
             template(v-for="team in schedule.home.clan.teams")
               template(v-if="team")
-                div(class="p-1")
-                  a(class="btn btn-outline-info btn-sm" v-bind:href="`/team/${team.team.id}`" target="_blank")
-                    img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
-                    span(class="text-info")  {{team.team.name}}
-                    img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
-                    br
-                    span(class="badge badge-success") /u/{{reddit(schedule.home.clan,team.coach.name)}}
-                    span(class="badge badge-warning") {{team.coach.name}}
-                    span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
-          div(class="col-6 row")
+                a(class="m-1 btn btn-outline-info btn-sm" v-bind:href="`/team/${team.team.id}`" target="_blank")
+                  img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
+                  span(class="text-info")  {{team.team.name}}
+                  img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                  br
+                  span(class="badge text-bg-success") /u/{{reddit(schedule.home.clan,team.coach.name)}}
+                  span(class="badge text-bg-warning") {{team.coach.name}}
+                  span(class="badge text-bg-info") TV: {{team.team.nextMatchTV || team.team.value}}
+          div(class="col-6")
             template(v-for="team in schedule.away.clan.teams")
               template(v-if="team")
-                div(class="p-1")
-                  a(class="btn btn-outline-info btn-sm" v-bind:href="`/team/${team.team.id}`" target="_blank")
-                    img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
-                    span(class="text-info")  {{team.team.name}}
-                    img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
-                    br
-                    span(class="badge badge-success") /u/{{reddit(schedule.away.clan,team.coach.name)}}
-                    span(class="badge badge-warning") {{team.coach.name}}
-                    span(class="badge badge-info") TV: {{team.team.nextMatchTV || team.team.value}}
+                a(class="m-1 btn btn-outline-info btn-sm" v-bind:href="`/team/${team.team.id}`" target="_blank")
+                  img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
+                  span(class="text-info")  {{team.team.name}}
+                  img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                  br
+                  span(class="badge text-bg-success") /u/{{reddit(schedule.away.clan,team.coach.name)}}
+                  span(class="badge text-bg-warning") {{team.coach.name}}
+                  span(class="badge text-bg-info") TV: {{team.team.nextMatchTV || team.team.value}}
 
       template(v-if="schedule.drafted")
         .row.col-12.g-0.justify-content-center
@@ -94,22 +90,20 @@ block content
             h1 Used Powers
             .col-12.row.justify-content-center
               .col-5
-                .row.btn-group-toggle(data-bs-toggle="buttons")
+                .btn-group-toggle(data-bs-toggle="buttons")
                   template(v-if="schedule.home.usedPowers")
                     template(v-for="power in Object.keys(schedule.home.usedPowers)")
                       template(v-for="t in schedule.home.usedPowers[power]")
-                        .p-1
-                        button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                           | {{powers.find(function(x){return x.key == power}).name}} 
 
               .col
               .col-5
-                .row.btn-group-toggle(data-bs-toggle="buttons")
+                .btn-group-toggle(data-bs-toggle="buttons")
                   template(v-if="schedule.away.usedPowers")
                     template(v-for="power in Object.keys(schedule.away.usedPowers)")
                       template(v-for="t in schedule.away.usedPowers[power]")
-                        .p-1
-                        button.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
                           | {{powers.find(function(x){return x.key == power}).name}} 
           .col-12.row.justify-content-center
             h1 Matches
@@ -142,7 +136,7 @@ block content
                       span.MatchStatus-score {{match.opponents[1].team.score}}
                 template(v-if="match.eic")
                   .justify-content-center
-                    span.badge.badge-success= "EIC!"
+                    span.badge.text-bg-success= "EIC!"
 
               .MatchRow-team
                 .TeamLabel

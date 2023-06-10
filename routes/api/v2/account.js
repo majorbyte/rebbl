@@ -45,7 +45,7 @@ class AccountApi{
     });
 
 
-    this.router.get("/following/:coachId",util.ensureAuthenticated, async function(req,res){
+    this.router.get("/following/:coachId",util.ensureAuthenticatedNoRedirect, async function(req,res){
       try {
         
         const account = await accountService.getAccount(req.user.name);

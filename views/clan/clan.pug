@@ -22,43 +22,35 @@ block content
         input( @change="onFileSelectedEvent" type="file" accept="image/*" class="fileChooser")
         button(@click="uploadLogo" class="btn btn-primary" ) upload logo
     h3 Purchased Clan Powers
-    div(class="row")
-      template(v-for="power in Object.keys(clan.ledger)")
-        template(v-if="clan.ledger[power] > 0")
-          div(class="p-1")
-            button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
-              | {{powers.find(function(x){return x.key == power}).name}} 
-              span(class="badge badge-secondary") {{clan.ledger[power]}}
+    template(v-for="power in Object.keys(clan.ledger)")
+      template(v-if="clan.ledger[power] > 0")
+        button.m-1(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+          | {{powers.find(function(x){return x.key == power}).name}} 
+          span(class="badge text-bg-secondary") {{clan.ledger[power]}}
     template(v-if="clan.phase != 'building'")
       h3 Remaining Clan Powers
-      div(class="row")
-        template(v-for="power in Object.keys(clan.powers)")
-          template(v-if="clan.powers[power] > 0")
-            div(class="p-1")
-              button(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
-                | {{powers.find(function(x){return x.key == power}).name}} 
-                span(class="badge badge-secondary") {{clan.powers[power]}}
+      template(v-for="power in Object.keys(clan.powers)")
+        template(v-if="clan.powers[power] > 0")
+          button.m-1(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+            | {{powers.find(function(x){return x.key == power}).name}} 
+            span(class="badge text-bg-secondary") {{clan.powers[power]}}
     h3 Teams
-    div(class="row")
-      template(v-if="clan.phase !== 'building'")
-        template(v-for="team in clan.ledger.teams")
-          template(v-if="team.active || clan.phase === 'building'")
-            div(class="p-1")
-              a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/team/' + team.team.id" target="_blank" )
-                | {{team.team.name}}
-                img(v-bind:src="'https://cdn.rebbl.net/images/logo/logo_' + team.team.logo.toLowerCase() + '.png'")
+    template(v-if="clan.phase !== 'building'")
+      template(v-for="team in clan.ledger.teams")
+        template(v-if="team.active || clan.phase === 'building'")
+          a.m-1(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/team/' + team.team.id" target="_blank" )
+            | {{team.team.name}}
+            img(v-bind:src="'https://cdn.rebbl.net/images/logo/logo_' + team.team.logo.toLowerCase() + '.png'")
       template(v-else)
         button(v-if="clan.ledger.teamBuilding.length < 5" type="button" class="btn btn-outline-info btn-sm" v-on:click="newTeam" ) Add Team
         
     template(v-if="clan.phase !== 'building'") 
       h3 Retired Teams (new Blood)
-      div(class="row")
-        template(v-for="team in clan.ledger.teams")
-          template(v-if="!team.active")
-            div(class="p-1")
-              a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/team/' + team.team.id" target="_blank" )
-                | {{team.team.name}}
-                img(v-bind:src="'https://cdn.rebbl.net/images/logo/logo_' + team.team.logo.toLowerCase() + '.png'")
+      template(v-for="team in clan.ledger.teams")
+        template(v-if="!team.active")
+          a.m-1(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/team/' + team.team.id" target="_blank" )
+            | {{team.team.name}}
+            img(v-bind:src="'https://cdn.rebbl.net/images/logo/logo_' + team.team.logo.toLowerCase() + '.png'")
 
 
 block scripts

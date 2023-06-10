@@ -23,7 +23,7 @@ block content
         i(data-bind="id:$data[0].division"  style="padding-top:180px;margin-top:-180px")
         a.highlight(data-bind="text:$data[0].division,attr:{href:`/clan/schedule/${$root.season}/${$data[0].division}`}")
     .table-responsive
-      table.table-striped.table-sm 
+      table.table-striped.table-sm(style="width:100%")
         thead
           th(scope="row") #
           th(scope="row") Clan 
