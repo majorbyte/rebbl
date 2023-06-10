@@ -5,19 +5,15 @@ extends ../relayout.pug
 block content
   div(class="container")
     .col-12.justify-content-center
-      .btn-group.btn-group-toggle(data-bs-toggle='buttons')
-        label.btn.btn-primary.btn-sm.active(data-bind="click: () => show = 'all'")
-          input#option1(type='radio', name='options', autocomplete='off', value="all")
-          |  all
-        label.btn.btn-primary.btn-sm(data-bind="click: () => show = 'aliveActive'")
-          input#option2(type='radio', name='options', autocomplete='off' value="aliveActive")
-          |  alive and active team
-        label.btn.btn-primary.btn-sm(data-bind="click: () => show = 'alive'")
-          input#option2(type='radio', name='options', autocomplete='off' value="alive")
-          |  alive in retired team
-        label.btn.btn-primary.btn-sm(data-bind="click: () => show = 'retired'")
-          input#option3(type='radio', name='options', autocomplete='off' value="retired")
-          |  retired
+      .btn-group(role="group" aria-label="Basic radio toggle button group")
+        input.btn-check#option1(data-bind="checked:show" type='radio', name='options', autocomplete='off', value="all")
+        label.btn.btn-outline-primary.btn-sm(for="option1") all
+        input.btn-check#option2(data-bind="checked:show" type='radio', name='options', autocomplete='off' value="aliveActive")
+        label.btn.btn-outline-primary.btn-sm(for="option2") alive and active team
+        input.btn-check#option3(data-bind="checked:show" type='radio', name='options', autocomplete='off' value="alive")
+        label.btn.btn-outline-primary.btn-sm(for="option3") alive in retired team
+        input.btn-check#option4(data-bind="checked:show" type='radio', name='options', autocomplete='off' value="retired")
+        label.btn.btn-outline-primary.btn-sm(for="option4") retired
 
     table(class="table table-striped")
       thead(class="")
@@ -61,11 +57,11 @@ block content
       td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:actualLevel()")     
 
   div(class="modal" tabindex="-1" role="dialog" id="player-dialog")
-    // ko if: selectedPlayer !== null
-    //ko with:selectedPlayer
 
     div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
       div(class="modal-content")
+        //ko if: selectedPlayer !== null
+        //ko with:selectedPlayer
         div(class="modal-header")
           h3.modal-title( data-bind="text: name")
           a.highlight(style="float:right" target="_blank" data-bind="{attr:{href:`/rebbl/match/${lastMatch}`}}") Last Match
@@ -166,10 +162,10 @@ block content
                 td surfs
                 td(data-bind="text:stats.inflictedpushouts")      
                 td -
+        // /ko
+        // /ko
         div(class="modal-footer")
           button( type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bind="click:$root.selectedPlayer = null") Close
-    // /ko
-    // /ko
 
   div(class="modal" tabindex="-1" role="dialog" id="skill-dialog" style="z-index:2050")
     // ko if: activeSkill

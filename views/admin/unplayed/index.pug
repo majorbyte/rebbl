@@ -75,16 +75,18 @@ block scripts
         });
 
 
-        self.toggleLeague= function(l){
+        self.toggleLeague= function(l,c,e){
+          self.toggleButton(e);
           let i = self.filteredLeagues.indexOf(l);
           if( i === -1){
             self.filteredLeagues.push(l.replace(" 2", ""));
           } else {
             self.filteredLeagues.splice(i,1);  
           }
+          
         }
-        self.toggleDivision= function(d){
-          console.log(d)
+        self.toggleDivision= function(d,e){
+          self.toggleButton(e);
           let i = self.filteredDivisions.indexOf(d);
           if( i === -1){
             self.filteredDivisions.push(d);
@@ -92,13 +94,21 @@ block scripts
             self.filteredDivisions.splice(i,1);  
           }
         }
-        self.toggleRound= function(r){
+        self.toggleRound= function(r,e){
+          self.toggleButton(e);
           let i = self.filteredRounds.indexOf(r);
           if( i === -1){
             self.filteredRounds.push(r);
           } else {
             self.filteredRounds.splice(i,1);  
           }
+        }
+
+        self.toggleButton = function(e){
+          const toggle = new bootstrap.Button(e.target,{
+            toggle:true
+          });
+          toggle.toggle();          
         }
 
         self.refresh = async function(g){
@@ -126,31 +136,26 @@ block content
       i(class="fa fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
     // /ko
     div(class="row col-12")
-      div(class="btn-group-toggle" data-bs-toggle="buttons")
-        label(class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - Big O')" style="margin-right: 15px")
-          input(type="checkbox" checked autocomplete="off")       
-          span Big O
-        label(class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - GMan')" style="margin-right: 15px")
-          input(type="checkbox" checked autocomplete="off")       
-          span GMan
-        label(class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - REL')" style="margin-right: 15px")
-          input(type="checkbox" checked autocomplete="off")       
-          span REL
+      div(class="" role="group" aria-label="Basic checkbox toggle button group")
+        input.btn-check#BigO(type="checkbox" autocomplete="off")       
+        label(for="BigO" class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - Big O')" style="margin-right: 15px") Big O
+        input.btn-check#Gman(type="checkbox" autocomplete="off")       
+        label(for="Gman" class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - GMan')" style="margin-right: 15px") GMan
+        input.btn-check#REL(type="checkbox" autocomplete="off")       
+        label(for="REL" class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - REL')" style="margin-right: 15px")  REL
     br  
     div(class="row col-12")
-      div(class="btn-group-toggle" data-bs-toggle="buttons")
+      div(class="btn-group-toggle" data-toggle="buttons")
         // ko foreach: divisions
-        label(class="btn btn-outline-primary" data-bind="click: $root.toggleDivision")
-          input(type="checkbox" checked autocomplete="off")       
-          span(data-bind="text: $data") 
+        input.btn-check(type="checkbox" autocomplete="off" data-bind="attr:{id:'div_btn'+$index()}")
+        label(class="btn btn-outline-primary" data-bind="click: $root.toggleDivision, text: $data, attr:{for:'div_btn'+$index()}")
         // /ko
     br
     div(class="row col-12")
-      div(class="btn-group-toggle" data-bs-toggle="buttons")
+      div(class="btn-group-toggle" data-toggle="buttons")
         // ko foreach: rounds
-        label(class="btn btn-outline-primary" data-bind="click: $root.toggleRound")
-          input(type="checkbox" checked autocomplete="off")       
-          span(data-bind="text: $data") 
+        input.btn-check(type="checkbox" autocomplete="off" data-bind="attr:{id:'week_btn'+$index()}")
+        label(class="btn btn-outline-primary" data-bind="click: $root.toggleRound, text: $data, attr:{for:'week_btn'+$index()}") 
         // /ko        
     br
     div(class="row col-12")
