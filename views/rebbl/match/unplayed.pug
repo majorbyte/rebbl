@@ -7,11 +7,11 @@ block append vars
 
 block head
   - if (process.env.NODE_ENV === 'production')
-    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/tempusdominus.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/tempusdominus.min.css")
     link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
     link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
   - else
-    link(rel="stylesheet" href="/styles/tempusdominus.min.css")
+    link(rel="stylesheet" href="/styles/v2/tempusdominus.min.css")
     link(rel="stylesheet" href="/styles/fontawesome.min.css")
     link(rel="stylesheet" href="/styles/solid.min.css")
 
@@ -20,12 +20,12 @@ block scripts
     script(src="https://cdn.rebbl.net/scripts/moment.min.js")
     script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
     script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
-    script(src="https://cdn.rebbl.net/scripts/tempusdominus.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/tempusdominus.min.js")
   - else
     script(src="/scripts/moment.min.js")
     script(src="/scripts/moment-timezone.min.js")
     script(src="/scripts/moment-timezone-with-data-10-year-range.min.js")
-    script(src="/scripts/tempusdominus.min.js")
+    script(src="/scripts/v2/tempusdominus.min.js")
 
   - if(user)
     script.

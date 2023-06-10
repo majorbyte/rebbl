@@ -3,15 +3,15 @@ doctype html
 html(lang="en")
   head
     - if (process.env.NODE_ENV === 'production')
-      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.min.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
       link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
       link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
-      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/style.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/style.css")
     - else  
-      link(rel="stylesheet" href="/styles/bootstrap.min.css")
+      link(rel="stylesheet" href="/styles/v2/bootstrap.min.css")
       link(rel="stylesheet" href="/styles/fontawesome.min.css")
       link(rel="stylesheet" href="/styles/solid.min.css")
-      link(rel="stylesheet" href="/styles/style.css")
+      link(rel="stylesheet" href="/styles/v2/style.css")
     block head
   block vars
 
@@ -61,10 +61,10 @@ html(lang="en")
         p(style="padding:10px") &nbsp; <i class="fa-solid fa-copyright fa-flip-horizontal"></i> majorbyte 2023 &nbsp; &nbsp; &nbsp;
       - if (process.env.NODE_ENV === 'production')
         script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-        script(src="https://cdn.rebbl.net/scripts/popper.min.js")
-        script(src="https://cdn.rebbl.net/scripts/bootstrap.min.js")        
+        script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
+        script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")        
       - else
         script(src="/scripts/jquery-3.3.1.slim.min.js")
-        script(src="/scripts/popper.min.js")
-        script(src="/scripts/bootstrap.min.js")        
+        script(src="/scripts/v2/popper.min.js")
+        script(src="/scripts/v2/bootstrap.min.js")        
       block scripts
