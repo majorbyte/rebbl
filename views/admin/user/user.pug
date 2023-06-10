@@ -404,12 +404,11 @@ block content
             a(class="nav-item nav-link" id="nav-donations-tab" data-bs-toggle="tab" href="#nav-donations" role="tab" aria-controls="nav-donations" aria-selected="false") Donations
     div(class="tab-content" id="nav-tabContent")
       div(class="tab-pane fade show active" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab")
-        .row
-          -if (user && admin.roles && admin.roles.indexOf("superadmin")>-1 )
-            button.btn.mx-1(data-bind="click: toggleAdmin, css: roles.indexOf('admin') > -1 ? 'btn-success' : 'btn-secondary'  " ) admin
-          button.btn.mx-1(data-bind="click: toggleClanAdmin, css: roles.indexOf('clanadmin') > -1 ? 'btn-success' : 'btn-secondary'  " ) clan admin
-          button.btn.mx-1(data-bind="click: toggleClanLeader, css: roles.indexOf('clanleader') > -1 ? 'btn-success' : 'btn-secondary'  " ) clan leader
-          button.btn.mx-1(data-bind="click: toggleStreamer, css: roles.indexOf('streamer')  > -1? 'btn-success' : 'btn-secondary'  " ) streamer
+        -if (user && admin.roles && admin.roles.indexOf("superadmin")>-1 )
+          button.btn.mx-1(data-bind="click: toggleAdmin, css: roles.indexOf('admin') > -1 ? 'btn-success' : 'btn-secondary'  " ) admin
+        button.btn.mx-1(data-bind="click: toggleClanAdmin, css: roles.indexOf('clanadmin') > -1 ? 'btn-success' : 'btn-secondary'  " ) clan admin
+        button.btn.mx-1(data-bind="click: toggleClanLeader, css: roles.indexOf('clanleader') > -1 ? 'btn-success' : 'btn-secondary'  " ) clan leader
+        button.btn.mx-1(data-bind="click: toggleStreamer, css: roles.indexOf('streamer')  > -1? 'btn-success' : 'btn-secondary'  " ) streamer
         - let userAction = user ? "/admin/user/update" : "/admin/user/new"
         form(action=userAction method="post" class="container signup")
           div
@@ -417,7 +416,7 @@ block content
             input(type="text" id="reddit" name="reddit" data-bind="value: newReddit")
             // ko if: reddit() != newReddit()
             button(class="btn btn-success " data-bind="click: $root.changeReddit,clickBubble: false" title="Change Reddit Account" style="margin:0px 10px") 
-              i(class="fa fa-save")
+              i(class="fa-solid fa-save")
             label(style="display:inline-block") Update reddit account  
             // /ko
           div
@@ -460,7 +459,7 @@ block content
             img(data-bind="attr:{src: 'https://cdn.rebbl.net/' + filename }")
           div(class="col-1")
             button(class="btn btn-danger float-right" data-bind="click: $root.deleteTrophy,clickBubble: false") 
-              i(class="fa fa-ban")
+              i(class="fa-solid fa-ban")
 
         // /ko
         br
@@ -501,9 +500,9 @@ block content
               input(type="text" data-bind="value: end")
             div(class="col-1 no-gutter" style="padding:unset")   
               button(class="btn btn-success " data-bind="click: $root.saveWarning,clickBubble: false") 
-                i(class="fa fa-save")
+                i(class="fa-solid fa-save")
               button(class="btn btn-danger float-right" data-bind="click: $root.cancelWarning,clickBubble: false") 
-                i(class="fa fa-ban")
+                i(class="fa-solid fa-ban")
             // /ko
             // ko ifnot: editable
             div(class="col-7" data-bind="text:reason " )
@@ -567,9 +566,9 @@ block content
               input(type="text" data-bind="value: end")
             div(class="col-1 no-gutter" style="padding:unset")   
               button(class="btn btn-success " data-bind="click: $root.saveStrike,clickBubble: false") 
-                i(class="fa fa-save")
+                i(class="fa-solid fa-save")
               button(class="btn btn-danger float-right" data-bind="click: $root.cancelStrike,clickBubble: false") 
-                i(class="fa fa-ban")
+                i(class="fa-solid fa-ban")
             // /ko
             // ko ifnot: editable
             div(class="col-7" data-bind="text:reason " )
@@ -629,9 +628,9 @@ block content
               input(type="text" data-bind="value: end")
             div(class="col-1 no-gutter" style="padding:unset")   
               button(class="btn btn-success " data-bind="click: $root.saveBan,clickBubble: false") 
-                i(class="fa fa-save")
+                i(class="fa-solid fa-save")
               button(class="btn btn-danger float-right" data-bind="click: $root.cancelBan,clickBubble: false") 
-                i(class="fa fa-ban")
+                i(class="fa-solid fa-ban")
             // /ko
             // ko ifnot: editable
             div(class="col-7" data-bind="text:reason " )

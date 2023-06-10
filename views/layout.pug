@@ -2,8 +2,9 @@ include nav-link
 doctype html
 html(lang="en")
   head
-    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/font-awesome.css")
     - if (process.env.NODE_ENV === 'production')
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
+      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")        
       - if (user && user.useDark) 
         link(rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.dark.min.css")
         link(rel="stylesheet" href="https://cdn.rebbl.net/styles/style.dark.css")
@@ -11,6 +12,8 @@ html(lang="en")
         link(rel="stylesheet" href="https://cdn.rebbl.net/styles/bootstrap.min.css")
         link(rel="stylesheet" href="https://cdn.rebbl.net/styles/style.css")
     - else
+      link(rel="stylesheet" href="/styles/fontawesome.min.css")
+      link(rel="stylesheet" href="/styles/solid.min.css")
       - if (user && user.useDark) 
         link(rel="stylesheet" href="/styles/bootstrap.dark.min.css")
         link(rel="stylesheet" href="/styles/style.dark.css")
@@ -65,7 +68,7 @@ html(lang="en")
             img(src="https://cdn.rebbl.net/images/donate.png" title="Donate")  
           | &nbsp; &nbsp; &nbsp; 
           a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
-        p(style="padding:10px") &nbsp; <i class="fa fa-copyright fa-flip-horizontal"></i> majorbyte 2023 &nbsp; &nbsp; &nbsp;
+        p(style="padding:10px") &nbsp; <i class="fa-solid fa-copyright fa-flip-horizontal"></i> majorbyte 2023 &nbsp; &nbsp; &nbsp;
       - if (process.env.NODE_ENV === 'production')
         script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
         script(src="https://cdn.rebbl.net/scripts/popper.min.js")

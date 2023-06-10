@@ -239,9 +239,9 @@ block content
         h2(style="margin-left:50px;margin-top:10px") ANNOUNCEMENTS
         div(class="slider-frame")
           div(class="btn prev")
-            i(class="fa fa-chevron-left" style="position: absolute;top: 47%;")
+            i(class="fa-solid fa-chevron-left" style="position: absolute;top: 47%;")
           div(class="btn next")
-            i(class="fa fa-chevron-right" style="position: absolute;top: 47%;")
+            i(class="fa-solid fa-chevron-right" style="position: absolute;top: 47%;")
           div(class="slider-container")
             for announcement in data.announcements.sort((a,b) => a.date > b.date ? -1 : 1).splice(0,5)
               div(class="slide")

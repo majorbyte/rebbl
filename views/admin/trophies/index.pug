@@ -117,7 +117,7 @@ block content
   div(class="container")
     //ko if: loading
     div(class="row col-12 justify-content-center")
-      i(class="fa fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
+      i(class="fa-solid fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
     // /ko
     div(class="row col-12")
       div(class="col-4") Name
@@ -130,7 +130,7 @@ block content
       img(data-bind="attr:{src: 'https://cdn.rebbl.net/' + filename }")
       div(class="col-1")
         button(class="btn btn-danger float-right trophy-toggle" data-bind="click: $root.deleteTrophy,clickBubble: false") 
-          i(class="fa fa-ban")      
+          i(class="fa-solid fa-ban")      
     // /ko 
     div(class="row col-12")
       form(data-bind="submit: addTrophy" class="col-12")

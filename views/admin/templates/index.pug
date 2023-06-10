@@ -115,9 +115,9 @@ block content
         span(data-bind="text: title")
       .col-1
         button.btn-sm.btn-default(data-bind="click:$data.toggleEdit") 
-          i(class="fa fa-edit")
+          i(class="fa-solid fa-edit")
         button.btn-sm.btn-info(data-bind="click:$data.post") 
-          i(class="fa fa-reddit")
+          i(class="fa-solid fa-newspaper")
 
     // /ko
     //ko if: $data.editable
@@ -134,9 +134,9 @@ block content
         input(type="text" data-bind="value: title")
       .col-1
         button.btn-sm.btn-success(data-bind="click:$data.save")
-          i(class="fa fa-save")
+          i(class="fa-solid fa-save")
         button.btn-sm.btn-secondary(data-bind="click:$data.cancel")
-          i(class="fa fa-undo")
+          i(class="fa-solid fa-undo")
       .col-12
         textarea(data-bind="value: template" style="width:100%;" rows="14")
     // /ko

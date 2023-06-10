@@ -136,13 +136,13 @@ block scripts
       this.getIcon = function(data){
         switch(Number(data.type)){
           case 0:
-            return 'fa fa-user-circle-o'; 
+            return 'fa-solid fa-circle-user'; 
           case 1:
-            return 'fa fa-user-plus';
+            return 'fa-solid fa-user-plus';
           case 2:
-            return 'fa fa-user-o';
+            return 'fa-solid fa-user';
           case 3:
-            return 'fa fa-vcard-o';
+            return 'fa-solid fa-vcard';
         }
       }
 
@@ -150,13 +150,13 @@ block scripts
         const muted = self.filterRoles.length === 0 || self.filterRoles.includes(n) ? " text-success" : " text-muted";
         switch(n){
           case 0:
-            return 'fa fa-user-circle-o mx-1' + muted; 
+            return 'fa-solid fa-user-circle mx-1' + muted; 
           case 1:
-            return 'fa fa-user-plus mx-1' + muted;
+            return 'fa-solid fa-user-plus mx-1' + muted;
           case 2:
-            return 'fa fa-user-o mx-1' + muted;
+            return 'fa-solid fa-user mx-1' + muted;
           case 3:
-            return 'fa fa-vcard-o mx-1' + muted;
+            return 'fa-solid fa-vcard mx-1' + muted;
         }
       }
 
@@ -209,18 +209,18 @@ block content
         h1 Add user
         input(type="text" data-bind="value: coachName" placeholder="Coach name")
         div.btn.btn-default.btn-sm(data-bind="click: searchCoach") 
-          i.fa.fa-search
+          i.fa-solid.fa-search
         br
         ul.list-group
           //ko foreach: coaches
           li.list-group-item
             div.row.g-0
               div.col-12
-                i.fa(data-bind="text: ' ' + user")
+                span(data-bind="text: ' ' + user")
                 div.float-right.btn.btn-success.btn-sm(data-bind="click: $parent.addCommisioner" title="add commisioner") 
-                  i.fa.fa-user-o
+                  i.fa-solid.fa-user
                 div.float-right.btn.btn-success.btn-sm.mx-1(data-bind="click: $parent.addAdministrator" title="add administrator") 
-                  i.fa.fa-user-plus
+                  i.fa-solid.fa-user-plus
               //ko if: $data.alert !== ""
               div.col-12
                 div.alert.alert-danger.alert-dismissible.fade.show(role="alert")
@@ -240,10 +240,11 @@ block content
             tr
               //ko foreach: coaches
               td
-                i(data-bind="css: $root.getIcon($data), text: ' ' + coachName")
+                i(data-bind="css: $root.getIcon($data)")
+                span(data-bind="text: ' ' + coachName")
                 //ko if: type !== "0"
                 div.float-right.btn.btn-danger.btn-sm(data-bind="click: $root.remove") 
-                  i.fa.fa-gavel
+                  i.fa-solid.fa-gavel
                 // /ko
               // /ko
             // /ko

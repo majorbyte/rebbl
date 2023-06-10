@@ -33,7 +33,7 @@ block content
             input(type="text" v-bind:value="matchup.competitionName")
           .col-1  
             button(@click="removeMatchup(matchup)" class="btn btn-small btn-success" style="margin:0px 10px")
-              i(class="fa fa-trash")
+              i(class="fa-solid fa-trash")
 
       .col.my-1
         .btn.btn-primary(@click="create") Create competitions
@@ -47,7 +47,7 @@ block content
             .col {{coach.signupDate}}
             .col
               button(@click="excludeCoach(coach.coach)" class="btn btn-small btn-success" style="margin:0px 10px")
-                i(class="fa fa-gavel") 
+                i(class="fa-solid fa-gavel") 
 
 
 

@@ -157,23 +157,23 @@ block content
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
         a(class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" data-bind="click:selectCurrent") Current &nbsp;
           //ko if: loadingCurrent
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
         a(class="nav-item nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-profile" aria-selected="false" data-bind="click:selectPrevious") Previous &nbsp;
           //ko if: loadingPrevious
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
         a(class="nav-item nav-link" id="nav-contact-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-contact" aria-selected="false" data-bind="click:selectJourneymen") Star Players &amp; Loners &nbsp;
           //ko if: loadingJourneymen
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
         a(class="nav-item nav-link" id="nav-history-tab" data-bs-toggle="tab" href="#nav-history" role="tab" aria-controls="nav-history" aria-selected="false" data-bind="click:selectHistory") History &nbsp;
           //ko if: loadingHistory
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko
         a(class="nav-item nav-link" id="nav-matches-tab" data-bs-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches &nbsp;
           //ko if: loadingMatches
-          i(class="fa fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
+          i(class="fa-solid fa-spinner fa-spin" style="font-size:22px;color: #e67b00;")
           // /ko          
     div(class="tab-content" id="tabContent")
       div(class="tab-pane fade col-12 show active table-responsive-md" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
@@ -361,7 +361,7 @@ block content
         // /ko
         //ko if: assassinated
         span.badge.badge-danger(title="The player has been assassinated and cannot be targeted again, unless it's the result of a failed assassination attempt")
-          i.fa.fa-small.fa-crosshairs(style="font-size:24px") 
+          i.fa-solid.fa-small.fa-crosshairs(style="font-size:24px") 
         // /ko        
         // ko foreach: casualties_state
         //ko if: $data !== "BadlyHurt"

@@ -4,7 +4,7 @@ include nav
 block head
   style.
     .dropdown-toggle::after {display: none}
-    .dropdown-toggle::before {display: inline-block;padding: 0rem 0.5rem;font: normal normal normal 12px/1 FontAwesome;content: "\f078";vertical-align:0.5em;}
+    .dropdown-toggle::before {display: inline-block;padding: 0rem 0.5rem;font: normal normal normal 12px/1 'Font Awesome 6 Free';content: "\f078";vertical-align:0.5em;}
     .jiggle {-webkit-animation: jiggle 3s infinite;-moz-animation-duration: 3s;-moz-animation-name: jiggle;-moz-animation-iteration-count: infinite;-webkit-transform: rotate(0deg);-moz-transform: rotate(-0deg);}
 
     @-moz-keyframes jiggle {80% {-moz-transform: rotate(0deg);}84% {-moz-transform: rotate(3deg);}88% {-moz-transform: rotate(-3deg);}92% {-moz-transform: rotate(3deg);}96% {-moz-transform: rotate(-3deg);}100% {-moz-transform: rotate(0deg);}}
@@ -53,7 +53,7 @@ block body
     div(class="container-fluid")
       div(class="row")
         div(class="col-sm text-center text-sm-left m-2")
-          p(class="p-2") <i class="fa fa-copyright fa-flip-horizontal"></i> majorbyte 2023
+          p(class="p-2") <i class="fa-solid fa-copyright fa-flip-horizontal"></i> majorbyte 2023
         div(class="col-sm text-center m-2")
           a(class="m-1" href="/rebbl" target="_blank" title="REBBL home")
             img(src="https://cdn.rebbl.net/images/rebbl.png" )  

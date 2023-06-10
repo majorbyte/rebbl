@@ -15,7 +15,7 @@ table.table.table-striped.table-sm
     th.table-info team cost
     td.data(data-bind="css: isTeamCostValid() ? '' : 'choose-race'")
       // ko if: !isTeamCostValid()
-      i.fa.fa-info-circle.mx-1(data-bind="attr:{title:`you need to spend more, target is ${targetTeamCost()} GP`}")
+      i.fa-solid.fa-info-circle.mx-1(data-bind="attr:{title:`you need to spend more, target is ${targetTeamCost()} GP`}")
       // /ko
       span(data-bind="text: new Intl.NumberFormat('en-US').format(teamCost())")
   tr
