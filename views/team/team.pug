@@ -262,8 +262,8 @@ block content
         //ko foreach: matches.sort(function(a,b){return a.match.id < b.match.id ? 1 : -1;})
         //ko with: $data.match
         br
-        div(class="MatchRow MatchRow-match MatchRow-header" data-bind="text: `${competitionname} - ${hasOwnProperty('round') ? round || 0 : 0}`")
-        div(class="MatchRow MatchRow-match" )
+        div(class="MatchRow MatchRow-match MatchRow-header" data-bind="text: `${competitionname} - ${hasOwnProperty('round') ? round || 0 : 0}`"  style="width:unset")
+        div(class="MatchRow MatchRow-match" style="width:unset")
           a(data-bind="attr:{href: `/rebbl/match/${$parent.uuid}` }" class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" target="_blank")
             div(class="MatchRow-team")
               div(class="TeamLabel TeamLabel--reverse")
@@ -469,7 +469,7 @@ block scripts
     script(src="/scripts/knockout-es5.js")
 
   script.
-    const SKILLS = "skills.v3";
+    const SKILLS = "skills.v4";
     const SKILLDESCRIPTIONS = 'skillDescriptions.v2'
     class TeamModel{
       constructor(data){
@@ -952,7 +952,7 @@ block scripts
           model.skills = await response.json();
       
           if (storage)
-            storage.setItem(SKILLS, JSON.stringify(model.skillDescriptions));    
+            storage.setItem(SKILLS, JSON.stringify(model.skill));    
         }
       } else {
         model.skills = JSON.parse(skills);

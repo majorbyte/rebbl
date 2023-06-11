@@ -1210,7 +1210,7 @@ label { display: block; }
   background-color: #333333!important;
 }
 
-.player-out {
+.player-out , .player-out > td {
   background-color: #ab072566 !important;
 }
 

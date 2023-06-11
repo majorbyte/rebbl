@@ -224,7 +224,7 @@ block content
                     template(v-if="isPlayed(match) && hasEIC(match,0)")
                       button(type="button" class="btn btn-outline-info btn-sm active float-right" @click="loadEicPlayers(match, 0)"  data-bs-toggle="modal" data-bs-target="#eicUse")
                         | EIC      
-                a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
+                a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(style="width:unset" v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : '#'" target="_blank")
                   .MatchRow-team
                     .TeamLabel.TeamLabel--reverse
                       div: img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
@@ -255,7 +255,7 @@ block content
                         .text-info {{  match.opponents[1].team.name  }}
                 .col-2
                   template(v-if="match.counted === true && match.match_uuid !== null")
-                    button.m-1.btn.btn-success.btn-sm(type="button" @click="refreshMatch(match.match_uuid)") 
+                    button.btn.btn-success.btn-sm(type="button" @click="refreshMatch(match.match_uuid)") 
                       i(class="fa-solid fa-refresh")  
                   template(v-if="isPlayed(match) &&  hasEIC(match, 1)")
                     button.btn.btn-outline-info.btn-sm.active(type="button" @click="loadEicPlayers(match, 1)"  data-bs-toggle="modal" data-bs-target="#eicUse")
@@ -265,7 +265,7 @@ block content
                   template(v-if="!match.counted && match.match_uuid === null")
                     button.btn.btn-primary.btn-sm(type="button" @click="abandonMatch(match)") Abandon Game
                   template(v-if="match.counted === true && match.match_uuid !== null")
-                    button.m-1.btn.btn-primary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#clanScore" @click="selectedMatch=match") Change score
+                    button.btn.btn-primary.btn-sm(type="button" data-bs-toggle="modal" data-bs-target="#clanScore" @click="selectedMatch=match") Change score
         template(v-if="loadingMissingGames")        
           .row.col-12.g-0.justify-content-center
             .col-12.row.justify-content-center
