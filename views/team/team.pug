@@ -946,13 +946,13 @@ block scripts
       if (storage)    
         skills = localStorage.getItem(SKILLS);
 
-      if(!skills){
+      if(!skills || skills === "undefined"){
         let response = await fetch("/api/v2/bloodbowl/skills");
         if(response.ok){
           model.skills = await response.json();
       
           if (storage)
-            storage.setItem(SKILLS, JSON.stringify(model.skill));    
+            storage.setItem(SKILLS, JSON.stringify(model.skills));    
         }
       } else {
         model.skills = JSON.parse(skills);

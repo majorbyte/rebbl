@@ -1,14 +1,14 @@
+- console.dir(match)
 br
-div(class="MatchRow MatchRow-match MatchRow-header" data-bind="text: `${competitionname} - ${hasOwnProperty('round') ? round || 0 : 0}`")
-div(class="MatchRow MatchRow-match" )
-  a(href=`/bb3/match/${match.matchId}` class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" target="_blank")
-    div(class="MatchRow-team")
+.col-12
+  a.MatchRow-contentWrapper(href=`/bb3/match/${match.matchId}` class="" target="_blank")
+    .col-5
       div(class="TeamLabel TeamLabel--reverse")
         div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
         div(class="TeamLabel-info TeamLabel-info--noScore")
           div(class="TeamLabel-name ")=match.homeTeam.name
           div(class="TeamLabel-coach ")=match.homeGamer.name
-    div(class="MatchRow-status")
+    .col-2.text-center
       span(class="MatchStatus MatchStatus--transparent")
         span
           - if (match.homeScore > match.awayScore)
@@ -23,7 +23,9 @@ div(class="MatchRow MatchRow-match" )
             span(class="MatchStatus-score")=match.homeScore
             span(class="MatchStatus-score") -
             span(class="MatchStatus-score")=match.awayScore
-    div(class="MatchRow-team")
+      p.my-0
+        span.TeamLabel-coach=match.competition.name
+    .col-5
       div(class="TeamLabel")
         div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
         div(class="TeamLabel-info TeamLabel-info--noScore")
