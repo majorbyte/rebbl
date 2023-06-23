@@ -1,6 +1,6 @@
 .mx-1 
   span.mx-2(data-bind="text: name" id="clanName")
-  i.fa-solid.fa-user-circle-o.mx-1(title="clan leader") 
+  i.fa-solid.fa-user-circle.mx-1(title="clan leader") 
   span.mx-2(data-bind="text: leader" id="clanLeader")
   span.mx-2(data-bind="text: division" id="division")
   // ko if: !locked
@@ -60,7 +60,7 @@
             button.btn.btn-success.btn-sm.pull-right(title='save team', data-bind="click:$root.onSaveTeam, attr:{disabled: !isDirty()}")
               i.fa-solid.fa-save
             button.btn.btn-sm.btn-info.pull-right(title='Edit team' data-bind="click:$root.onEditTeam")
-              i.fa-solid.fa-pencil-square-o
+              i.fa-solid.fa-pencil-square
             // /ko  
             //ko if: $root.locked
             //ko if: $root.powers?.newBlood > 0

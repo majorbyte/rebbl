@@ -42,7 +42,7 @@
                   img(src="/images/glitch.png" style="width:24px;height:24px")
             - else if (hasDate)
               span(class="MatchStatus-score" style="color:#2F6FAD;font-size:2.3em;width:unset")  
-                i(class="fa-solid fa-clock-o" title=hasDate.date+" UTC")
+                i(class="fa-solid fa-clock" title=hasDate.date+" UTC")
             - if(!hasDate)
               span(class="MatchStatus-score") -
             span(class="MatchStatus-score")= match.opponents[1].team.score

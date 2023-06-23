@@ -1,10 +1,10 @@
 tr
   td.left-align
     // ko if: id > 0
-    i.fa-solid.fa-id-card-o(title="returning player")
+    i.fa-solid.fa-id-card(title="returning player")
     // /ko
     // ko if: id === 0
-    i.fa-solid.fa-user-circle-o(title="rookie player")
+    i.fa-solid.fa-user-circle(title="rookie player")
     // /ko
     span(data-bind='text:name')
 
@@ -57,14 +57,14 @@ tr
     .flex-container
       // ko if: (id > 0 && !player.dice) || id === 0
       button.btn.btn-danger.btn-sm.pull-right(title='Remove player', data-bind="click: $parent.removePlayer.bind($parent)")
-        i.fa-solid.fa-times-rectangle-o
+        i.fa-solid.fa-times-rectangle
       // /ko
       // ko if: !$parent.isNewBloodTeam && id > 0 && levelEligible && $parent.isPlayerEligable(player)
       button.btn.btn-sm.btn-success.pull-right(data-bind="click: $parent.showSkillPlayerModal.bind($parent)")
         img(src="https://cdn.rebbl.net/images/level.png" style="width: 20px;")
       // /ko
       button.btn.btn-sm.btn-info.pull-right(data-bind="click: player.toggleEdit")
-        i.fa-solid.fa-pencil-square-o
+        i.fa-solid.fa-pencil-square
     // /ko
 
 tr(data-bind="visible: player.visible")
