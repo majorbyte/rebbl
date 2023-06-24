@@ -48,14 +48,14 @@ block content
           div(class="col-6")
             template(v-for="power in Object.keys(schedule.home.clan.powers)")
               template(v-if="schedule.home.clan.powers[power] > 0")
-                button.m-1(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                button.m-1(type="button" class="btn btn-outline-info btn-sm" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powers.find(function(x){return x.key == power}).name" v-bind:data-bs-content="powers.find(function(x){return x.key == power}).description")
                   | {{powers.find(function(x){return x.key == power}).name}} 
                   span(class="badge text-bg-secondary") {{schedule.home.clan.powers[power]}}
           div(class="col-6")
             template(v-if="schedule.matches.length === 0  && powers.length > 0")
               template(v-for="power in Object.keys(schedule.away.clan.powers)")
                 template(v-if="schedule.away.clan.powers[power] > 0")
-                  button.m-1(type="button" class="btn btn-outline-info btn-sm" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                  button.m-1(type="button" class="btn btn-outline-info btn-sm" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powers.find(function(x){return x.key == power}).name" v-bind:data-bs-content="powers.find(function(x){return x.key == power}).description")
                     | {{powers.find(function(x){return x.key == power}).name}} 
                     span(class="badge text-bg-secondary") {{schedule.away.clan.powers[power]}}
         div(class="col-12 row justify-content-center")
@@ -94,7 +94,7 @@ block content
                   template(v-if="schedule.home.usedPowers")
                     template(v-for="power in Object.keys(schedule.home.usedPowers)")
                       template(v-for="t in schedule.home.usedPowers[power]")
-                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powers.find(function(x){return x.key == power}).name" v-bind:data-bs-content="powers.find(function(x){return x.key == power}).description")
                           | {{powers.find(function(x){return x.key == power}).name}} 
 
               .col
@@ -103,7 +103,7 @@ block content
                   template(v-if="schedule.away.usedPowers")
                     template(v-for="power in Object.keys(schedule.away.usedPowers)")
                       template(v-for="t in schedule.away.usedPowers[power]")
-                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-container="body" data-bs-toggle="popover" data-placement="right" v-bind:data-title="powers.find(function(x){return x.key == power}).name" v-bind:data-content="powers.find(function(x){return x.key == power}).description")
+                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powers.find(function(x){return x.key == power}).name" v-bind:data-bs-content="powers.find(function(x){return x.key == power}).description")
                           | {{powers.find(function(x){return x.key == power}).name}} 
           .col-12.row.justify-content-center
             h1 Matches
@@ -238,7 +238,7 @@ block scripts
           let response = await fetch(`/api/v2/clan/${path[path.length-4]}/${path[path.length-3]}/${path[path.length-2]}/${path[path.length-1]}`);
           this.schedule = await response.json();
           $(function () {
-            $('[data-bs-toggle="popover"]').popover({ template: '<div class="popover popoverFix" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'})
+            $('[data-bs-toggle="popover"]').popover({ customClass: 'popoverFix' })
           });
       }
     })
