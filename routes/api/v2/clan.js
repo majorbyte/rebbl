@@ -197,11 +197,11 @@ class ClanApi{
         cost: 0,
         quantitiy: 1,
         description: `Deadlines:
-        Call power & Submit ledger: Within 48 hours of game ending, and before next draft.
+        Locked into Clan Builder (i.e. fully validated): End of the round, Monday 23:59 UTC and in good time before the next draft.
         
         The clan leader (or nominated deputy) can use the New Blood power, thereby removing the target team from the league permanently and replacing it with a new team costing the same in gold as the original team did AT THE START OF THE SEASON. 
 
-        Clan leaders may use the New Blood button next to one of their teams in the Clan Builder tool to test and consider if they want to use New Blood or not. The power is only called once the Clan Leader locks in a fully validated team within 48 hours of the target team’s last game ending. The New Blood team follows the same rules for buying players and skills as any new team. The new team may be of a different race if so desired, but still must be unique to the clan. If the new team is the same race as the original team, a single player from the original team may be kept as a legacy player (retaining skills and injuries). 
+        Clan leaders may use the New Blood button next to one of their teams in the Clan Builder tool to test and consider if they want to use New Blood or not. The power is only called once the Clan Leader locks in a fully validated team no later than at the end of the round, i.e. Monday 23:59 UTC, but in good time before your next draft. This deadline will never be extended for any reason. Effectively, this makes playing games very late in the round more risky as it gives the clan less time to sort out a possible use of New Blood before the end of the round. On the other hand, games played earlier in the round will mean that clans have much more time to finalize and validate the new team, and also makes it much easier to know which of multiple teams in a round that New Blood is best used on.
 
         You cannot switch tiers upwards when using this power, if you move downwards a tier you DO NOT receive any tax rebate associated with that tier. You cannot use this power on a team that started the season under 1100 TV. After your New Blood team comes to the same price (in Gold Pieces) as the previous team, create the team in-game according to the New Blood tab and submit the new team ledger (plus team created in-game) to a division admin over PM for review. 
         `
