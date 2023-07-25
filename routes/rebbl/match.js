@@ -38,10 +38,16 @@ router.put('/unplayed/:match_id', util.checkAuthenticated, util.hasRole('streame
 });
 
 router.get('/:match_id', util.cache(600), async function(req, res, next){
-  let data = await leagueService.getMatchDetails(req.params.match_id);
-  if (!data) return  res.render('rebbl/match/notfound', data);
-  data.lonersValue = [await bloodBowlService.getLonerCost(data.match.teams[0].idraces), await bloodBowlService.getLonerCost(data.match.teams[1].idraces)];
+  let data = null;
+  try{
+    data = await leagueService.getMatchDetails(req.params.match_id);
+    if (!data) return res.render('rebbl/match/notfound', data);
+  }
+  catch(e){
+    return res.render('rebbl/match/notfound', data);
+  }
   
+  data.lonersValue = [await bloodBowlService.getLonerCost(data.match.teams[0].idraces), await bloodBowlService.getLonerCost(data.match.teams[1].idraces)];
 
   data.skills =[];
 
