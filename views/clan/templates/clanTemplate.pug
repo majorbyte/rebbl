@@ -42,7 +42,7 @@
         //ko with: $root.getMemberTeam($index())
         td 
           // ko if: $root.isClanLeader() || isTeamOwner()
-          input(data-bind="textInput: name, attr:{pattern:`\\\\u{5B}${$root.name}\\\\u{5D}.*S15`}" required maxlength="25")
+          input(data-bind="textInput: name, attr:{pattern:`\\\\u{5B}${$root.name}\\\\u{5D}.*S16`}" required maxlength="25")
           // /ko
           // ko if: !$root.isClanLeader() && !isTeamOwner()
           span(data-bind="text: name")
