@@ -167,7 +167,7 @@ class ClanBuildingApi{
     res.locals.clan = clan;
     res.locals.account = account;
 
-    const isMember = clan.leader === account.coach || clan.members.some(x => x.coach === account.coach);
+    const isMember = clan.leader === account.coach || clan.members?.some(x => x.coach === account.coach);
 
     if (!isMember) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
 
