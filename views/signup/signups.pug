@@ -18,7 +18,7 @@ block content
           p Not signed up? 
             a(href="/signup") Here &nbsp;
             | you go!
-        div
+        //div
           div(class="btn btn-outline-primary" id="greenhorn" data-bind="click: toggleGreenhorn, css: greenhorn() ? 'active':''") Greenhorn
 
         - let races = ["Amazon","Bretonnia","Chaos","Chaos Dwarf","Dark Elf","Dwarf","Goblin","Halfling","High Elf","Human","Khemri","Kislev","Lizardman","Necromantic","Norse","Nurgle","Ogre","Orc","Pro Elf","Skaven","Undead","Underworld","Vampire","Wood Elf"]
@@ -51,21 +51,21 @@ block content
               // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
               div(style="display: table-cell;" class="Standings-header" data-bind="text:d")
               // /ko
-              div(style="display: table-cell;" class="Standings-header" ) GHC
+              //div(style="display: table-cell;" class="Standings-header" ) GHC
             // ko foreach: {data: leagues, as: 'league'}
             div(class="TableRow" )
               div(style="display: table-cell;min-width:110px" data-bind="text:league" class="sticky_column")
               // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
               div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0)")
               // /ko
-              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.filteredUsers().reduce(function(p, c){ return c.league === league && c.greenHorn ? p+1 : p; }, 0)")
+              //div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.filteredUsers().reduce(function(p, c){ return c.league === league && c.greenHorn ? p+1 : p; }, 0)")
             // /ko
             div(class="TableRow")
               div(style="display: table-cell;min-width:110px" class="sticky_column") Total
               // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
               div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.saveType === d ? p+1 : p; }, 0)")
               // /ko
-              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
+              //div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
         div(style="grid-template-columns: auto;clear:both" class="table-responsive mb-3")
           div(class="table-striped TeamLabel-info")
             div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")

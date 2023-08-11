@@ -58,19 +58,19 @@ class Signup{
     
     //this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
 
-    //this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
+    this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
 
-    //this.router.post('/resign', util.ensureAuthenticated, this._resign);
+    this.router.post('/resign', util.ensureAuthenticated, this._resign);
   
-    //this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
+    this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
 
-    //this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
+    this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
 
     //this.router.get('/signup-greenhorn',util.ensureAuthenticated, this._signupGreenhornCup);
 
-    //this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll.bind(this));
+    this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll.bind(this));
 
-    //this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew.bind(this));
+    this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew.bind(this));
 
     //this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
 
@@ -81,12 +81,12 @@ class Signup{
     this.router.get('/signups', function(req,res){res.render('signup/signups', {url: ""});});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
 
-    //this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
-    this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
+    ////this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
+    //this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
     
     this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
-    //this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
-    //this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
+    this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
+    this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
     
     return this.router;
   }

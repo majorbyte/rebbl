@@ -127,7 +127,7 @@ block content
     div(class="row col-12")
       div(class="col-4" data-bind="text: name" )
       div(class="col-4" data-bind="text: title")
-      img(data-bind="attr:{src: 'https://cdn.rebbl.net/' + filename }")
+      img(style="width:unset" data-bind="attr:{src: 'https://cdn.rebbl.net/' + filename }")
       div(class="col-1")
         button(class="btn btn-danger float-right trophy-toggle" data-bind="click: $root.deleteTrophy,clickBubble: false") 
           i(class="fa-solid fa-ban")      
