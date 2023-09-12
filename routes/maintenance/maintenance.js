@@ -55,6 +55,7 @@ class Maintenance{
 
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       try{
+        ts.checkTickets();
         res.redirect('/');
       }
       catch(e){
@@ -174,7 +175,7 @@ class Maintenance{
       if (req.app.locals.cyanideEnabled){
         try{
           await maintenanceService.getRebblData(req.query.league);
-          //await ts.checkTickets();
+          await ts.checkTickets();
         }
         catch(e){
           console.dir(e);

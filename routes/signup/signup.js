@@ -81,7 +81,7 @@ class Signup{
     this.router.get('/signups', function(req,res){res.render('signup/signups', {url: ""});});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
 
-    ////this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
+    this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
     //this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
     
     this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));

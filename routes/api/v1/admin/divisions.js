@@ -14,11 +14,11 @@ const express = require("express")
   router.get("/", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
-      let data = await dataService.getSchedules({season:"season 22", round:1, league:{$in:["REBBL - GMan","REBBL - Big O", "REBBL - REL","REBBL - REL 2","REBBL - GMan 2"]}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
+      let data = await dataService.getSchedules({season:"season 23", round:1, league:{$in:["REBBL - GMan","REBBL - Big O", "REBBL - REL","REBBL - REL 2","REBBL - GMan 2"]}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
       let upstarts = await dataService.getSchedules({season:/season 23/i, round:1, league:"ReBBRL Upstarts"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
       let minors = await dataService.getSchedules({season:/season 17/i, round:1, league:"ReBBRL Minors League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
       let college = await dataService.getSchedules({season:/season 18/i, round:1, league:"ReBBRL College League"},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
-      let playoffs = await dataService.getSchedules({season:"season 22", round:1, league:"ReBBL Playoffs",competition:{$in:['Challenger\'s Cup XXI','REBBL Playoffs Season 21']}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
+      let playoffs = await dataService.getSchedules({season:"season 23", round:1, league:"ReBBL Playoffs",competition:{$in:['Challenger\'s Cup XXI','REBBL Playoffs Season 21']}},{projection:{_id: 0,league:1, competition:1, competition_id:1}});
 
       data = data.concat(upstarts,minors,college,playoffs);
 
