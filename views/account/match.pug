@@ -16,16 +16,8 @@ block head
 
 block scripts
   - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")  
-    script(src="https://cdn.rebbl.net/scripts/moment.min.js")
-    script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
-    script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
     script(src="https://cdn.rebbl.net/scripts/v2/tempusdominus.min.js")
   - else
-    script(src="/scripts/v2/bootstrap.min.js")  
-    script(src="/scripts/moment.min.js")
-    script(src="/scripts/moment-timezone.min.js")
-    script(src="/scripts/moment-timezone-with-data-10-year-range.min.js")
     script(src="/scripts/v2/tempusdominus.min.js")
 
 
