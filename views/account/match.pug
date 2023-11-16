@@ -14,7 +14,7 @@ block head
     link(rel="stylesheet" href="/styles/solid.min.css")
   
 
-block scripts
+block append scripts
   - if (process.env.NODE_ENV === 'production')
     script(src="https://cdn.rebbl.net/scripts/v2/tempusdominus.min.js")
   - else
