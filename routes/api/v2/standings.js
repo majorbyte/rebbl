@@ -10,6 +10,7 @@ class StandingsApi{
     this.router = express.Router({mergeParams: true});
   }
   routesConfig(){
+
     this.router.get('/coach/:id', util.cache(600), async function(req, res){
       let standings = await dataService.getStandings({id:Number(req.params.id),$or:[{admin:{$exists:false}},{admin:false}]});
       res.json(standings);

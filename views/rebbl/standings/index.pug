@@ -35,6 +35,8 @@ block content
         a(data-bind="text:$data[0].competition,attr:{href:$root.competitionUrl($data)}" class="highlight")
         a(data-bind="attr:{href:$root.casterUrl($data)}" class="highlight") &nbsp; 
           img(src="/images/obs.png" style="width: 25px;margin-top: -17px;")
+        a(data-bind="attr:{href:$root.graphUrl($data)}" class="highlight") &nbsp; 
+          i.fa.fa-line-chart(aria-hidden="true" style="font-size:32px")
       //ko if:$root.getAdmin($data[0].competitionId ? $data[0].competitionId:  0) !== ""
       span division admin:&nbsp;
       a(data-bind="text:$root.getAdmin($data[0].competitionId ? $data[0].competitionId:  0),attr:{href:$root.adminUrl($data[0].competitionId ? $data[0].competitionId : 0)}" class="highlight")
@@ -274,6 +276,9 @@ block scripts
       };
       casterUrl(comp){
         return `/caster/standings/${this.league}/${this.season}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
+      };
+      graphUrl(comp){
+        return `/graph/standings/${this.league}/${this.season}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
       };
 
       adminUrl(competitionId){

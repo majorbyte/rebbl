@@ -1,0 +1,76 @@
+extends ../../relayout.pug
+include ../../nav-link
+
+block content
+  .container 
+    .row
+      .col-12
+        canvas#myChart
+
+
+block append scripts 
+  script(src="https://cdn.jsdelivr.net/npm/chart.js")
+
+  script.
+    $(document).ready(async function(){
+      const ctx = document.getElementById('myChart');
+
+      const standings = !{JSON.stringify(standings)};
+
+      const labels = standings[0].progression.map((x,i) => i+1);
+      labels.push(labels.length+1);
+      const dataset = standings.map(x => {
+        
+        const image = new Image(48, 48); // Using optional size for image
+        // Load an image of intrinsic size 300x227 in CSS pixels
+        image.src = `https://cdn.rebbl.net/images/logo/256x256/logo_${x.logo.toLowerCase()}.png`;
+        
+        return {label: [[`   ${x.name}`],[`   ${x.team}`]], data: x.progression, pointStyle: image, borderColor: x.logoColor,
+      backgroundColor: x.logoColor,};
+      });
+
+      Chart.defaults.font.family= "Industry,Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif";
+      Chart.defaults.font.size= 14;
+      const plugin = {
+        id: 'customCanvasBackgroundColor',
+        beforeDraw: (chart, args, options) => {
+          const {ctx} = chart;
+          ctx.save();
+          ctx.globalCompositeOperation = 'destination-over';
+          ctx.fillStyle = options.color || '#99ffff';
+          ctx.fillRect(0, 0, chart.width, chart.height);
+          ctx.restore();
+        }
+      };
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: dataset
+        },
+        options: {
+          layout:{padding:{top:10}},
+          scales: {
+            y: {reverse: true}
+          },
+          elements: {
+            point: {
+              radius: (ctx) => (ctx.chart.data.datasets[ctx.datasetIndex].data.length - 1 === ctx.index ? 10 : 0),
+              hitRadius: 3,
+              hoverRadius: 5
+            }
+          },
+          plugins: {
+            customCanvasBackgroundColor: {color: 'white'},
+            tooltip: {enabled: false},
+            legend: {
+              position: 'right',
+              labels: {usePointStyle: true,padding:20,pointStyleWidth:18 ,textalign:'right'}
+            },
+            title: {display: true,text: "!{title}",padding: {top: 10,bottom: 30},font: {size: 24}}
+          }
+        },
+        plugins: [plugin],
+      });
+
+    });
