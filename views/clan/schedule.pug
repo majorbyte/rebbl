@@ -20,36 +20,46 @@ block content
           div(class="col-12 col-lg-6 col-xl-4 col-md-6 mx-auto table-striped" style="display:unset" )
             div(class="col-12 TableHeader col-md-11 col-xl-12 col-lg-12 col-sm-12" style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
               div(title="" class="Standings-details Standings-header highlight" ) Round {{row}}
-            template(v-for="col in numberOfRounds")
-              a(class="row col-12 g-0 col-md-11 col-xl-12 col-lg-12 col-sm-12" v-bind:href="'/clan/'+ schedule(row,col).season + '/' + schedule(row,col).competition + '/' + schedule(row,col).round + '/' + schedule(row,col).house" style="padding-left:15px;padding-right:15px")
+            template(v-for="col in numberOfRounds" )
+              a(:set="_schedule = schedule(row,col)" class="row col-12 g-0 col-md-11 col-xl-12 col-lg-12 col-sm-12" v-bind:href="'/clan/'+ _schedule.season + '/' + _schedule.competition + '/' + _schedule.round + '/' + _schedule.house" style="padding-left:15px;padding-right:15px")
                 .col.row.g-0
                   .col.text-start
-                    img(v-bind:src="'https://cdn.rebbl.net/' + schedule(row,col).home.logo" alt="" class="TeamLabelLogo" )
-                  .col.text-info {{ schedule(row,col).home.clan }}
-                .col.text-center
-                  template(v-if="schedule(row,col).home.win > schedule(row,col).away.win")
-                    span(class="is-winner") {{schedule(row,col).home.win}}
-                    span(class="") -
-                    span(class="") {{schedule(row,col).away.draw}}
-                    span(class="") -
-                    span(class="") {{schedule(row,col).away.win}}
-                  template(v-else-if="schedule(row,col).home.win < schedule(row,col).away.win")
-                    span(class="") {{schedule(row,col).home.win}}
-                    span(class="") -
-                    span(class="") {{schedule(row,col).away.draw}}
-                    span(class="") -
-                    span(class=" is-winner") {{schedule(row,col).away.win}}
-                  template(v-else)
-                    span(class="") {{schedule(row,col).home.win}}
-                    span(class="") -
-                    span(class="") {{schedule(row,col).away.draw}}
-                    span(class="") -
-                    span(class="") {{schedule(row,col).away.win}}
+                    img(v-bind:src="'https://cdn.rebbl.net/' + _schedule.home.logo" alt="" class="TeamLabelLogo" )
+                  .col.text-info {{ _schedule.home.clan }}
+                .col.text-center()
+                  template(v-if="_schedule.home.hasOwnProperty('win')")
+                    template(v-if="_schedule.home.win > _schedule.away.win")
+                      span(class="is-winner") {{_schedule.home.win}}
+                      span(class="") -
+                      span(class="") {{_schedule.away.draw}}
+                      span(class="") -
+                      span(class="") {{_schedule.away.win}}
+                    template(v-else-if="_schedule.home.win < _schedule.away.win")
+                      span(class="") {{_schedule.home.win}}
+                      span(class="") -
+                      span(class="") {{_schedule.away.draw}}
+                      span(class="") -
+                      span(class=" is-winner") {{_schedule.away.win}}
+                    template(v-else)
+                      span(class="") {{_schedule.home.win}}
+                      span(class="") -
+                      span(class="") {{_schedule.away.draw}}
+                      span(class="") -
+                      span(class="") {{_schedule.away.win}}
+                  template(v-if="_schedule.home.hasOwnProperty('score')")
+                    template(v-if="_schedule.home.score > _schedule.away.score")
+                      span(class="MatchStatus-score is-winner") {{_schedule.home.score}}
+                      span(class="MatchStatus-score") -
+                      span(class="MatchStatus-score") {{_schedule.away.score}}
+                    template(v-else-if="_schedule.home.score < _schedule.away.score")
+                      span(class="MatchStatus-score") {{_schedule.home.score}}
+                      span(class="MatchStatus-score") -
+                      span(class="MatchStatus-score is-winner") {{_schedule.away.score}}                  
                 .col.row.g-0
                   .col.text-end
-                    .text-info {{ schedule(row,col).away.clan }}
+                    .text-info {{ _schedule.away.clan }}
                   .col.text-end
-                    img(v-bind:src="'https://cdn.rebbl.net/' + schedule(row,col).away.logo" alt="" class="TeamLabelLogo")
+                    img(v-bind:src="'https://cdn.rebbl.net/' + _schedule.away.logo" alt="" class="TeamLabelLogo")
 block scripts
   - if (process.env.NODE_ENV === 'production')
     script(src="https://cdn.rebbl.net/scripts/vue-2.6.10.min.js")
@@ -75,6 +85,12 @@ block scripts
       methods:{
         schedule: function(r,c){
           const numberOfRounds = this.schedules.length % 5 === 0 ? 5 : 4;
+          if (r == 7 && c == 2) {
+            let s = this.schedules[(r - 1) * numberOfRounds + (c - 1)];
+            console.dir(s);
+            console.log(s.home.score > s.away.score);
+            console.log(s.home.score < s.away.score);
+          }
           return this.schedules[(r - 1) * numberOfRounds + (c - 1)];
         }
       },

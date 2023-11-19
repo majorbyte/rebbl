@@ -20,27 +20,50 @@ block content
       button.btn.mx-1.btn-sm.btn-success(v-if="schedule.redditLink" @click="openReddit") reddit
       template(v-if="message")
         .mx-1 {{message}}
-      div(class="row col-12 g-0")
-        div(class="col-5")
-          div(class="row col-12 border-bottom border-info pb-1")
-            div(class="col-10 media text-center d-flex flex-wrap align-items-center")
-              div(class="media-body")
-                h1 
-                  a(v-bind:href="`/clan/clan/season/${schedule.season}/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
-              img(v-bind:src="`https://cdn.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
-            div(class="col-2 text-end")
-              h1 {{schedule.home.win}}
-        div(class="col text-center")
-          h1 -&nbsp;&nbsp;&nbsp; {{schedule.home.draw }} &nbsp;&nbsp;&nbsp;- 
-        div(class="col-5")
-          div(class="row col-12 border-bottom border-info pb-1 ")
-            div(class="col-2 text-start")
-              h1  {{schedule.away.win}}
-            div(class="col-10 media text-center d-flex flex-wrap align-items-center")
-              img(v-bind:src="`https://cdn.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
-              div(class="media-body")
-                h1 
-                  a(v-bind:href="`/clan/clan/season/${schedule.season}/${schedule.away.clan.name}`") {{schedule.away.clan.name}}          
+      template(v-if="schedule.home.hasOwnProperty('score')")
+        div(class="row col-12 no-gutters")
+          div(class="col-5")
+            div(class="row col-12 border-bottom border-info pb-1")
+              div(class="col-10 media text-center d-flex flex-wrap align-items-center")
+                div(class="media-body")
+                  h1 
+                    a(v-bind:href="`/clan/clan/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
+                img(v-bind:src="`https://cdn.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
+              div(class="col-2 text-right")
+                h1 {{schedule.home.score}}
+          div(class="col text-center")
+            h1 -
+          div(class="col-5")
+            div(class="row col-12 border-bottom border-info pb-1 ")
+              div(class="col-2 text-left")
+                h1  {{schedule.away.score}}
+              div(class="col-10 media text-center d-flex flex-wrap align-items-center")
+                img(v-bind:src="`https://cdn.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
+                div(class="media-body")
+                  h1 
+                    a(v-bind:href="`/clan/clan/${schedule.away.clan.name}`") {{schedule.away.clan.name}}   
+      template(v-else)
+        div(class="row col-12 g-0")
+          div(class="col-5")
+            div(class="row col-12 border-bottom border-info pb-1")
+              div(class="col-10 media text-center d-flex flex-wrap align-items-center")
+                div(class="media-body")
+                  h1 
+                    a(v-bind:href="`/clan/clan/season/${schedule.season}/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
+                img(v-bind:src="`https://cdn.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
+              div(class="col-2 text-end")
+                h1 {{schedule.home.win}}
+          div(class="col text-center")
+            h1 -&nbsp;&nbsp;&nbsp; {{schedule.home.draw }} &nbsp;&nbsp;&nbsp;- 
+          div(class="col-5")
+            div(class="row col-12 border-bottom border-info pb-1 ")
+              div(class="col-2 text-start")
+                h1  {{schedule.away.win}}
+              div(class="col-10 media text-center d-flex flex-wrap align-items-center")
+                img(v-bind:src="`https://cdn.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
+                div(class="media-body")
+                  h1 
+                    a(v-bind:href="`/clan/clan/season/${schedule.season}/${schedule.away.clan.name}`") {{schedule.away.clan.name}}          
       template(v-if="!schedule.drafted && powers.length > 0")          
         div(class="col-12 row")
           div(class="col-12 row  justify-content-center")
@@ -48,15 +71,15 @@ block content
           div(class="col-6")
             template(v-for="power in Object.keys(schedule.home.clan.powers)")
               template(v-if="schedule.home.clan.powers[power] > 0")
-                button.m-1(type="button" class="btn btn-outline-info btn-sm" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powers.find(function(x){return x.key == power}).name" v-bind:data-bs-content="powers.find(function(x){return x.key == power}).description")
-                  | {{powers.find(function(x){return x.key == power}).name}} 
+                button.m-1(type="button" class="btn btn-outline-info btn-sm" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powerName(power)" v-bind:data-bs-content="powerDescription(power)")
+                  | {{powerName(power)}} 
                   span(class="badge text-bg-secondary") {{schedule.home.clan.powers[power]}}
           div(class="col-6")
             template(v-if="schedule.matches.length === 0  && powers.length > 0")
               template(v-for="power in Object.keys(schedule.away.clan.powers)")
                 template(v-if="schedule.away.clan.powers[power] > 0")
-                  button.m-1(type="button" class="btn btn-outline-info btn-sm" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powers.find(function(x){return x.key == power}).name" v-bind:data-bs-content="powers.find(function(x){return x.key == power}).description")
-                    | {{powers.find(function(x){return x.key == power}).name}} 
+                  button.m-1(type="button" class="btn btn-outline-info btn-sm" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powerName(power)" v-bind:data-bs-content="powerDescription(power)")
+                    | {{powerName(power)}} 
                     span(class="badge text-bg-secondary") {{schedule.away.clan.powers[power]}}
         div(class="col-12 row justify-content-center")
           div(class="col-12 row justify-content-center")
@@ -94,8 +117,8 @@ block content
                   template(v-if="schedule.home.usedPowers")
                     template(v-for="power in Object.keys(schedule.home.usedPowers)")
                       template(v-for="t in schedule.home.usedPowers[power]")
-                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powers.find(function(x){return x.key == power}).name" v-bind:data-bs-content="powers.find(function(x){return x.key == power}).description")
-                          | {{powers.find(function(x){return x.key == power}).name}} 
+                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powerName(power)" v-bind:data-bs-content="powerDescription(power)")
+                          | {{powerName(power)}} 
 
               .col
               .col-5
@@ -103,8 +126,8 @@ block content
                   template(v-if="schedule.away.usedPowers")
                     template(v-for="power in Object.keys(schedule.away.usedPowers)")
                       template(v-for="t in schedule.away.usedPowers[power]")
-                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powers.find(function(x){return x.key == power}).name" v-bind:data-bs-content="powers.find(function(x){return x.key == power}).description")
-                          | {{powers.find(function(x){return x.key == power}).name}} 
+                        button.m-1.btn.btn-outline-info.btn-sm(type="button" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" v-bind:data-bs-title="powerName(power)" v-bind:data-bs-content="powerDescription(power)")
+                          | {{powerName(power)}} 
           .col-12.row.justify-content-center
             h1 Matches
           template(v-for="match in schedule.matches")
@@ -220,6 +243,14 @@ block scripts
         },
         openReddit: function(){
           window.open(`https://reddit.com${this.schedule.redditLink}`, '_blank');
+        },
+        powerName:function(name){
+          const power = this.powers.find(function(x){return x.key == name});
+          return power ? power.name : name.replace(/([A-Z])(?=[A-Z][a-z])|([a-z])(?=[A-Z])/g,'$& ');
+        },
+        powerDescription:function(name){
+          const power = this.powers.find(function(x){return x.key == name});
+          return power ? power.description : name.replace(/([A-Z])(?=[A-Z][a-z])|([a-z])(?=[A-Z])/g,'$& ');
         }
 
       },      
