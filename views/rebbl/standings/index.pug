@@ -31,11 +31,11 @@ block content
     // ko foreach: {data: Object.keys(standings).sort($root.collator.compare)}
     // ko with: $root.standings[$data] 
     div
-      h2(data-bind="attr:{id:$data[0].competition}")
+      .d-flex.h2(data-bind="attr:{id:$data[0].competition}")
         a(data-bind="text:$data[0].competition,attr:{href:$root.competitionUrl($data)}" class="highlight")
         a(data-bind="attr:{href:$root.casterUrl($data)}" class="highlight") &nbsp; 
           img(src="/images/obs.png" style="width: 25px;margin-top: -17px;")
-        a(data-bind="attr:{href:$root.graphUrl($data)}" class="highlight") &nbsp; 
+        a(data-bind="attr:{href:$root.graphUrl($data)}" class="highlight" style="margin-top:-4px") &nbsp; 
           i.fa.fa-line-chart(aria-hidden="true" style="font-size:32px")
       //ko if:$root.getAdmin($data[0].competitionId ? $data[0].competitionId:  0) !== ""
       span division admin:&nbsp;

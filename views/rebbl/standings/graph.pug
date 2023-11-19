@@ -17,8 +17,8 @@ block append scripts
 
       const standings = !{JSON.stringify(standings)};
 
-      const labels = standings[0].progression.map((x,i) => i+1);
-      labels.push(labels.length+1);
+      const labels = standings[0].progression.map((x,i) => `week ${i+1}`);
+      labels.push(null);
       const dataset = standings.map(x => {
         
         const image = new Image(48, 48); // Using optional size for image
@@ -67,7 +67,7 @@ block append scripts
               position: 'right',
               labels: {usePointStyle: true,padding:20,pointStyleWidth:18 ,textalign:'right'}
             },
-            title: {display: true,text: "!{title}",padding: {top: 10,bottom: 30},font: {size: 24}}
+            title: {display: true,text: "Standings per week: !{title}",padding: {top: 10,bottom: 30},font: {size: 24}}
           }
         },
         plugins: [plugin],
