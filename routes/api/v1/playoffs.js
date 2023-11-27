@@ -1,9 +1,22 @@
 'use strict';
 const db = require('../../../lib/LeagueService.js')
+  , dataService = require("../../../lib/DataService.js").rebbl
   , datingService = require("../../../lib/DatingService.js")
   , util = require('../../../lib/util.js')
   , express = require('express')
   , router = express.Router({mergeParams: true});
+
+
+router.get('/seasons', util.cache(60*60*24), async function(req,res){
+  try{  
+    const seasons = await dataService.getSeasons({league:'ReBBL Playoffs'});
+    res.json(seasons);
+  }
+  catch (ex){
+    console.error(ex);
+    res.status(500).send('Something something error');
+  }
+});
 
 router.get('/:division', util.cache(10*60), async function(req,res) {
   let data = {matches: null, league: req.params.league, competition: req.params.division, round:1};

@@ -2,7 +2,7 @@ body{padding-top:82px !important;}
 #bracket {overflow:hidden;background-color:rgba(225,225,225,0.9);font-size: 16px;padding-bottom: 40px}
 .container-ko {margin: 0 25px;display:block;display: -webkit-box;display: -moz-box;display: -ms-flexbox;display: -webkit-flex;display: -webkit-flex;display: flex;-webkit-flex-direction:row;flex-direction: row;}
 .split {display:block;float:left;display: -webkit-box;display: -moz-box;display: -ms-flexbox;display: -webkit-flex;display:flex;width: 42%;-webkit-flex-direction:row;-moz-flex-direction:row;flex-direction:row;color:#0e0e0e;}
-.champion {float:left;display:block;width: 16%;-webkit-flex-direction:row;flex-direction:row;-webkit-align-self:center;align-self:center;margin: -229px 16px 0px 16px;text-align: center;} 
+.champion {float:left;display:block;width: 16%;-webkit-flex-direction:row;flex-direction:row;-webkit-align-self:center;align-self:center;margin: -500px 16px 0px 16px;text-align: center;} 
 .champion i {color: #ceb234; font-size: 85px;padding: 10px 0; }
 .round {display:block;float:left;display: -webkit-box;display: -moz-box;display: -ms-flexbox;display: -webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;width:25.0333%;}
 .split-one .round {margin: 0 4px 0 0;}
