@@ -44,13 +44,13 @@ class Signup{
   }
 
   routesConfig(){
-   /*
+   
    this.router.get('/', async function(req, res){
       res.render('signup/closed');
    });
-   */
+   
 
-    this.router.get('/', util.ensureAuthenticated, this._getStatus);
+   // this.router.get('/', util.ensureAuthenticated, this._getStatus);
 
     this.router.get('/discord', util.ensureAuthenticated, this._authDiscord);
     this.router.get('/nodiscord', util.ensureAuthenticated, this._noDiscord);
@@ -59,7 +59,7 @@ class Signup{
     
     //this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
 
-    this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
+    /*this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
 
     this.router.post('/resign', util.ensureAuthenticated, this._resign);
   
@@ -84,7 +84,7 @@ class Signup{
     this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
     this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
     this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
-    
+    */
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
   
     this.router.get('/signups', function(req,res){res.render('signup/signups', {url: ""});});
