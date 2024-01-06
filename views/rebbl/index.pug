@@ -111,10 +111,12 @@ block scripts
         $(".slider-container").each(init)
         controls();
 
+
+
         if (!autoScroll){
-          $('.carousel').carousel({interval:false});
+          $('.carousel').carousel({interval:false, ride:false});
         } else{
-          $('.carousel').carousel({interval:10000});
+          $('.carousel').carousel({interval:10000, ride:'carousel'});
         }
         $("#scroll-switch").prop("checked",autoScroll);
     });
@@ -224,9 +226,9 @@ block scripts
       storage.setItem("autoscroll",autoScroll);
       $('.carousel').carousel('dispose');
       if(autoScroll){
-        $('.carousel').carousel({interval:10000});
+        $('.carousel').carousel({interval:10000, ride:'carousel'});
       } else{
-        $('.carousel').carousel({interval:false});
+        $('.carousel').carousel({interval:false, ride:false});
       }
     }
 
@@ -266,7 +268,7 @@ block content
         -let urlMain = company === "" ? "rebbl" : company
         a(href=`/${urlMain}`)
           h2(style="margin-left:50px;margin-top:10px")= titleMain
-        div( id="leftgames" class="col-12 carousel slide" data-bs-ride="carousel")
+        div( id="leftgames" class="col-12 carousel slide" )
           .carousel-indicators(style="bottom:unset;top:0px;")
             button(type="button" data-bs-target="#leftgames" data-bs-slide-to="0" class="active")
             button(type="button" data-bs-target="#leftgames" data-bs-slide-to="1" )
@@ -340,7 +342,7 @@ block content
         - let urlFix = company === "" ? "rebbrl" : company
         a(href=`/${urlFix}`)
           h2(style="margin-left:50px;margin-top:10px")= titleSide      
-        div( id="rightgames" class="col-12 carousel slide" data-bs-ride="carousel")
+        div( id="rightgames" class="col-12 carousel slide" )
           .carousel-indicators(style="bottom:unset;top:0px;")
             button(type="button" data-bs-target="#rightgames" data-bs-slide-to="0" class="active" )
             button(type="button" data-bs-target="#rightgames" data-bs-slide-to="1")
@@ -423,7 +425,7 @@ block content
       div(class="row")
         div(class="col-lg-6 col-md-12 g-0")
           h2(style="margin-left:50px;margin-top:10px") UPCOMING GAMES
-          div( id="upcoming" class="col-12 carousel slide" data-bs-ride="carousel")
+          div( id="upcoming" class="col-12 carousel slide" )
             - var l = Math.floor(data.upcoming.length/5) +1;
             .carousel-indicators(style="bottom:unset;top:0px;")
               - for(var x=0; x<l;x++)

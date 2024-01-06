@@ -154,7 +154,7 @@ block append scripts
         let time = $("#matchTime").text();
         $("#matchTime").text(moment.tz(time,"UTC").tz(moment.tz.guess()).format('YYYY-MM-DD HH:mm ZZ')); 
         
-        $('.carousel').carousel({interval:false});
+        $('.carousel').carousel({interval:false, ride:false});
       });  
 block content
   for match in matches
@@ -253,7 +253,7 @@ block content
           div(class="col-4 timezone" )= match.opponents[1].coach.timezone
             div(class="time")
       .d-sm-none
-        div.col-12.carousel.slide( id="leftgames"+match.contest_id data-bs-ride="carousel")
+        div.col-12.carousel.slide( id="leftgames"+match.contest_id)
           ol.carousel-indicators(style="bottom:unset;top:0px;")
             li.active(data-bs-target="#leftgames"+match.contest_id data-slide-to="0")
             li(data-bs-target="#leftgames"+match.contest_id data-slide-to="1" )
