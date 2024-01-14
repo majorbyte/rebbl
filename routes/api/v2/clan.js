@@ -27,7 +27,7 @@ class ClanApi{
       let clan = await clanService.getClanByUser(account.coach); 
       if (!clan) clan = await clanService.getClanByLeader(account.coach);
       const leader = await accountService.hasRole(req.user.name, "clanleader");
-      res.json({ clan:clan, leader:leader && account.coach.toLowerCase() === clan.leader?.toLowerCase() } );
+      res.json({ clan:clan, leader:leader && account.coach.toLowerCase() === clan?.leader?.toLowerCase() } );
     });
 
     this.router.use("/build", new clanBuildingApi().routesConfig());
@@ -320,7 +320,7 @@ class ClanApi{
 
     this.router.get("/data", util.ensureAuthenticated, util.hasRole("admin"),async (req,res) => {
       
-      const schedules = await dataService.getSchedules({league:"clan", season:"season 16"});
+      const schedules = await dataService.getSchedules({league:"clan", season:"season 17"});
       
       const data = [];
 
