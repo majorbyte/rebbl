@@ -28,7 +28,7 @@ block navigation
 
 block content
   div(class=`container`)
-    // ko foreach: {data: Object.keys(standings).sort($root.collator.compare)}
+    // ko foreach: {data: $root.competitions}
     // ko with: $root.standings[$data] 
     div
       .d-flex.h2(data-bind="attr:{id:$data[0].competition}")
@@ -248,6 +248,7 @@ block scripts
         this.season = "";
         this.seasons = [];
         this.standings = {};
+        this.competitions = [];
         this.schedules = [];
         this.tickets = [];
         this.admins = [];
@@ -312,6 +313,7 @@ block scripts
         if (season) model.season = season;
 
         this.standings={};
+        this.competitions=[];
         this.loadTickets();
         this.loadAdmins();
         this.schedules = [];
@@ -322,6 +324,13 @@ block scripts
           let data  = await response.json();
           data = data.map(x => new StandingsModel(x));
           data = this._groupBy(data,"competition");
+
+          this.competitions = Object.keys(data).sort((a,b) => {
+            let k1 = a.split(" ").slice(-1);
+            let k2 = b.split(" ").slice(-1);
+
+            return this.collator.compare(k1,k2);
+          })
 
           this.standings=data;
         }    

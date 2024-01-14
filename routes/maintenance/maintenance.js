@@ -282,7 +282,7 @@ class Maintenance{
 
       seasons.map(season => {
         season.leagues.map(league =>{
-          league.divisions.map(division => standingsService.updateStandings(league.name,division));
+          league.divisions.map(division => standingsService.updateStandings(season.name, league.name,division));
 
           cache.keys().map(key => {
             if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
