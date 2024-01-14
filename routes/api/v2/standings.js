@@ -68,13 +68,14 @@ class StandingsApi{
           if (/s\d+/i.test(x.competition)){ 
             x.competition = x.competition.replace(/s(\d+)/i,'Season $1');
           }
-          if (x.competition.indexOf('/') > -1){
+          /*if (x.competition.indexOf('/') > -1){
             x.competitionUrl =  x.competitionId;
           } else
           {
             x.competitionUrl = x.competition;
             
-          }
+          }*/
+          x.competitionUrl = x.competitionId;
         });
         standings =standings.sort((a,b) => {
           if (a.competition > b.competition) return 1;
@@ -106,7 +107,7 @@ class StandingsApi{
     });
 
     this.router.get('/:league/:season/:competition/tickets', util.cache(300), async function(req, res){
-      let tickets = configurationService.getCompetitionTickets(req.params.league, req.params.competition);
+      let tickets = configurationService.getCompetitionTickets(req.params.season, req.params.league, req.params.competition);
       res.json(tickets || {playoffs:0, challenger:0});
     });
 

@@ -70,6 +70,12 @@ class Division{
       data.matches[prop].map(m => ids.push(m.contest_id));
     }
   
+    try {
+      data.competition = data.matches[1][0].competition;
+    }
+    catch{}
+    finally{}
+
     data.dates = await datingService.search({"id":{$in:ids}});
   
     if(league.toLowerCase() === "xscessively elfly league"){

@@ -82,7 +82,7 @@ class TextRoutes{
       let page = this.pages.find(x => x.number === number);
       if (!page) page = this.pages.find(x => x.number > number);
       let data = {league:page.league, competition:page.division, season:page.season};
-      data.tickets = config.getCompetitionTickets(page.league, page.division);
+      data.tickets = config.getCompetitionTickets(null, page.league, page.division);
       const standings = await dataService.getStandings({
         'league':new RegExp(`^${page.league}`,'i'), 
         'season':new RegExp(`^${page.season}`,'i'), 

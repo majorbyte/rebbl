@@ -43,14 +43,21 @@ class Standings{
         return name.splice(-1,1);
       };
 
-      let data = {company:req.params.company, league:req.params.league, competition:req.params.competition, season:req.params.season};
+      let competition = req.params.competition;
+      if (!isNaN(competition)){
+        const comp = await dataService.getSchedule({season:req.params.season, league:req.params.league, competition_id: Number(competition)});
+        competition = comp.competition;
+      }
+
+      let data = {company:req.params.company, league:req.params.league, competition:competition, season:req.params.season};
       if(data.company ==='caster'){
         try{
-          data.tickets = configurationService.getCompetitionTickets(req.params.league, req.params.competition);
+
+          data.tickets = configurationService.getCompetitionTickets(data.season, data.league, data.competition);
           const standings = await dataService.getStandings({
-            'league':new RegExp(`^${req.params.league}$`,'i'), 
-            'season':new RegExp(`^${req.params.season}$`,'i'), 
-            'competition':new RegExp(`^${req.params.competition}$`,'i')
+            'league':new RegExp(`^${data.league}$`,'i'), 
+            'season':new RegExp(`^${data.season}$`,'i'), 
+            'competition':new RegExp(`^${data.competition}$`,'i')
           });
           data.standings = [];
           for(const standing of standings){
@@ -76,9 +83,9 @@ class Standings{
       } else if (data.company === 'graph'){
         try{
           const standings = await dataService.getStandings({
-            'league':new RegExp(`^${req.params.league}$`,'i'), 
-            'season':new RegExp(`^${req.params.season}$`,'i'), 
-            'competition':new RegExp(`^${req.params.competition}$`,'i')
+            'league':new RegExp(`^${data.league}$`,'i'), 
+            'season':new RegExp(`^${data.season}$`,'i'), 
+            'competition':new RegExp(`^${data.competition}$`,'i')
           });
 
           data.standings = standings.map(x => ({

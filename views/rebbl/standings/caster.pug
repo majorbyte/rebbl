@@ -95,7 +95,7 @@ block body
         each st,index in standings[x]
           .border
             if (x === 0)
-              .standing(class = (tickets ? index < tickets.playoffs ? 'playoffs' : (index < tickets.challenger ? 'challenger' : '') : '' ) )
+              .standing(class = (tickets ? index < tickets.playoffs ? 'playoffs' : (index < tickets.challenger && standings[x].length >= tickets.challenger ? 'challenger' : '') : '' ) )
                 .unskew
                   p= `${st.win}-${st.draw}-${st.loss}`
             else

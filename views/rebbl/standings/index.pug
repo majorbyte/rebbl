@@ -273,13 +273,13 @@ block scripts
 
       competitionUrl(comp){
         
-        return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
+        return `/!{company}/${this.league}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition_id)}`;
       };
       casterUrl(comp){
-        return `/caster/standings/${this.league}/${this.season}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
+        return `/caster/standings/${this.league}/${this.season}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition_id)}`;
       };
       graphUrl(comp){
-        return `/graph/standings/${this.league}/${this.season}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition)}`;
+        return `/graph/standings/${this.league}/${this.season}/${encodeURIComponent(comp[0].competitionUrl || comp[0].competition_id)}`;
       };
 
       adminUrl(competitionId){
@@ -326,8 +326,8 @@ block scripts
           data = this._groupBy(data,"competition");
 
           this.competitions = Object.keys(data).sort((a,b) => {
-            let k1 = a.split(" ").slice(-1);
-            let k2 = b.split(" ").slice(-1);
+            let k1 = a.split(" ").slice(-1)[0];
+            let k2 = b.split(" ").slice(-1)[0];
 
             return this.collator.compare(k1,k2);
           })
