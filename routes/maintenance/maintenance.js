@@ -99,7 +99,7 @@ class Maintenance{
     this.router.get('/scheduleClan' , util.verifyMaintenanceToken, async function(req,res){
       const week = util.getISOWeek();
 
-      if (week % 2 === 1) {
+      if (week % 2 === 0) {
         const template = await dataService.getScheduleTemplate({key:"CLAN"});
         if (template && template.active){
           let date = new Date(Date.now());
@@ -238,6 +238,24 @@ class Maintenance{
           console.dir(e);
           loggingService.error(e);
         }  
+        try{
+          let seasons = [configurationService.getActiveSeason()];
+    
+          seasons.map(season => {
+            season.leagues.map(league =>{
+              league.divisions.map(division => standingsService.updateStandings(season.name, league.name,division));
+    
+              cache.keys().map(key => {
+                if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
+                  cache.del(key);
+                }
+              });
+            });
+          });          
+        }
+        catch(e){
+          console.dir(e);
+        }
       }
     };
 

@@ -14,7 +14,7 @@ block content
   div(class="container navcontainer" data-index="0" id="app")
     template(v-if="schedule !== null")
       h1.u-no-text-transform.my-0 Round {{schedule.round || ''}} - house {{schedule.house || ''}}
-      button.btn.mx-1.btn-sm.btn-secundary(@click="openDraft" v-if="schedule.drafted") draft
+      button.btn.mx-1.btn-sm.btn-primary(@click="openDraft" v-if="schedule.drafted") draft
       button.btn.mx-1.btn-sm.btn-success(@click="openDraft" v-if="!schedule.drafted") draft
       button.btn.mx-1.btn-sm.btn-success(v-if="schedule.drafted && schedule.unstarted && schedule.unstarted.length > 0" @click="startGames") start games
       button.btn.mx-1.btn-sm.btn-success(v-if="schedule.redditLink" @click="openReddit") reddit
