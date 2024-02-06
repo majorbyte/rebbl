@@ -1,0 +1,57 @@
+extends ../no-cache-sub-relayout.pug
+include ../nav-link
+
+block vars
+  - company = company || "bb3"
+  - let options = {company: company || "bb3"}
+
+block head
+  style.
+    h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
+    .card{width: 12rem;}
+
+block content
+  div.Background.u-bottomPadding--large.u-topPadding--medium
+    div.container.navcontainer
+      h1(class="u-no-text-transform u-verticalMargin--xx-small")= league + " " + competition
+      div(class="League-Standings")    
+        - let round = 0
+        each schedule, x in schedules.sort(function(a,b){return a.name > b.name})
+          - let url = `/${company}/match/${ schedule.matchId }`
+
+          - if (round != schedule.round)
+            - round = schedule.round
+            br
+            div.table-striped.TeamLabel-info
+              div.TableHeader(style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
+                a.unplayed-anchor(name=x style="padding-top:180px;margin-top:-180px" href=`/${company}/${league}/${competition}/${round}`)
+                  div.Standings-details.Standings-header.highlight= "Round " + round
+
+          a.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(href=url)
+            div.MatchRow-team
+              div.TeamLabel.TeamLabel--reverse
+                div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${schedule.home.team.logo}` alt="" class="TeamLabel-logo")
+                div(class="TeamLabel-info TeamLabel-info--noScore")
+                  div(class="TeamLabel-name ")= schedule.home.team.name
+                  div(class="TeamLabel-coach ")= schedule.home.coach.name
+            div(class="MatchRow-status")
+              span(class="MatchStatus MatchStatus--transparent")
+                span
+                  if schedule.home.score > schedule.away.score
+                    span(class="MatchStatus-score is-winner")= schedule.home.score
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score")= schedule.away.score
+                  else if schedule.away.score > schedule.home.score
+                    span(class="MatchStatus-score")= schedule.home.score
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score is-winner")= schedule.away.score
+                  else
+                    span(class="MatchStatus-score")= schedule.status > 1 ? schedule.home.score : ''
+                    span(class="MatchStatus-score") -
+                    span(class="MatchStatus-score")= schedule.status > 1 ? schedule.away.score : ''
+            div(class="MatchRow-team")
+              div(class="TeamLabel")
+                div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${schedule.away.team.logo}` alt="" class="TeamLabel-logo")
+                div(class="TeamLabel-info TeamLabel-info--noScore")
+                  div(class="TeamLabel-name ")= schedule.away.team.name
+                  div(class="TeamLabel-coach ")= schedule.away.coach.name

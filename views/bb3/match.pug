@@ -6,8 +6,8 @@ include functions.pug
 block append vars
   -
     let options = {company:company}
-    const homeTeamStats = match.statistics.homeGamerStatistics.teamStatistics.statistics.aggregatedStatistics
-    const awayTeamStats = match.statistics.awayGamerStatistics.teamStatistics.statistics.aggregatedStatistics
+    const homeTeamStats = match.statistics.homeGamerStatistics.teamStatistics.statistics.statistic
+    const awayTeamStats = match.statistics.awayGamerStatistics.teamStatistics.statistics.statistic
 
 block content
   div(class=`container`)

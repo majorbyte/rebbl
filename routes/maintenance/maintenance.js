@@ -55,7 +55,7 @@ class Maintenance{
 
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       try{
-        //ts.checkTickets();
+        bb3Service.updateCompetitions("3c9429cd-b146-11ed-80a8-020000a4d571");
         res.redirect('/');
       }
       catch(e){
