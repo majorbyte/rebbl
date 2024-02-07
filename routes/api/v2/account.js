@@ -136,6 +136,23 @@ class AccountApi{
       res.status(200).send(ret);
     });
 
+
+    this.router.get('/bb3/:name', util.ensureAuthenticated, async function(req,res){
+      res.json(await accountService.getBB3Account(req.params.name));
+    });
+    
+    this.router.post('/bb3', util.ensureAuthenticated, async function(req,res){
+      try {
+        await accountService.updateBB3Account(req.user.name, req.body);
+
+        res.status(200).send();
+      }
+      catch (ex){
+        console.error(ex);
+        res.status(500).send('Something something error');
+      }      
+    });
+
     return this.router;
   }
 }  

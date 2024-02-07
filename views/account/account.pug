@@ -71,13 +71,104 @@ block append scripts
         i.src = `https://cdn.rebbl.net/images/skills/${icon}/Dodge.png`;
       }
     }
+  - if (!user.bb3coach)
+    script.
 
+      let coachNames;
+
+      function updateFields(e){
+        const select = document.getElementById("bb3coachSelect");
+        const input = document.getElementById("bb3coach");
+        const id = document.getElementById("bb3coachId");
+
+        id.value = select.value;
+        const coach = coachNames.find(x => x.id === id.value);
+        input.value = coach.name;
+
+        const saveButton = document.getElementById("saveButton");
+        saveButton.classList.remove("hidden");
+      }
+
+      async function search(e){
+
+        const btn = document.getElementById("searchButton");
+        const input = document.getElementById("bb3coach");
+        const spinner = document.getElementById("spinner");
+        const select = document.getElementById("bb3coachSelect");
+        const selectLabel = document.getElementById("bb3coachSelectLabel");
+        
+        btn.disabled = true;
+        spinner.classList.remove("hidden");
+
+        const response = await fetch(`/api/v2/account/bb3/${input.value}`);
+
+        if (response.ok){
+          const coaches = await response.json();
+          coachNames = coaches;
+          if (Array.isArray(coaches)){
+            const select = document.getElementById("bb3coachSelect");
+            const selectLabel = document.getElementById("bb3coachSelectLabel");
+
+            select.innerHTML = '';
+
+            const o =  document.createElement("option");
+            o.disabled = true;
+            o.selected = true;
+            o.text = "Select a steam account";
+            select.add(o,null);
+
+            coaches.forEach(coach => {
+              const opt = document.createElement("option");
+
+              opt.value = coach.id;
+              opt.text = coach.steamName;
+              select.add(opt,null);
+            });
+
+            select.classList.remove("hidden");
+            selectLabel.classList.remove("hidden");
+          } else {
+            const input = document.getElementById("bb3coach");
+            const id = document.getElementById("bb3coachId");
+            const saveButton = document.getElementById("saveButton");
+            select.classList.add("hidden");
+            selectLabel.classList.add("hidden");
+
+            id.value = coaches.id;
+            input.value = coaches.name;
+
+            saveButton.classList.remove("hidden");
+          }
+
+        }
+
+        spinner.classList.add("hidden");
+        btn.disabled = false;
+      }
+
+      async function savebb3(){
+        const input = document.getElementById("bb3coach");
+        const id = document.getElementById("bb3coachId");
+        const spinner = document.getElementById("spinnerSave");
+        spinner.classList.remove("hidden");
+
+        const response = await fetch(`/api/v2/account/bb3`,{
+          method:'POST',
+          headers:{'Content-Type': 'application/json'},
+          body:JSON.stringify({id:id.value, name:input.value})
+        });
+        if (response.ok){
+          location.reload();
+        }
+
+        spinner.classList.add("hidden");
+      }
 
 block content
   .container
     .row.col-12
       .col
-        form(action="/account/update" method="post" class="container signup")
+        div.container.signup
           h2
             span(class="highlight")= user.reddit
             a.btn.btn-primary.btn-sm.pull-right(type="button" href="/account/logout") Logout
@@ -89,6 +180,23 @@ block content
             br
             span coach team &amp; stats: &nbsp;
             a(href=`/coach/${user.coach}`)= user.coach
+          div
+            div(style="width: 375px;")
+              label(for="bb3coach") Blood Bowl 3 coach name 
+              - if (user.bb3coach)
+                input#bb3coach(type="text" name="bb3coach" value=user.bb3coach  disabled)
+              - else              
+                input#bb3coach(type="text" name="bb3coach" value=user.bb3coach)
+                input#bb3coachId(type="hidden")
+                label#bb3coachSelectLabel.hidden(for="bb3coachSelect" ) select correct coach by steam name
+                select#bb3coachSelect.hidden(onchange="updateFields()")
+                br
+                button#searchButton.btn.btn-primary.btn-sm(onclick="search()")
+                  span Search
+                  span#spinner.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+                button#saveButton.btn.btn-success.hidden.btn-sm(style="float:right" onclick="savebb3()" ) Save
+                  span#spinnerSave.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+        form(action="/account/update" method="post" class="container signup")
           div
             label(for="timezone") Timezone
             select(id="timezone" name="timezone" required title="timezone")
