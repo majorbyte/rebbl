@@ -56,6 +56,7 @@ class Maintenance{
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       try{
         bb3Service.updateCompetitions("3c9429cd-b146-11ed-80a8-020000a4d571");
+        //bb3Service.calculateStandings("abecb238-c1ed-11ee-a745-02000090a64f")
         res.redirect('/');
       }
       catch(e){

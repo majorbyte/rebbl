@@ -1,0 +1,142 @@
+extends ../no-cache-sub-relayout.pug
+include ../nav-link
+
+block vars
+  - let options = {company: company}
+
+  -
+    const races = [
+        {
+            code: 1000, 
+            data: "Black Orc", 
+        }, 
+        {
+            code: 8, 
+            data: "Chaos Chosen", 
+        }, 
+        {
+            code: 1001, 
+            data: "Chaos Renegade", 
+        }, 
+        {
+            code: 9, 
+            data: "Dark Elf", 
+        }, 
+        {
+            code: 2, 
+            data: "Dwarf", 
+        }, 
+        {
+            code: 14, 
+            data: "Elven Union", 
+        }, 
+        {
+            code: 6, 
+            data: "Goblin", 
+        }, 
+        {
+            code: 11, 
+            data: "Halfling", 
+        }, 
+        {
+            code: 1, 
+            data: "Human", 
+        }, 
+        {
+            code: 24, 
+            data: "Imperial Nobility", 
+        }, 
+        {
+            code: 23, 
+            data: "Khorne", 
+        }, 
+        {
+            code: 5, 
+            data: "Lizardman", 
+        }, 
+        {
+            code: 17, 
+            data: "Necromantic Horror", 
+        }, 
+        {
+            code: 18, 
+            data: "Nurgle", 
+        }, 
+        {
+            code: 1002, 
+            data: "Old World Alliance", 
+        }, 
+        {
+            code: 4, 
+            data: "Orc", 
+        }, 
+        {
+            code: 10, 
+            data: "Shambling Undead", 
+        }, 
+        {
+            code: 3, 
+            data: "Skaven", 
+        }, 
+        {
+            code: 29, 
+            data: "Slaanesh", 
+        }, 
+        {
+            code: 1004, 
+            data: "Tzeentch", 
+        }, 
+        {
+            code: 22, 
+            data: "Underworld Denizen", 
+        }, 
+        {
+            code: 7, 
+            data: "Wood Elf", 
+        }];
+
+    const getRace = id => races.find(x => x.code === Number(id)).data;
+
+block head
+  style.
+    h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
+
+block content
+  .container
+    div
+      a(href=`/bb3/competition/${competition.id}/schedules` class="highlight")
+        h2=competition.name
+    .season-table(style="margin-bottom:40px;")  
+      .row(style="border-bottom: 3px solid #bdbcbccf;")
+        .col-8.col-md-6(style="font-size:1.25em")
+          .row
+            .col-1 #
+            .col Coach
+            .col Team
+        .col-2.d-none.d-md-block(style="font-size:1.25em") Race
+        .col-4(style="font-size:1.25em")
+          .row
+            .col-4.col-md-2 Pts.
+            .col-2.d-none.d-md-block W  
+            .col-2.d-none.d-md-block D  
+            .col-2.d-none.d-md-block L
+            .col-4.col-md-2 P
+            .col-4.col-md-2.text-end ΔTD
+      each rank,index in competition.standings
+        .row.season-table-row
+          .col-8.col-md-6
+            .row
+              .col-2=rank.position
+              .col(style=";overflow:hidden") 
+                span=rank.name
+              .col(style=";overflow:hidden") 
+                a(href=`/bb3/team/${rank.teamId}`)=rank.team
+          .col-2.d-none.d-md-block(style=";overflow:hidden")=getRace(rank.race)
+          .col-4
+            .row
+              .col-4.col-md-2=rank.points
+              .col-2.d-none.d-md-block=rank.win
+              .col-2.d-none.d-md-block=rank.draw
+              .col-2.d-none.d-md-block=rank.loss
+              .col-4.col-md-2=(Number(rank.win)+Number(rank.loss)+Number(rank.draw))
+              .col-4.col-md-2.text-end=(rank.tddiff)
