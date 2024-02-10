@@ -11,8 +11,7 @@ const
   , offseasonService = require('../../lib/OffSeasonService.js')
   , ds = require("../../lib/DraftService.js")
   , dataService = require("../../lib/DataService.js").rebbl
-  , bb3 = require("../../lib/bb3Service.js").rebbl3
-  , bb3Report = require("../../lib/bb3MatchReport.js")
+  , bb3 = require("../../lib/DataServiceBB3.js").rebbl3
   , express = require('express')
   , hjmc = require("../../lib/TourneyService")
   , loggingService = require("../../lib/loggingService.js")
@@ -57,6 +56,16 @@ class Maintenance{
       try{
         bb3Service.updateCompetitions("3c9429cd-b146-11ed-80a8-020000a4d571");
         //bb3Service.calculateStandings("abecb238-c1ed-11ee-a745-02000090a64f")
+
+        const competitions = await bb3.getCompetitions({leagueId:"3c9429cd-b146-11ed-80a8-020000a4d571",format:2});
+        for (const competition of competitions){
+          const matches = await bb3.getMatches({"competition.id": competition.id});
+          for (const match of matches){
+            await bb3MatchReport.matchReport(match.matchId, process.env.BB3Hook);
+          }
+        }
+
+
         res.redirect('/');
       }
       catch(e){

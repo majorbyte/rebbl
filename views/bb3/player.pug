@@ -17,6 +17,7 @@ mixin player(player, stats, mvp)
         case '9': return "ico_action_dislocated_shoulder.png";
         case '10': return "ico_action_dead.png";
       }
+      if (player.player.missNextGame == "1") return "ico_action_seriously_hurt.png";
       return false;
     }
   tr
