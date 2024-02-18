@@ -176,10 +176,27 @@ block append vars
       {id: 74, name:"Zap success"},
       {id: 75, name:"Favor point"}];    
 
+    const shouldRender = (statIds,homeTeamStats, awayTeamStats) => {
+      const x = statIds.reduce((p,c) => p + getStatTotal(homeTeamStats,c),0); 
+      const y = statIds.reduce((p,c) => p + getStatTotal(awayTeamStats,c),0);
+
+      console.log(x);
+      console.log(y);
+      return (x+y) > 0;
+    }
+
+    const getStatTotal = (statistics, statId) =>  {
+      const x = getStat(statistics,statId);
+
+      return isNaN(x) ? x.split("/").reduce((p,c) => p+Number(c),0) : x;
+    }
+
+
     let getStat = function(statistics, statId){
       const a = Array.isArray(statistics) ? statistics : [statistics];
-      let x = a.filter(x => x).find(x => Number(x.id) ==statId);
-      return x ? x.value : 0
+      let x = a.filter(x => x).find(x => Number(x.id) == statId);
+      
+      return x ? x.value : 0;
     }
     const positions = [
         {

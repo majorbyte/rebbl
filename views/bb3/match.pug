@@ -27,7 +27,12 @@ block content
                     div(class="TeamLabel-coach ")
                       a(href=`/coach/${match.homeGamer.name}`)= match.homeGamer.name
                     div(class="TeamLabel-coach" )= "winnings: " + (match.homeGameResultGain.newTreasury - match.homeGameResultGain.previousTreasury - match.homeGameResultGain.cashSpentDuringMatch)
-                    div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
+                    - let homeFans = Number(match.homeGameResultGain.newDedicatedFans) - Number(match.homeGameResultGain.previousDedicatedFans)
+                    - if (homeFans != 0)
+                      div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans " + (homeFans > 0 ? `(+${homeFans})` : `(${homeFans})`)
+                    -else 
+                      div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
+
             div(class="MatchRow-status")
               span(class="MatchStatus MatchStatus--transparent")
                 span
@@ -55,7 +60,12 @@ block content
                     div(class="TeamLabel-coach ")
                       a(href=`/coach/${match.awayGamer.id}`)= match.awayGamer.name
                     div(class="TeamLabel-coach" )= "winnings: " + (match.awayGameResultGain.newTreasury - match.awayGameResultGain.previousTreasury - match.awayGameResultGain.cashSpentDuringMatch)
-                    div(class="TeamLabel-coach " title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans"
+                    - let awayFans = Number(match.awayGameResultGain.newDedicatedFans) - Number(match.awayGameResultGain.previousDedicatedFans)
+                    - if ( awayFans != 0)
+                      div(class="TeamLabel-coach " title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans " + (awayFans > 0 ? `(+${awayFans})` : `(${awayFans})`)
+                    -else 
+                      div(class="TeamLabel-coach " title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans"
+                      
                 - if (match.filename)
                   div(class="ReplayLinks")
                     div(class="ReplayLinks-outer")
@@ -80,13 +90,16 @@ block content
                     td Team value
                     td= match.homeTeam.value
                     td= match.awayTeam.value
-                  +teamStat("Spent on inducements", [67], homeTeamStats, awayTeamStats)
-                  +teamStat("Possession (total / own / oppo)", [63,64,65], homeTeamStats, awayTeamStats)
-                  +teamStat("Pass (try/success/yards)", [40,41,24], homeTeamStats, awayTeamStats)
-                  +teamStat("Catch (try/success)", [52,53], homeTeamStats, awayTeamStats)
-                  +teamStat("Interceptions", [58], awayTeamStats, homeTeamStats)
-                  +teamStat("Dodge (try/success)", [43,44], homeTeamStats, awayTeamStats)
-                  +teamStat("Rush (try/success)", [45,46], homeTeamStats, awayTeamStats)
+
+                  each stat in homeTeamStats.filter(x => x.categoryId != 2 && [18,27,31].indexOf(Number(x.id)) === -1)
+                    +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
+                  //+teamStat("Spent on inducements", [67], homeTeamStats, awayTeamStats)
+                    +teamStat("Possession (total / own / oppo)", [63,64,65], homeTeamStats, awayTeamStats)
+                    +teamStat("Pass (try/success/yards)", [1009], homeTeamStats, awayTeamStats)
+                    +teamStat("Catch (try/success)", [1002], homeTeamStats, awayTeamStats)
+                    +teamStat("Interceptions", [1004], awayTeamStats, homeTeamStats)
+                    +teamStat("Dodge (try/success)", [1003], homeTeamStats, awayTeamStats)
+                    +teamStat("Rush (try/success)", [1011], homeTeamStats, awayTeamStats)
             div(class="table-responsive-xl col-6 ")
               table(class="team-stats")
                 thead 
@@ -96,14 +109,18 @@ block content
                     th= match.awayTeam.name
 
                 tbody
-                  +teamStat("Blocks succeeded", [26], homeTeamStats, awayTeamStats)
-                  +teamStat("Armour breaks", [61], homeTeamStats, awayTeamStats)
-                  +teamStat("Knockout (inflicted/sustained)", [25,29], homeTeamStats, awayTeamStats)
-                  +teamStat("Casualties (inflicted/sustained)", [19,28], homeTeamStats, awayTeamStats)
-                  +teamStat("Kills / Deaths", [21,31], homeTeamStats, awayTeamStats)
-                  +teamStat("Surfs", [57], homeTeamStats, awayTeamStats)
-                  +teamStat("Fouls / Expulsion", [47,62], homeTeamStats, awayTeamStats)
-                  +teamStat("Throw Team-Mate success", [69], homeTeamStats, awayTeamStats)
+                  - const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+                  each stat in homeTeamStats.filter(x => x.categoryId == 2).sort((a,b) => collator.compare(a.name, b.name))
+                    +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
+
+                  //+teamStat("Blocks succeeded", [26], homeTeamStats, awayTeamStats)
+                    +teamStat("Armour breaks", [61], homeTeamStats, awayTeamStats)
+                    +teamStat("Knockout (inflicted/sustained)", [25,29], homeTeamStats, awayTeamStats)
+                    +teamStat("Casualties (inflicted/sustained)", [19,28], homeTeamStats, awayTeamStats)
+                    +teamStat("Kills / Deaths", [21,31], homeTeamStats, awayTeamStats)
+                    +teamStat("Surfs", [57], homeTeamStats, awayTeamStats)
+                    +teamStat("Fouls / Expulsion", [47,62], homeTeamStats, awayTeamStats)
+                    +teamStat("Throw Team-Mate success", [69], homeTeamStats, awayTeamStats)
 
           - match.homeTeam.mvp = match.homeMvp
           - match.homeTeam.roster = match.spp.homeTeamSppResult.playerSppResults.playerSppResult.sort((a,b) => a.player.number - b.player.number)
