@@ -232,10 +232,8 @@ block scripts
       }
 
       toggle(root, teamId, show){
-        console.log(teamId);
         console.dir(this);
         const isHome = this.homeTeamId == teamId;
-        console.log(isHome ? this.awayTeamName : this.homeTeamName);
         root.highlight(isHome ? this.awayTeamId : this.homeTeamId, show);
       }
     }

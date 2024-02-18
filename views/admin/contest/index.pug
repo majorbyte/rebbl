@@ -53,7 +53,6 @@ block scripts
             // This will be called when the binding is first applied to an element
             // Set up any initial state, event handlers, etc. here
             ko.utils.registerEventHandler(element, "change", function () {
-                console.log("change");
                 var observable = valueAccessor();
                 observable(JSON.parse(element.value));
             });

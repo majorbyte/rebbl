@@ -87,9 +87,6 @@ block scripts
           const numberOfRounds = this.schedules.length % 5 === 0 ? 5 : 4;
           if (r == 7 && c == 2) {
             let s = this.schedules[(r - 1) * numberOfRounds + (c - 1)];
-            console.dir(s);
-            console.log(s.home.score > s.away.score);
-            console.log(s.home.score < s.away.score);
           }
           return this.schedules[(r - 1) * numberOfRounds + (c - 1)];
         }
