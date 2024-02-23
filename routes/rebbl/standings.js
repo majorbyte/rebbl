@@ -46,6 +46,11 @@ class Standings{
       let competition = req.params.competition;
       if (!isNaN(competition)){
         const comp = await dataService.getSchedule({season:req.params.season, league:req.params.league, competition_id: Number(competition)});
+        if (!comp) {
+          res.status(500).render('5xx');
+          return;
+        }          
+
         competition = comp.competition;
       }
 
