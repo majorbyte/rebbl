@@ -6,7 +6,8 @@ const accountService = require('../../lib/accountService.js')
   , cyanideService = require('../../lib/CyanideService.js')
   , express = require('express')
   , util = require('../../lib/util.js')
-  , signupService = require('../../lib/signupService.js');
+  , signupService = require('../../lib/signupService.js')
+  , bb3Service = require('../../lib/bb3Service.js')
 
 const CLIENT_ID = process.env['discordClientId'];
 const REDIRECT_URI = process.env['discordSignupCallbackURL'];
@@ -44,56 +45,71 @@ class Signup{
   }
 
   routesConfig(){
-   
-   this.router.get('/', async function(req, res){
-      res.render('signup/closed');
-   });
-   
 
-   // this.router.get('/', util.ensureAuthenticated, this._getStatus);
+    const bb3Open = true;
+    const rebblOpen = false;
+    const rookiesOpen = false
 
+    if (!bb3Open && !rebblOpen && !rookiesOpen){
+      this.router.get('/', async function(req, res){
+        res.render('signup/closed');
+      });
+    }
+   
     this.router.get('/discord', util.ensureAuthenticated, this._authDiscord);
     this.router.get('/nodiscord', util.ensureAuthenticated, this._noDiscord);
 
     this.router.get('/discord/callback', this._authDiscordCallback);
-    
-    //this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
 
-    /*this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
+    if (bb3Open || rebblOpen || rookiesOpen)
+      this.router.get('/', util.ensureAuthenticated, this.#getStatus);
 
-    this.router.post('/resign', util.ensureAuthenticated, this._resign);
+    if (rebblOpen){
+      this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
+     
+      this.router.post('/resign', util.ensureAuthenticated, this._resign);
+      
+      this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
+      
+      this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
   
-    this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
-
-    this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
-
-    //this.router.get('/signup-greenhorn',util.ensureAuthenticated, this._signupGreenhornCup);
-
-    this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll.bind(this));
-
-    this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew.bind(this));
-
-    //this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
-
-    //this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
-
-
-    this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
-    //this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
+      this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll.bind(this));
+  
+      this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew.bind(this));
+      
+      //this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
+      //this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
+  
+      //this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
+    }
     
-    this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
-    this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
-    this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
-    */
+    if (rookiesOpen){
+      this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
+      this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
+      
+      this.router.post('/confirm-new-rebbrl', util.ensureLoggedIn, this._confirmRebbrl.bind(this));
+      this.router.get('/rebbrl/minors', util.ensureLoggedIn, this._minors.bind(this));
+      this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
+    }
+
+    if (bb3Open){
+      this.router.get('/bb3/change', util.ensureLoggedIn, this.#changeSignupBB3.bind(this));
+      this.router.post('/bb3/confirm', util.ensureLoggedIn, this.#confirmNewBB3.bind(this));
+      this.router.post('/bb3/resign', util.ensureAuthenticated, this.#resignBB3);
+    }
+
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
-  
+    this.router.get('/bb3/signups', util.cache(10*60), function(req,res){res.render('signup/bb3/signups');});
     this.router.get('/signups', function(req,res){res.render('signup/signups', {url: ""});});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
+
+
+    this.router.get('/:slush', (req, res) => res.render('signup/closed'));
 
     return this.router;
   }
 
-  async _getStatus(req, res){
+  async #getStatus(req, res){
     try{
       let user = await signupService.getExistingTeam(req.user.name);
       let signups = [];
@@ -106,6 +122,13 @@ class Signup{
       }
 
       signup = await signupService.getSignUp(req.user.name,"rebbrl");
+
+      if (signup){
+        signup.signedUp = true;
+        signups.push(signup);
+      }
+      
+      signup = await signupService.getSignUp(req.user.name,"rebbl3","season 1");
 
       if (signup){
         signup.signedUp = true;
@@ -172,6 +195,54 @@ class Signup{
     } catch (err){
       console.log(err);
     }
+  }
+
+  async #changeSignupBB3(req, res){
+    let account = await accountService.getAccount(req.user.name);
+
+    if (!account.bb3coach) {
+      res.render('signup/bb3/fix-account');
+    } else {
+      let teams = await bb3Service.searchTeams(account.bb3id, '%');
+      teams = teams.filter(x => !x.experienced);
+      res.render('signup/bb3/signup-new-coach', {user: {account: account}, teams});
+    }
+  }
+      
+  async #confirmNewBB3(req,res){
+    try {
+      let signup = {
+        team: {
+          id: req.body.id,
+          value: Number(req.body.value),
+          race:req.body.race,
+          name: req.body.name,
+        },
+        league: req.body.league
+      };
+
+      signup.saveType = "new";
+      signup.type="rebbl3";
+
+      let account = await accountService.getAccount(req.user.name);
+      signup.coach = account.coach;
+      signup.reddit = account.reddit;
+      signup.timezone = account.timezone
+
+      await signupService.saveSignUpBB3(signup);
+
+      res.redirect('/signup');
+    } catch (err){
+      console.log(err);
+    }
+  }
+  async #resignBB3(req,res){
+    try{
+      await signupService.resign(req.user.name,"rebbl3","season 1");
+      res.redirect('/signup');
+    } catch (err){
+      console.log(err);
+    }    
   }
 
   /* seasonal */

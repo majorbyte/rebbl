@@ -25,6 +25,10 @@ block content
           h2= "Welcome back to REBBL Season 24, "
             span(class="highlight")= signup.coach
             span !
+        - else if (signup.type ==="rebbl3")
+          h2= "Welcome to REBBL BB3 Season 1, "
+            span(class="highlight")= signup.coach
+            span !
         - else 
           h2= "Welcome back to REBBRL, "
             span(class="highlight")= signup.coach
@@ -32,23 +36,42 @@ block content
 
         div
           h3 You have signed up with
-            span(class="highlight")= " " + signup.team
-            span(style="font-size:0.75em" )= " (" + signup.race + ")"
+            - let teamName =  signup.team.name ?? signup.team
+            - let teamRace =  signup.race ?? signup.team.race
+            span(class="highlight")= " " + teamName
+            span(style="font-size:0.75em" )= " (" + teamRace + ")"
             span= " to the following:"
           div
             - if (signup.type==="rebbl")
               h3= "REBBL Season 24 - " + signup.league
-              form(action="/signup/resign" method="post" )
+              //form(action="/signup/resign" method="post" )
                 br
                 button(type="submit"  class="btn btn-primary") Resign
+              p Nagivate 
+                a(href="/signup/signups" class="highlighted-rules") here
+                span &nbsp;to view all current signups
+            - else if (signup.type==="rebbl3")
+              h3= "REBBL BB3 Season 1 - " + signup.league
+              div(style="display:flex")
+                form.mx-1(action="/signup/bb3/change" method="get" style="display:flex" )
+                  button(type="submit"  class="btn btn-primary") Change
+                form(action="/signup/bb3/resign" method="post" style="display:flex" )
+                  br
+                  button(type="submit"  class="btn btn-primary") Resign
+              p Nagivate 
+                a(href="/signup/bb3/signups" class="highlighted-rules") here
+                span &nbsp;to view all current signups
             - else
               - if (signup.saveType === "reserve")
                 h3= "REBBRL " + signup.league + " (Reserve)"
               - else
                 h3= "REBBRL " + signup.league
-                form(action="/signup/resign-rebbrl" method="post")
+                //form(action="/signup/resign-rebbrl" method="post")
                   br
                   button(type="submit"  class="btn btn-primary") Resign
+              p Nagivate 
+                a(href="/signup/signups" class="highlighted-rules") here
+                span &nbsp;to view all current signups
           
           //-if (signup.greenHorn)
             div
@@ -60,9 +83,6 @@ block content
             div
               h3 You can still sign up for THE GREENHORN CUP
               a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
-          p Nagivate 
-            a(href="/signup/signups" class="highlighted-rules") here
-            span &nbsp;to view all current signups
     - if (signups.length === 0)
       h2= "Welcome back to REBBL, "
         span(class="highlight")= user.coach
@@ -78,8 +98,8 @@ block content
         p 
           a(href="https://www.reddit.com/r/ReBBl/comments/tshhfa/rebbl_rampup_season_19/" class="highlighted-rules") Read more here about our Rampup system for Season 21
         a.btn.btn-primary.btn-lg(href="/signup/change" role="button") Continue
-      
-      .jumbotron
+
+      //.jumbotron
         h1.display-4 REBBL Season 24
         p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 24!
         hr.my-2
@@ -89,7 +109,7 @@ block content
           span(class="text-info") REBBL Season 24
         a.btn.btn-primary.btn-lg(href="/signup/change" role="button") Continue
 
-      .jumbotron
+      //.jumbotron
         h1.display-4 MINORS Season 20
         //p.lead Signups for MINORS Season 20 are currently closed. 
         p.lead If you played in our College League last season and want to continue in the Minors Leauge, look no further!
@@ -100,7 +120,7 @@ block content
           span(class="text-info") REBBRL MINORS Season 20
         a.btn.btn-primary.btn-lg(href="/signup/rebbrl/minors" role="button") Continue
 
-      .jumbotron
+      //.jumbotron
         h1.display-4 COLLEGE Season 21
         p.lead Are you a new coach, wanting to learn to play Blood Bowl in our rookie's College League Season 21?
         hr.my-2
@@ -121,3 +141,11 @@ block content
           | , scroll down to the header: &nbsp;
           span(class="text-info") REBBL COLLEGE LEAGUE Season 20
         a.btn.btn-primary.btn-lg(href="/signup/rebbrl/college-reserves" role="button") Continue
+    - if (!signups.some(x => x.type ==="rebbl3"))
+      .jumbotron
+        h1.display-4 REBBL BB3 Season 1
+        p.lead You haven't signed up yet, so hit that button to continue with your sign up for REBBL BB3 Season 1!
+        hr.my-2
+        p 
+          a(href="https://www.reddit.com/r/ReBBl/comments/17w4hvy/signups_rebbl_s24_minors_s20_college_s21/" class="highlighted-rules") Read more here about Season 1
+        a.btn.btn-primary.btn-lg(href="/signup/bb3/change" role="button") Continue

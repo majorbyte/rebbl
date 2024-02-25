@@ -45,6 +45,26 @@ router.get('/page', util.cache(10*60), async function(req, res){
   res.status(200).send(ret);
 });
 
+router.get('/bb3', util.cache(10*60), async function(req, res){
+  const data = await db.getSignupsBB3({season:"season 1", type:"rebbl3"});
+
+  const mapEntry = entry => {
+    return {
+      team: entry.team.name,
+      teamId: entry.team.id,
+      coach: entry.coach,
+      race: entry.team.race,
+      timezone: entry.timezone,
+      saveType: entry.saveType,
+      TV: entry.team.value / 1000,
+      league: entry.league,
+      signupDate: entry.signupDate
+    };
+  };
+
+  res.status(200).send(data.map(mapEntry));
+});
+
 router.get('/count', util.cache(10*60), async function(req, res){
   const data = await db.getSignUps({});
 
