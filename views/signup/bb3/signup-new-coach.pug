@@ -6,7 +6,7 @@ block title
 block append scripts
   script.
     $(document).ready(function(){
-      $("#teamId").on("change", function(e){
+      $("#id").on("change", function(e){
         const option = e.currentTarget.selectedOptions[0];
         const tv = option.attributes['data-tv'].value;
         const race = option.attributes['data-race'].value;
@@ -40,9 +40,9 @@ block content
               p(class="alert-danger my-0")= user.error.coach
               p(class="alert-info my-0") This is probably due to a typo in your coachname, contact an admin on our discord to have it corrected.
           div
-            label(for="team") Team name
-            select(id="teamId" name="id")
-              option(disable) Select your team
+            label(for="id") Team name
+            select(id="id" name="id" required)
+              option(disabled selected value="") Select your team
               each team of teams 
                 option(value=team.id data-race=team.race data-tv=team.value data-name=team.name )= team.name
             span#teamData
