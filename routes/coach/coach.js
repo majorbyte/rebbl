@@ -39,6 +39,7 @@ class Coach{
         data.renderExtra = true;
       }
       data.company = req.params.company;   
+      if (!data.coachDetails) data.coachDetails = {trophies : []};
       res.render('coach/trophies', data);
     });
     
