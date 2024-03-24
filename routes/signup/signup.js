@@ -46,7 +46,7 @@ class Signup{
 
   routesConfig(){
 
-    const bb3Open = true;
+    const bb3Open = false;
     const rebblOpen = false;
     const rookiesOpen = false
 

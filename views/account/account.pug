@@ -98,6 +98,8 @@ block append scripts
         const selectLabel = document.getElementById("bb3coachSelectLabel");
         
         btn.disabled = true;
+        btn.classList.add("btn-primary")<
+        btn.classList.remove("btn-danger")
         spinner.classList.remove("hidden");
 
         const response = await fetch(`/api/v2/account/bb3/${input.value}`);
@@ -127,7 +129,7 @@ block append scripts
 
             select.classList.remove("hidden");
             selectLabel.classList.remove("hidden");
-          } else {
+          } else if (coaches != null) {
             const input = document.getElementById("bb3coach");
             const id = document.getElementById("bb3coachId");
             const saveButton = document.getElementById("saveButton");
@@ -138,6 +140,11 @@ block append scripts
             input.value = coaches.name;
 
             saveButton.classList.remove("hidden");
+          } else{
+            btn.disabled = false;
+            spinner.classList.add("hidden");
+            btn.classList.remove("btn-primary")<
+            btn.classList.add("btn-danger")
           }
 
         }
