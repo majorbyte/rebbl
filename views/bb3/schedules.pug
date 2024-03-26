@@ -17,7 +17,7 @@ block content
       div(class="League-Standings")    
         - let round = 0
         each schedule, x in schedules.sort(function(a,b){return a.name > b.name})
-          - let url = schedule.status === 3 ? `/${company}/match/${ schedule.matchId }` : ''
+          - let url = schedule.status === 3 ? `/${company}/match/${ schedule.matchId }` : `/${company}/unplayed/${schedule.id}`
 
           - if (round != schedule.round)
             - round = schedule.round
