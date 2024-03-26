@@ -12,6 +12,12 @@ class Coach{
 
 
   routesConfig(){
+    this.router.get('/bb3/:coach_id', util.cache(10*60), async function(req, res){
+      const coach = await accountService.searchAccount({"bb3id": req.params.coach_id});
+
+      res.redirect(`/coach/${coach.coach}/details`);
+    });
+
     this.router.get('/:coach_id', util.cache(10*60), async function(req, res){
       res.redirect(`/coach/${req.params.coach_id}/details`);
     });

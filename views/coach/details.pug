@@ -125,6 +125,9 @@ block content
               input(type="text" id="coach" name="coach" value=(coachDetails ? coachDetails.coach : name)  disabled)
             - if(coachDetails)  
               div
+                label(for="bb3coach") Blood Bowl 3 coach name
+                input(type="text" id="bb3coach" name="bb3coach" value=(coachDetails.bb3coach)  disabled)
+              div
                 label(for="coach") Reddit
                 input(type="text" id="reddit" name="coach" value="/u/" + coachDetails.reddit.toLowerCase()  disabled)
                 span(id="copy" title="copy to clipboard" style="cursor:pointer")= '📋'

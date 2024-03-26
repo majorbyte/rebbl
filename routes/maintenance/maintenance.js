@@ -52,19 +52,22 @@ class Maintenance{
       res.redirect('/');
     });
 
-    this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
+    this.router.get('/bb3', util.verifyMaintenanceToken, async function(req, res){
       try{
-        bb3Service.updateCompetitions("3c9429cd-b146-11ed-80a8-020000a4d571");
+        await bb3Service.updateCompetitions("3c9429cd-b146-11ed-80a8-020000a4d571");
+        
+        await bb3Service.updateCompetitions("94f0d3aa-e9ba-11ee-a745-02000090a64f");
         //bb3Service.calculateStandings("abecb238-c1ed-11ee-a745-02000090a64f")
 
-        const competitions = await bb3.getCompetitions({leagueId:"3c9429cd-b146-11ed-80a8-020000a4d571",format:2});
-        for (const competition of competitions){
-          const matches = await bb3.getMatches({"competition.id": competition.id});
-          for (const match of matches){
-            await bb3MatchReport.matchReport(match.matchId, process.env.BB3Hook);
+        for(const leagueId of ["94f0d3aa-e9ba-11ee-a745-02000090a64f","3c9429cd-b146-11ed-80a8-020000a4d571"]){
+          const competitions = await bb3.getCompetitions({leagueId:leagueId,format:2});
+          for (const competition of competitions){
+            const matches = await bb3.getMatches({"competition.id": competition.id});
+            for (const match of matches){
+              await bb3MatchReport.matchReport(match.matchId, process.env.BB3Hook);
+            }
           }
         }
-
 
         res.redirect('/');
       }
