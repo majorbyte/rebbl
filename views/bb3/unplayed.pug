@@ -1,5 +1,5 @@
 extends ../relayout.pug
-
+include functions.pug
 
 block append vars
   - var activeSubMenu = "match"
@@ -197,10 +197,10 @@ block content
           h3 
             a(href=`/team/${match.away.team.id}`)= match.away.team.name
       div(class="row justify-content-center")
-        div(class="col-4 text-end")= match.home.team.race
+        div(class="col-4 text-end")= getRace(match.home.team.race)
         div(class="col-2 text-center") 
           strong race
-        div(class="col-4")= match.away.team.race
+        div(class="col-4")= getRace(match.away.team.race)
       div(class="row justify-content-center")
         -if (match.home.team.team)
           div(class="col-4 text-end")= match.home.team.team.nextMatchTV

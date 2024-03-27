@@ -1,4 +1,5 @@
 extends ./sublayout.pug
+include functions.pug
 
 block append vars
   - var activeSubMenu = "match"
@@ -158,17 +159,18 @@ block append scripts
       });  
 block content
   for match in matches
+    - if (!match.opponents) match.opponents = [match.home,match.away]
     .container.h-100
       .row.justify-content-center
         .row.col-12.justify-content-center.text-center
           -if(match.admin)
             div 
-              h2(style="margin-top:40px;margin-bottom:0px")= match.competition + " - week " + match.round
+              h2(style="margin-top:40px;margin-bottom:0px")= (match.bb3 ? match.competitionName : match.competition) + " - week " + match.round
               .row.justify-content-center(style="margin-bottom:20px")
                 span division admin:&nbsp;
                 a.highlight(href=`/coach/${match.admin}` target="blank")= match.admin
           -if(!match.admin)
-            h2(style="margin-top:40px;margin-bottom:20px")= match.competition + " - week " + match.round
+            h2(style="margin-top:40px;margin-bottom:20px")= (match.bb3 ? match.competitionName : match.competition) + " - week " + match.round
           .row.col.justify-content-center.text-center
             - if(user)
               span Enter match date in your own local time
@@ -190,28 +192,34 @@ block content
             h3
               a(href=`/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
           div(class="col-2 text-center")
-            img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+            - if (match.bb3)
+              img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.opponents[0].team.logo alt="" class="TeamLabel-logo")
+            - else 
+              img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
             span -
-            img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+            - if (match.bb3)
+              img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.opponents[1].team.logo alt="" class="TeamLabel-logo")
+            - else 
+              img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
           div(class="col-5")
             h3 
               a(href=`/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
         div(class="row justify-content-center")
-          div(class="col-4 text-end")= match.opponents[0].team.race
+          div(class="col-4 text-end")= match.bb3 ? getRace(match.opponents[0].team.race) : match.opponents[0].team.race
           div(class="col-2 text-center") 
             strong race
-          div(class="col-4")= match.opponents[1].team.race
+          div(class="col-4")= match.bb3 ? getRace(match.opponents[1].team.race) :match.opponents[1].team.race
         div(class="row justify-content-center")
           -if (match.opponents[0].team.team)
-            div(class="col-4 text-end")= match.opponents[0].team.team.nextMatchTV
+            div(class="col-4 text-end")= match.bb3 ? match.opponents[0].team.valueWithJourneymen / 1000 : match.opponents[0].team.team.nextMatchTV
           -else
-            div(class="col-4 text-end")= match.opponents[0].team.value
+            div(class="col-4 text-end")= match.bb3 ? match.opponents[0].team.valueWithJourneymen / 1000 : match.opponents[0].team.value
           div(class="col-2 text-center") 
             strong team value
           -if (match.opponents[1].team.team)
-            div(class="col-4")= match.opponents[1].team.team.nextMatchTV
+            div(class="col-4")= match.bb3 ? match.opponents[1].team.valueWithJourneymen / 1000 : match.opponents[1].team.team.nextMatchTV
           -else
-            div(class="col-4")= match.opponents[1].team.value
+            div(class="col-4")= match.bb3 ? match.opponents[1].team.valueWithJourneymen / 1000 : match.opponents[1].team.value
         div(class="row justify-content-center")
           -if (match.opponents[0].team.team)
             div(class="col-4 text-end")= Math.floor(match.opponents[0].team.team.cash/1000) + "k"

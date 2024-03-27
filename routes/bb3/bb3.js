@@ -14,7 +14,8 @@ class BB3{
   match = async (req,res) => res.render("bb3/match", {match:await dataService.getMatch({matchId:req.params.id})});
   competitions = async (req,res) => res.render("bb3/competitions", {competitions:await dataService.getCompetitions({format:2,status:{$lt:4}})});
   competition = async (req,res) =>  res.render("bb3/competition", {competition:await dataService.getCompetition({id:req.params.competitionId})});
-  schedules = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId})});
+  schedules = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}}) });
+  round = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId, round:Number(req.params.round)}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}})});
   unplayed = async (req,res) => res.render("bb3/unplayed",{matches: await bb3Service.getUnplayedMatch(req.params.id)});
   standings = async (req,res) => res.render("bb3/standings", {rankings:await dataService.getRankings({competitionId:"2b791aa6-b14d-11ed-80a8-020000a4d571"})});
   rookieStandings = async (req,res) => res.render("bb3/standings", {rankings:await dataService.getRankings({competitionId:"5d031521-b151-11ed-80a8-020000a4d571"})});
@@ -27,9 +28,10 @@ class BB3{
   };
 
   routesConfig(){
-    this.router.get("/", util.cache(1), util.checkAuthenticated, this.competitions);
-    this.router.get("/competition/:competitionId", util.cache(1), util.checkAuthenticated, this.competition);
-    this.router.get("/competition/:competitionId/schedules", util.cache(1), util.checkAuthenticated, this.schedules);
+    this.router.get("/", util.cache(10*60), util.checkAuthenticated, this.competitions);
+    this.router.get("/competition/:competitionId", util.cache(10*60), util.checkAuthenticated, this.competition);
+    this.router.get("/competition/:competitionId/schedules", util.cache(10*60), util.checkAuthenticated, this.schedules);
+    this.router.get("/competition/:competitionId/schedules/:round", util.cache(10*60), util.checkAuthenticated, this.round);
     //this.router.get("/rookies", util.cache(1), util.checkAuthenticated, this.rookieStandings);
     this.router.get("/team/:id", util.cache(10*60), util.checkAuthenticated, this.team);
     this.router.get("/match/:id", util.cache(10*60), util.checkAuthenticated, this.match);

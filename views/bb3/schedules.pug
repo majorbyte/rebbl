@@ -13,7 +13,7 @@ block head
 block content
   div.Background.u-bottomPadding--large.u-topPadding--medium
     div.container.navcontainer
-      h1(class="u-no-text-transform u-verticalMargin--xx-small")= league + " " + competition
+      h1(class="u-no-text-transform u-verticalMargin--xx-small")= league + " " + competition.name
       div(class="League-Standings")    
         - let round = 0
         each schedule, x in schedules.sort(function(a,b){return a.name > b.name})
@@ -24,7 +24,7 @@ block content
             br
             div.table-striped.TeamLabel-info
               div.TableHeader(style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
-                a.unplayed-anchor(name=x style="padding-top:180px;margin-top:-180px" href=`/${company}/${league}/${competition}/${round}`)
+                a.unplayed-anchor(name=x style="padding-top:180px;margin-top:-180px" href=`/${company}/competition/${competition.id}/schedules/${round}`)
                   div.Standings-details.Standings-header.highlight= "Round " + round
 
           a.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(href=url)

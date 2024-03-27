@@ -1,6 +1,7 @@
 'use strict';
 
 const accountService = require("../../lib/accountService.js")
+  , bb3service = require("../../lib/bb3Service.js")
   , datingService = require("../../lib/DatingService.js")
   , dataService = require("../../lib/DataService.js").rebbl
   , express = require('express')
@@ -91,6 +92,7 @@ class Account{
   async _getMatch(req, res){
     try{
       let match = await leagueService.getUpcomingMatch(req.user.name);
+      match = match.concat(await bb3service.getUpcomingMatch(req.user.name));
       res.render('account/match',{matches: match, user:res.locals.user} );
     } catch(err){
       console.log(err);
