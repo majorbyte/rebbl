@@ -64,7 +64,12 @@ class Maintenance{
           for (const competition of competitions){
             const matches = await bb3.getMatches({"competition.id": competition.id});
             for (const match of matches){
-              await bb3MatchReport.matchReport(match.matchId, process.env.BB3Hook);
+              try{
+                await bb3MatchReport.matchReport(match.matchId, process.env.BB3Hook);
+              } catch(e){
+                loggingService.error(e);
+                loggingService.information(match.matchId);
+              }
             }
           }
         }
