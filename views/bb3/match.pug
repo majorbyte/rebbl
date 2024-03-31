@@ -8,6 +8,7 @@ block append vars
     let options = {company:company}
     const homeTeamStats = match.statistics.homeGamerStatistics.teamStatistics.statistics.statistic
     const awayTeamStats = match.statistics.awayGamerStatistics.teamStatistics.statistics.statistic
+  
 
 block content
   div(class=`container`)
@@ -131,6 +132,8 @@ block content
           //- - match.awayTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
           //- - match.awayTeam.rosterStatistics = match.statistics.awayGamerStatistics.teamStatistics.playerStatistics
           hr
+          - match.homeTeam.coach = match.homeGamer 
+          - match.awayTeam.coach = match.awayGamer 
           div(class="col-12 table-responsive-md")
             table(class="match-stats-table" style="width:100%")
               each team in [match.homeTeam, match.awayTeam]

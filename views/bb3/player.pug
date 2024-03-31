@@ -22,7 +22,9 @@ mixin player(player, stats, mvp)
     }
   tr
     // number
-    td(class="MatchRow-status" style="font-size:1em;text-align:center")= player ? player.number : ""
+    td(class="MatchRow-status" style="font-size:1em;text-align:center")
+      span= player ? player.number : ""
+      img(src="https://cdn.rebbl.net/images/skills/" + player.level + ".png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
     // player
     td
         div(class="match-stats-TeamLabel-name")= playerName
