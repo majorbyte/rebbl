@@ -12,7 +12,7 @@ class BB3{
 	}
 
   match = async (req,res) => res.render("bb3/match", {match:await dataService.getMatch({matchId:req.params.id})});
-  competitions = async (req,res) => res.render("bb3/competitions", {competitions:await dataService.getCompetitions({format:2,status:{$lt:4}})});
+  competitions = async (req,res) => res.render("bb3/competitions", {competitions:await dataService.getCompetitions({format:2,status:{$lt:4},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}})});
   competition = async (req,res) =>  res.render("bb3/competition", {competition:await dataService.getCompetition({id:req.params.competitionId})});
   schedules = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}}) });
   round = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId, round:Number(req.params.round)}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}})});
@@ -28,14 +28,14 @@ class BB3{
   };
 
   routesConfig(){
-    this.router.get("/", util.cache(10*60), util.checkAuthenticated, this.competitions);
+    this.router.get("/", util.cache(1), util.checkAuthenticated, this.competitions);
     this.router.get("/competition/:competitionId", util.cache(10*60), util.checkAuthenticated, this.competition);
     this.router.get("/competition/:competitionId/schedules", util.cache(10*60), util.checkAuthenticated, this.schedules);
     this.router.get("/competition/:competitionId/schedules/:round", util.cache(10*60), util.checkAuthenticated, this.round);
     //this.router.get("/rookies", util.cache(1), util.checkAuthenticated, this.rookieStandings);
     this.router.get("/team/:id", util.cache(10*60), util.checkAuthenticated, this.team);
-    this.router.get("/match/:id", util.cache(10*60), util.checkAuthenticated, this.match);
-    this.router.get("/unplayed/:id", util.cache(1), util.checkAuthenticated, this.unplayed);
+    this.router.get("/match/:id", util.cache(1), util.checkAuthenticated, this.match);
+    this.router.get("/unplayed/:id", util.cache(10*60), util.checkAuthenticated, this.unplayed);
 
     return this.router;
   }

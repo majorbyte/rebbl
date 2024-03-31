@@ -123,13 +123,13 @@ block content
                     +teamStat("Throw Team-Mate success", [69], homeTeamStats, awayTeamStats)
 
           - match.homeTeam.mvp = match.homeMvp
-          - let roster = Array.isArray(match.spp.homeTeamSppResult.playerSppResults.playerSppResult) ? match.spp.homeTeamSppResult.playerSppResults.playerSppResult : [match.spp.homeTeamSppResult.playerSppResults.playerSppResult]
-          - match.homeTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
-          - match.homeTeam.rosterStatistics = match.statistics.homeGamerStatistics.teamStatistics.playerStatistics
-          - match.awayTeam.mvp = match.awayMvp
-          - roster = Array.isArray(match.spp.awayTeamSppResult.playerSppResults.playerSppResult) ? match.spp.awayTeamSppResult.playerSppResults.playerSppResult : [match.spp.awayTeamSppResult.playerSppResults.playerSppResult]
-          - match.awayTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
-          - match.awayTeam.rosterStatistics = match.statistics.awayGamerStatistics.teamStatistics.playerStatistics
+          //- let roster = Array.isArray(match.spp.homeTeamSppResult.playerSppResults.playerSppResult) ? match.spp.homeTeamSppResult.playerSppResults.playerSppResult : [match.spp.homeTeamSppResult.playerSppResults.playerSppResult]
+          //- match.homeTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
+          //- - match.homeTeam.rosterStatistics = match.statistics.homeGamerStatistics.teamStatistics.playerStatistics
+          //- - match.awayTeam.mvp = match.awayMvp
+          //- - roster = Array.isArray(match.spp.awayTeamSppResult.playerSppResults.playerSppResult) ? match.spp.awayTeamSppResult.playerSppResults.playerSppResult : [match.spp.awayTeamSppResult.playerSppResults.playerSppResult]
+          //- - match.awayTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
+          //- - match.awayTeam.rosterStatistics = match.statistics.awayGamerStatistics.teamStatistics.playerStatistics
           hr
           div(class="col-12 table-responsive-md")
             table(class="match-stats-table" style="width:100%")

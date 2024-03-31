@@ -52,14 +52,42 @@ class Maintenance{
       res.redirect('/');
     });
 
+    this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
+      try{
+        await bb3MatchReport.matchReport("8f5984b8-ec31-11ee-a745-02000090a64f", process.env.BB3Hook);
+
+        // for(const leagueId of ["94f0d3aa-e9ba-11ee-a745-02000090a64f"]){
+        //   const competitions = await bb3.getCompetitions({leagueId:leagueId,format:2});
+        //   for (const competition of competitions){
+        //     const matches = await bb3.getMatches({"competition.id": competition.id});
+        //     for (const match of matches){
+        //       try{
+        //         //await bb3Service.correctMatch(match.matchId);
+        //         await bb3MatchReport.matchReport("8f5984b8-ec31-11ee-a745-02000090a64f", process.env.BB3Hook);
+        //       } catch(e){
+        //         loggingService.error(e);
+        //         loggingService.information(match.matchId);
+        //       }
+        //     }
+        //   }
+        // }
+
+
+        //await bb3Service.correctMatch("95655ed4-ec15-11ee-a745-02000090a64f");
+      } catch(e) {
+        console.log(e);
+      }
+      res.redirect('/');
+    });
+
     this.router.get('/bb3', util.verifyMaintenanceToken, async function(req, res){
       try{
-        await bb3Service.updateCompetitions("3c9429cd-b146-11ed-80a8-020000a4d571");
+        //await bb3Service.updateCompetitions("3c9429cd-b146-11ed-80a8-020000a4d571");
         
         await bb3Service.updateCompetitions("94f0d3aa-e9ba-11ee-a745-02000090a64f");
         //bb3Service.calculateStandings("abecb238-c1ed-11ee-a745-02000090a64f")
 
-        for(const leagueId of ["94f0d3aa-e9ba-11ee-a745-02000090a64f","3c9429cd-b146-11ed-80a8-020000a4d571"]){
+        for(const leagueId of ["94f0d3aa-e9ba-11ee-a745-02000090a64f"]){
           const competitions = await bb3.getCompetitions({leagueId:leagueId,format:2});
           for (const competition of competitions){
             const matches = await bb3.getMatches({"competition.id": competition.id});

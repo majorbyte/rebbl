@@ -19,11 +19,11 @@ thead
     th(class="align-left") Player
     th(class="align-left") Position
     th(class="align-left" style="min-width:160px") Skills
+    th(class="align-center") Comp
+    th(class="align-center") TD
+    th(class="align-center") INT
+    th(class="align-center") CAS
     th(class="align-center") 
-    //th(class="align-center") Comp
-    //th(class="align-center") TD
-    //th(class="align-center") INT
-    //th(class="align-center") CAS
     //th(class="align-center") Foul
     th(class="align-center") Σ SPP
 - let index = 0
@@ -31,6 +31,6 @@ tbody
   - let isAdminned = team.mvp != 1
   - let pageSkills = []
   each player in team.roster
-    -if (player.player.position)
-      - const stats = team.rosterStatistics ? team.rosterStatistics.find(x => x.id === player.player.id).statistics : []
+    -if (player.type)
+      - const stats = team.rosterStatistics ? team.rosterStatistics.find(x => x.id === player.id).statistics : []
       +player(player, stats, team.mvp)

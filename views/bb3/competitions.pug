@@ -12,7 +12,11 @@ block head
 block content
   div.Background.u-bottomPadding--large.u-topPadding--medium
     div.container.navcontainer(style="display:flex;flex-flow:wrap" data-index="0")
+      - let compName = ""
       each comp, index in competitions.sort(function(a,b){return a.name > b.name})
+        - if (compName != "" && compName != comp.name.split(" ")[0])
+          div.col-12
+        - compName = comp.name.split(" ")[0]  
         div.card.m-1
           img.card-img-top(src=`https://cdn.rebbl.net/images/bb3/Logos/${comp.logo}` alt="...")
           div.card-body
@@ -26,3 +30,6 @@ block content
               p.card-text= `Round ${comp.day}`
               a(style="    position: absolute;bottom: 10px;right: 10px;font-size: 2em;" href="/bb3/competition/" + comp.id)
                 i(class="fa-solid fa-arrow-circle-right")
+              
+
+
