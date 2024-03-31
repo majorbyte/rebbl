@@ -46,7 +46,7 @@ mixin player(player, stats, mvp)
       div(style="margin-left:15px")= player.stats.touchdowns_scored > 0 ? player.stats.touchdowns_scored : ""
     // INT
     td(class="match-stats")
-      div(style="margin-left:15px")= player.stats.inflictedinterceptions > 0 ? player.stats.inflictedinterceptions : ""
+      div(style="margin-left:15px")= player.stats.interception_success > 0 ? player.stats.interception_success : ""
     // CAS
     td(class="match-stats")
       div(style="margin-left:15px")= player.stats.casualties_inflicted > 0 ? player.stats.casualties_inflicted : ""
@@ -57,7 +57,7 @@ mixin player(player, stats, mvp)
       if getStat(stats,62) > 0
         img(src=`https://cdn.rebbl.net/images/bb3/ico_action_expelled_.png`)
       if getCasualtyIcon()
-        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${getCasualtyIcon()}`)
+        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${getCasualtyIcon()}` title=getCasualtyIcon().replace("ico_action_","").replace("_", " ").replace(".png",""))
 
     //each id in [53,18,55,19,47]
       td(class="match-stats")

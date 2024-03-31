@@ -28,13 +28,13 @@ class BB3{
   };
 
   routesConfig(){
-    this.router.get("/", util.cache(1), util.checkAuthenticated, this.competitions);
+    this.router.get("/", util.cache(10*60), util.checkAuthenticated, this.competitions);
     this.router.get("/competition/:competitionId", util.cache(10*60), util.checkAuthenticated, this.competition);
     this.router.get("/competition/:competitionId/schedules", util.cache(10*60), util.checkAuthenticated, this.schedules);
     this.router.get("/competition/:competitionId/schedules/:round", util.cache(10*60), util.checkAuthenticated, this.round);
     //this.router.get("/rookies", util.cache(1), util.checkAuthenticated, this.rookieStandings);
     this.router.get("/team/:id", util.cache(10*60), util.checkAuthenticated, this.team);
-    this.router.get("/match/:id", util.cache(1), util.checkAuthenticated, this.match);
+    this.router.get("/match/:id", util.cache(10*60), util.checkAuthenticated, this.match);
     this.router.get("/unplayed/:id", util.cache(10*60), util.checkAuthenticated, this.unplayed);
 
     return this.router;
