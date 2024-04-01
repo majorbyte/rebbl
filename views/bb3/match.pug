@@ -52,7 +52,7 @@ block content
               if match.validated || match.hasPendingValidation === "0"
                 .MatchStatus.col-12 
                   span.badge.text-bg-success validated
-              else if user && (user.roles.indexOf("admin") > -1 || match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) &&  (!match.validated || match.hasPendingValidation === "1")  && (!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1)
+              else if user && ((user.roles && user.roles.indexOf("admin") > -1) || match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) &&  (!match.validated || match.hasPendingValidation === "1")  && (!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1)
                 .MatchStatus.col-12 
                   form(action=`/bb3/match/${match.matchId}/validate` method="POST")
                     button.btn.btn-sm.btn-primary.mx-2(style="vertical-align:top") Validate
