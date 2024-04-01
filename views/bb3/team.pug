@@ -13,7 +13,7 @@ thead
   tr
     th(colspan="11")
       h2= team.name
-        - if (user && team.coach.id === user.bb3id && match.validatedBy && match.validatedBy.indexOf(team.coach.id) === -1)
+        - if (user && team.coach.id === user.bb3id &&  match.hasPendingValidation === "1" && (!match.validatedBy || match.validatedBy.indexOf(team.coach.id) === -1))
           form(action=`/bb3/match/${match.matchId}/validate` method="POST")
             button.btn.btn-primary.mx-2(style="vertical-align:top") Validate
 
