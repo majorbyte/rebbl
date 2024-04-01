@@ -190,7 +190,10 @@ block content
         div(class="row justify-content-center align-items-center h-100")
           div(class="col-5 text-end")
             h3
-              a(href=`/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
+              -if (match.bb3)
+                a(href=`/bb3/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
+              -else
+                a(href=`/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
           div(class="col-2 text-center")
             - if (match.bb3)
               img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.opponents[0].team.logo alt="" class="TeamLabel-logo")
@@ -203,7 +206,10 @@ block content
               img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
           div(class="col-5")
             h3 
-              a(href=`/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
+              -if (match.bb3)
+                a(href=`/bb3/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
+              -else
+                a(href=`/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
         div(class="row justify-content-center")
           div(class="col-4 text-end")= match.bb3 ? getRace(match.opponents[0].team.race) : match.opponents[0].team.race
           div(class="col-2 text-center") 

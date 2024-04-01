@@ -1,10 +1,16 @@
 .carousel-item(class=active ? "active" : "" style="background-color:unset" )
   .row.justify-content-center.align-items-center
     .col-2.text-conter
-      img(src="https://cdn.rebbl.net/images/logo/logo_" + opponent.team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+      -if (match.bb3)
+        img(src="https://cdn.rebbl.net/images/bb3/Logos/" + opponent.team.logo alt="" class="TeamLabel-logo")
+      -else
+        img(src="https://cdn.rebbl.net/images/logo/logo_" + opponent.team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
     .col-10
       h3
-        a(href=`/team/${opponent.team.id}`)= opponent.team.name
+        - if (match.bb3)
+          a(href=`/team/${opponent.team.id}`)= opponent.team.name
+        - else
+          a(href=`/bb3/team/${opponent.team.id}`)= opponent.team.name
   .row
     .col-4
       strong race

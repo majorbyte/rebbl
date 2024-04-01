@@ -188,14 +188,14 @@ block content
       div(class="row justify-content-center align-items-center h-100")
         div(class="col-5 text-end")
           h3
-            a(href=`/team/${match.home.team.id}`)= match.home.team.name
+            a(href=`/bb3/team/${match.home.team.id}`)= match.home.team.name
         div(class="col-2 text-center")
           img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.home.team.logo alt="" class="TeamLabel-logo")
           span -
           img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.away.team.logo alt="" class="TeamLabel-logo")
         div(class="col-5")
           h3 
-            a(href=`/team/${match.away.team.id}`)= match.away.team.name
+            a(href=`/bb3/team/${match.away.team.id}`)= match.away.team.name
       div(class="row justify-content-center")
         div(class="col-4 text-end")= getRace(match.home.team.race)
         div(class="col-2 text-center") 

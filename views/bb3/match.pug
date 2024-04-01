@@ -26,7 +26,7 @@ block content
                       - let tn = match.homeTeam.name
                         a(href=`/bb3/team/${match.homeTeam.id}` )= tn
                     div(class="TeamLabel-coach ")
-                      a(href=`/coach/${match.homeGamer.name}`)= match.homeGamer.name
+                      a(href=`/coach/bb3/${match.homeGamer.id}`)= match.homeGamer.name
                     div(class="TeamLabel-coach" )= "winnings: " + (match.homeGameResultGain.newTreasury - match.homeGameResultGain.previousTreasury - match.homeGameResultGain.cashSpentDuringMatch)
                     - let homeFans = Number(match.homeGameResultGain.newDedicatedFans) - Number(match.homeGameResultGain.previousDedicatedFans)
                     - if (homeFans != 0)
@@ -34,8 +34,8 @@ block content
                     -else 
                       div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
 
-            div(class="MatchRow-status")
-              span(class="MatchStatus MatchStatus--transparent")
+            .MatchRow-status.row
+              .MatchStatus.MatchStatus--transparent.col-12
                 span
                   if match.homeScore > match.awayScore
                     span(class="MatchStatus-score is-winner")= match.homeScore
@@ -49,6 +49,13 @@ block content
                     span(class="MatchStatus-score")= match.homeScore
                     span(class="MatchStatus-score") -
                     span(class="MatchStatus-score")= match.awayScore
+              if match.validated || match.hasPendingValidation === "0"
+                .MatchStatus.col-12 
+                  span.badge.text-bg-success validated
+              else if user && (user.roles.indexOf("admin") > -1 || match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) &&  (!match.validated || match.hasPendingValidation === "1")  && (!match.validatedBy || match.validatedBy.indexOf(team.coach.id) === -1)
+                .MatchStatus.col-12 
+                  form(action=`/bb3/match/${match.matchId}/validate` method="POST")
+                    button.btn.btn-sm.btn-primary.mx-2(style="vertical-align:top") Validate
             div(class="MatchRow-team")
               div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                 div(class="TeamLabel")
@@ -59,7 +66,7 @@ block content
                       a(href=`/bb3/team/${match.awayTeam.id}` )= on
 
                     div(class="TeamLabel-coach ")
-                      a(href=`/coach/${match.awayGamer.id}`)= match.awayGamer.name
+                      a(href=`/coach/bb3/${match.awayGamer.id}`)= match.awayGamer.name
                     div(class="TeamLabel-coach" )= "winnings: " + (match.awayGameResultGain.newTreasury - match.awayGameResultGain.previousTreasury - match.awayGameResultGain.cashSpentDuringMatch)
                     - let awayFans = Number(match.awayGameResultGain.newDedicatedFans) - Number(match.awayGameResultGain.previousDedicatedFans)
                     - if ( awayFans != 0)
