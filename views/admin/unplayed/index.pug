@@ -11,13 +11,12 @@ block scripts
         self.loading = ko.observable(true);
 
 
-        self.filteredLeagues = ko.observableArray([]);
         self.filteredDivisions = ko.observableArray([]);
         self.filteredRounds = ko.observableArray([]);
 
         self.divisions = ko.computed(function(){
           let collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-          return [...new Set(self.games().map(x => x.competition.replace(/Season 24.{1,3}Division /i,'Div ')))].sort(collator.compare); 
+          return [...new Set(self.games().map(x => x.competition))].sort(collator.compare); 
         });
 
         self.rounds = ko.computed(function(){
@@ -27,43 +26,36 @@ block scripts
 
         self.filteredGames = ko.computed(function(){
 
-          if (self.filteredDivisions().length > 0  && self.filteredLeagues().length > 0 && self.filteredRounds().length  > 0){
+          if (self.filteredDivisions().length > 0  && self.filteredRounds().length  > 0){
 
-            return self.games().filter(x => self.filteredLeagues.indexOf(x.league.replace(" 2","")) > -1
-              && self.filteredDivisions.indexOf(x.competition.replace(/Season 24.{1,3}Division /i,'Div ')) > -1
+            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition) > -1
               && self.filteredRounds.indexOf(x.round || 2) > -1       
             );
           }
 
-          if (self.filteredLeagues().length > 0 && self.filteredRounds().length  > 0){
+          if (self.filteredRounds().length  > 0){
 
-            return self.games().filter(x => self.filteredLeagues.indexOf(x.league.replace(" 2","")) > -1
-              && self.filteredRounds.indexOf(x.round || 2) > -1       
+            return self.games().filter(x => self.filteredRounds.indexOf(x.round || 2) > -1       
             );
           }
 
           if (self.filteredDivisions().length > 0  && self.filteredRounds().length  > 0){
 
-            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition.replace(/Season 24.{1,3}Division /i,'Div ')) > -1
+            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition) > -1
               && self.filteredRounds.indexOf(x.round || 2) > -1       
             );
           }
 
-          if (self.filteredDivisions().length > 0  && self.filteredLeagues().length > 0){
+          if (self.filteredDivisions().length > 0 ){
 
-            return self.games().filter(x => self.filteredLeagues.indexOf(x.league.replace(" 2","")) > -1
-              && self.filteredDivisions.indexOf(x.competition.replace(/Season 24.{1,3}Division /i,'Div ')) > -1
+            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition) > -1
             );
           }
 
 
 
           if (self.filteredDivisions().length > 0 ){
-            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition.replace(/Season 24.{1,3}Division /i,'Div ')) > -1);
-          }
-
-          if ( self.filteredLeagues().length > 0){
-            return self.games().filter(x => self.filteredLeagues.indexOf(x.league.replace(" 2","")) > -1);
+            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition) > -1);
           }
 
           if ( self.filteredRounds().length > 0){
@@ -75,16 +67,6 @@ block scripts
         });
 
 
-        self.toggleLeague= function(l,c,e){
-          self.toggleButton(e);
-          let i = self.filteredLeagues.indexOf(l);
-          if( i === -1){
-            self.filteredLeagues.push(l.replace(" 2", ""));
-          } else {
-            self.filteredLeagues.splice(i,1);  
-          }
-          
-        }
         self.toggleDivision= function(d,e){
           self.toggleButton(e);
           let i = self.filteredDivisions.indexOf(d);
@@ -111,9 +93,9 @@ block scripts
           toggle.toggle();          
         }
 
-        self.refresh = async function(g){
-          await fetch(`/api/v1/admin/unplayed/${g.contest_id}`,{method:"POST"});
-        }
+        //- self.refresh = async function(g){
+        //-   await fetch(`/api/v1/admin/unplayed/${g.contest_id}`,{method:"POST"});
+        //- }
 
     }
 
@@ -135,15 +117,6 @@ block content
     div(class="row col-12 justify-content-center")
       i(class="fa-solid fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
     // /ko
-    div(class="row col-12")
-      div(class="" role="group" aria-label="Basic checkbox toggle button group")
-        input.btn-check#BigO(type="checkbox" autocomplete="off")       
-        label(for="BigO" class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - Big O')" style="margin-right: 15px") Big O
-        input.btn-check#Gman(type="checkbox" autocomplete="off")       
-        label(for="Gman" class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - GMan')" style="margin-right: 15px") GMan
-        input.btn-check#REL(type="checkbox" autocomplete="off")       
-        label(for="REL" class="btn btn-outline-primary" data-bind="click: $root.toggleLeague.bind($data,'REBBL - REL')" style="margin-right: 15px")  REL
-    br  
     div(class="row col-12")
       div(class="btn-group-toggle" data-toggle="buttons")
         // ko foreach: divisions
@@ -168,27 +141,20 @@ block content
     div(data-bind="foreach: filteredGames" )
       div(class="row col-12")
         div(class="col-2")
-          button(data-bind="click:$root.refresh" class="btn btn-small btn-success" style="margin:0px 10px")
-            i(class="fa-solid fa-refresh")
-          span( data-bind="text: league.replace(/rebbl - /i, '') + ' ' + competition.replace(/Season 24.{1,3}Division /i,'Div ')")
+          // ko if: status === 2
+          a(data-bind="text: competition, attr:{href:`/bb3/match/${matchId}` }"  target="_blank" style="color:#03a9f4")
+          // /ko
+          // ko if: status === 1
+          span( data-bind="text: competition")
+          // /ko
         div(class="col-2" )
-          a(data-bind="text: coach1, attr:{href:'/coach/'+ coach1 + '/details' }"  target="_blank" style="color:#03a9f4")
+          a(data-bind="text: home.coach.name, attr:{href:'/bb3/coach/'+ home.coach.id + '/details' }"  target="_blank" style="color:#03a9f4")
         div(class="col-3")
-          //ko if: $data.link1
-          a(data-bind="text: team1, attr:{href: link1}"  target="_blank")
-          // /ko
-          //ko ifnot: $data.link1
-          span(data-bind="text: team1")
-          // /ko
+          span(data-bind="text: home.team.name")
         div(class="col-3")
-          //ko if: $data.link2
-          a(data-bind="text: team2, attr:{href: link2}"  target="_blank")
-          // /ko
-          //ko ifnot: $data.link2
-          span(data-bind="text: team2")
-          // /ko
+          span(data-bind="text: away.team.name")
         div(class="col-2")
-          a(data-bind="text: coach2, attr:{href:'/coach/'+ coach2 + '/details'}" target="_blank" style="color:#03a9f4")
+          a(data-bind="text: away.coach.name, attr:{href:'/bb3/coach/'+ away.coach.id + '/details'}" target="_blank" style="color:#03a9f4")
 
 
 
