@@ -8,7 +8,8 @@ block append vars
     let options = {company:company}
     const homeTeamStats = match.statistics.homeGamerStatistics.teamStatistics.statistics.statistic
     const awayTeamStats = match.statistics.awayGamerStatistics.teamStatistics.statistics.statistic
-  
+    
+    
 
 block content
   div(class=`container`)
@@ -35,6 +36,7 @@ block content
                       div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
 
             .MatchRow-status.row
+              - if (!user.bb3id) user.bb3id = 0
               .MatchStatus.MatchStatus--transparent.col-12.row
                 if match.validated || match.hasPendingValidation === "0"
                   .MatchStatus.col-12 
