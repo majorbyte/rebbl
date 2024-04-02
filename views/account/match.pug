@@ -126,20 +126,24 @@ block append scripts
 
         $(".stream").on("click", async function(event){
           let id = event.currentTarget.getAttribute("data-contestid");
-          let result = await fetch(`/api/v1/upcoming/stream/${id}`,{method:"POST"});
+          let matchId = event.currentTarget.getAttribute("data-matchId");
+
+          let result = await fetch(`/api/v1/upcoming/stream/${id ?? matchId}`,{method:"POST"});
 
           if (result.ok){
             $(event.currentTarget).addClass("hidden");
-            $(`#unstream-${id}`).removeClass("hidden");
+            $(`#unstream-${id || matchId}`).removeClass("hidden");
           } 
         });
         $(".unstream").on("click", async  function(event){
           let id = event.currentTarget.getAttribute("data-contestid");
-          let result = await fetch(`/api/v1/upcoming/unstream/${id}`,{method:"POST"});
+          let matchId = event.currentTarget.getAttribute("data-matchId");
+
+          let result = await fetch(`/api/v1/upcoming/unstream/${id ?? matchId}`,{method:"POST"});
 
           if (result.ok){
             $(event.currentTarget).addClass("hidden");
-            $(`#stream-${id}`).removeClass("hidden");
+            $(`#stream-${id || matchId}`).removeClass("hidden");
           } 
         });
 
@@ -185,8 +189,12 @@ block content
                   a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.opponents[0].team.name data-team-away=match.opponents[1].team.name class="calendar-add") Add to Google Calendar
                 -if (user.twitch)                  
                   .col-xs-12.col-sm-5.col-md-2 
-                    btn.hidden.btn.btn-danger.unstream(id=`unstream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
-                    btn.btn.btn-success.stream(id=`stream-${match.contest_id}` data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
+                    if (match.date && match.date.stream && match.date.stream.name === user.reddit)
+                      btn.btn.btn-danger.unstream(id=`unstream-${match.contest_id || match.matchId}` data-matchId=match.matchId data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
+                      btn.hidden.btn.btn-success.stream(id=`stream-${match.contest_id || match.matchId}` data-matchId=match.matchId data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
+                    else
+                      btn.hidden.btn.btn-danger.unstream(id=`unstream-${match.contest_id || match.matchId}` data-matchId=match.matchId data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
+                      btn.btn.btn-success.stream(id=`stream-${match.contest_id || match.matchId}` data-matchId=match.matchId data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
       .d-none.d-sm-block
         div(class="row justify-content-center align-items-center h-100")
           div(class="col-5 text-end")

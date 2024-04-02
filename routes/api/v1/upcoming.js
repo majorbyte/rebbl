@@ -98,7 +98,9 @@ router.get("/", util.cache(10*60), async function(req, res){
 
 router.post("/stream/:contest_id", util.ensureAuthenticatedApi, async function(req, res){
     try{
-        let date = await datingService.getDate(Number(req.params.contest_id));
+        let date = isNaN(req.params.contest_id) 
+          ? await datingService.getDate(req.params.contest_id) 
+          : await datingService.getDate(Number(req.params.contest_id));
         //let user = await accountService.getAccount(req.user.name);
 
         if(date && !date.stream){
@@ -116,7 +118,9 @@ router.post("/stream/:contest_id", util.ensureAuthenticatedApi, async function(r
 
 router.post("/unstream/:contest_id", util.ensureAuthenticatedApi, async function(req, res){
     try{
-        let date = await datingService.getDate(Number(req.params.contest_id));
+      let date = isNaN(req.params.contest_id) 
+        ? await datingService.getDate(req.params.contest_id) 
+        : await datingService.getDate(Number(req.params.contest_id));
 
         if(date && date.stream){
             datingService.update(date.id, {$unset:{stream:""}});
