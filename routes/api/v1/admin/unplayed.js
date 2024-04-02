@@ -16,6 +16,11 @@ const express = require('express')
       for(const competition of competitions){
         const schedules = await dataService.getSchedules({competitionId:competition.id, status:{$lt:3}});
         schedules.forEach(x => x.competition = competition.name);
+        for(const schedule of schedules.filter(x => x.status === 2)){
+          const match = await dataService.getMatch({matchId:schedule.matchId});
+          schedule.validatedBy = match.validatedBy;
+          schedule.notValidatedBy = match.notValidatedBy;
+        }
         data = data.concat(schedules);
       }
 

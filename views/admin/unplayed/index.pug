@@ -9,6 +9,8 @@ block scripts
         const self = this;
         self.games = ko.observableArray([]);
         self.loading = ko.observable(true);
+        self.played = ko.observable(true);
+        self.unplayed = ko.observable(true);
 
 
         self.filteredDivisions = ko.observableArray([]);
@@ -27,15 +29,15 @@ block scripts
         self.filteredGames = ko.computed(function(){
 
           if (self.filteredDivisions().length > 0  && self.filteredRounds().length  > 0){
-
             return self.games().filter(x => self.filteredDivisions.indexOf(x.competition) > -1
-              && self.filteredRounds.indexOf(x.round || 2) > -1       
+              && self.filteredRounds.indexOf(x.round || 2) > -1
+              && ((self.played() && x.status === 2) || (self.unplayed() && x.status === 1 ))        
             );
           }
 
           if (self.filteredRounds().length  > 0){
-
-            return self.games().filter(x => self.filteredRounds.indexOf(x.round || 2) > -1       
+            return self.games().filter(x => self.filteredRounds.indexOf(x.round || 2) > -1 
+              && ((self.played() && x.status === 2) || (self.unplayed() && x.status === 1 ))        
             );
           }
 
@@ -43,26 +45,30 @@ block scripts
 
             return self.games().filter(x => self.filteredDivisions.indexOf(x.competition) > -1
               && self.filteredRounds.indexOf(x.round || 2) > -1       
+              && ((self.played() && x.status === 2) || (self.unplayed() && x.status === 1 ))        
             );
           }
 
           if (self.filteredDivisions().length > 0 ){
 
             return self.games().filter(x => self.filteredDivisions.indexOf(x.competition) > -1
+              && ((self.played() && x.status === 2) || (self.unplayed() && x.status === 1 ))        
             );
           }
 
-
-
           if (self.filteredDivisions().length > 0 ){
-            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition) > -1);
+            return self.games().filter(x => self.filteredDivisions.indexOf(x.competition) > -1
+              && ((self.played() && x.status === 2) || (self.unplayed() && x.status === 1 ))        
+            );
           }
 
           if ( self.filteredRounds().length > 0){
-            return self.games().filter(x => self.filteredRounds.indexOf(x.round || 2) > -1);
+            return self.games().filter(x => self.filteredRounds.indexOf(x.round || 2) > -1
+              && ((self.played() && x.status === 2) || (self.unplayed() && x.status === 1 ))        
+            );
           }
 
-          return self.games();
+          return self.games().filter(x => (self.played() && x.status === 2) || (self.unplayed() && x.status === 1 ));
 
         });
 
@@ -85,7 +91,14 @@ block scripts
             self.filteredRounds.splice(i,1);  
           }
         }
-
+        self.togglePlayed= function(r,e){
+          self.toggleButton(e);
+          self.played(!self.played());
+        }        
+        self.toggleUnplayed= function(r,e){
+          self.toggleButton(e);
+          self.unplayed(!self.unplayed());
+        }
         self.toggleButton = function(e){
           const toggle = new bootstrap.Button(e.target,{
             toggle:true
@@ -112,49 +125,68 @@ block scripts
 
 
 block content
-  div(class="container")
+  .container
     //ko if: loading
-    div(class="row col-12 justify-content-center")
+    .row.col-12.justify-content-center
       i(class="fa-solid fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
     // /ko
-    div(class="row col-12")
-      div(class="btn-group-toggle" data-toggle="buttons")
+    .row.col-12
+      .btn-group-toggle(data-toggle="buttons")
         // ko foreach: divisions
         input.btn-check(type="checkbox" autocomplete="off" data-bind="attr:{id:'div_btn'+$index()}")
-        label(class="btn btn-outline-primary" data-bind="click: $root.toggleDivision, text: $data, attr:{for:'div_btn'+$index()}")
+        label.btn.btn-outline-primary(data-bind="click: $root.toggleDivision, text: $data, attr:{for:'div_btn'+$index()}")
         // /ko
     br
-    div(class="row col-12")
-      div(class="btn-group-toggle" data-toggle="buttons")
+    .row.col-12
+      .btn-group-toggle(data-toggle="buttons")
         // ko foreach: rounds
         input.btn-check(type="checkbox" autocomplete="off" data-bind="attr:{id:'week_btn'+$index()}")
-        label(class="btn btn-outline-primary" data-bind="click: $root.toggleRound, text: $data, attr:{for:'week_btn'+$index()}") 
+        label.btn.btn-outline-primary(data-bind="click: $root.toggleRound, text: $data, attr:{for:'week_btn'+$index()}") 
         // /ko        
     br
-    div(class="row col-12")
-      div(class="col-2") League
-      div(class="col-2") Coach
-      div(class="col-3") Team
-      div(class="col-3") Team
-      div(class="col-2") Coach
-    hr
-    div(data-bind="foreach: filteredGames" )
-      div(class="row col-12")
-        div(class="col-2")
-          // ko if: status === 2
-          a(data-bind="text: competition, attr:{href:`/bb3/match/${matchId}` }"  target="_blank" style="color:#03a9f4")
-          // /ko
-          // ko if: status === 1
-          span( data-bind="text: competition")
-          // /ko
-        div(class="col-2" )
-          a(data-bind="text: home.coach.name, attr:{href:'/bb3/coach/'+ home.coach.id + '/details' }"  target="_blank" style="color:#03a9f4")
-        div(class="col-3")
-          span(data-bind="text: home.team.name")
-        div(class="col-3")
-          span(data-bind="text: away.team.name")
-        div(class="col-2")
-          a(data-bind="text: away.coach.name, attr:{href:'/bb3/coach/'+ away.coach.id + '/details'}" target="_blank" style="color:#03a9f4")
+    .row.col-12
+      .btn-group-toggle(data-toggle="buttons")
+        input.btn-check(type="checkbox" autocomplete="off" data-bind="attr:{id:'played_btn'}")
+        label.btn.btn-outline-primary.active(data-bind="click: $root.togglePlayed, text: 'played', attr:{for:'played_btn'}") 
+        input.btn-check(type="checkbox" autocomplete="off" data-bind="attr:{id:'unplayed_btn'}")
+        label.btn.btn-outline-primary.active(data-bind="click: $root.toggleUnplayed, text: 'unplayed', attr:{for:'unplayed_btn'}") 
+    br
+    table.table.table-sm
+      thead
+        th Competition 
+        th Home Coach 
+        th Home Team 
+        th Away Team 
+        th Away Coach
+      tbody(data-bind="foreach: filteredGames" )
+        tr
+          td
+            // ko if: status === 2
+            a(data-bind="text: competition, attr:{href:`/bb3/match/${matchId}` }"  target="_blank" style="color:#03a9f4")
+            // /ko
+            // ko if: status === 1
+            span( data-bind="text: competition")
+            // /ko
+          td
+            a(data-bind="text: home.coach.name, attr:{href:'/coach/bb3'+ home.coach.id + '/details' }"  target="_blank" style="color:#03a9f4")
+            // ko if: $data.hasOwnProperty("validatedBy") && validatedBy.indexOf(home.coach.id) > -1
+            span.badge.badge-sm.text-bg-success.mx-2 validated
+            // /ko
+            // ko if: $data.hasOwnProperty("notValidatedBy") && notValidatedBy.indexOf(home.coach.id) > -1
+            span.badge.bage-sm.text-bg-danger.mx-2 blocked
+            // /ko
+          td 
+            span(data-bind="text: home.team.name")
+          td 
+            span(data-bind="text: away.team.name ")
+          td
+            a(data-bind="text: away.coach.name, attr:{href:'/coach/bb3'+ away.coach.id + '/details'}" target="_blank" style="color:#03a9f4")
+            // ko if: $data.hasOwnProperty("validatedBy") && validatedBy.indexOf(away.coach.id) > -1
+            span.badge.bage-sm.text-bg-success.mx-2 validated
+            // /ko
+            // ko if: $data.hasOwnProperty("notValidatedBy") && notValidatedBy.indexOf(away.coach.id) > -1
+            span.badge.bage-sm.text-bg-danger.mx-2 blocked
+            // /ko
 
 
 
