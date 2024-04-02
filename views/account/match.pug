@@ -68,7 +68,8 @@ block append scripts
           let id = event.currentTarget.getAttribute("data-contestid");
           let competitionId = event.currentTarget.getAttribute("data-competitionid");
           let clan = event.currentTarget.getAttribute("data-clan");
-          let target =event.currentTarget.getAttribute("data-bs-target");
+          let target = event.currentTarget.getAttribute("data-bs-target");
+          let matchId = event.currentTarget.getAttribute("data-matchId");
           
           let timezone = "#{user.timezone}" || moment.tz.guess();
 
@@ -80,7 +81,7 @@ block append scripts
           
           setCalendarDatetime();
 
-          let result = await fetch(`/account/unplayed/${id}`,{
+          let result = await fetch(id ? `/account/unplayed/${id}` : `/bb3/unplayed/${matchId}/schedule`,{
             method:"PUT",
             headers:{
               'Content-Type': 'application/json',
@@ -176,11 +177,11 @@ block content
               span Enter match date in your own local time
               .row.col.justify-content-center
                 .col-xs-12.col-sm-7.col-md-6.col-lg-4
-                  .input-group.datetimepicker(id=`datetimepicker-${match.contest_id}` data-td-target-input="nearest" data-td-target-toggle="nearest" data-btn=`#btn-${match.contest_id}`)
-                    span.input-group-text(data-td-target=`#datetimepicker-${match.contest_id}` data-td-toggle="datetimepicker")
+                  .input-group.datetimepicker(id=`datetimepicker-${match.contest_id||match.matchId}` data-td-target-input="nearest" data-td-target-toggle="nearest" data-btn=`#btn-${match.contest_id||match.matchId}`)
+                    span.input-group-text(data-td-target=`#datetimepicker-${match.contest_id ||match.matchId}` data-td-toggle="datetimepicker")
                       i.fa-solid.fa-calendar
-                    input.datetimepickerInput.form-control.px-0.text-center(id=`datetimepickerInput-${match.contest_id}` type="text" value=(match.date ? match.date.date : null)  data-td-target=`#datetimepicker-${match.contest_id}`)
-                    button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-contestid=match.contest_id data-competitionid=match.competition_id data-bs-target=`#datetimepickerInput-${match.contest_id}` id=`btn-${match.contest_id}`) Set match date
+                    input.datetimepickerInput.form-control.px-0.text-center(id=`datetimepickerInput-${match.contest_id||match.matchId}` type="text" value=(match.date ? match.date.date : null)  data-td-target=`#datetimepicker-${match.contest_id||match.matchId}`)
+                    button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-contestid=match.contest_id data-competitionid=match.competition_id data-matchId=match.matchId data-bs-target=`#datetimepickerInput-${match.contest_id || match.matchId}` id=`btn-${match.contest_id || match.matchId}`) Set match date
                   a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.opponents[0].team.name data-team-away=match.opponents[1].team.name class="calendar-add") Add to Google Calendar
                 -if (user.twitch)                  
                   .col-xs-12.col-sm-5.col-md-2 

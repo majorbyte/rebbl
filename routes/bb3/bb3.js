@@ -4,6 +4,7 @@ const bb3Service = require("../../lib/bb3Service.js");
 
 const express = require("express")
 , dataService = require("../../lib/DataServiceBB3.js").rebbl3
+, datingService = require("../../lib/DatingService.js")
 , util = require("../../lib/util.js");
 
 class BB3{
@@ -23,6 +24,44 @@ class BB3{
   standings = async (req,res) => res.render("bb3/standings", {rankings:await dataService.getRankings({competitionId:"2b791aa6-b14d-11ed-80a8-020000a4d571"})});
   rookieStandings = async (req,res) => res.render("bb3/standings", {rankings:await dataService.getRankings({competitionId:"5d031521-b151-11ed-80a8-020000a4d571"})});
 
+  scheduleMatch = async function(req, res){
+    try{
+      let contest = await dataService.getSchedule({"matchId":req.params.matchId});
+      
+      if(contest && (contest.away.coach.id === res.locals.user.bb3id || contest.home.coach.id === res.locals.user.bb3id)){
+        if (req.body.date && req.body.date.length === 16)
+          datingService.updateDate(req.params.matchId, req.body.date);
+        else 
+          datingService.removeDate(req.params.matchId);
+        res.send("ok");
+      } else {
+        res.status(403).send();
+      }
+    } catch(err){
+      console.log(err);
+    }
+  }
+
+  stream = async function(req, res){
+    try{
+      let contest = [];
+      contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id) });
+      if (contest.length === 0) contest = await dataService.getSchedule({matchId:req.params.match_id});
+      
+      if(contest.length > 0){
+        if (req.body.date && req.body.date.length === 16)
+          datingService.updateDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id), req.body.date);
+        else 
+          datingService.removeDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id));
+        res.send("ok");
+      } else {
+        res.status(403).send();
+      }
+    } catch(err){
+      console.log(err);
+    }
+  };
+
   team = async (req,res) => {
     const team = await dataService.getTeam({id:req.params.id});
     const m = Array.isArray(team?.matches) ? team.matches : [];
@@ -38,8 +77,11 @@ class BB3{
     this.router.get("/team/:id", util.cache(10*60), util.checkAuthenticated, this.team);
     this.router.get("/match/:id", util.cache(1), util.checkAuthenticated, this.match);
     this.router.get("/unplayed/:id", util.cache(10*60), util.checkAuthenticated, this.unplayed);
-    
+
     this.router.post("/match/:id/validate", util.cache(1), util.ensureAuthenticated, this.validate);
+
+    this.router.put('/unplayed/:matchId/stream', util.checkAuthenticated, util.hasRole('streamer'), this.stream);
+    this.router.put('/unplayed/:matchId/schedule', util.checkAuthenticated, util.ensureAuthenticated, this.scheduleMatch);
 
     return this.router;
   }
