@@ -44,15 +44,13 @@ class BB3{
 
   stream = async function(req, res){
     try{
-      let contest = [];
-      contest = await leagueService.searchLeagues({"contest_id":Number(req.params.match_id) });
-      if (contest.length === 0) contest = await dataService.getSchedule({matchId:req.params.match_id});
+      let contest = await dataService.getSchedule({"matchId":req.params.matchId});
       
-      if(contest.length > 0){
+      if(contest){
         if (req.body.date && req.body.date.length === 16)
-          datingService.updateDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id), req.body.date);
+          datingService.updateDate(req.params.matchId, req.body.date);
         else 
-          datingService.removeDate(Number(req.params.match_id == 0 ? req.body.competitionId : req.params.match_id));
+          datingService.removeDate(req.params.matchId);
         res.send("ok");
       } else {
         res.status(403).send();

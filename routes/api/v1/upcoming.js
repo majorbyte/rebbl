@@ -2,6 +2,7 @@
 const LeagueService = require("../../../lib/LeagueService.js")
   , apiService = require("../../../lib/apiService.js")
   , dataService = require("../../../lib/DataService.js").rebbl
+  , dataServiceBB3 = require("../../../lib/DataServiceBB3.js").rebbl3
   , datingService = require("../../../lib/DatingService.js")
   , teamService = require("../../../lib/teamservice.js")
   , util = require("../../../lib/util.js")
@@ -92,6 +93,62 @@ router.get("/", util.cache(10*60), async function(req, res){
 
     }));
 
+    // bb3
+    schedules = await dataServiceBB3.getSchedules({"matchId":{$in:dates}});
+
+    const getRace = function(raceId){
+      switch (raceId){
+        case 1: return "Human";
+        case 2: return "Dwarf";
+        case 3: return "Skaven";
+        case 4: return "Orc";
+        case 5: return "Lizardman";
+        case 6: return "Goblin";
+        case 7: return "Wood Elf";
+        case 8: return "Chaos Chosen";
+        case 9: return "Dark Elf";
+        case 10: return "Shambling Undead";
+        case 11: return "Halfling";
+        case 14: return "Elven Union";
+        case 17: return "Necromantic Horror";
+        case 18: return "Nurgle";
+        case 22: return "Underworld Denizen";
+        case 23: return "Khorne";
+        case 24: return "Imperial Nobility";
+        case 29: return "Slaanesh";
+        case 1000: return "Black Orc";
+        case 1001: return "Chaos Renegade";
+        case 1002: return "OldWorld Alliance";
+        case 1004: return "Tzeentch";
+        default: return `${raceId} unknown`;
+      }
+    }
+  
+
+    for(const match of schedules){
+      let date = n.find(s => s.id === match.matchId);
+
+      data.push({
+        scheduledDate : date.date,
+        stream: date.stream,
+        homeCoach: match.home.coach.name,
+        homeTeam: match.home.team.name,
+        homeTeamValue: match.home.team.valueWithJourneymen / 1000,
+        homeTeamRace: getRace(match.home.team.race),
+        homeTeamLogo: match.home.team.logo,
+        awayCoach: match.away.coach.name,
+        awayTeam: match.away.team.name,
+        awayTeamValue: match.away.team.valueWithJourneymen / 1000,
+        awayTeamRace: getRace(match.away.team.race),
+        awayTeamLogo: match.away.team.logo,
+        match_uuid : match.matchId,
+        contest_id: match.matchId,
+        league:'ReBBL - BB3',
+        competition:''
+
+      });
+
+    }
 
     res.send(data);
 });

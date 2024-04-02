@@ -103,8 +103,12 @@ block scripts
             date.shortTime = time.format('HH:mm');
             date.shortTimeTitle = time.format('zz(ZZ)');
             date.url = date.match_uuid ? "/rebbl/match/" + date.match_uuid : "/rebbl/match/unplayed/"+date.contest_id;
-            date.homeTeamLogo = 'https://cdn.rebbl.net/images/logo/logo_' + date.homeTeamLogo.toLowerCase() + '.png';
-            date.awayTeamLogo = 'https://cdn.rebbl.net/images/logo/logo_' + date.awayTeamLogo.toLowerCase() + '.png';
+            date.homeTeamLogo = date.homeTeamLogo.indexOf('.png') === -1 
+              ? 'https://cdn.rebbl.net/images/logo/logo_' + date.homeTeamLogo.toLowerCase() + '.png'
+              : 'https://cdn.rebbl.net/images/bb3/Logos/' + date.homeTeamLogo;
+            date.awayTeamLogo = date.awayTeamLogo.indexOf('.png') === -1 
+              ? 'https://cdn.rebbl.net/images/logo/logo_' + date.awayTeamLogo.toLowerCase() + '.png'
+              : 'https://cdn.rebbl.net/images/bb3/Logos/' + date.awayTeamLogo;
             date.show = ko.observable(true);
             date.streaming = ko.observable(date.stream ? true: false);
             date.stream = ko.observable(date.stream);
