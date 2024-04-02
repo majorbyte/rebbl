@@ -19,7 +19,7 @@ class BB3{
   round = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId, round:Number(req.params.round)}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}})});
   unplayed = async (req,res) => res.render("bb3/unplayed",{matches: await bb3Service.getUnplayedMatch(req.params.id)});
 
-  validate = async (req,res) => res.render("bb3/match", {match: await bb3Service.validateMatch(req.params.id, res.locals.user), user:res.locals.user});
+  validate = async (req,res, valid) => res.render("bb3/match", {match: await bb3Service.processMatch(req.params.id, res.locals.user, valid), user:res.locals.user});
 
   standings = async (req,res) => res.render("bb3/standings", {rankings:await dataService.getRankings({competitionId:"2b791aa6-b14d-11ed-80a8-020000a4d571"})});
   rookieStandings = async (req,res) => res.render("bb3/standings", {rankings:await dataService.getRankings({competitionId:"5d031521-b151-11ed-80a8-020000a4d571"})});
@@ -76,7 +76,8 @@ class BB3{
     this.router.get("/match/:id", util.cache(1), util.checkAuthenticated, this.match);
     this.router.get("/unplayed/:id", util.cache(10*60), util.checkAuthenticated, this.unplayed);
 
-    this.router.post("/match/:id/validate", util.cache(1), util.ensureAuthenticated, this.validate);
+    this.router.post("/match/:id/validate", util.cache(1), util.ensureAuthenticated, async (req,res) => this.validate(req,res,true));
+    this.router.post("/match/:id/invalidate", util.cache(1), util.ensureAuthenticated, async (req,res) => this.validate(req,res,false));
 
     this.router.put('/unplayed/:matchId/stream', util.checkAuthenticated, util.hasRole('streamer'), this.stream);
     this.router.put('/unplayed/:matchId/schedule', util.checkAuthenticated, util.ensureAuthenticated, this.scheduleMatch);
