@@ -34,7 +34,6 @@ block content
                       div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans " + (homeFans > 0 ? `(+${homeFans})` : `(${homeFans})`)
                     -else 
                       div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
-
             .MatchRow-status.row
               - if (user && !user.bb3id) user.bb3id = 0
               .MatchStatus.MatchStatus--transparent.col-12.row
@@ -84,14 +83,12 @@ block content
                     -else 
                       div(class="TeamLabel-coach " title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans"
                       
-                - if (match.filename)
+                - if (match.replayFile)
                   div(class="ReplayLinks")
                     div(class="ReplayLinks-outer")
                       div(class="ReplayLinks-inner")
-                        a(href=`https://replays.rebbl.net/${match.filename}`)
+                        a(href=`https://replays.rebbl.net/bb3/${match.replayFile}`)
                           img(src=`https://cdn.rebbl.net/images/replay.png` class="ReplayLinks-download" alt="Download replay" title="Download replay")
-                        a(href=`https://dicedornot.vengefulpickle.com/?rebbl=${match.uuid}`)
-                          img(src=`https://cdn.rebbl.net/images/dicedornot-logo.svg` class="ReplayLinks-view" alt="View replay" title="View replay on DicedOrNot")
           div(class="col-12")
             br
           div(class="col-12 d-flex")

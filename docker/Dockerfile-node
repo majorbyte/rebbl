@@ -20,6 +20,7 @@ RUN addgroup -S node && adduser -S node -G node
 USER node
 
 RUN mkdir /home/node/code
+RUN mkdir /home/node/code/replays
 
 WORKDIR /home/node/code
 
