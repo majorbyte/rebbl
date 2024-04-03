@@ -1,14 +1,34 @@
-FROM node:16-bullseye-slim AS build
+#FROM node:20-alpine3.19 AS build
 
-WORKDIR /usr/src/rebbl
-COPY package*.json ./
-RUN npm install
+#WORKDIR /usr/src/rebbl
+#COPY package*.json ./
+#RUN npm install --production
+#RUN npm prune --production
+#COPY  . .
+
+#FROM gcr.io/distroless/nodejs:20
+
+#WORKDIR /usr/src/rebbl
+#COPY --from=build /usr/src/rebbl .
+
+FROM alpine:3.19.1
+
+RUN apk add --update nodejs npm
+
+RUN addgroup -S node && adduser -S node -G node
+
+USER node
+
+RUN mkdir /home/node/code
+
+WORKDIR /home/node/code
+
+COPY --chown=node:node package-lock.json package.json ./
+
+RUN npm install --production
+
 RUN npm prune --production
-COPY . .
 
-FROM gcr.io/distroless/nodejs:16
+COPY --chown=node:node . .
 
-WORKDIR /usr/src/rebbl
-COPY --from=build /usr/src/rebbl .
-
-CMD ["server.js"]
+CMD ["node","server.js"]
