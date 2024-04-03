@@ -36,7 +36,7 @@ block content
                       div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
 
             .MatchRow-status.row
-              - if (!user.bb3id) user.bb3id = 0
+              - if (user && !user.bb3id) user.bb3id = 0
               .MatchStatus.MatchStatus--transparent.col-12.row
                 if match.validated || match.hasPendingValidation === "0"
                   .MatchStatus.col-12 
@@ -45,7 +45,7 @@ block content
                   .MatchStatus.col-12 
                     form(action=`/bb3/match/${match.matchId}/validate` method="POST")
                       button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
-                else if (match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) && ((!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1) && (!match.notValidatedBy ||  match.notValidatedBy.indexOf(user.bb3id) === -1))
+                else if user && (match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) && ((!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1) && (!match.notValidatedBy ||  match.notValidatedBy.indexOf(user.bb3id) === -1))
                   .MatchStatus.col-12 
                     form(action=`/bb3/match/${match.matchId}/validate` method="POST")
                       button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
