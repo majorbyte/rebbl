@@ -16,7 +16,8 @@ block content
       h1(class="u-no-text-transform u-verticalMargin--xx-small")= league + " " + competition.name
       div(class="League-Standings")    
         - let round = 0
-        each schedule, x in schedules.sort(function(a,b){return a.name > b.name})
+        - let sorted = schedules.sort((a,b) => a.round - b.round)
+        each schedule, x in schedules.sort((a,b) => a.round - b.round)
           - let url = schedule.status > 1 ? `/${company}/match/${ schedule.matchId }` : `/${company}/unplayed/${schedule.matchId}`
 
           - if (round != schedule.round)

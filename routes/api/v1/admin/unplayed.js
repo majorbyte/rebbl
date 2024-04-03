@@ -14,7 +14,7 @@ const express = require('express')
       let competitions = await dataService.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f"});
       let data = [];
       for(const competition of competitions){
-        const schedules = await dataService.getSchedules({competitionId:competition.id, status:{$lt:3}});
+        const schedules = await dataService.getSchedules({competitionId:competition.id, $or:[{status:1},{status:2}]});
         schedules.forEach(x => x.competition = competition.name);
         for(const schedule of schedules.filter(x => x.status === 2)){
           const match = await dataService.getMatch({matchId:schedule.matchId});
