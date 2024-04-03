@@ -20,7 +20,7 @@
     "passport": "^0.6.0",
     "passport-oauth2": "^1.6",
     "pug": "^3.0.1",
-    "socket.io": "^2.4.0",
+    "socket.io": "^4.7.5npm innpm",
     "swagger-ui-express": "^4.5.0",
     "thenify": "^3.3.0",
     "tough-cookie": "^2.4.2",
