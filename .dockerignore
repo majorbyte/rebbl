@@ -2,6 +2,10 @@ data
 db-dump
 grunk
 certificates
+node-modules
+public-images/images/logos
+public-images/images/portraits
+public-images/images/skills
 
 .git
 .vscode
