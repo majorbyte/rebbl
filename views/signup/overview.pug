@@ -22,7 +22,7 @@ block content
 
                 a.btn.btn-light.btn-sm.pull-right(type="button" href="/signup/nodiscord") No thanks
         - if (signup.type ==="rebbl")
-          h2= "Welcome back to REBBL Season 24, "
+          h2= "Welcome back to REBBL Season 25, "
             span(class="highlight")= signup.coach
             span !
         - else if (signup.type ==="rebbl3")
@@ -43,14 +43,14 @@ block content
             span= " to the following:"
           div
             - if (signup.type==="rebbl")
-              h3= "REBBL Season 24 - " + signup.league
-              //form(action="/signup/resign" method="post" )
+              h3= "REBBL Season 25 - " + signup.league
+              form(action="/signup/resign" method="post" )
                 br
                 button(type="submit"  class="btn btn-primary") Resign
               p Nagivate 
                 a(href="/signup/signups" class="highlighted-rules") here
                 span &nbsp;to view all current signups
-            - else if (signup.type==="rebbl3")
+            //- else if (signup.type==="rebbl3")
               h3= "REBBL BB3 Season 1 - " + signup.league
               div(style="display:flex")
                 form.mx-1(action="/signup/bb3/change" method="get" style="display:flex" )
@@ -61,7 +61,7 @@ block content
               p Nagivate 
                 a(href="/signup/bb3/signups" class="highlighted-rules") here
                 span &nbsp;to view all current signups
-            - else
+            //- else
               - if (signup.saveType === "reserve")
                 h3= "REBBRL " + signup.league + " (Reserve)"
               - else
@@ -83,13 +83,15 @@ block content
             div
               h3 You can still sign up for THE GREENHORN CUP
               a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
-    - if (signups.length === 0)
+      hr.my-4
+
+    - if (signups.every(x => x.type !==  "rebbl") )
       h2= "Welcome back to REBBL, "
         span(class="highlight")= user.coach
         span !
       //.jumbotron
-        h1.display-4 REBBL Season 24
-        p.lead Signups for REBBL Season 24 are currently closed. 
+        h1.display-4 REBBL Season 25
+        p.lead Signups for REBBL Season 25 are currently closed. 
 
       //.jumbotron
         h1.display-4 REBBL Season 21 - RAMPUP
@@ -99,14 +101,12 @@ block content
           a(href="https://www.reddit.com/r/ReBBl/comments/tshhfa/rebbl_rampup_season_19/" class="highlighted-rules") Read more here about our Rampup system for Season 21
         a.btn.btn-primary.btn-lg(href="/signup/change" role="button") Continue
 
-      //.jumbotron
-        h1.display-4 REBBL Season 24
-        p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 24!
+      .jumbotron
+        h1.display-4 REBBL Season 25
+        p.lead You haven't signed up yet, so hit that button to continue with your sign up for the REBBL Season 25!
         hr.my-2
         p 
-          a(href="https://www.reddit.com/r/ReBBl/comments/17w4hvy/signups_rebbl_s24_minors_s20_college_s21/" class="highlighted-rules") Read more here about Season 24
-          | , look for the header: &nbsp; 
-          span(class="text-info") REBBL Season 24
+          a(href="https://www.reddit.com/r/ReBBl/comments/1c0umm1/rebbl_bb2_season_25/" class="highlighted-rules text-info") Read more here about Season 25
         a.btn.btn-primary.btn-lg(href="/signup/change" role="button") Continue
 
       //.jumbotron
