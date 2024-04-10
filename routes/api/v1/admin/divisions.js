@@ -2,9 +2,11 @@
 
 const express = require("express")
   , api = require("../../../../lib/apiService.js")
+  , bb3Service = require("../../../../lib/bb3Service.js")
   , cache = require("memory-cache")
   , cyanideService = require("../../../../lib/CyanideService.js")
   , dataService = require("../../../../lib/DataService").rebbl
+  , dataServiceBB3 = require("../../../../lib/DataServiceBB3.js").rebbl3
   , maintenanceService = require("../../../../lib/MaintenanceService.js")
   , util = require("../../../../lib/util.js")
   , router = express.Router();
@@ -35,6 +37,27 @@ const express = require("express")
       });
 
       res.status(200).send(data);
+    } catch(err){
+      console.log(err); 
+    }
+  });
+  router.get("/bb3", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+    try{
+      
+      let data = await dataServiceBB3.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f"});
+
+      res.status(200).send(data);
+    } catch(err){
+      console.log(err); 
+    }
+  });
+
+  router.get("/bb3/:competitionId/:day", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+    try{
+      
+      let data = await dataServiceBB3.getSchedules({competitionId: req.params.competitionId, round:Number(req.params.day)});
+
+      res.status(200).send({canAdvance: data.every(x => x.status === 3), confirmed: data.filter(x=> x.status == 3).length , played: data.filter(x=> x.status == 2).length, unplayed: data.filter(x=> x.status < 2).length  });
     } catch(err){
       console.log(err); 
     }
@@ -128,6 +151,31 @@ const express = require("express")
 
   });
 
+  router.put("/bb3/:competitionId/admin/:admin", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    try{
+
+      dataServiceBB3.updateCompetition({id: req.params.competitionId}, {$set:{admin:req.params.admin}});
+      
+      res.status(200).send("ok");
+    } catch(err){
+      console.log(err);
+      res.status(500).send("oy vey");
+    }
+
+  });
+
+  router.put("/bb3/:competitionId/advance", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
+    try{
+
+      await bb3Service.advanceCompetition(req.params.competitionId);
+      
+      res.status(200).send("ok");
+    } catch(err){
+      console.log(err);
+      res.status(500).send("oy vey");
+    }
+
+  });
 
 
 module.exports = router;

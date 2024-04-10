@@ -61,9 +61,13 @@ class BB3{
   };
 
   team = async (req,res) => {
-    const team = await dataService.getTeam({id:req.params.id});
+    let team = await dataService.getTeam({id:req.params.id});
+    if (!team){
+      await bb3Service.getTeams([req.params.id]);
+      team = await dataService.getTeam({id:req.params.id});
+    }
     const m = Array.isArray(team?.matches) ? team.matches : [];
-    const matches = await dataService.getMatches({matchId:{$in:m}});
+    const matches = await dataService.getMatches({gameId:{$in:m}});
     return res.render("bb3/fullTeam", {team, matches, user:res.locals.user});
   };
 

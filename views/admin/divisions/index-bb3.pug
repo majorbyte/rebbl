@@ -1,0 +1,142 @@
+extends ../layout.pug
+
+block head
+  style.
+    .btn-success, .btn-danger, .btn-secondary {transition: background-color .4s;}
+
+block scripts
+  script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
+  script.
+
+    function ScheduleModel(data){
+      const self = this;
+      self.map = function(data){
+        self.canAdvance = data.canAdvance || false;
+        self.confirmed = data.confirmed || 0;
+        self.played = data.played || 0;
+        self.unplayed = data.unplayed || 0;
+      }
+      self.map(data);
+
+      ko.track(this);
+
+    }
+
+    function DivisionModel(data){
+      const self = this;
+      self.map = function(data){
+        self.leagueId = data.leagueId;
+        self.name = data.name;
+        self.id = data.id;
+        self.day = data.day;
+        self.admin = data.admin;
+        self.schedule = new ScheduleModel({});
+      }
+      self.map(data);
+
+      ko.track(this);
+
+      self.setAdmin= async function(a){
+        let result =await fetch(`/api/v1/admin/divisions/bb3/${self.id}/admin/${self.admin}`,{method:"PUT"});
+        if (result.ok){
+            $("#dropdownAdmin").addClass("btn-success");
+        } else{
+            $("#dropdownAdmin").addClass("btn-success");
+        }
+        setTimeout(() =>  $("#dropdownAdmin").removeClass("btn-success"),1100);
+      }
+      
+      self.advance = async function(a){
+
+        await fetch(`/api/v1/admin/divisions/bb3/${self.id}/advance`,{method:"PUT"});
+        let result = await fetch(`/api/v1/admin/divisions/bb3/${self.id}/${self.day}`);
+        if (result.ok){
+            self.schedule = new ScheduleModel(await result.json());
+        }
+      }
+
+    }
+
+
+    function LeagueModel(data) {
+        const self = this;
+        self.map = function(data){
+          self.competitions = data.map(x => new DivisionModel(x));
+          self.teams = [];
+          self.admins = [];
+          self.loading = true;
+          self.selectedDivision = null;
+
+          self.selectedLeague = [];
+          self.unplayed = [];
+          self.newAdmin = "";
+        }
+        self.map(data);
+
+  
+        self.filteredData = function(){
+          return self.competitions.sort((a,b) => a.competition>b.competition ? 1: -1);
+        };
+
+
+        self.checkState = async function(){
+          for(const competition of self.competitions){
+            let result = await fetch(`/api/v1/admin/divisions/bb3/${competition.id}/${competition.day}`);
+            if (result.ok){
+              competition.schedule = new ScheduleModel(await result.json());
+            }
+          }
+        }
+
+        ko.track(this);
+    }
+
+    let model;
+    $(document).ready(async function(){
+        $('.alert').hide();
+
+        let result = await fetch("/api/v1/admin/divisions/bb3");
+
+        if (result.ok){
+          model = new LeagueModel(await result.json());
+          ko.applyBindings(model);
+          await model.checkState();
+        }
+
+        let admins = await fetch("/api/v1/admin/divisions/admins");
+        if (admins.ok)
+          model.admins = await admins.json();
+
+    });
+
+
+block content
+  .container
+    table.table.table-borderless.table-striped.table-sm
+      thead 
+        tr 
+          th division 
+          th round 
+          th.text-center unplayed/played/confirmed
+          th actions
+      tbody 
+        //ko foreach: competitions
+        tr 
+          td(data-bind="text: $data.name")
+          td(data-bind="text: $data.day")
+          td.text-center(data-bind="text: `${$data.schedule.unplayed}/${$data.schedule.played}/${$data.schedule.confirmed}`")
+          td
+            // ko if: $data.schedule.canAdvance
+            button.btn.btn-sm.btn-primary(data-bind="click: $data.advance") advance 
+            // /ko
+        // /ko
+    div(class="alert alert-success" role="alert")
+    div(class="alert alert-danger" role="alert")
+      
+  
+
+
+
+
