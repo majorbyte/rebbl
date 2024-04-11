@@ -110,6 +110,18 @@ class Maintenance{
       
     });
 
+    this.router.get('/bb3-teams', util.verifyMaintenanceToken, async function(req, res){
+      try{
+        await bb3Service.updateTeams("94f0d3aa-e9ba-11ee-a745-02000090a64f");
+        res.redirect('/');
+      }
+      catch(e){
+        loggingService.error(e);
+      }
+      
+    });
+
+
     this.router.get('/updateleague/init', util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled) maintenanceService.initRebblData(req.query.league, req.query.comp);
       res.redirect('/');
