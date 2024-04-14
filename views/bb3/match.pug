@@ -6,8 +6,8 @@ include functions.pug
 block append vars
   -
     let options = {company:company}
-    const homeTeamStats = match.statistics.homeGamerStatistics.teamStatistics.statistics.statistic
-    const awayTeamStats = match.statistics.awayGamerStatistics.teamStatistics.statistics.statistic
+    const homeTeamStats = match.statistics.homeGamerStatistics?.teamStatistics.statistics.statistic || []
+    const awayTeamStats = match.statistics.awayGamerStatistics?.teamStatistics.statistics.statistic || []
     
     
 
@@ -38,8 +38,15 @@ block content
               - if (user && !user.bb3id) user.bb3id = 0
               .MatchStatus.MatchStatus--transparent.col-12.row
                 if match.validated || match.hasPendingValidation === "0"
-                  .MatchStatus.col-12 
-                    span.badge.text-bg-success validated
+                  if match.homeHasConceded == "1"
+                    .MatchStatus.col-12(style="justify-content: start;padding: 0px;background-color: unset;}")
+                      span.badge.text-bg-warning conceded
+                  else if match.awayHasConceded == "1"
+                    .MatchStatus.col-12(style="justify-content: end;padding: 0px;background-color: unset;}")
+                      span.badge.text-bg-warning conceded
+                  else 
+                    .MatchStatus.col-12(style="background-color: unset;}")
+                      span.badge.text-bg-success validated
                 else if user && (user.roles && user.roles.indexOf("admin") > -1) 
                   .MatchStatus.col-12 
                     form(action=`/bb3/match/${match.matchId}/validate` method="POST")
@@ -89,59 +96,60 @@ block content
                       div(class="ReplayLinks-inner")
                         a(href=`https://replays.rebbl.net/bb3/${match.replayFile}`)
                           img(src=`https://cdn.rebbl.net/images/replay.png` class="ReplayLinks-download" alt="Download replay" title="Download replay")
-          div(class="col-12")
-            br
-          div(class="col-12 d-flex")
-            div(class="table-responsive-xl col-6 ")
-              table(class="team-stats")
-                thead 
-                  tr 
-                    th statistic 
-                    th= match.homeTeam.name
-                    th= match.awayTeam.name
+          if match.homeHasConceded == "0" && match.awayHasConceded == "0"
+            div(class="col-12")
+              br
+            div(class="col-12 d-flex")
+              div(class="table-responsive-xl col-6 ")
+                table(class="team-stats")
+                  thead 
+                    tr 
+                      th statistic 
+                      th= match.homeTeam.name
+                      th= match.awayTeam.name
 
-                tbody
-                  tr
-                    td Team value
-                    td= match.homeTeam.value
-                    td= match.awayTeam.value
+                  tbody
+                    tr
+                      td Team value
+                      td= match.homeTeam.value
+                      td= match.awayTeam.value
 
-                  each stat in homeTeamStats.filter(x => x.categoryId != 2 && [18,27,31].indexOf(Number(x.id)) === -1)
-                    +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
-                  //+teamStat("Spent on inducements", [67], homeTeamStats, awayTeamStats)
-                    +teamStat("Possession (total / own / oppo)", [63,64,65], homeTeamStats, awayTeamStats)
-                    +teamStat("Pass (try/success/yards)", [1009], homeTeamStats, awayTeamStats)
-                    +teamStat("Catch (try/success)", [1002], homeTeamStats, awayTeamStats)
-                    +teamStat("Interceptions", [1004], awayTeamStats, homeTeamStats)
-                    +teamStat("Dodge (try/success)", [1003], homeTeamStats, awayTeamStats)
-                    +teamStat("Rush (try/success)", [1011], homeTeamStats, awayTeamStats)
-            div(class="table-responsive-xl col-6 ")
-              table(class="team-stats")
-                thead 
-                  tr 
-                    th statistic 
-                    th= match.homeTeam.name
-                    th= match.awayTeam.name
+                    each stat in homeTeamStats.filter(x => x.categoryId != 2 && [18,27,31].indexOf(Number(x.id)) === -1)
+                      +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
+                    //+teamStat("Spent on inducements", [67], homeTeamStats, awayTeamStats)
+                      +teamStat("Possession (total / own / oppo)", [63,64,65], homeTeamStats, awayTeamStats)
+                      +teamStat("Pass (try/success/yards)", [1009], homeTeamStats, awayTeamStats)
+                      +teamStat("Catch (try/success)", [1002], homeTeamStats, awayTeamStats)
+                      +teamStat("Interceptions", [1004], awayTeamStats, homeTeamStats)
+                      +teamStat("Dodge (try/success)", [1003], homeTeamStats, awayTeamStats)
+                      +teamStat("Rush (try/success)", [1011], homeTeamStats, awayTeamStats)
+              div(class="table-responsive-xl col-6 ")
+                table(class="team-stats")
+                  thead 
+                    tr 
+                      th statistic 
+                      th= match.homeTeam.name
+                      th= match.awayTeam.name
 
-                tbody
-                  - const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
-                  each stat in homeTeamStats.filter(x => x.categoryId == 2).sort((a,b) => collator.compare(a.name, b.name))
-                    +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
+                  tbody
+                    - const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+                    each stat in homeTeamStats.filter(x => x.categoryId == 2).sort((a,b) => collator.compare(a.name, b.name))
+                      +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
 
-                  //+teamStat("Blocks succeeded", [26], homeTeamStats, awayTeamStats)
-                    +teamStat("Armour breaks", [61], homeTeamStats, awayTeamStats)
-                    +teamStat("Knockout (inflicted/sustained)", [25,29], homeTeamStats, awayTeamStats)
-                    +teamStat("Casualties (inflicted/sustained)", [19,28], homeTeamStats, awayTeamStats)
-                    +teamStat("Kills / Deaths", [21,31], homeTeamStats, awayTeamStats)
-                    +teamStat("Surfs", [57], homeTeamStats, awayTeamStats)
-                    +teamStat("Fouls / Expulsion", [47,62], homeTeamStats, awayTeamStats)
-                    +teamStat("Throw Team-Mate success", [69], homeTeamStats, awayTeamStats)
+                    //+teamStat("Blocks succeeded", [26], homeTeamStats, awayTeamStats)
+                      +teamStat("Armour breaks", [61], homeTeamStats, awayTeamStats)
+                      +teamStat("Knockout (inflicted/sustained)", [25,29], homeTeamStats, awayTeamStats)
+                      +teamStat("Casualties (inflicted/sustained)", [19,28], homeTeamStats, awayTeamStats)
+                      +teamStat("Kills / Deaths", [21,31], homeTeamStats, awayTeamStats)
+                      +teamStat("Surfs", [57], homeTeamStats, awayTeamStats)
+                      +teamStat("Fouls / Expulsion", [47,62], homeTeamStats, awayTeamStats)
+                      +teamStat("Throw Team-Mate success", [69], homeTeamStats, awayTeamStats)
 
           - match.homeTeam.mvp = match.homeMvp
           //- let roster = Array.isArray(match.spp.homeTeamSppResult.playerSppResults.playerSppResult) ? match.spp.homeTeamSppResult.playerSppResults.playerSppResult : [match.spp.homeTeamSppResult.playerSppResults.playerSppResult]
           //- match.homeTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
           //- - match.homeTeam.rosterStatistics = match.statistics.homeGamerStatistics.teamStatistics.playerStatistics
-          //- - match.awayTeam.mvp = match.awayMvp
+          - match.awayTeam.mvp = match.awayMvp
           //- - roster = Array.isArray(match.spp.awayTeamSppResult.playerSppResults.playerSppResult) ? match.spp.awayTeamSppResult.playerSppResults.playerSppResult : [match.spp.awayTeamSppResult.playerSppResults.playerSppResult]
           //- - match.awayTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
           //- - match.awayTeam.rosterStatistics = match.statistics.awayGamerStatistics.teamStatistics.playerStatistics

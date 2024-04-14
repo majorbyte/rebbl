@@ -32,6 +32,6 @@ tbody
   - let isAdminned = team.mvp != 1
   - let pageSkills = []
   each player in team.roster
-    -if (player.type)
+    -if (player.type || player.position)
       - const stats = team.rosterStatistics ? team.rosterStatistics.find(x => x.id === player.id).statistics : []
       +player(player, stats, team.mvp)

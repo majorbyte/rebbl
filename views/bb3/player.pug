@@ -30,28 +30,34 @@ mixin player(player, stats, mvp)
         div(class="match-stats-TeamLabel-name")= playerName
     // position
     td
-      div(class="TeamLabel-name ")= player.type.split("_")[1].replace(/([A-Z])/g, ' $1')
+      -if (player.type)
+        div(class="TeamLabel-name ")= player.type.split("_")[1].replace(/([A-Z])/g, ' $1')
     // skills
     td
       div
-        //- let playerSkills = Array.isArray(player.skills.skillsItem) ? player.skills.skillsItem : [player.skills.skillsItem]
-        - for(let skill of player.skills)
-          - let s = skills.find(x => x.id == skill)
-          - if (s)
-            img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999" )
-        if player.skills.filter(s => s).length > 0
-          span.style(style="margin-left: 32px")
+        -if (player.type)
+          //- let playerSkills = Array.isArray(player.skills.skillsItem) ? player.skills.skillsItem : [player.skills.skillsItem]
+          - for(let skill of player.skills)
+            - let s = skills.find(x => x.id == skill)
+            - if (s)
+              img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999" )
+          if player.skills.filter(s => s).length > 0
+            span.style(style="margin-left: 32px")
     td(class="match-stats")
-      div(style="margin-left:15px")= player.stats.pass_reception_success > 0 ? player.stats.pass_reception_success : ""
+      -if (player.type && player.stats)
+        div(style="margin-left:15px")= player.stats.pass_reception_success > 0 ? player.stats.pass_reception_success : ""
     // TD
     td(class="match-stats")
-      div(style="margin-left:15px")= player.stats.touchdowns_scored > 0 ? player.stats.touchdowns_scored : ""
+      -if (player.type && player.stats)
+        div(style="margin-left:15px")= player.stats.touchdowns_scored > 0 ? player.stats.touchdowns_scored : ""
     // INT
     td(class="match-stats")
-      div(style="margin-left:15px")= player.stats.interception_success > 0 ? player.stats.interception_success : ""
+      -if (player.type && player.stats)
+        div(style="margin-left:15px")= player.stats.interception_success > 0 ? player.stats.interception_success : ""
     // CAS
     td(class="match-stats")
-      div(style="margin-left:15px")= player.stats.casualties_inflicted > 0 ? player.stats.casualties_inflicted : ""
+      -if (player.type && player.stats)
+        div(style="margin-left:15px")= player.stats.casualties_inflicted > 0 ? player.stats.casualties_inflicted : ""
 
     td.text-center
       if player.mvp

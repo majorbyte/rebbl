@@ -54,26 +54,10 @@ class Maintenance{
 
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       try{
-        // await bb3MatchReport.matchReport("8f5984b8-ec31-11ee-a745-02000090a64f", process.env.BB3Hook);
+        const service = require("../../lib/concedeMatchService.js");
 
-        for(const leagueId of ["94f0d3aa-e9ba-11ee-a745-02000090a64f"]){
-          const competitions = await bb3.getCompetitions({leagueId:leagueId,format:2});
-          for (const competition of competitions){
-            const matches = await bb3.getMatches({"competition.id": competition.id});
-            for (const match of matches){
-              try{
-                await bb3Service.correctMatch(match.matchId);
-                //await bb3MatchReport.matchReport("8f5984b8-ec31-11ee-a745-02000090a64f", process.env.BB3Hook);
-              } catch(e){
-                loggingService.error(e);
-                loggingService.information(match.matchId);
-              }
-            }
-          }
-        }
+        await service.concedeMatch("95e4f73b-f989-11ee-a745-02000090a64f","3049f9b3-eaed-11ee-a745-02000090a64f");
 
-
-        //await bb3Service.correctMatch("95655ed4-ec15-11ee-a745-02000090a64f");
       } catch(e) {
         console.log(e);
       }
