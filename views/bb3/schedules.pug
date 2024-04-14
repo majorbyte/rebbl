@@ -18,7 +18,7 @@ block content
         - let round = 0
         - let sorted = schedules.sort((a,b) => a.round - b.round)
         each schedule, x in schedules.sort((a,b) => a.round - b.round)
-          - let url = schedule.status > 1 ? `/${company}/match/${ schedule.matchId }` : `/${company}/unplayed/${schedule.matchId}`
+          - let url = schedule.status > 1 ? `/${company}/match/${ schedule.gameId }` : `/${company}/unplayed/${schedule.matchId}`
 
           - if (round != schedule.round)
             - round = schedule.round

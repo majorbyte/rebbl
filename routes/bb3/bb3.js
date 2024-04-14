@@ -12,7 +12,7 @@ class BB3{
 		this.router = express.Router();
 	}
 
-  match = async (req,res) => res.render("bb3/match", {match:await dataService.getMatch({matchId:req.params.id}), user:res.locals.user});
+  match = async (req,res) => res.render("bb3/match", {match:await dataService.getMatch({gameId:req.params.id}), user:res.locals.user});
   competitions = async (req,res) => res.render("bb3/competitions", {competitions:await dataService.getCompetitions({format:2,status:{$lt:4},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}})});
   competition = async (req,res) =>  res.render("bb3/competition", {competition:await dataService.getCompetition({id:req.params.competitionId})});
   schedules = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}}) });
