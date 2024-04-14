@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express')
+  , concedeMatchService = require("../../../../lib/concedeMatchService.js")
   , dataService = require("../../../../lib/DataServiceBB3.js").rebbl3
   , util = require('../../../../lib/util.js')
   , router = express.Router();
@@ -27,6 +28,17 @@ const express = require('express')
       res.status(200).send(data);
     } catch(err){
       console.log(err);
+    }
+  });
+
+
+  router.post('/byeweek/:matchId/:winningTeamId', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+    try{
+      await concedeMatchService.concedeMatch(req.params.matchId, req.params.winningTeamId);
+      res.status(200).send();
+    } catch(err){
+      console.log(err);
+      res.status(500).send(err);
     }
   });
   

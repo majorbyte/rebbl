@@ -5,6 +5,64 @@ extends ../layout.pug
 block scripts
   script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
   script.
+    function MatchModel(data){
+      const self = this;
+      self.homeTeamId = ko.observable(data.homeTeamId);
+      self.homeTeamCoach = ko.observable(data.homeTeamCoach);
+      self.homeTeamName = ko.observable(data.homeTeamName);
+      self.homeTeamLogo = ko.observable(data.homeTeamLogo);
+      self.homeTeamSelected = ko.observable(false);
+
+      self.awayTeamId = ko.observable(data.awayTeamId);
+      self.awayTeamCoach = ko.observable(data.awayTeamCoach);
+      self.awayTeamName = ko.observable(data.awayTeamName);
+      self.awayTeamLogo = ko.observable(data.awayTeamLogo);
+      self.awayTeamSelected = ko.observable(false);
+
+      self.competition = ko.observable(data.competition);
+      self.round = ko.observable(data.round);
+      self.matchId = ko.observable(data.matchId);
+
+      self.processing = ko.observable(false);
+      self.processed = ko.observable(false);
+
+      self.success = ko.observable(false);
+
+      self.homeCardClass = ko.pureComputed(function(){
+        return self.homeTeamSelected() ? 'card border border-5 border-success bg-success' : 'card';
+      });
+
+      self.awayCardClass = ko.pureComputed(function(){
+        return self.awayTeamSelected() ? 'card border border-5 border-success bg-success' : 'card';
+      });
+
+      self.selectHome = function(){
+        self.homeTeamSelected(true);
+        self.awayTeamSelected(false);
+      }
+      self.selectAway = function(){
+        self.homeTeamSelected(false);
+        self.awayTeamSelected(true);
+      }
+
+
+      self.selected = ko.pureComputed(function(){
+        if (self.homeTeamSelected()) return `${self.homeTeamName()} receives 2 MVP's, 1 TD and all the cash.`;
+        if (self.awayTeamSelected()) return `${self.awayTeamName()} receives 2 MVP's, 1 TD and all the cash.`;
+        return "Please select a team.";
+      });
+
+      self.proceed = async function(){
+        self.processing(true);
+        const teamId = self.homeTeamSelected() ? self.homeTeamId() : self.awayTeamId();
+        let response = await fetch(`/api/v1/admin/unplayed/byeweek/${self.matchId}/${teamId}`,{method:"POST"});
+        self.processing(false);
+        self.processed(true);
+        if(response.ok) self.success(true);
+        else self.success(false);
+      }
+    }
+
     function DateModel() {
         const self = this;
         self.games = ko.observableArray([]);
@@ -12,6 +70,7 @@ block scripts
         self.played = ko.observable(true);
         self.unplayed = ko.observable(true);
 
+        self.concedeMatch = ko.observable(new MatchModel({}));
 
         self.filteredDivisions = ko.observableArray([]);
         self.filteredRounds = ko.observableArray([]);
@@ -71,6 +130,27 @@ block scripts
           return self.games().filter(x => (self.played() && x.status === 2) || (self.unplayed() && x.status === 1 ));
 
         });
+
+        self.concede = function(match,e){
+          self.concedeMatch(new MatchModel({
+            homeTeamId : match.home.team.id,
+            homeTeamLogo : match.home.team.logo,
+            homeTeamCoach : match.home.coach.name,
+            homeTeamName : match.home.team.name,
+            awayTeamId : match.away.team.id,
+            awayTeamLogo : match.away.team.logo,
+            awayTeamCoach : match.away.coach.name,
+            awayTeamName : match.away.team.name,
+            competition : match.competition,
+            round : match.round,
+            matchId : match.matchId
+          }));
+        }
+
+        self.select = function(teamId){
+
+        }
+
 
 
         self.toggleDivision= function(d,e){
@@ -158,6 +238,7 @@ block content
         th Home Team 
         th Away Team 
         th Away Coach
+        th
       tbody(data-bind="foreach: filteredGames" )
         tr
           td
@@ -187,9 +268,60 @@ block content
             // ko if: $data.hasOwnProperty("notValidatedBy") && notValidatedBy.indexOf(away.coach.id) > -1
             span.badge.bage-sm.text-bg-danger.mx-2 blocked
             // /ko
+          td 
+            // ko if: $data.status == 1
+            button.btn.btn-sm.btn-primary(data-bind="click:$root.concede" data-bs-toggle="modal" data-bs-target="#ByeWeekModal")
+              i.fa.fa-wrench
+            // /ko
+    #ByeWeekModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
+      .modal-dialog.modal-dialog-centered.modal-lg
+        .modal-content
+          //ko if: concedeMatch().homeTeamId
+          // ko with: concedeMatch()
+          .modal-header
+            h1#exampleModalLabel.modal-title.fs-5(data-bind="text: 'Bye Week, ' + competition() + ', round: ' + round()")
+            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
 
+          .modal-body.d-flex.flex-wrap
+            div(data-bind="attr: {class: homeCardClass}, click: selectHome " style="width:50%;--bs-bg-opacity: .5;")
+              img.card-img-top(data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${homeTeamLogo()}`}}" alt="...")
 
+              .card-body
+                h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: homeTeamName")
+                h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: homeTeamCoach")
 
+            div(data-bind="attr: {class: awayCardClass }, click: selectAway" style="width:50%;--bs-bg-opacity: .5;")
+              img.card-img-top(data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${awayTeamLogo()}`}}" alt="...")
 
+              .card-body
+                h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: awayTeamName")
+                h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: awayTeamCoach")
 
-
+            div(style="width: 100%;")
+              p(data-bind="text: selected()")
+              // ko if: processing()
+              p Processing the bye week, this can take up to 90 seconds, so please be patient.
+              // /ko
+          .modal-footer.d-flex
+            .mx-0(style="width:25%")
+              button.btn.btn-primary(type='button' data-bind="click: proceed, attr: {disabled: processing() || processed() || (!homeTeamSelected() && !awayTeamSelected()) }" ) 
+                // ko if: processing()
+                span.mx-2 processing 
+                span.spinner-border.spinner-border-sm(aria-hidden="true")
+                // /ko
+                // ko if: !processing()
+                span proceed
+                // /ko
+            .mx-0(style="width:50%")
+              // ko if:processed()
+              // ko if:success()
+              span.text-success Bye week successfully processed
+              // /ko
+              // ko if:!success()
+              span.text-danger Something when wrong, please contact majorbyte.
+              // /ko
+              // /ko
+            .mx-0(style="width:25%;text-align:end")
+              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+          // /ko
+          // /ko
