@@ -71,6 +71,7 @@ block scripts
         self.unplayed = ko.observable(true);
 
         self.concedeMatch = ko.observable(new MatchModel({}));
+        self.resetMatch = ko.observable({});
 
         self.filteredDivisions = ko.observableArray([]);
         self.filteredRounds = ko.observableArray([]);
@@ -147,11 +148,13 @@ block scripts
           }));
         }
 
-        self.select = function(teamId){
-
+        self.reset = function(match,e){
+          self.resetMatch(match);
         }
-
-
+        self.performReset = async function(){
+          await fetch(`/api/v1/admin/unplayed/reset/${self.resetMatch().matchId}`,{method:"POST"});
+          await self.load();
+        }
 
         self.toggleDivision= function(d,e){
           self.toggleButton(e);
@@ -190,26 +193,34 @@ block scripts
         //-   await fetch(`/api/v1/admin/unplayed/${g.contest_id}`,{method:"POST"});
         //- }
 
+        self.load = async function(){
+          self.loading(true); 
+          const response = await fetch("/api/v1/admin/unplayed");
+          if (response.ok) self.games(await response.json());
+        
+          self.loading(false);          
+        }
+
     }
 
     const model = new DateModel();
 
     $(document).ready(async function(){
         ko.applyBindings(model);
+        await model.load();
 
-        const response = await fetch("/api/v1/admin/unplayed");
-        if (response.ok) model.games(await response.json());
-        
-        model.loading(false);
     });
 
 
 block content
   .container
-    //ko if: loading
+    //ko if: loading()
     .row.col-12.justify-content-center
-      i(class="fa-solid fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
+      .spinner-grow(style="width: 3rem; height: 3rem;" role="status")
+        span.visually-hidden Loading...
+
     // /ko
+    //ko if: !loading()
     .row.col-12
       .btn-group-toggle(data-toggle="buttons")
         // ko foreach: divisions
@@ -236,6 +247,7 @@ block content
         th Competition 
         th Home Coach 
         th Home Team 
+        th 
         th Away Team 
         th Away Coach
         th
@@ -259,6 +271,12 @@ block content
           td 
             span(data-bind="text: home.team.name")
           td 
+            // ko if: status == 2
+            span(data-bind="text: home.score")
+            span.mx-2 -
+            span(data-bind="text: away.score")
+            // /ko  
+          td 
             span(data-bind="text: away.team.name ")
           td
             a(data-bind="text: away.coach.name, attr:{href:'/coach/bb3/'+ away.coach.id}" target="_blank" style="color:#03a9f4")
@@ -273,13 +291,19 @@ block content
             button.btn.btn-sm.btn-primary(data-bind="click:$root.concede" data-bs-toggle="modal" data-bs-target="#ByeWeekModal")
               i.fa.fa-wrench
             // /ko
+            // ko if: $data.status == 2
+            button.btn.btn-sm.btn-danger(data-bind="click:$root.reset" data-bs-toggle="modal" data-bs-target="#ResetMatchModal")
+              i.fa.fa-mail-reply-all
+            // /ko
+    // /ko
+
     #ByeWeekModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
       .modal-dialog.modal-dialog-centered.modal-lg
         .modal-content
           //ko if: concedeMatch().homeTeamId
           // ko with: concedeMatch()
           .modal-header
-            h1#exampleModalLabel.modal-title.fs-5(data-bind="text: 'Bye Week, ' + competition() + ', round: ' + round()")
+            h1#exampleModalLabel.modal-title.fs-5(data-bind="text: 'Bye Week: ' + competition() + ', round: ' + round()")
             button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
 
           .modal-body.d-flex.flex-wrap
@@ -323,5 +347,26 @@ block content
               // /ko
             .mx-0(style="width:25%;text-align:end")
               button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+          // /ko
+          // /ko
+
+    #ResetMatchModal.modal.fade
+      .modal-dialog.modal-dialog-centered.modal-lg
+        .modal-content
+          // ko if: resetMatch().competition
+          // ko with: resetMatch()
+          .modal-header
+            h1#exampleModalLabel.modal-title.fs-5(data-bind="text: 'Reset match: ' + competition + ', round: ' + round")
+            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+          .modal-body.d-flex.flex-wrap
+            p(data-bind="text: `Are you sure you want to reset the game between ${$data.home.team.name} and ${$data.away.team.name}`")
+
+          .modal-footer.d-flex
+            .mx-0(style="width:50%")
+              button.btn.btn-danger(type='button' data-bind="click: $root.performReset" data-bs-dismiss='modal') 
+                span Yes
+            .mx-0(style="width:50%;text-align:end")
+              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') No
+
           // /ko
           // /ko

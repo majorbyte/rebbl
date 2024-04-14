@@ -41,5 +41,15 @@ const express = require('express')
       res.status(500).send(err);
     }
   });
+
+  router.post('/reset/:matchId', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+    try{
+      await concedeMatchService.resetMatch(req.params.matchId);
+      res.status(200).send();
+    } catch(err){
+      console.log(err);
+      res.status(500).send(err);
+    }
+  });
   
 module.exports = router;
