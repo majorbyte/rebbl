@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express')
-  , concedeMatchService = require("../../../../lib/concedeMatchService.js")
+  , adminMatchService = require("../../../../lib/adminMatchService.js")
   , dataService = require("../../../../lib/DataServiceBB3.js").rebbl3
   , util = require('../../../../lib/util.js')
   , router = express.Router();
@@ -32,9 +32,11 @@ const express = require('express')
   });
 
 
-  router.post('/byeweek/:matchId/:winningTeamId', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+  router.post('/admin/:matchId', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
-      await concedeMatchService.concedeMatch(req.params.matchId, req.params.winningTeamId);
+      
+      if (req.body.type === 'byeweek') await adminMatchService.concedeMatch(req.params.matchId, req.body.teamId);
+      else await adminMatchService.adninMatch(req.params.matchId, req.body.teamId, req.body.type);
       res.status(200).send();
     } catch(err){
       console.log(err);
@@ -44,7 +46,7 @@ const express = require('express')
 
   router.post('/reset/:matchId', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
-      await concedeMatchService.resetMatch(req.params.matchId);
+      await adminMatchService.resetMatch(req.params.matchId);
       res.status(200).send();
     } catch(err){
       console.log(err);

@@ -3,10 +3,13 @@ extends ../layout.pug
 
 
 block scripts
-  script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-3.5.1.js")
   script.
     function MatchModel(data){
       const self = this;
+
+      self.adminType = ko.observable("byeweek");
+
       self.homeTeamId = ko.observable(data.homeTeamId);
       self.homeTeamCoach = ko.observable(data.homeTeamCoach);
       self.homeTeamName = ko.observable(data.homeTeamName);
@@ -45,17 +48,50 @@ block scripts
         self.awayTeamSelected(true);
       }
 
+      self.adminType.subscribe(function(newValue){
+        self.homeTeamSelected(newValue === "homewin");
+        self.awayTeamSelected(newValue === "awaywin");
 
-      self.selected = ko.pureComputed(function(){
-        if (self.homeTeamSelected()) return `${self.homeTeamName()} receives 2 MVP's, 1 TD and all the cash.`;
-        if (self.awayTeamSelected()) return `${self.awayTeamName()} receives 2 MVP's, 1 TD and all the cash.`;
-        return "Please select a team.";
+      });
+
+
+      self.textHome = ko.pureComputed(function(){
+        switch(self.adminType()){
+          case "byeweek":
+            if (self.homeTeamSelected()) return `2 MVP's, 1 TD and all the cash.`;
+            break;
+          case "homewin":
+            return `1 MVP, 2 TDs.`;
+          case "awaywin":
+            return `1 MVP's, 1 TD.`;
+        }
+
+      });
+
+      self.textAway = ko.pureComputed(function(){
+        switch(self.adminType()){
+          case "byeweek":
+            if (self.awayTeamSelected()) return `2 MVP's, 1 TD and all the cash.`;
+            break;
+          case "homewin":
+            return `1 MVP, 1 TD.`;
+          case "awaywin":
+            return `1 MVP's, 2 TDs.`;
+        }
+
       });
 
       self.proceed = async function(){
         self.processing(true);
         const teamId = self.homeTeamSelected() ? self.homeTeamId() : self.awayTeamId();
-        let response = await fetch(`/api/v1/admin/unplayed/byeweek/${self.matchId}/${teamId}`,{method:"POST"});
+        const response = await fetch(`/api/v1/admin/unplayed/admin/${self.matchId}`, {
+            method:"POST",
+            headers:{'Content-Type': 'application/json'},
+            body:JSON.stringify({
+              type: self.adminType(),
+              teamId
+            })
+        });
         self.processing(false);
         self.processed(true);
         if(response.ok) self.success(true);
@@ -63,14 +99,14 @@ block scripts
       }
     }
 
-    function DateModel() {
+    function DataModel() {
         const self = this;
         self.games = ko.observableArray([]);
         self.loading = ko.observable(true);
         self.played = ko.observable(true);
         self.unplayed = ko.observable(true);
 
-        self.concedeMatch = ko.observable(new MatchModel({}));
+        self.adminMatch = ko.observable(new MatchModel({}));
         self.resetMatch = ko.observable({});
 
         self.filteredDivisions = ko.observableArray([]);
@@ -132,8 +168,8 @@ block scripts
 
         });
 
-        self.concede = function(match,e){
-          self.concedeMatch(new MatchModel({
+        self.admin = function(match,e){
+          self.adminMatch(new MatchModel({
             homeTeamId : match.home.team.id,
             homeTeamLogo : match.home.team.logo,
             homeTeamCoach : match.home.coach.name,
@@ -147,6 +183,8 @@ block scripts
             matchId : match.matchId
           }));
         }
+
+
 
         self.reset = function(match,e){
           self.resetMatch(match);
@@ -203,7 +241,7 @@ block scripts
 
     }
 
-    const model = new DateModel();
+    const model = new DataModel();
 
     $(document).ready(async function(){
         ko.applyBindings(model);
@@ -288,7 +326,7 @@ block content
             // /ko
           td 
             // ko if: $data.status == 1
-            button.btn.btn-sm.btn-primary(data-bind="click:$root.concede" data-bs-toggle="modal" data-bs-target="#ByeWeekModal")
+            button.btn.btn-sm.btn-primary(data-bind="click:$root.admin" data-bs-toggle="modal" data-bs-target="#AdminMatchModal")
               i.fa.fa-wrench
             // /ko
             // ko if: $data.status == 2
@@ -297,76 +335,90 @@ block content
             // /ko
     // /ko
 
-    #ByeWeekModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
-      .modal-dialog.modal-dialog-centered.modal-lg
-        .modal-content
-          //ko if: concedeMatch().homeTeamId
-          // ko with: concedeMatch()
-          .modal-header
-            h1#exampleModalLabel.modal-title.fs-5(data-bind="text: 'Bye Week: ' + competition() + ', round: ' + round()")
-            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+  #AdminMatchModal.modal.fade(tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true')
+    .modal-dialog.modal-dialog-centered.modal-lg
+      .modal-content
+        //ko if: adminMatch().homeTeamId
+        // ko with: adminMatch()
+        .modal-header
+          h1#exampleModalLabel.modal-title.fs-5(data-bind="text: 'Admin match: ' + competition() + ', round: ' + round()")
+          button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
 
-          .modal-body.d-flex.flex-wrap
-            div(data-bind="attr: {class: homeCardClass}, click: selectHome " style="width:50%;--bs-bg-opacity: .5;")
-              img.card-img-top(data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${homeTeamLogo()}`}}" alt="...")
+        .modal-body.d-flex.flex-wrap
 
-              .card-body
-                h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: homeTeamName")
-                h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: homeTeamCoach")
+          .input-group.mb-3
+            label.input-group-text(for="inputGroupSelect01") Result
+            select#inputGroupSelect01.form-select(data-bind="value: adminType")
+              option( selected disabled) choose...
+              option(value="byeweek") bye week
+              option(value="homewin") home: 2 away: 1
+              option(value="awaywin") home: 1 away: 2
+              //option(value="custom") custom
 
-            div(data-bind="attr: {class: awayCardClass }, click: selectAway" style="width:50%;--bs-bg-opacity: .5;")
-              img.card-img-top(data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${awayTeamLogo()}`}}" alt="...")
+          div(data-bind="attr: {class: homeCardClass}, click: selectHome " style="width:50%;--bs-bg-opacity: .5;")
+            img.lg.card-img-top(data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${homeTeamLogo()}`}}" alt="...")
 
-              .card-body
-                h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: awayTeamName")
-                h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: awayTeamCoach")
+            .card-body
+              h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: homeTeamName")
+              h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: homeTeamCoach")
+            .card-footer 
+              p(data-bind="text:textHome()")  
 
-            div(style="width: 100%;")
-              p(data-bind="text: selected()")
+          div(data-bind="attr: {class: awayCardClass }, click: selectAway" style="width:50%;--bs-bg-opacity: .5;")
+            img.card-img-top(data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${awayTeamLogo()}`}}" alt="...")
+
+            .card-body
+              h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: awayTeamName")
+              h5.card-title.my-0(style="color: rgb(24, 119, 162)" data-bind="text: awayTeamCoach")
+
+            .card-footer 
+              p(data-bind="text:textAway()")  
+
+          div(style="width: 100%;")
+            // ko if: processing()
+            p Processing the result, this can take up to 90 seconds, so please be patient.
+            // /ko
+        .modal-footer.d-flex
+          .mx-0(style="width:25%")
+            button.btn.btn-primary(type='button' data-bind="click: proceed, attr: {disabled: processing() || processed() || (!homeTeamSelected() && !awayTeamSelected()) }" ) 
               // ko if: processing()
-              p Processing the bye week, this can take up to 90 seconds, so please be patient.
+              span.mx-2 processing 
+              span.spinner-border.spinner-border-sm(aria-hidden="true")
               // /ko
-          .modal-footer.d-flex
-            .mx-0(style="width:25%")
-              button.btn.btn-primary(type='button' data-bind="click: proceed, attr: {disabled: processing() || processed() || (!homeTeamSelected() && !awayTeamSelected()) }" ) 
-                // ko if: processing()
-                span.mx-2 processing 
-                span.spinner-border.spinner-border-sm(aria-hidden="true")
-                // /ko
-                // ko if: !processing()
-                span proceed
-                // /ko
-            .mx-0(style="width:50%")
-              // ko if:processed()
-              // ko if:success()
-              span.text-success Bye week successfully processed
+              // ko if: !processing()
+              span proceed
               // /ko
-              // ko if:!success()
-              span.text-danger Something when wrong, please contact majorbyte.
-              // /ko
-              // /ko
-            .mx-0(style="width:25%;text-align:end")
-              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
-          // /ko
-          // /ko
+          .mx-0(style="width:50%")
+            // ko if:processed()
+            // ko if:success()
+            span.text-success Result successfully processed
+            // /ko
+            // ko if:!success()
+            span.text-danger Something when wrong, please contact majorbyte.
+            // /ko
+            // /ko
+          .mx-0(style="width:25%;text-align:end")
+            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+        // /ko
+        // /ko
 
-    #ResetMatchModal.modal.fade
-      .modal-dialog.modal-dialog-centered.modal-lg
-        .modal-content
-          // ko if: resetMatch().competition
-          // ko with: resetMatch()
-          .modal-header
-            h1#exampleModalLabel.modal-title.fs-5(data-bind="text: 'Reset match: ' + competition + ', round: ' + round")
-            button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-          .modal-body.d-flex.flex-wrap
-            p(data-bind="text: `Are you sure you want to reset the game between ${$data.home.team.name} and ${$data.away.team.name}`")
+  #ResetMatchModal.modal.fade
+    .modal-dialog.modal-dialog-centered.modal-lg
+      .modal-content
+        // ko if: resetMatch().competition
+        // ko with: resetMatch()
+        .modal-header
+          h1#exampleModalLabel.modal-title.fs-5(data-bind="text: 'Reset match: ' + competition + ', round: ' + round")
+          button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+        .modal-body.d-flex.flex-wrap
+          p(data-bind="text: `Are you sure you want to reset the game between ${$data.home.team.name} and ${$data.away.team.name}`")
 
-          .modal-footer.d-flex
-            .mx-0(style="width:50%")
-              button.btn.btn-danger(type='button' data-bind="click: $root.performReset" data-bs-dismiss='modal') 
-                span Yes
-            .mx-0(style="width:50%;text-align:end")
-              button.btn.btn-secondary(type='button' data-bs-dismiss='modal') No
+        .modal-footer.d-flex
+          .mx-0(style="width:50%")
+            button.btn.btn-danger(type='button' data-bind="click: $root.performReset" data-bs-dismiss='modal') 
+              span Yes
+          .mx-0(style="width:50%;text-align:end")
+            button.btn.btn-secondary(type='button' data-bs-dismiss='modal') No
 
-          // /ko
-          // /ko
+        // /ko
+        // /ko
