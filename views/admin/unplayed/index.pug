@@ -84,7 +84,7 @@ block scripts
       self.proceed = async function(){
         self.processing(true);
         const teamId = self.homeTeamSelected() ? self.homeTeamId() : self.awayTeamId();
-        const response = await fetch(`/api/v1/admin/unplayed/admin/${self.matchId}`, {
+        const response = await fetch(`/api/v1/admin/unplayed/admin/${self.matchId()}`, {
             method:"POST",
             headers:{'Content-Type': 'application/json'},
             body:JSON.stringify({
