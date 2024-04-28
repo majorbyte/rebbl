@@ -54,9 +54,8 @@ class Maintenance{
 
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       try{
-        const service = require("../../lib/concedeMatchService.js");
 
-        await service.concedeMatch("95e4f73b-f989-11ee-a745-02000090a64f","3049f9b3-eaed-11ee-a745-02000090a64f");
+        await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
 
       } catch(e) {
         console.log(e);
@@ -85,6 +84,8 @@ class Maintenance{
             }
           }
         }
+
+        await bb3Service.checkRetiredPlayers();
 
         res.redirect('/');
       }
