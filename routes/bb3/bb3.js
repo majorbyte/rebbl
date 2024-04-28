@@ -69,18 +69,43 @@ class BB3{
     if (!team){
       await bb3Service.getTeams([req.params.id]);
       team = await dataService.getTeam({id:req.params.id});
-    }
+    } 
+    const retiredPlayers = await dataService.getRetiredPlayers({teamId:req.params.id});
     const m = Array.isArray(team?.matches) ? team.matches : [];
     const matches = await dataService.getMatches({gameId:{$in:m}});
-    return res.render("bb3/fullTeam", {team, matches, user:res.locals.user});
+
+    const competition = await dataService.getCompetition({"standings.teamId":req.params.id});
+    
+    if (competition){
+      const standing = competition.standings.find(x => x.teamId === req.params.id);
+
+      if (standing) team.coachId = standing.id;
+  
+    }
+
+    return res.render("bb3/fullTeam", {team, matches, retiredPlayers, user:res.locals.user});
   };
+
+  retirePlayer = async (req,res)  => {  
+    
+    try{
+      const result = await bb3Service.retirePlayer(res.locals.user, req.params.id, req.params.playerId);
+      if (result) res.status(200).send();
+      else res.status(400).send();
+    } catch(e) {
+      console.dir(e);
+      res.status(500).send();
+    }
+    
+  }
+
 
   routesConfig(){
     this.router.get("/", util.cache(10*60), util.checkAuthenticated, this.competitions);
     this.router.get("/competition/:competitionId", util.cache(10*60), util.checkAuthenticated, this.competition);
     this.router.get("/competition/:competitionId/schedules", util.cache(10*60), util.checkAuthenticated, this.schedules);
     this.router.get("/competition/:competitionId/schedules/:round", util.cache(10*60), util.checkAuthenticated, this.round);
-    this.router.get("/team/:id", util.cache(10*60), util.checkAuthenticated, this.team);
+    this.router.get("/team/:id", util.cache(/*10*60*/1), util.checkAuthenticated, this.team);
     this.router.get("/match/:id", util.cache(1), util.checkAuthenticated, this.match);
     this.router.get("/unplayed/:id", util.cache(10*60), util.checkAuthenticated, this.unplayed);
 
@@ -89,6 +114,8 @@ class BB3{
 
     this.router.put('/unplayed/:matchId/stream', util.checkAuthenticated, util.hasRole('streamer'), this.stream);
     this.router.put('/unplayed/:matchId/schedule', util.checkAuthenticated, util.ensureAuthenticated, this.scheduleMatch);
+
+    this.router.post('/team/:id/retire/:playerId', util.ensureAuthenticated, this.retirePlayer)
 
     return this.router;
   }
