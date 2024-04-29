@@ -1,0 +1,258 @@
+extends ../../no-cache-sub-relayout.pug
+include ../functions.pug
+
+block append vars
+  -
+    let options = {company:"Team"}
+    const getPlayerCasualtyIcon = function(cas){
+      switch(Number(cas)){ 
+        case 1: return ["ico_action_badly_hurt.png",""]
+        case 2: return ["ico_action_seriously_hurt.png","MNG"]
+        case 3: return ["ico_action_serious_injury.png","+1 on injury rolls"]
+        case 4: return ["ico_action_lasting_injury.png",""]
+        case 5: return ["ico_action_smashed_knee.png","-1 MV"]
+        case 6: return ["ico_action_head_injury.png","-1 AV"]
+        case 7: return ["ico_action_broken_arm.png","+1 PA"]
+        case 8: return ["ico_action_neck_injury.png","+1 AG"]
+        case 9: return ["ico_action_dislocated_shoulder.png","-1 ST"]
+        case 10: return "ico_action_dead.png";
+      }
+      return false;
+    }
+block head 
+  style.
+    .col-12 table img {width: 40px;height: 40px;}
+    .silhouette-shadow{
+      filter: drop-shadow(0px 0px 1px black);
+    }
+
+    .table-striped > tbody > tr.text-bg-success > td { background-color:unset !important; color:unset !important; }
+
+block content
+  .container
+    .col-12.d-flex.flex-wrap.align-items-center
+      img(src=`https://cdn.rebbl.net/images/bb3/Logos/${team.logo.icon}` class="align-top" style="height:100px")
+      span.h1=team.name
+      .row.col-12
+        h3(style="margin-top: 0px;")
+          i= team.motto
+    .clearfix
+    .row(style="margin-left:0px")
+      .col-12
+        strong
+          span Redraft budget: 
+          span#budget= team.budget/1000
+    .row(style="margin-left:0px")
+      .col-md-1.col-6
+        img(src="https://cdn.rebbl.net/images/bb3/dedicated_fan.png")
+        strong=team.improvements[3].quantity
+      .col-md-1.col-6
+        img(src="https://cdn.rebbl.net/images/bb3/reroll.png")
+        strong=team.improvements[4].quantity
+      .col-md-1.col-6
+        img(src="https://cdn.rebbl.net/images/bb3/cheerleader.png")
+        strong=team.improvements[1].quantity
+      .col-md-1.col-6
+        img(src="https://cdn.rebbl.net/images/bb3/assistant_coach.png")
+        strong=team.improvements[2].quantity
+      - if (team.improvements[0].quantity > 0)
+        .col-md-1.col-6
+          img(src="https://cdn.rebbl.net/images/bb3/apo.png")
+
+    br
+    .col-12
+      table.table.table-striped
+          thead.headerText
+            tr
+              th(scope="col") #
+              th(scope="col") name
+              th(scope="col") position
+              th(scope="col") MA
+              th(scope="col") ST
+              th(scope="col") AG
+              th(scope="col") PA
+              th(scope="col") AV
+              th(scope="col" style="min-width:160px") Skills
+              th(scope="col") CAS
+              th(scope="col") SPP
+              th(scope="col") Value
+          tbody
+            - for(let player of team.roster)
+              tr(id=player.id data-selected="false")
+                td=player.number
+                td
+                  div
+                    img(src=`https://cdn.rebbl.net/images/skills/${player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                    .match-stats-TeamLabel-name=player.name
+                td
+                  - let p = getPosition(player.position)
+                  img.silhouette-shadow(src=getSilhouette(player.position) title=p)
+                - let c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)
+                td= c ? c.value : "-"
+                - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)
+                td= c ? c.value : "-"
+                - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==2)
+                td= c ? c.value : "-"
+                - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==3)
+                td= c ? c.value : "-"
+                - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==4)
+                td= c ? c.value : "-"
+                td.td-prevent
+                  - for(let skill of Array.isArray(player.skills.skillsItem) ? player.skills.skillsItem : [player.skills.skillsItem] )
+                    - let s = skills.find(x => x.id == skill)
+                    - if (s)
+                      img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt="" style="z-index:9999" )
+                td.pull-right
+                  each cas in Array.isArray(player.casualties.casualtiesItem) ? player.casualties.casualtiesItem:[player.casualties.casualtiesItem]
+                    -let d = getPlayerCasualtyIcon(cas)
+                    if d
+                      img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${d[0]}` title=d[1])
+                  if player.missNextGame == "1"
+                      img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
+                  if retiredPlayers.some(x => x.id === player.id)
+                    span.badge.text-bg-success.ms-2 retired    
+                  
+                td=player.spp
+                td.playerValue.text-end(data-bind="text:value")=player.value/1000
+
+          tfoot 
+            tr
+              th(scope="col") 
+              th(scope="col") 
+              th(scope="col") position
+              th(scope="col") MA
+              th(scope="col") ST
+              th(scope="col") AG
+              th(scope="col") PA
+              th(scope="col") AV
+              th(scope="col" style="min-width:160px") Skills
+              th(scope="col") Amount
+              th(scope="col") Cost
+              th(scope="col") Value
+
+            each position in allowedPositions
+              tr
+                td 0
+                td
+                  div
+                    img(src=`https://cdn.rebbl.net/images/skills/1.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                    .match-stats-TeamLabel-name 
+                td
+                  img.silhouette-shadow(src=getSilhouetteByName(position.type) title=position.type)
+                - let c = position.characteristics.find(x=>x.characteristic=="MA")
+                td= c ? c.value : "-"
+                - c = position.characteristics.find(x=>x.characteristic=="ST")
+                td= c ? c.value : "-"
+                - c = position.characteristics.find(x=>x.characteristic=="AG")
+                td= c ? c.value : "-"
+                - c = position.characteristics.find(x=>x.characteristic=="PA")
+                td= c ? c.value : "-"
+                - c = position.characteristics.find(x=>x.characteristic=="AV")
+                td= c ? c.value : "-"
+                td.td-prevent
+                  - for(let skill of Array.isArray(position.skills) ? position.skills : [position.skills] )
+                    - let name =  getSkillName(skill)
+                    - let s = skills.find(x => x.name == name)
+                    - if (s)
+                      img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt="" style="z-index:9999" )
+                td
+                  input.rookie-input.form-control(id=position.type, value=0 data-type=position.type type="number" min="0" max=position.max data-cost=position.cost/1000 )
+                td.rookie.text-end=position.cost/1000
+                td.text-end.rookie-total
+
+            tr
+              th(colspan="10")
+                .d-flex
+                  .col.d-flex
+                    img(src="https://cdn.rebbl.net/images/bb3/dedicated_fan.png")
+                    input.form-control(type="number" value=team.improvements[3].quantity disabled)
+                  .col.d-flex
+                    img(src="https://cdn.rebbl.net/images/bb3/reroll.png")
+                    input#rerolls.form-control(type="number" value=team.improvements[4].quantity min=team.improvements[4].min max=team.improvements[4].max data-cost=value=team.improvements[4].cost/2000)
+                  .col.d-flex
+                    img(src="https://cdn.rebbl.net/images/bb3/cheerleader.png")
+                    input#cheerleaders.form-control(type="number" value=team.improvements[1].quantity min=team.improvements[1].min max=team.improvements[1].max)
+                  .col.d-flex
+                    img(src="https://cdn.rebbl.net/images/bb3/assistant_coach.png")
+                    input#assistants.form-control(type="number" value=team.improvements[2].quantity min=team.improvements[2].min max=team.improvements[2].max )
+                  .col.d-flex
+                    img(src="https://cdn.rebbl.net/images/bb3/apo.png")
+                    input#apothecary.form-control(type="number" value=team.improvements[0].quantity min=team.improvements[0].min max=team.improvements[0].max )
+
+              th(colspan="1") Total
+              th.text-end
+                span#total
+
+  .toast-container.top-0.start-50
+    #successToast.toast.align-items-center.text-bg-success.border-0(role="alert" aria-live="assertive" aria-atomic="true")
+      .d-flex
+        .toast-body
+          | Player has been successfully retired.
+        button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")
+
+    #errorToast.toast.align-items-center.text-bg-danger.border-0(role="alert" aria-live="assertive" aria-atomic="true")
+      .d-flex
+        .toast-body
+          | Something went wrong, please contact the admins.
+        button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")
+
+
+block scripts 
+  script.
+
+    function rowClick (event){
+      let elm = event.srcElement;
+      while (elm.nodeName !== "TR") elm = elm.parentElement;
+
+      if (elm.getAttribute("data-selected") === "true") {
+        elm.classList.remove("text-bg-success");
+        elm.setAttribute("data-selected", "false");
+      } else {
+        elm.classList.add("text-bg-success");
+        elm.setAttribute("data-selected", "true");
+      }
+      calculateTotal();
+    }
+
+    function calculateTotal(){
+      const selectedRows = document.querySelectorAll("tbody>tr.text-bg-success");
+      const elm = document.querySelector("#total");
+
+      let sum = 0;
+      selectedRows.forEach(row => sum += Number(row.querySelector(".playerValue").innerText));
+      document.querySelectorAll(".rookie-total").forEach(rookie => sum += Number(rookie.innerText || 0));
+      elm.innerText = Number(sum) + improvementsCost();
+    }
+
+    function improvementsCost(){
+      let cost = 0;
+      let elm = document.querySelector("#rerolls");
+      cost += Number(elm.value) * Number(elm.getAttribute("data-cost"));
+
+      elm = document.querySelector("#cheerleaders");
+      cost += Number(elm.value) * 10;
+
+      elm = document.querySelector("#assistants");
+      cost += Number(elm.value) * 10;
+
+      elm = document.querySelector("#apothecary");
+      cost += Number(elm.value) * 50;
+
+      return cost;
+    }
+
+    function updateRookieTotal(e){
+      const rowTotal = e.target.parentElement.parentElement.querySelector(".rookie-total");
+
+      rowTotal.innerText = e.target.valueAsNumber * Number(e.target.getAttribute("data-cost"));
+      calculateTotal()
+    }
+
+    const rows = document.querySelectorAll("tbody>tr");
+    rows.forEach(row => row.addEventListener("click", rowClick));
+
+    const inputs = document.querySelectorAll("th input");
+    inputs.forEach(row => row.addEventListener("change", calculateTotal));
+
+    const rookiInputs = document.querySelectorAll(".rookie-input");
+    rookiInputs.forEach(row => row.addEventListener("change", updateRookieTotal));

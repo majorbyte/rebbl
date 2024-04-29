@@ -5,6 +5,7 @@ const bb3Service = require("../../lib/bb3Service.js");
 const express = require("express")
 , dataService = require("../../lib/DataServiceBB3.js").rebbl3
 , datingService = require("../../lib/DatingService.js")
+, redraft = require("./redraft.js")
 , util = require("../../lib/util.js");
 
 class BB3{
@@ -102,6 +103,7 @@ class BB3{
 
   routesConfig(){
     this.router.get("/", util.cache(10*60), util.checkAuthenticated, this.competitions);
+    this.router.use("/redraft", new redraft().routesConfig());
     this.router.get("/competition/:competitionId", util.cache(10*60), util.checkAuthenticated, this.competition);
     this.router.get("/competition/:competitionId/schedules", util.cache(10*60), util.checkAuthenticated, this.schedules);
     this.router.get("/competition/:competitionId/schedules/:round", util.cache(10*60), util.checkAuthenticated, this.round);

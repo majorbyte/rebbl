@@ -960,96 +960,122 @@ block append vars
     }  
 
     const getSilhouette = id => `https://cdn.rebbl.net/images/bb3/Silhouettes/T_${positions.find(x => x.code === Number(id) ).silhouette}_Silhouette.png`;
+    const getSilhouetteByName = id => `https://cdn.rebbl.net/images/bb3/Silhouettes/T_${positions.find(x => x.data === id )?.silhouette}_Silhouette.png`;
 
 
     const races = [
         {
             code: 1000, 
             data: "Black Orc", 
+            prefix: "blackOrc"
         }, 
         {
             code: 8, 
             data: "Chaos Chosen", 
+            prefix: "chaosChosen"
         }, 
         {
             code: 1001, 
             data: "Chaos Renegade", 
+            prefix: "chaosRenegade"
         }, 
         {
             code: 9, 
             data: "Dark Elf", 
+            prefix: "darkElf"
         }, 
         {
             code: 2, 
             data: "Dwarf", 
+            prefix: "dwarf"
         }, 
         {
             code: 14, 
             data: "Elven Union", 
+            prefix: "elvenUnion"
         }, 
         {
             code: 6, 
             data: "Goblin", 
+            prefix: "goblin"
         }, 
         {
             code: 11, 
             data: "Halfling", 
+            prefix: "halfling"
         }, 
         {
             code: 1, 
             data: "Human", 
+            prefix: "human"
         }, 
         {
             code: 24, 
             data: "Imperial Nobility", 
+            prefix: "imperialNobility"
         }, 
         {
             code: 23, 
             data: "Khorne", 
+            prefix: "khorne"
         }, 
         {
             code: 5, 
             data: "Lizardman", 
+            prefix: "lizardman"
         }, 
         {
             code: 17, 
             data: "Necromantic Horror", 
+            prefix: "necromanticHorror"
         }, 
         {
             code: 18, 
             data: "Nurgle", 
+            prefix: "nurgle"
         }, 
         {
             code: 1002, 
             data: "Old World Alliance", 
+            prefix: "oldWorldAlliance"
         }, 
         {
             code: 4, 
             data: "Orc", 
+            prefix: "orc"
         }, 
         {
             code: 10, 
             data: "Shambling Undead", 
+            prefix: "shamblingUndead"
         }, 
         {
             code: 3, 
             data: "Skaven", 
+            prefix: "skaven"
         }, 
         {
             code: 29, 
             data: "Slaanesh", 
+            prefix: "slaanesh"
         }, 
         {
             code: 1004, 
             data: "Tzeentch", 
+            prefix: "tzeentch"
         }, 
         {
             code: 22, 
             data: "Underworld Denizen", 
+            prefix: "underworldDenizen"
         }, 
         {
             code: 7, 
             data: "Wood Elf", 
+            prefix: "woodElf"
         }];
 
     const getRace = id => races.find(x => x.code === Number(id)).data; 
+
+    const getSkillName = name => name.replace("(","").replace(")","").replace("+","").replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();}).replace(/ /g,"").replace(/-/g,"");
+    
