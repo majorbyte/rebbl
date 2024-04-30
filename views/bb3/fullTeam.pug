@@ -56,6 +56,9 @@ block content
       - if (team.improvements[0].quantity > 0)
         div(class="col-md-1 col-6")
           img(src="https://cdn.rebbl.net/images/bb3/apo.png")
+      - if (user)     
+        .col
+          button.float-end.btn.btn-sm.btn-success(onclick="redraft()") Redraft
 
     //div(class="row" style="margin-left:0px")
       div(class="col-12 table-responsive-md")
@@ -215,7 +218,7 @@ block content
           button#btnProceed.btn.btn-success.d-none(type="button" onclick="handleProceed()" disabled) Proceed
             #spinner.d-none.spinner-grow.spinner-grow-sm.ms-2(role="status")
 
-  .toast-container.top-0.start-50
+  .toast-container.top-50.start-50.translate-middle
     #successToast.toast.align-items-center.text-bg-success.border-0(role="alert" aria-live="assertive" aria-atomic="true")
       .d-flex
         .toast-body
@@ -227,6 +230,11 @@ block content
         .toast-body
           | Something went wrong, please contact the admins.
         button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")
+
+    #redraftToast.toast.align-items-center.text-bg-danger.border-0(role="alert" aria-live="assertive" aria-atomic="true")
+      .d-flex
+        .toast-body#redraftError
+        button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")        
 
 
 block scripts 
@@ -318,6 +326,23 @@ block scripts
       spinner.classList.add("d-none");
 
       playerModal.hide();
+    }
+
+    async function redraft(){
+      const response = await fetch(`/bb3/redraft/api/#{team.id}`, {method:"POST"});
+      if (response.ok){
+        const data = await response.json();
+        window.location.href = data.redirect;
+      } else {
+        const data = await response.json();
+        const e = document.getElementById("redraftToast");
+        const d = document.getElementById("redraftError");        
+        d.innerHTML = data.error;
+        
+        const toast = new bootstrap.Toast(e);
+        toast.show();
+      }
+
     }
 
     function showModal(id, name){

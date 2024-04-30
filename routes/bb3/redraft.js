@@ -17,9 +17,16 @@ class Redraft{
     return res.render("bb3/redraft/index", {id:req.params.teamId});
   }
 
+  startRedraft = async (req,res) => {
+    const result =  await redraftService.startRedraft(req.params.teamId, res.locals.user);
+
+    if (result?.error) res.status(400).json(result);
+    else res.json({redirect: `/bb3/redraft/${req.params.teamId}`});
+  }
+
   teamData = async (req,res) => {
     
-    const team = await redraftService.getRedraftTeam(req.params.teamId);
+    const team = await dataService.getTeam({id: req.params.teamId});
     const retiredPlayers = await dataService.getRetiredPlayers({teamId:req.params.teamId});
     const positions = await dataService.getPositions();
     const races = await dataService.getRaces();
@@ -27,22 +34,17 @@ class Redraft{
     const race = races.find(x => x.code == team.race);
 
     const allowedPositions = positions.filter(x => x.race === race.prefix);
-    delete team.matches;
-    delete team.primaryColor;
-    delete team.secondaryColor;
-    delete team.tertiaryColor;
-    delete team.jerseyPattern;
-    team.roster.forEach(player => {
-      delete player.equipmentIds;
-    });
 
-    res.json({team, retiredPlayers, allowedPositions});
+    res.json({team:team.redraft, retiredPlayers, allowedPositions});
   }
 
   routesConfig(){
     this.router.get("/:teamId", util.cache(1), util.checkAuthenticated, this.teamView);
     
+    this.router.post("/api/:teamId", util.ensureAuthenticated, this.startRedraft)
+
     this.router.get("/api/:teamId", util.cache(1),  this.teamData);
+
 
     return this.router;
   }
