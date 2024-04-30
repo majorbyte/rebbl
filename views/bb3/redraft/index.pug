@@ -4,65 +4,38 @@ include ../functions.pug
 block append vars
   -
     let options = {company:"Team"}
-    const getPlayerCasualtyIcon = function(cas){
-      switch(Number(cas)){ 
-        case 1: return ["ico_action_badly_hurt.png",""]
-        case 2: return ["ico_action_seriously_hurt.png","MNG"]
-        case 3: return ["ico_action_serious_injury.png","+1 on injury rolls"]
-        case 4: return ["ico_action_lasting_injury.png",""]
-        case 5: return ["ico_action_smashed_knee.png","-1 MV"]
-        case 6: return ["ico_action_head_injury.png","-1 AV"]
-        case 7: return ["ico_action_broken_arm.png","+1 PA"]
-        case 8: return ["ico_action_neck_injury.png","+1 AG"]
-        case 9: return ["ico_action_dislocated_shoulder.png","-1 ST"]
-        case 10: return "ico_action_dead.png";
-      }
-      return false;
-    }
 block head 
   style.
-    .col-12 table img {width: 40px;height: 40px;}
-    .silhouette-shadow{
+            .silhouette-shadow{
       filter: drop-shadow(0px 0px 1px black);
     }
 
     .table-striped > tbody > tr.text-bg-success > td { background-color:unset !important; color:unset !important; }
+    .gradient-striped {
+      background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+      background-size: 40px 40px;
+    }
+    .form-control-sm, .table-sm > :not(caption) > * > *{padding: 0rem 0.25rem !important;}
+    .form-control-sm {min-height:unset !important;}
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0; }
+    input[type=number] {-moz-appearance: textfield;}
+
 
 block content
+  - let path = `https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : 'BB3Standard'}`
+
   .container
     .col-12.d-flex.flex-wrap.align-items-center
-      img(src=`https://cdn.rebbl.net/images/bb3/Logos/${team.logo.icon}` class="align-top" style="height:100px")
-      span.h1=team.name
-      .row.col-12
-        h3(style="margin-top: 0px;")
-          i= team.motto
-    .clearfix
-    .row(style="margin-left:0px")
-      .col-12
-        strong
-          span Redraft budget: 
-          span#budget= team.budget/1000
-    .row(style="margin-left:0px")
-      .col-md-1.col-6
-        img(src="https://cdn.rebbl.net/images/bb3/dedicated_fan.png")
-        strong=team.improvements[3].quantity
-      .col-md-1.col-6
-        img(src="https://cdn.rebbl.net/images/bb3/reroll.png")
-        strong=team.improvements[4].quantity
-      .col-md-1.col-6
-        img(src="https://cdn.rebbl.net/images/bb3/cheerleader.png")
-        strong=team.improvements[1].quantity
-      .col-md-1.col-6
-        img(src="https://cdn.rebbl.net/images/bb3/assistant_coach.png")
-        strong=team.improvements[2].quantity
-      - if (team.improvements[0].quantity > 0)
-        .col-md-1.col-6
-          img(src="https://cdn.rebbl.net/images/bb3/apo.png")
+      //img(src=`https://cdn.rebbl.net/images/bb3/Logos/$logo.icon}` class="align-top" style="height:50px")
+      span(style="font-size:2rem;font-weight:700" data-bind="text: name")
+      span(style="font-size:2rem;font-weight:700") &nbsp;Redraft Budget:&nbsp;
+      span#budget(style="font-size:2rem;font-weight:700" data-bind="text: budget/1000")
 
+    .clearfix
     br
     .col-12
-      table.table.table-striped
-          thead.headerText
+      table.table.table-striped.table-sm
+          thead
             tr
               th(scope="col") #
               th(scope="col") name
@@ -77,48 +50,15 @@ block content
               th(scope="col") SPP
               th(scope="col") Value
           tbody
-            - for(let player of team.roster)
-              tr(id=player.id data-selected="false")
-                td=player.number
-                td
-                  div
-                    img(src=`https://cdn.rebbl.net/images/skills/${player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
-                    .match-stats-TeamLabel-name=player.name
-                td
-                  - let p = getPosition(player.position)
-                  img.silhouette-shadow(src=getSilhouette(player.position) title=p)
-                - let c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)
-                td= c ? c.value : "-"
-                - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)
-                td= c ? c.value : "-"
-                - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==2)
-                td= c ? c.value : "-"
-                - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==3)
-                td= c ? c.value : "-"
-                - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==4)
-                td= c ? c.value : "-"
-                td.td-prevent
-                  - for(let skill of Array.isArray(player.skills.skillsItem) ? player.skills.skillsItem : [player.skills.skillsItem] )
-                    - let s = skills.find(x => x.id == skill)
-                    - if (s)
-                      img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt="" style="z-index:9999" )
-                td.pull-right
-                  each cas in Array.isArray(player.casualties.casualtiesItem) ? player.casualties.casualtiesItem:[player.casualties.casualtiesItem]
-                    -let d = getPlayerCasualtyIcon(cas)
-                    if d
-                      img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${d[0]}` title=d[1])
-                  if player.missNextGame == "1"
-                      img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
-                  if retiredPlayers.some(x => x.id === player.id)
-                    span.badge.text-bg-success.ms-2 retired    
-                  
-                td=player.spp
-                td.playerValue.text-end(data-bind="text:value")=player.value/1000
-
+            //ko foreach: {data:roster, as: 'player'}
+            // ko template: { name: 'player-row', data: player, as: 'player' }
+            // /ko
+            // /ko
           tfoot 
             tr
-              th(scope="col") 
-              th(scope="col") 
+              th(colspan="12") &nbsp;
+            tr
+              th(scope="col" colspan='2') Rookies 
               th(scope="col") position
               th(scope="col") MA
               th(scope="col") ST
@@ -130,58 +70,77 @@ block content
               th(scope="col") Cost
               th(scope="col") Value
 
-            each position in allowedPositions
-              tr
-                td 0
-                td
-                  div
-                    img(src=`https://cdn.rebbl.net/images/skills/1.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
-                    .match-stats-TeamLabel-name 
-                td
-                  img.silhouette-shadow(src=getSilhouetteByName(position.type) title=position.type)
-                - let c = position.characteristics.find(x=>x.characteristic=="MA")
-                td= c ? c.value : "-"
-                - c = position.characteristics.find(x=>x.characteristic=="ST")
-                td= c ? c.value : "-"
-                - c = position.characteristics.find(x=>x.characteristic=="AG")
-                td= c ? c.value : "-"
-                - c = position.characteristics.find(x=>x.characteristic=="PA")
-                td= c ? c.value : "-"
-                - c = position.characteristics.find(x=>x.characteristic=="AV")
-                td= c ? c.value : "-"
-                td.td-prevent
-                  - for(let skill of Array.isArray(position.skills) ? position.skills : [position.skills] )
-                    - let name =  getSkillName(skill)
-                    - let s = skills.find(x => x.name == name)
-                    - if (s)
-                      img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt="" style="z-index:9999" )
-                td
-                  input.rookie-input.form-control(id=position.type, value=0 data-type=position.type type="number" min="0" max=position.max data-cost=position.cost/1000 )
-                td.rookie.text-end=position.cost/1000
-                td.text-end.rookie-total
-
+            // ko foreach: {data: allowedPositions, as: 'position'}
+            // ko template: { name: 'position-row', data: position }
+            // /ko
+            // /ko
             tr
               th(colspan="10")
                 .d-flex
+                  //ko foreach: improvements
                   .col.d-flex
-                    img(src="https://cdn.rebbl.net/images/bb3/dedicated_fan.png")
-                    input.form-control(type="number" value=team.improvements[3].quantity disabled)
-                  .col.d-flex
-                    img(src="https://cdn.rebbl.net/images/bb3/reroll.png")
-                    input#rerolls.form-control(type="number" value=team.improvements[4].quantity min=team.improvements[4].min max=team.improvements[4].max data-cost=value=team.improvements[4].cost/2000)
-                  .col.d-flex
-                    img(src="https://cdn.rebbl.net/images/bb3/cheerleader.png")
-                    input#cheerleaders.form-control(type="number" value=team.improvements[1].quantity min=team.improvements[1].min max=team.improvements[1].max)
-                  .col.d-flex
-                    img(src="https://cdn.rebbl.net/images/bb3/assistant_coach.png")
-                    input#assistants.form-control(type="number" value=team.improvements[2].quantity min=team.improvements[2].min max=team.improvements[2].max )
-                  .col.d-flex
-                    img(src="https://cdn.rebbl.net/images/bb3/apo.png")
-                    input#apothecary.form-control(type="number" value=team.improvements[0].quantity min=team.improvements[0].min max=team.improvements[0].max )
+                    img(data-bind="{attr: {src: icon}}")
+                    input.form-control-sm.w-50(data-bind="{value:quantity, attr:{min,max,disabled}}" type="number" step="1" onfocus="this.previousValue = this.value" onkeydown="this.previousValue = this.value" oninput="validity.valid || (value = this.previousValue)" )
+
+                  // /ko
 
               th(colspan="1") Total
               th.text-end
-                span#total
+                span(data-bind="text: totalCost()")
+
+    template#player-row 
+      tr(data-bind="id: player.id, click:select, class:cssClass() " )
+        td(data-bind="text: player.number")
+        td
+          div(data-bind="text: player.name")
+        td
+          img.silhouette-shadow(data-bind="{attr: {src: $root.getSilhouette(player.position) }}" )
+        td(data-bind="text: player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)?.value || '-'")
+        td(data-bind="text: player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)?.value || '-'")
+        td(data-bind="text: player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==2)?.value || '-'")
+        td(data-bind="text: player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==3)?.value || '-'")
+        td(data-bind="text: player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==4)?.value || '-'")
+        td.td-prevent
+          // ko foreach: {data: Array.isArray(player.skills.skillsItem) ? player.skills.skillsItem : [player.skills.skillsItem] , as: 'skill'}
+          img(data-bind="{attr: {src: '" + path + "/' + $root.getSkill(skill).icon }}" alt="" style="z-index:9999" )
+          // /ko
+        td.pull-right
+          // ko foreach: {data: (Array.isArray(player.casualties.casualtiesItem) ? player.casualties.casualtiesItem:[player.casualties.casualtiesItem]).map(x => $root.getPlayerCasualtyIcon(x)), as: 'cas'}
+          // ko if: cas
+          img(data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${ cas[0] }` },title:cas[1] }")
+          // /ko
+          // /ko
+
+          // ko if: $root.retiredPlayers.some(x => x.id === player.id)
+          span.badge.text-bg-success.ms-2 retired    
+          // /ko
+        td(data-bind="text: player.spp")
+        td.playerValue.text-end(data-bind="text:value/1000")
+
+    template#position-row 
+      tr
+        td 0
+        td
+          div
+            img(src=`https://cdn.rebbl.net/images/skills/1.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+            .match-stats-TeamLabel-name 
+        td
+          img.silhouette-shadow(data-bind="{attr: {src: $root.getSilhouetteByName(type) }}")
+        td(data-bind="text: characteristics.find(x=>x.characteristic=='MA')?.value || '-'")
+        td(data-bind="text: characteristics.find(x=>x.characteristic=='ST')?.value || '-'")
+        td(data-bind="text: characteristics.find(x=>x.characteristic=='AG')?.value || '-'")
+        td(data-bind="text: characteristics.find(x=>x.characteristic=='PA')?.value || '-'")
+        td(data-bind="text: characteristics.find(x=>x.characteristic=='AV')?.value || '-'")
+
+        td.td-prevent
+          // ko foreach: {data: Array.isArray(skills) ? skills : [skills] , as: 'skill'}
+          img(data-bind="{attr: {src: '" + path + "/' + $root.getSkillByName($root.getSkillName(skill)).icon }}" alt="" style="z-index:9999" )
+          // /ko
+        td
+          input.form-control-sm.w-25(data-bind="{value: quantity, attr:{max:calculatedMax()}, css: {'border-danger': quantity > calculatedMax() }}" type="number" min="0" step="1" onfocus="this.previousValue = this.value" onkeydown="this.previousValue = this.value" oninput="validity.valid || (value = this.previousValue)" )
+        td.text-end(data-bind="text: cost/1000")
+        td.text-end(data-bind="text: totalCost()")
+
 
   .toast-container.top-0.start-50
     #successToast.toast.align-items-center.text-bg-success.border-0(role="alert" aria-live="assertive" aria-atomic="true")
@@ -198,61 +157,135 @@ block content
 
 
 block scripts 
+  script(src="https://cdn.rebbl.net/scripts/knockout-3.5.1.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
+
   script.
 
-    function rowClick (event){
-      let elm = event.srcElement;
-      while (elm.nodeName !== "TR") elm = elm.parentElement;
-
-      if (elm.getAttribute("data-selected") === "true") {
-        elm.classList.remove("text-bg-success");
-        elm.setAttribute("data-selected", "false");
-      } else {
-        elm.classList.add("text-bg-success");
-        elm.setAttribute("data-selected", "true");
+    class ImprovementModel{
+      constructor(data){
+        this.quantity = data.quantity;
+        this.min = data.min;
+        this.max = data.max;
+        this.improvement = Number(data.improvement);
+        this.cost = Number(data.cost) / (this.improvement === 4 ? 2000 : 1000);
+        this.disabled = this.improvement == 5;
+        this.icon = [                    
+          null,"https://cdn.rebbl.net/images/bb3/apo.png","https://cdn.rebbl.net/images/bb3/cheerleader.png","https://cdn.rebbl.net/images/bb3/assistant_coach.png","https://cdn.rebbl.net/images/bb3/reroll.png","https://cdn.rebbl.net/images/bb3/dedicated_fan.png"][this.improvement];
+        ko.track(this);
       }
-      calculateTotal();
+      totalCost(){ 
+        return Number(this.quantity )* this.cost;
+      }
     }
 
-    function calculateTotal(){
-      const selectedRows = document.querySelectorAll("tbody>tr.text-bg-success");
-      const elm = document.querySelector("#total");
 
-      let sum = 0;
-      selectedRows.forEach(row => sum += Number(row.querySelector(".playerValue").innerText));
-      document.querySelectorAll(".rookie-total").forEach(rookie => sum += Number(rookie.innerText || 0));
-      elm.innerText = Number(sum) + improvementsCost();
+    class PlayerModel{
+      constructor(data){
+        this.map(data);
+        this.selected = false;
+        ko.track(this);
+      }
+      map(data){
+        if(data){
+          Object.assign(this, data);
+        }
+      }
+
+      select =(e) => this.selected = !this.selected;
+
+      cssClass(){
+        if (!this.selected) return "";
+        return model.retiredPlayers.some(x => x.id === this.id) ? "gradient-striped text-bg-success border border-2 border-danger" : "text-bg-success";  
+
+      }
     }
 
-    function improvementsCost(){
-      let cost = 0;
-      let elm = document.querySelector("#rerolls");
-      cost += Number(elm.value) * Number(elm.getAttribute("data-cost"));
+    class PositionModel{
+      constructor(data){
+        this.map(data);
+        this.quantity = 0;
+        ko.track(this);
+      }
+      map(data){
+        if(data){
+          Object.assign(this, data);
+        }
+      }
 
-      elm = document.querySelector("#cheerleaders");
-      cost += Number(elm.value) * 10;
-
-      elm = document.querySelector("#assistants");
-      cost += Number(elm.value) * 10;
-
-      elm = document.querySelector("#apothecary");
-      cost += Number(elm.value) * 50;
-
-      return cost;
+      calculatedMax(){
+        return this.max - this.players.filter(x => x.selected).length;
+      }
+      totalCost(){
+        return Number(this.quantity) * Number(this.cost) / 1000;
+      }
     }
 
-    function updateRookieTotal(e){
-      const rowTotal = e.target.parentElement.parentElement.querySelector(".rookie-total");
+    class RedraftModel{
+      constructor(data){
+        this.roster = data.team.roster.map(x => {return new PlayerModel(x)});
+        this.improvements = data.team.improvements.map(x => {return new ImprovementModel(x)});
+        this.allowedPositions = data.allowedPositions.map(x => {
+          x.players = this.roster.filter(player => player.position == x.id );
+          return new PositionModel(x);
+        });
+        this.retiredPlayers = data.retiredPlayers;
+        this.name = data.team.name;
+        this.logo = data.team.logo;
+        this.budget = Number(data.team.budget);
+        //this.map(data);
+        
+        ko.track(this);
+      }
+      map(data){
+        if(data){
+          Object.assign(this, data);
+        }
+      }
 
-      rowTotal.innerText = e.target.valueAsNumber * Number(e.target.getAttribute("data-cost"));
-      calculateTotal()
+      selectedPlayers(){
+        return this.roster.filter(x => x.selected);
+      }
+
+      totalCost(){
+        let cost = this.roster.map(x => x.selected ? Number(x.value)/1000 : 0).reduce((p,c) => p+c,0);
+        cost += this.allowedPositions?.map(x => x.totalCost()).reduce((p,c) => p+c,0);
+        cost += this.improvements?.map(x => x.totalCost()).reduce((p,c) => p+c,0);
+        return cost;
+      }
+
+      getSkill = id => skills.find(x => x.id == id);
+      getSkillByName = name => skills.find(x => x.name == name);
+      getSilhouette = id => `https://cdn.rebbl.net/images/bb3/Silhouettes/T_${this.allowedPositions.find(x => x.id === Number(id)).type}_Silhouette.png`;
+      getSilhouetteByName = type => `https://cdn.rebbl.net/images/bb3/Silhouettes/T_${type}_Silhouette.png`;
+      getSkillName = name => name.replace("(","").replace(")","").replace("+","").replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();}).replace(/ /g,"").replace(/-/g,"");
+      getPlayerCasualtyIcon = function(cas){
+        switch(Number(cas)){ 
+          case 1: return ["ico_action_badly_hurt.png",""]
+          case 2: return ["ico_action_seriously_hurt.png","MNG"]
+          case 3: return ["ico_action_serious_injury.png","+1 on injury rolls"]
+          case 4: return ["ico_action_lasting_injury.png",""]
+          case 5: return ["ico_action_smashed_knee.png","-1 MV"]
+          case 6: return ["ico_action_head_injury.png","-1 AV"]
+          case 7: return ["ico_action_broken_arm.png","+1 PA"]
+          case 8: return ["ico_action_neck_injury.png","+1 AG"]
+          case 9: return ["ico_action_dislocated_shoulder.png","-1 ST"]
+          case 10: return "ico_action_dead.png";
+        }
+        return false;
+      }
+
     }
 
-    const rows = document.querySelectorAll("tbody>tr");
-    rows.forEach(row => row.addEventListener("click", rowClick));
+    
+    let model;
+    $(document).ready(async function(){
+      const response = await fetch("/bb3/redraft/api/#{id}");
+      model = new RedraftModel(await response.json());
+      if (response.ok) ko.applyBindings(model);
+    });
+    
+    const skills = [
+      {id:1, name: "StripBall", icon:"StripBall.png"},{id:6, name: "Catch", icon:"Catch.png"},{id:7, name: "Dodge", icon:"Dodge.png"},{id:8, name: "Sprint", icon:"Sprint.png"},{id:10, name: "FoulAppearance", icon:"FoulAppearance.png"},{id:100, name: "AnimosityOrcLinemen", icon:"Animosity.png"},{id:1001, name: "BloodGreed", icon:"BloodGreed.png"},{id:1005, name: "Fumblerooskie", icon:"Fumblerooskie.png"},{id:1007, name: "KickTeamMate", icon:"KickTeamMate.png"},{id:1008, name: "Loner3", icon:"Loner.png"},{id:1009, name: "MightyBlow2", icon:"MightyBlow.png"},{id:101, name: "AnimosityBigUnBlockers", icon:"Animosity.png"},{id:1010, name: "MonstrousMouth", icon:"MonstrousMouth.png"},{id:1012, name: "PileDriver", icon:"PileDriver.png"},{id:1015, name: "SafePairOfHands", icon:"SafePairOfHands.png"},{id:1016, name: "Swarming", icon:"Swarming.png"},{id:1017, name: "Swoop", icon:"Swoop.png"},{id:1018, name: "Loner2", icon:"Loner.png"},{id:102, name: "AnimosityUnderworldGoblinLinemen", icon:"Animosity.png"},{id:1020, name: "PlagueRidden", icon:"PlagueRidden.png"},{id:1021, name: "DirtyPlayer2", icon:"DirtyPlayer.png"},{id:1022, name: "Loner5", icon:"Loner.png"},{id:11, name: "Leap", icon:"Leap.png"},{id:12, name: "ExtraArms", icon:"ExtraArms.png"},{id:13, name: "MightyBlow1", icon:"MightyBlow.png"},{id:14, name: "Leader", icon:"Leader.png"},{id:15, name: "Horns", icon:"Horns.png"},{id:16, name: "TwoHeads", icon:"TwoHeads.png"},{id:17, name: "StandFirm", icon:"StandFirm.png"},{id:18, name: "AlwaysHungry", icon:"AlwaysHungry.png"},{id:19, name: "Regeneration", icon:"Regeneration.png"},{id:20, name: "TakeRoot", icon:"TakeRoot.png"},{id:21, name: "Accurate", icon:"Accurate.png"},{id:22, name: "BreakTackle", icon:"BreakTackle.png"},{id:23, name: "SneakyGit", icon:"SneakyGit.png"},{id:25, name: "Chainsaw", icon:"Chainsaw.png"},{id:26, name: "Dauntless", icon:"Dauntless.png"},{id:27, name: "DirtyPlayer1", icon:"DirtyPlayer.png"},{id:28, name: "DivingCatch", icon:"DivingCatch.png"},{id:29, name: "Dumpoff", icon:"DumpOff.png"},{id:30, name: "Block", icon:"Block.png"},{id:31, name: "BoneHead", icon:"BoneHead.png"},{id:32, name: "VeryLongLegs", icon:"VeryLongLegs.png"},{id:33, name: "DisturbingPresence", icon:"DisturbingPresence.png"},{id:34, name: "DivingTackle", icon:"DivingTackle.png"},{id:35, name: "Fend", icon:"Fend.png"},{id:36, name: "Frenzy", icon:"Frenzy.png"},{id:37, name: "Grab", icon:"Grab.png"},{id:38, name: "Guard", icon:"Guard.png"},{id:39, name: "HailMaryPass", icon:"HailMaryPass.png"},{id:40, name: "Juggernaut", icon:"Juggernaut.png"},{id:41, name: "JumpUp", icon:"JumpUp.png"},{id:44, name: "Loner4", icon:"Loner.png"},{id:45, name: "NervesOfSteel", icon:"NervesOfSteel.png"},{id:46, name: "NoHands", icon:"NoHands.png"},{id:47, name: "Pass", icon:"Pass.png"},{id:49, name: "PrehensileTail", icon:"PrehensileTail.png"},{id:50, name: "Pro", icon:"Pro.png"},{id:51, name: "ReallyStupid", icon:"ReallyStupid.png"},{id:52, name: "RightStuff", icon:"RightStuff.png"},{id:53, name: "SafePass", icon:"SafePass.png"},{id:54, name: "SecretWeapon", icon:"SecretWeapon.png"},{id:55, name: "Shadowing", icon:"Shadowing.png"},{id:56, name: "Sidestep", icon:"SideStep.png"},{id:57, name: "Tackle", icon:"Tackle.png"},{id:58, name: "StrongArm", icon:"StrongArm.png"},{id:59, name: "Stunty", icon:"Stunty.png"},{id:60, name: "SureFeet", icon:"SureFeet.png"},{id:61, name: "SureHands", icon:"SureHands.png"},{id:63, name: "ThickSkull", icon:"ThickSkull.png"},{id:64, name: "ThrowTeamMate", icon:"ThrowTeamMate.png"},{id:67, name: "UnchannelledFury", icon:"UnchannelledFury.png"},{id:68, name: "Wrestle", icon:"Wrestle.png"},{id:69, name: "Tentacles", icon:"Tentacles.png"},{id:70, name: "MultipleBlock", icon:"MultipleBlock.png"},{id:71, name: "Kick", icon:"Kick.png"},{id:74, name: "BigHand", icon:"BigHand.png"},{id:75, name: "Claws", icon:"Claw.png"},{id:76, name: "BallAndChain", icon:"BallAndChain.png"},{id:77, name: "Stab", icon:"Stab.png"},{id:78, name: "HypnoticGaze", icon:"HypnoticGaze.png"},{id:80, name: "Bombardier", icon:"Bombardier.png"},{id:81, name: "Decay", icon:"Decay.png"},{id:83, name: "Titchy", icon:"Titchy.png"},{id:84, name: "AnimalSavagery", icon:"AnimalSavagery.png"},{id:86, name: "AnimosityAllTeamMates", icon:"Animosity.png"},{id:87, name: "TimmmBer", icon:"Timmm-ber.png"},{id:88, name: "Cannoneer", icon:"Cannoneer.png"},{id:89, name: "PogoStick", icon:"PogoStick.png"},{id:90, name: "Defensive", icon:"Defensive.png"},{id:91, name: "ArmBar", icon:"ArmBar.png"},{id:92, name: "IronHardSkin", icon:"IronHardSkin.png"},{id:93, name: "RunningPass", icon:"RunningPass.png"},{id:94, name: "CloudBurster", icon:"CloudBurster.png"},{id:95, name: "ProjectileVomit", icon:"ProjectileVomit.png"},{id:96, name: "Brawler", icon:"Brawler.png"},{id:97, name: "OnTheBall", icon:"OnTheBall.png"},{id:98, name: "AnimosityAllDwarfAndHalflingTeamMates", icon:"Animosity.png"},{id:99, name: "AnimosityAllDwarfAndHumanTeamMates", icon:"Animosity.png"}
+    ];
 
-    const inputs = document.querySelectorAll("th input");
-    inputs.forEach(row => row.addEventListener("change", calculateTotal));
-
-    const rookiInputs = document.querySelectorAll(".rookie-input");
-    rookiInputs.forEach(row => row.addEventListener("change", updateRookieTotal));
