@@ -20,6 +20,14 @@ block head
     input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0; }
     input[type=number] {-moz-appearance: textfield;}
 
+    .dice{background: url("/images/dice.png") no-repeat;width: 32px;height: 32px;display: inline-block;background-position-x: 0px;background-position-y:3px;vertical-align: bottom;transform: scale(1.2);}
+    .dice-1{background-position-x:0px;}
+    .dice-2{background-position-x:-32px;}
+    .dice-3{background-position-x:-64px;}
+    .dice-4{background-position-x:-96px;}
+    .dice-5{background-position-x:-128px;}
+    .dice-6{background-position-x:-160px;}
+
 
 block content
   - let path = `https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : 'BB3Standard'}`
@@ -29,7 +37,7 @@ block content
       //img(src=`https://cdn.rebbl.net/images/bb3/Logos/$logo.icon}` class="align-top" style="height:50px")
       span(style="font-size:2rem;font-weight:700" data-bind="text: name")
       span(style="font-size:2rem;font-weight:700") &nbsp;Redraft Budget:&nbsp;
-      span#budget(style="font-size:2rem;font-weight:700" data-bind="text: budget/1000")
+      span#budget(style="font-size:2rem;font-weight:700" data-bind="text: budget.total")
 
     .clearfix
     br
@@ -105,13 +113,18 @@ block content
           img(data-bind="{attr: {src: '" + path + "/' + $root.getSkill(skill).icon }}" alt="" style="z-index:9999" )
           // /ko
         td.pull-right
-          // ko foreach: {data: (Array.isArray(player.casualties.casualtiesItem) ? player.casualties.casualtiesItem:[player.casualties.casualtiesItem]).map(x => $root.getPlayerCasualtyIcon(x)), as: 'cas'}
-          // ko if: cas
-          img(data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${ cas[0] }` },title:cas[1] }")
+          // ko foreach: {data: player.casualties}
+          // ko if: !player.locked
+          img(data-bind="{attr: {src: icon() },title: title()}  ")
+          // /ko
+          // ko if: player.locked
+          img(data-bind="{attr: {src: icon(), title:title()}, event: { mouseover: showOld, mouseout: showNew } }")
+          .dice.me-1(data-bind="class: `dice-${dice}`  ")
           // /ko
           // /ko
 
-          // ko if: $root.retiredPlayers.some(x => x.id === player.id)
+
+          // ko if: $root.retiredPlayers.some(x => x.id === player.id) && !player.selected
           span.badge.text-bg-success.ms-2 retired    
           // /ko
         td(data-bind="text: player.spp")
@@ -123,7 +136,7 @@ block content
         td
           div
             img(src=`https://cdn.rebbl.net/images/skills/1.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
-            .match-stats-TeamLabel-name 
+            div(data-bind="text: type.split('_')[1].replace(/([A-Z])/g, ' $1')") 
         td
           img.silhouette-shadow(data-bind="{attr: {src: $root.getSilhouetteByName(type) }}")
         td(data-bind="text: characteristics.find(x=>x.characteristic=='MA')?.value || '-'")
@@ -155,12 +168,67 @@ block content
           | Something went wrong, please contact the admins.
         button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")
 
+  #playerModal.modal.fade(data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="playerModal" aria-hidden="true")
+    .modal-dialog.modal-xl
+      .modal-content 
+        .modal-header 
+          h1.modal-title#titleName Temporarily Retire
+          button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+        .modal-body 
+          .modal-page
+            h3  Buyer beware
+
+            p You are about to draft a player that is either Seriously Injured or has Lasting Injuries.
+            p If you continue, a D6 will be rolled for each injury, if you have an apothecary rostered, then you'll get a +1. If the result is a 4+, the apothecary managed to patch up the injury.
+            p Any success on Serious Injuries will remove them.
+            p Any success on Lasting Injuries will turn them into Serious Injuries. 
+
+            .p-3.text-bg-danger.border-start.border-2.border-danger-subtle Redrafting this player will make it locked in
+
+
+        .modal-footer(style="justify-content: space-between") 
+          button#btnCancel.btn.btn-primary(type="button" data-bs-dismiss="modal") Cancel
+          button#btnProceed.btn.btn-success(type="button" data-bind="click:proceed") Proceed
+            #spinner.d-none.spinner-grow.spinner-grow-sm.ms-2(role="status")
+
 
 block scripts 
   script(src="https://cdn.rebbl.net/scripts/knockout-3.5.1.js")
   script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
 
   script.
+    const getPlayerCasualtyIcon = function(cas){
+      switch(Number(cas)){ 
+        case 0: return "ico_action_lasting_injury.png";
+        case 1: return "ico_action_badly_hurt.png";
+        case 2: return "ico_action_seriously_hurt.png";
+        case 3: return "ico_action_serious_injury.png";
+        case 4: return "ico_action_lasting_injury.png";
+        case 5: return "ico_action_smashed_knee.png";
+        case 6: return "ico_action_head_injury.png";
+        case 7: return "ico_action_broken_arm.png";
+        case 8: return "ico_action_neck_injury.png";
+        case 9: return "ico_action_dislocated_shoulder.png";
+        case 10: return "ico_action_dead.png";
+      }
+      return false;
+    }
+    const getPlayerCasualtyTitle = function(cas){
+      switch(Number(cas)){ 
+        case 0: return "";
+        case 1: return "";
+        case 2: return "MNG";
+        case 3: return "+1 on injury rolls";
+        case 4: return "";
+        case 5: return "-1 MV";
+        case 6: return "-1 AV";
+        case 7: return "+1 PA";
+        case 8: return "+1 AG";
+        case 9: return "-1 ST";
+        case 10: return "dead";
+      }
+      return false;
+    }
 
     class ImprovementModel{
       constructor(data){
@@ -180,10 +248,31 @@ block scripts
     }
 
 
+    class CasualtyModel{
+      constructor(data){
+        this.apo = data.apo;
+        this.dice = data.dice;
+        this.new = getPlayerCasualtyIcon(data.new);
+        this.old = getPlayerCasualtyIcon(data.old);
+        this.newTitle = getPlayerCasualtyTitle(data.new);
+        this.oldTitle = getPlayerCasualtyTitle(data.old);
+
+        this.hover = false;
+        ko.track(this);
+      }
+
+      icon = () => this.hover || !this.new ? `https://cdn.rebbl.net/images/bb3/Icons_Casualty/${this.old}` :  `https://cdn.rebbl.net/images/bb3/Icons_Casualty/${this.new}`;
+      title = () => this.hover || !this.new ? this.oldTitle :  this.newTitle;
+      showOld = () => this.hover = true;
+      showNew = () => this.hover = false;
+
+    }
+
     class PlayerModel{
       constructor(data){
         this.map(data);
-        this.selected = false;
+        this.selected = data.selected || false;
+        this.casualties = this.casualties.map(x => new CasualtyModel(x));
         ko.track(this);
       }
       map(data){
@@ -192,7 +281,18 @@ block scripts
         }
       }
 
-      select =(e) => this.selected = !this.selected;
+      select = async (e) => {
+        //if (this.locked) return;
+        this.selected = !this.selected;
+        if (this.selected) {
+          model.selectedPlayer = this;
+          const myModalAlternative = new bootstrap.Modal('#playerModal', {});
+          myModalAlternative.show();
+        }
+      }
+
+
+
 
       MA = () => this.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic=='0');
       ST = () => this.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic=='1');
@@ -202,7 +302,7 @@ block scripts
 
       cssClass(){
         if (!this.selected) return "";
-        return model.retiredPlayers.some(x => x.id === this.id) ? "gradient-striped text-bg-success border border-2 border-danger" : "text-bg-success";  
+        return this.locked ? "gradient-striped text-bg-success border border-2 border-danger" : "text-bg-success";  
 
       }
     }
@@ -225,6 +325,8 @@ block scripts
       totalCost(){
         return Number(this.quantity) * Number(this.cost) / 1000;
       }
+
+
     }
 
     class RedraftModel{
@@ -238,7 +340,8 @@ block scripts
         this.retiredPlayers = data.retiredPlayers;
         this.name = data.team.name;
         this.logo = data.team.logo;
-        this.budget = Number(data.team.budget);
+        this.budget = data.team.budget;
+        this.selectedPlayer = null;
         //this.map(data);
         
         ko.track(this);
@@ -260,26 +363,18 @@ block scripts
         return cost;
       }
 
+      proceed(){
+        console.log(`/bb3/redraft/api/#{id}/${this.selectedPlayer.id}`);
+        //const response = await fetch(`/bb3/redraft/api/#{id}/${this.id}`,{method: this.selected ? "PUT" : "DELETE"});
+
+      }
+
+
       getSkill = id => skills.find(x => x.id == id);
       getSkillByName = name => skills.find(x => x.name == name);
       getSilhouette = id => `https://cdn.rebbl.net/images/bb3/Silhouettes/T_${this.allowedPositions.find(x => x.id === Number(id)).type}_Silhouette.png`;
       getSilhouetteByName = type => `https://cdn.rebbl.net/images/bb3/Silhouettes/T_${type}_Silhouette.png`;
       getSkillName = name => name.replace("(","").replace(")","").replace("+","").replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();}).replace(/ /g,"").replace(/-/g,"");
-      getPlayerCasualtyIcon = function(cas){
-        switch(Number(cas)){ 
-          case 1: return ["ico_action_badly_hurt.png",""]
-          case 2: return ["ico_action_seriously_hurt.png","MNG"]
-          case 3: return ["ico_action_serious_injury.png","+1 on injury rolls"]
-          case 4: return ["ico_action_lasting_injury.png",""]
-          case 5: return ["ico_action_smashed_knee.png","-1 MV"]
-          case 6: return ["ico_action_head_injury.png","-1 AV"]
-          case 7: return ["ico_action_broken_arm.png","+1 PA"]
-          case 8: return ["ico_action_neck_injury.png","+1 AG"]
-          case 9: return ["ico_action_dislocated_shoulder.png","-1 ST"]
-          case 10: return "ico_action_dead.png";
-        }
-        return false;
-      }
 
     }
 
