@@ -121,7 +121,7 @@ class AccountApi{
       const account = await accountService.getAccount(req.user.name);
       const regex = new RegExp(`^${account.coach}$`,"i");
       
-      const schedules = await leagueService.searchLeagues({round:1, season:"season 24", league:/rebbl - /i, "opponents.coach.name":regex});
+      const schedules = await leagueService.searchLeagues({round:1, season:"season 25", league:/rebbl - /i, "opponents.coach.name":regex});
 
 
       let schedule = schedules.find(s => regex.test(s.opponents[0].coach.name) && /^(?!\[admin]).+/i.test(s.opponents[0].team.name)); 
