@@ -6,9 +6,7 @@ block append vars
     let options = {company:"Team"}
 block head 
   style.
-            .silhouette-shadow{
-      filter: drop-shadow(0px 0px 1px black);
-    }
+    .silhouette-shadow{filter: drop-shadow(0px 0px 1px black);}
 
     .table-striped > tbody > tr.text-bg-success > td { background-color:unset !important; color:unset !important; }
     .gradient-striped {
@@ -55,8 +53,12 @@ block content
               th(scope="col") AV
               th(scope="col" style="min-width:160px") Skills
               th(scope="col") CAS
-              th(scope="col") SPP
-              th(scope="col") Value
+              th(scope="col") 
+                .float-end SPP
+              th(scope="col")
+                .float-end  Value
+              th(scope="col")
+                .float-end  Cost
           tbody
             //ko foreach: {data:roster, as: 'player'}
             // ko template: { name: 'player-row', data: player, as: 'player' }
@@ -64,7 +66,7 @@ block content
             // /ko
           tfoot 
             tr
-              th(colspan="12") &nbsp;
+              th(colspan="13") &nbsp;
             tr
               th(scope="col" colspan='2') Rookies 
               th(scope="col") position
@@ -73,17 +75,19 @@ block content
               th(scope="col") AG
               th(scope="col") PA
               th(scope="col") AV
-              th(scope="col" style="min-width:160px") Skills
-              th(scope="col") Amount
-              th(scope="col") Cost
-              th(scope="col") Value
+              th(scope="col" style="min-width:160px" colspan="2") Skills
+              th.text-center(scope="col") Amount
+              th(scope="col")
+                .float-end  Price
+              th(scope="col")
+                .float-end  Cost
 
             // ko foreach: {data: allowedPositions, as: 'position'}
             // ko template: { name: 'position-row', data: position }
             // /ko
             // /ko
             tr
-              th(colspan="10")
+              th(colspan="11")
                 .d-flex
                   //ko foreach: improvements
                   .col.d-flex
@@ -127,8 +131,10 @@ block content
           // ko if: $root.retiredPlayers.some(x => x.id === player.id) && !player.selected
           span.badge.text-bg-success.ms-2 retired    
           // /ko
-        td(data-bind="text: player.spp")
+        td
+            div.float-end(data-bind="text: player.spp")
         td.playerValue.text-end(data-bind="text:value/1000")
+        td.playerValue.text-end(data-bind="text:cost/1000")
 
     template#position-row 
       tr
@@ -145,11 +151,11 @@ block content
         td(data-bind="text: characteristics.find(x=>x.characteristic=='PA')?.value || '-'")
         td(data-bind="text: characteristics.find(x=>x.characteristic=='AV')?.value || '-'")
 
-        td.td-prevent
+        td.td-prevent(colspan="2")
           // ko foreach: {data: Array.isArray(skills) ? skills : [skills] , as: 'skill'}
           img(data-bind="{attr: {src: '" + path + "/' + $root.getSkillByName($root.getSkillName(skill)).icon }}" alt="" style="z-index:9999" )
           // /ko
-        td
+        td.text-center
           input.form-control-sm.w-25(data-bind="{value: quantity, attr:{max:calculatedMax()}, css: {'border-danger': quantity > calculatedMax() }}" type="number" min="0" step="1" onfocus="this.previousValue = this.value" onkeydown="this.previousValue = this.value" oninput="validity.valid || (value = this.previousValue)" )
         td.text-end(data-bind="text: cost/1000")
         td.text-end(data-bind="text: totalCost()")
@@ -241,9 +247,16 @@ block scripts
         this.icon = [                    
           null,"https://cdn.rebbl.net/images/bb3/apo.png","https://cdn.rebbl.net/images/bb3/cheerleader.png","https://cdn.rebbl.net/images/bb3/assistant_coach.png","https://cdn.rebbl.net/images/bb3/reroll.png","https://cdn.rebbl.net/images/bb3/dedicated_fan.png"][this.improvement];
         ko.track(this);
+
+        ko.getObservable(this, 'quantity').subscribe( async (newValue) => await this.updateImprovement(newValue));
       }
       totalCost(){ 
         return Number(this.quantity )* this.cost;
+      }
+
+      async updateImprovement(quantity){
+        const body = {improvement: this.improvement, quantity:Number(quantity)};
+        const response = await fetch(`/bb3/redraft/api/#{id}/improvement`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
       }
     }
 
@@ -252,6 +265,7 @@ block scripts
       constructor(data){
         this.apo = data.apo;
         this.dice = data.dice;
+        this.cas = data.old;
         this.new = getPlayerCasualtyIcon(data.new);
         this.old = getPlayerCasualtyIcon(data.old);
         this.newTitle = getPlayerCasualtyTitle(data.new);
@@ -283,11 +297,17 @@ block scripts
 
       select = async (e) => {
         //if (this.locked) return;
-        this.selected = !this.selected;
-        if (this.selected) {
+        
+        const isRetired = model.retiredPlayers.some(x => x.id === this.id);
+        const isSeriouslyInjured = this.casualties.some(x => x.cas === 3);
+
+        if (!this.selected && (isRetired || isSeriouslyInjured) ) {
           model.selectedPlayer = this;
-          const myModalAlternative = new bootstrap.Modal('#playerModal', {});
-          myModalAlternative.show();
+          model.modal = new bootstrap.Modal('#playerModal', {});
+          model.modal.show();
+        } else {
+          this.selected = !this.selected;
+          const response = await fetch(`/bb3/redraft/api/#{id}/${this.id}`,{method: this.selected ? "PUT" : "DELETE"});
         }
       }
 
@@ -342,14 +362,9 @@ block scripts
         this.logo = data.team.logo;
         this.budget = data.team.budget;
         this.selectedPlayer = null;
-        //this.map(data);
+        this.modal = null
         
         ko.track(this);
-      }
-      map(data){
-        if(data){
-          Object.assign(this, data);
-        }
       }
 
       selectedPlayers(){
@@ -363,9 +378,15 @@ block scripts
         return cost;
       }
 
-      proceed(){
-        console.log(`/bb3/redraft/api/#{id}/${this.selectedPlayer.id}`);
-        //const response = await fetch(`/bb3/redraft/api/#{id}/${this.id}`,{method: this.selected ? "PUT" : "DELETE"});
+      async proceed(){
+        const response = await fetch(`/bb3/redraft/api/#{id}/${this.selectedPlayer.id}`,{method: "PUT"});
+
+        if (response.ok){
+          const index = this.roster.findIndex(x => x.id === this.selectedPlayer.id);
+          this.roster.splice(index,1, new PlayerModel(await response.json()));
+        }
+
+        this.modal.hide();
 
       }
 

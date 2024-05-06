@@ -17,6 +17,8 @@ class Redraft{
     return res.render("bb3/redraft/index", {id:req.params.teamId});
   }
 
+  #redraftPreview = async (req, res) => res.render("bb3/redraft/preview", {team: await redraftService.checkRedraft(req.params.teamId, res.locals.user)});
+
   #startRedraft = async (req,res) => {
     const result =  await redraftService.startRedraft(req.params.teamId, res.locals.user);
 
@@ -26,8 +28,8 @@ class Redraft{
 
   #draftPlayer = async (req,res) =>  {
     try{
-      await redraftService.draftPlayer(req.params.teamId, req.params.playerId, res.locals.user);
-      res.status(200).json();
+      const player = await redraftService.draftPlayer(req.params.teamId, req.params.playerId, res.locals.user);
+      res.status(200).json(player);
     } catch (ex) {
       res.status(400).json(ex);
     }
@@ -35,6 +37,14 @@ class Redraft{
   #undraftPlayer = async (req,res) => {
     try{
       await redraftService.undraftPlayer(req.params.teamId, req.params.playerId, res.locals.user);
+      res.status(200).json();
+    } catch (ex) {
+      res.status(400).json(ex);
+    }
+  }
+  #updateImprovement = async (req,res) => {
+    try{
+      await redraftService.updateImprovement(req.params.teamId, {improvement:req.body.improvement, quantity:req.body.quantity}, res.locals.user);
       res.status(200).json();
     } catch (ex) {
       res.status(400).json(ex);
@@ -58,11 +68,14 @@ class Redraft{
 
 
   routesConfig(){
+    this.router.get("/:teamId/preview", util.cache(1), util.checkAuthenticated, this.#redraftPreview);
     this.router.get("/:teamId", util.cache(1), util.checkAuthenticated, this.#teamView);
     
     this.router.post("/api/:teamId", util.ensureAuthenticated, this.#startRedraft);
-
+    
+    this.router.put("/api/:teamId/improvement", util.ensureAuthenticated, this.#updateImprovement);
     this.router.put("/api/:teamId/:playerId", util.ensureAuthenticated, this.#draftPlayer);
+
     this.router.delete("/api/:teamId/:playerId", util.ensureAuthenticated, this.#undraftPlayer);
 
     this.router.get("/api/:teamId", util.cache(1),  this.#teamData);
