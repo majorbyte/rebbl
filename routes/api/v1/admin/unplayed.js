@@ -36,7 +36,7 @@ const express = require('express')
     try{
       
       if (req.body.type === 'byeweek') await adminMatchService.concedeMatch(req.params.matchId, req.body.teamId);
-      else await adminMatchService.adninMatch(req.params.matchId, req.body.teamId, req.body.type);
+      else await adminMatchService.adminMatch(req.params.matchId, req.body.teamId, req.body.type);
       res.status(200).send();
     } catch(err){
       console.log(err);
