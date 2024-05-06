@@ -1,0 +1,50 @@
+extends ../../no-cache-sub-relayout.pug
+include ../functions.pug
+
+block append vars
+  -
+    let options = {company:"Team"}
+block head 
+  style.
+    .silhouette-shadow{
+      filter: drop-shadow(0px 0px 1px black);
+    }
+
+    .table-striped > tbody > tr.text-bg-success > td { background-color:unset !important; color:unset !important; }
+    .gradient-striped {
+      background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+      background-size: 40px 40px;
+    }
+    .form-control-sm, .table-sm > :not(caption) > * > *{padding: 0rem 0.25rem !important;}
+    .form-control-sm {min-height:unset !important;}
+    input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0; }
+    input[type=number] {-moz-appearance: textfield;}
+
+    .dice{background: url("/images/dice.png") no-repeat;width: 32px;height: 32px;display: inline-block;background-position-x: 0px;background-position-y:3px;vertical-align: bottom;transform: scale(1.2);}
+    .dice-1{background-position-x:0px;}
+    .dice-2{background-position-x:-32px;}
+    .dice-3{background-position-x:-64px;}
+    .dice-4{background-position-x:-96px;}
+    .dice-5{background-position-x:-128px;}
+    .dice-6{background-position-x:-160px;}
+
+
+block content
+  - let icons = [null,"https://cdn.rebbl.net/images/bb3/apo.png","https://cdn.rebbl.net/images/bb3/cheerleader.png","https://cdn.rebbl.net/images/bb3/assistant_coach.png","https://cdn.rebbl.net/images/bb3/reroll.png","https://cdn.rebbl.net/images/bb3/dedicated_fan.png"]
+  .container
+    .row.d-flex
+      .col-12.d-flex.flex-wrap.align-items-center
+        //img(src=`https://cdn.rebbl.net/images/bb3/Logos/$logo.icon}` class="align-top" style="height:50px")
+        span(style="font-size:2rem;font-weight:700" data-bind="text: name")
+        span(style="font-size:2rem;font-weight:700")=` ${team.name} Redraft Budget:`
+        span#budget(style="font-size:2rem;font-weight:700" )= " " + team.budget.total
+      .col.d-flex.flex-wrap.align-items-center
+        .p-3.text-bg-success.border-start.border-2.border-success-subtle The team is ready for the re-draft.
+      .col-6.d-flex.flex-wrap.align-items-center
+        .p-3.text-bg-warning.border-start.border-2.border-warning-subtle The team needs to resolve Expansive Mistakes first.
+      .col-6.d-flex.flex-wrap.align-items-center
+        .p-3.text-bg-warning.border-start.border-2.border-warning-subtle The team has player(s) that need to have their level up fixed first.
+      .col-6.d-flex.flex-wrap.align-items-center
+        .p-3.text-bg-warning.border-start.border-2.border-warning-subtle The team needs to resolve Recruitable Journeyman first.
+
+  
