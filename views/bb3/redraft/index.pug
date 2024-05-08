@@ -17,6 +17,7 @@ block head
     .form-control-sm {min-height:unset !important;}
     input::-webkit-outer-spin-button,input::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0; }
     input[type=number] {-moz-appearance: textfield;}
+    .form-check-input:checked {  background-color: RGBA(0,188,140,var(--bs-bg-opacity,1)) ;}
 
     .dice{background: url("/images/dice.png") no-repeat;width: 32px;height: 32px;display: inline-block;background-position-x: 0px;background-position-y:3px;vertical-align: bottom;transform: scale(1.2);}
     .dice-1{background-position-x:0px;}
@@ -38,7 +39,11 @@ block content
       span#budget(style="font-size:2rem;font-weight:700" data-bind="text: budget.total")
 
     .clearfix
-    br
+    .col-12
+      .form-check.form-switch
+        input.form-check-input#flexSwitchCheckChecked(type="checkbox" role="switch" data-bind="checked: mock")
+        label.form-check-label(for="flexSwitchCheckChecked") Mock draft, when enabled, changes will not be saved to the server, no rolls made etc. 
+
     .col-12
       table.table.table-striped.table-sm
           thead
@@ -101,6 +106,12 @@ block content
                 span(data-bind="text: totalCost()")
 
     template#player-row 
+      // ko if: loading
+      tr.placeholder-glow
+        td(colspan="13" style="height:33px")
+          span.placeholder.w-100(data-bind="css: {'bg-success':player.selected}")
+      // /ko
+      // ko if: !loading
       tr(data-bind="id: player.id, click:select, class:cssClass() " )
         td(data-bind="text: player.number")
         td
@@ -135,6 +146,7 @@ block content
             div.float-end(data-bind="text: player.spp")
         td.playerValue.text-end(data-bind="text:value/1000")
         td.playerValue.text-end(data-bind="text:cost/1000")
+      // /ko
 
     template#position-row 
       tr
@@ -178,12 +190,10 @@ block content
     .modal-dialog.modal-xl
       .modal-content 
         .modal-header 
-          h1.modal-title#titleName Temporarily Retire
+          h1.modal-title#titleName Buyer beware
           button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
         .modal-body 
           .modal-page
-            h3  Buyer beware
-
             p You are about to draft a player that is either Seriously Injured or has Lasting Injuries.
             p If you continue, a D6 will be rolled for each injury, if you have an apothecary rostered, then you'll get a +1. If the result is a 4+, the apothecary managed to patch up the injury.
             p Any success on Serious Injuries will remove them.
@@ -191,7 +201,9 @@ block content
 
             .p-3.text-bg-danger.border-start.border-2.border-danger-subtle Redrafting this player will make it locked in
 
-
+            // ko if: !apo
+            .p-3.text-bg-info.border-start.border-2.border-info-subtle Your team does currently not have an Apothecary rostered.
+            // /ko
         .modal-footer(style="justify-content: space-between") 
           button#btnCancel.btn.btn-primary(type="button" data-bs-dismiss="modal") Cancel
           button#btnProceed.btn.btn-success(type="button" data-bind="click:proceed") Proceed
@@ -241,9 +253,10 @@ block scripts
         this.quantity = data.quantity;
         this.min = data.min;
         this.max = data.max;
+        this.locked = data.locked || false;
         this.improvement = Number(data.improvement);
         this.cost = Number(data.cost) / (this.improvement === 4 ? 2000 : 1000);
-        this.disabled = this.improvement == 5;
+        this.disabled = this.improvement == 5 || this.max == 0 || this.locked;
         this.icon = [                    
           null,"https://cdn.rebbl.net/images/bb3/apo.png","https://cdn.rebbl.net/images/bb3/cheerleader.png","https://cdn.rebbl.net/images/bb3/assistant_coach.png","https://cdn.rebbl.net/images/bb3/reroll.png","https://cdn.rebbl.net/images/bb3/dedicated_fan.png"][this.improvement];
         ko.track(this);
@@ -255,8 +268,11 @@ block scripts
       }
 
       async updateImprovement(quantity){
+        if (model.mock) return;
+
         const body = {improvement: this.improvement, quantity:Number(quantity)};
         const response = await fetch(`/bb3/redraft/api/#{id}/improvement`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
+        if (this.improvement === 1) model.apo = this.quantity == 1;
       }
     }
 
@@ -287,6 +303,7 @@ block scripts
         this.map(data);
         this.selected = data.selected || false;
         this.casualties = this.casualties.map(x => new CasualtyModel(x));
+        this.loading = false;
         ko.track(this);
       }
       map(data){
@@ -296,8 +313,13 @@ block scripts
       }
 
       select = async (e) => {
-        //if (this.locked) return;
+        if (this.locked) return;
         
+        if (model.mock){
+          this.selected = !this.selected;
+          return;
+        }
+
         const isRetired = model.retiredPlayers.some(x => x.id === this.id);
         const isSeriouslyInjured = this.casualties.some(x => x.cas === 3);
 
@@ -306,8 +328,11 @@ block scripts
           model.modal = new bootstrap.Modal('#playerModal', {});
           model.modal.show();
         } else {
-          this.selected = !this.selected;
-          const response = await fetch(`/bb3/redraft/api/#{id}/${this.id}`,{method: this.selected ? "PUT" : "DELETE"});
+          this.loading = true;
+          const response = await fetch(`/bb3/redraft/api/#{id}/${this.id}`,{method: !this.selected ? "PUT" : "DELETE"});
+          if (response.ok) this.selected = !this.selected;
+
+          this.loading = false;
         }
       }
 
@@ -351,6 +376,15 @@ block scripts
 
     class RedraftModel{
       constructor(data){
+        this.mock = true;
+        this.map(data);
+        ko.track(this);
+
+        ko.getObservable(this, 'mock').subscribe( async _ => await this.reload());
+      }
+
+      
+      map(data){
         this.roster = data.team.roster.map(x => {return new PlayerModel(x)});
         this.improvements = data.team.improvements.map(x => {return new ImprovementModel(x)});
         this.allowedPositions = data.allowedPositions.map(x => {
@@ -363,8 +397,7 @@ block scripts
         this.budget = data.team.budget;
         this.selectedPlayer = null;
         this.modal = null
-        
-        ko.track(this);
+        this.apo = this.improvements.some(x => x.improvement === 1 && x.quantity === 1);
       }
 
       selectedPlayers(){
@@ -379,6 +412,7 @@ block scripts
       }
 
       async proceed(){
+        if (this.mock) return;
         const response = await fetch(`/bb3/redraft/api/#{id}/${this.selectedPlayer.id}`,{method: "PUT"});
 
         if (response.ok){
@@ -387,9 +421,14 @@ block scripts
         }
 
         this.modal.hide();
-
       }
 
+      async reload(){
+        this.roster.forEach(x => x.loading =true);
+        const response = await fetch("/bb3/redraft/api/#{id}");
+        this.map(await response.json());
+        this.roster.forEach(x => x.loading =false);
+      }
 
       getSkill = id => skills.find(x => x.id == id);
       getSkillByName = name => skills.find(x => x.name == name);
@@ -403,8 +442,9 @@ block scripts
     let model;
     $(document).ready(async function(){
       const response = await fetch("/bb3/redraft/api/#{id}");
+      if (!response.ok) return; 
       model = new RedraftModel(await response.json());
-      if (response.ok) ko.applyBindings(model);
+      ko.applyBindings(model);
     });
     
     const skills = [
