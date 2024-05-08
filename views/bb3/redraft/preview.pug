@@ -27,24 +27,137 @@ block head
     .dice-4{background-position-x:-96px;}
     .dice-5{background-position-x:-128px;}
     .dice-6{background-position-x:-160px;}
-
+    .bi {width: 1em;height: 1em;vertical-align: -.125em;fill: currentcolor;}
 
 block content
   - let icons = [null,"https://cdn.rebbl.net/images/bb3/apo.png","https://cdn.rebbl.net/images/bb3/cheerleader.png","https://cdn.rebbl.net/images/bb3/assistant_coach.png","https://cdn.rebbl.net/images/bb3/reroll.png","https://cdn.rebbl.net/images/bb3/dedicated_fan.png"]
   .container
+    svg.d-none(xmlns="http://www.w3.org/2000/svg")
+      symbol#check-circle-fill(viewBox="0 0 16 16")
+        path(d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z")
+      symbol#info-fill(viewBox="0 0 16 16")
+        path(d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z")
+      symbol#exclamation-triangle-fill(iewBox="0 0 16 16")
+        path(d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z")
+
     .row.d-flex
-      .col-12.d-flex.flex-wrap.align-items-center
-        //img(src=`https://cdn.rebbl.net/images/bb3/Logos/$logo.icon}` class="align-top" style="height:50px")
+      .d-flex.flex-wrap.align-items-center
+        img(src='https://cdn.rebbl.net/images/bb3/Logos/' + team.logo.icon class="align-top" style="height:50px")
         span(style="font-size:2rem;font-weight:700" data-bind="text: name")
         span(style="font-size:2rem;font-weight:700")=` ${team.name} Redraft Budget:`
         span#budget(style="font-size:2rem;font-weight:700" )= " " + team.budget.total
-      .col.d-flex.flex-wrap.align-items-center
-        .p-3.text-bg-success.border-start.border-2.border-success-subtle The team is ready for the re-draft.
-      .col-6.d-flex.flex-wrap.align-items-center
-        .p-3.text-bg-warning.border-start.border-2.border-warning-subtle The team needs to resolve Expansive Mistakes first.
-      .col-6.d-flex.flex-wrap.align-items-center
-        .p-3.text-bg-warning.border-start.border-2.border-warning-subtle The team has player(s) that need to have their level up fixed first.
-      .col-6.d-flex.flex-wrap.align-items-center
-        .p-3.text-bg-warning.border-start.border-2.border-warning-subtle The team needs to resolve Recruitable Journeyman first.
 
-  
+        .float-end
+          button.btn.btn-warning.btn-sm(type="button" data-bs-toggle="collapse" data-bs-target="#collapseBudget" aria-expanded="false" aria-controls="collapseBudget")
+            | explain
+        .w-100
+        div.collapse#collapseBudget.mt-2
+          .v-stack.gap-3
+            .d-flex.justify-content-between.align-items-center 
+              span.me-2 Base 
+              span.badge.text-bg-success=team.budget.base
+            .d-flex.justify-content-between.align-items-center 
+              span.me-2 Games played 
+              div.align-items-center 
+                span.badge.text-bg-info=team.budget.games/20 
+                span.align-content-base x
+                span.badge.text-bg-warning 20 
+                span="="
+                span.badge.text-bg-success=team.budget.games
+            .d-flex.justify-content-between.align-items-center 
+              span.me-2 Games won
+              div
+                span.badge.text-bg-info=team.budget.wins/20 
+                span.align-content-base x
+                span.badge.text-bg-warning 20 
+                span="="
+                span.badge.text-bg-success=team.budget.wins
+            .d-flex.justify-content-between.align-items-center 
+              span.me-2 Games drawn
+              div 
+                span.badge.text-bg-info=team.budget.draws/10 
+                span.align-content-base x
+                span.badge.text-bg-warning 10 
+                span="="
+                span.badge.text-bg-success=team.budget.draws
+            .d-flex.justify-content-between.align-items-center 
+              span.me-2 Treasury
+              div 
+                span.badge.text-bg-success=team.budget.treasury
+
+
+      //- if (team.mustRollExpensiveMistake == "1")
+        .d-flex.flex-wrap.justify-content-between.alert.alert-warning
+          div 
+            svg.bi.flex-shrink-0.me-2(role="img" aria-label="Info:")
+              use(xlink:href="#exclamation-triangle-fill")
+            | The team needs to resolve Expansive Mistakes first.
+          .float-end
+            button.btn.btn-warning.btn-sm(type="button" data-bs-toggle="collapse" data-bs-target="#collapseExpansiveMistakes" aria-expanded="false" aria-controls="collapseExpansiveMistakes")
+              | explain
+          .w-100.collapse#collapseExpansiveMistakes.mt-2
+            .card.card-body
+              | Your team is flagged by BB3 for having too much Treasury. Resolve the situation buy either buying stuff, or roll for Expansive Mistakes. As long as the flag is present, you can not continue with the redraft.
+
+      - if (team.hasPlayerThatMustLevelUp == "1")
+        .d-flex.flex-wrap.justify-content-between.alert.alert-warning
+          div 
+            svg.bi.flex-shrink-0.me-2(role="img" aria-label="Info:")
+              use(xlink:href="#exclamation-triangle-fill")
+            | The team has player(s) that need to have their level up fixed first.
+          .float-end
+            button.btn.btn-warning.btn-sm(type="button" data-bs-toggle="collapse" data-bs-target="#collapseForcedLevelup" aria-expanded="false" aria-controls="collapseForcedLevelup")
+              | explain
+          .w-100.collapse#collapseForcedLevelup.mt-2
+            .card.card-body
+              | Your team is flagged by BB3 for having players that have reached the maximum amount of SPP. Rolling for levels is part of the Post Match sequence, please choose a skill or characteristic for those players, in order to be able to continue with the redraft.
+
+      - if (team.hasRecrutableJourneymen == "1")
+        .d-flex.flex-wrap.justify-content-between.alert.alert-warning
+          div 
+            svg.bi.flex-shrink-0.me-2(role="img" aria-label="Info:")
+              use(xlink:href="#exclamation-triangle-fill")
+            | The team needs to resolve Recruitable Journeyman first.
+          .float-end
+            button.btn.btn-warning.btn-sm.border.border-1.border-warning-subtle(type="button" data-bs-toggle="collapse" data-bs-target="#collapseJourneyman" aria-expanded="false" aria-controls="collapseJourneyman")
+              | explain
+          .w-100.collapse#collapseJourneyman.mt-2
+            .card.card-body
+              | Your team is flagged by BB3 for having journeyman or resurrected players available for hire. For redraft to be able to continue, this needs to be solved first. You can either buy the players, or contact one of the admins and ask for an admin loss which should clear the flag.
+
+      - if (team.hasPlayerThatMustLevelUp == "0" && team.mustRollExpensiveMistake == "0" && team.hasRecrutableJourneymen == "1")
+      .d-flex.flex-wrap.justify-content-between.alert.alert-success
+        div 
+          svg.bi.flex-shrink-0.me-2(role="img" aria-label="Info:")
+            use(xlink:href="#check-circle-fill")
+          | The team is ready for the re-draft.
+        .float-end
+          button.btn.btn-warning.btn-sm.border.border-1.border-warning-subtle(type="button" data-bs-toggle="collapse" data-bs-target="#collapseStart" aria-expanded="false" aria-controls="collapseStart")
+            | Start redraft
+        .w-100.collapse#collapseStart.mt-2
+          .card
+            .card-body.text-bg-info
+              p Make sure you are finished with picking skills. Since picking skills should be part of the Post Match sequence, you will not be allowed to skill players between the start of the redraft and the Post Match of next season's round 1 match. Since this can't enforced by the client, rebbl.net will keep track of your players. The site and the community are watching you! 
+              p.border.border-2.border-danger.rounded In case you would skill a player during this period, you will be forced to recreate the player, and any random skill advantages are forfeited.
+            .card-footer.text-bg-info 
+              button.float-end.btn.btn-sm.btn-success(onclick="redraft()") proceed
+
+  block scripts
+    script.
+
+      const redraft = async function (){
+        const response = await fetch(`/bb3/redraft/api/#{team.id}`, {method:"POST"});
+        if (response.ok){
+          const data = await response.json();
+          window.location.href = data.redirect;
+        } else {
+          const data = await response.json();
+          const e = document.getElementById("redraftToast");
+          const d = document.getElementById("redraftError");        
+          d.innerHTML = data.error;
+          
+          const toast = new bootstrap.Toast(e);
+          toast.show();
+        }
+
+      }
