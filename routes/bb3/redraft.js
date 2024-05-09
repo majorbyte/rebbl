@@ -50,20 +50,19 @@ class Redraft{
       res.status(400).json(ex);
     }
   }
+  #updatePosition = async (req,res) => {
+    try{
+      await redraftService.updatePosition(req.params.teamId, {id:req.body.id, quantity:req.body.quantity}, res.locals.user);
+      res.status(200).json();
+    } catch (ex) {
+      res.status(400).json(ex);
+    }
+  }
 
 
   #teamData = async (req,res) => {
-    
     const team = await dataService.getTeam({id: req.params.teamId});
-    const retiredPlayers = await dataService.getRetiredPlayers({teamId:req.params.teamId});
-    const positions = await dataService.getPositions();
-    const races = await dataService.getRaces();
-
-    const race = races.find(x => x.code == team.race);
-
-    const allowedPositions = positions.filter(x => x.race === race.prefix);
-
-    res.json({team:team.redraft, retiredPlayers, allowedPositions});
+    res.json(team.redraft);
   }
 
 
@@ -75,6 +74,7 @@ class Redraft{
     this.router.post("/api/:teamId", util.ensureAuthenticated, this.#startRedraft);
     
     this.router.put("/api/:teamId/improvement", util.ensureAuthenticated, this.#updateImprovement);
+    this.router.put("/api/:teamId/position", util.ensureAuthenticated, this.#updatePosition);
     this.router.put("/api/:teamId/:playerId", util.ensureAuthenticated, this.#draftPlayer);
 
     this.router.delete("/api/:teamId/:playerId", util.ensureAuthenticated, this.#undraftPlayer);

@@ -33,16 +33,20 @@ block content
 
   .container
     .col-12.d-flex.flex-wrap.align-items-center
-      //img(src=`https://cdn.rebbl.net/images/bb3/Logos/$logo.icon}` class="align-top" style="height:50px")
+      img(data-bind="attr:{src:`https://cdn.rebbl.net/images/bb3/Logos/${logo.icon}`}" class="align-top" style="height:50px")
       span(style="font-size:2rem;font-weight:700" data-bind="text: name")
       span(style="font-size:2rem;font-weight:700") &nbsp;Redraft Budget:&nbsp;
       span#budget(style="font-size:2rem;font-weight:700" data-bind="text: budget.total")
 
+    .row.g-0
+      .col-8
+        .form-check.form-switch
+          input.form-check-input#flexSwitchCheckChecked(type="checkbox" role="switch" data-bind="checked: mock")
+          label.form-check-label(for="flexSwitchCheckChecked") Mock draft, when enabled, changes will not be saved to the server, no rolls made etc. 
+      .col-4
+        button.float-end.btn.btn-sm.btn-success(data-bind="attr: {disabled:mock || !valid() }") Confirm
+
     .clearfix
-    .col-12
-      .form-check.form-switch
-        input.form-check-input#flexSwitchCheckChecked(type="checkbox" role="switch" data-bind="checked: mock")
-        label.form-check-label(for="flexSwitchCheckChecked") Mock draft, when enabled, changes will not be saved to the server, no rolls made etc. 
 
     .col-12
       table.table.table-striped.table-sm
@@ -249,7 +253,7 @@ block scripts
     }
 
     class ImprovementModel{
-      constructor(data){
+      constructor(data,teamId){
         this.quantity = data.quantity;
         this.min = data.min;
         this.max = data.max;
@@ -259,8 +263,9 @@ block scripts
         this.disabled = this.improvement == 5 || this.max == 0 || this.locked;
         this.icon = [                    
           null,"https://cdn.rebbl.net/images/bb3/apo.png","https://cdn.rebbl.net/images/bb3/cheerleader.png","https://cdn.rebbl.net/images/bb3/assistant_coach.png","https://cdn.rebbl.net/images/bb3/reroll.png","https://cdn.rebbl.net/images/bb3/dedicated_fan.png"][this.improvement];
+        this.teamId = teamId;
         ko.track(this);
-
+        ko.getObservable(this, 'quantity').extend({ rateLimit: { timeout: 500, method: "notifyWhenChangesStop" } });
         ko.getObservable(this, 'quantity').subscribe( async (newValue) => await this.updateImprovement(newValue));
       }
       totalCost(){ 
@@ -271,7 +276,7 @@ block scripts
         if (model.mock) return;
 
         const body = {improvement: this.improvement, quantity:Number(quantity)};
-        const response = await fetch(`/bb3/redraft/api/#{id}/improvement`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
+        const response = await fetch(`/bb3/redraft/api/${this.teamId}/improvement`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
         if (this.improvement === 1) model.apo = this.quantity == 1;
       }
     }
@@ -299,8 +304,9 @@ block scripts
     }
 
     class PlayerModel{
-      constructor(data){
+      constructor(data,teamId){
         this.map(data);
+        this.teamId = teamId;
         this.selected = data.selected || false;
         this.casualties = this.casualties.map(x => new CasualtyModel(x));
         this.loading = false;
@@ -329,15 +335,12 @@ block scripts
           model.modal.show();
         } else {
           this.loading = true;
-          const response = await fetch(`/bb3/redraft/api/#{id}/${this.id}`,{method: !this.selected ? "PUT" : "DELETE"});
+          const response = await fetch(`/bb3/redraft/api/${this.teamId}/${this.id}`,{method: !this.selected ? "PUT" : "DELETE"});
           if (response.ok) this.selected = !this.selected;
 
           this.loading = false;
         }
       }
-
-
-
 
       MA = () => this.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic=='0');
       ST = () => this.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic=='1');
@@ -353,10 +356,14 @@ block scripts
     }
 
     class PositionModel{
-      constructor(data){
+      constructor(data, teamId){
         this.map(data);
-        this.quantity = 0;
+        if (!data.hasOwnProperty("quantity")) this.quantity = 0;
+        this.quantityAsNumber = Number(this.quantity);
+        this.teamId = teamId;
         ko.track(this);
+        ko.getObservable(this, 'quantity').extend({ rateLimit: { timeout: 500, method: "notifyWhenChangesStop" } });
+        ko.getObservable(this, 'quantity').subscribe( async (val) => await this.updatePosition(val));
       }
       map(data){
         if(data){
@@ -370,8 +377,16 @@ block scripts
       totalCost(){
         return Number(this.quantity) * Number(this.cost) / 1000;
       }
+      valid(){
+        return this.quantity <= this.calculatedMax();
+      }
+      async updatePosition(quantity){
+        this.quantityAsNumber = Number(quantity);
+        if (model.mock) return;
 
-
+        const body = {id:this.id, quantity:Number(quantity)};
+        const response = await fetch(`/bb3/redraft/api/${this.teamId}/position`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
+      }
     }
 
     class RedraftModel{
@@ -385,18 +400,19 @@ block scripts
 
       
       map(data){
-        this.roster = data.team.roster.map(x => {return new PlayerModel(x)});
-        this.improvements = data.team.improvements.map(x => {return new ImprovementModel(x)});
+        this.roster = data.roster.map(x => {return new PlayerModel(x, data.id)});
+        this.improvements = data.improvements.map(x => {return new ImprovementModel(x,data.id)});
         this.allowedPositions = data.allowedPositions.map(x => {
           x.players = this.roster.filter(player => player.position == x.id );
-          return new PositionModel(x);
+          return new PositionModel(x,data.id);
         });
         this.retiredPlayers = data.retiredPlayers;
-        this.name = data.team.name;
-        this.logo = data.team.logo;
-        this.budget = data.team.budget;
+        this.name = data.name;
+        this.logo = data.logo;
+        this.budget = data.budget;
         this.selectedPlayer = null;
         this.modal = null
+        this.id = data.id;
         this.apo = this.improvements.some(x => x.improvement === 1 && x.quantity === 1);
       }
 
@@ -413,7 +429,7 @@ block scripts
 
       async proceed(){
         if (this.mock) return;
-        const response = await fetch(`/bb3/redraft/api/#{id}/${this.selectedPlayer.id}`,{method: "PUT"});
+        const response = await fetch(`/bb3/redraft/api/${this.id}/${this.selectedPlayer.id}`,{method: "PUT"});
 
         if (response.ok){
           const index = this.roster.findIndex(x => x.id === this.selectedPlayer.id);
@@ -425,10 +441,20 @@ block scripts
 
       async reload(){
         this.roster.forEach(x => x.loading =true);
-        const response = await fetch("/bb3/redraft/api/#{id}");
+        const response = await fetch(`/bb3/redraft/api/${this.id}`);
         this.map(await response.json());
         this.roster.forEach(x => x.loading =false);
       }
+
+      valid(){
+        const playerCount = this.roster.filter(p => p.selected).length + this.allowedPositions.reduce((p,c) => p + c.quantityAsNumber ,0);
+        const playerCountValid = playerCount >= 11 && playerCount <= 16;
+        const withinBudget = this.totalCost() <= this.budget.total;
+        const positionsValid = this.allowedPositions.every(p => p.valid());
+
+        return playerCountValid && withinBudget && positionsValid;
+      }
+
 
       getSkill = id => skills.find(x => x.id == id);
       getSkillByName = name => skills.find(x => x.name == name);
@@ -441,7 +467,9 @@ block scripts
     
     let model;
     $(document).ready(async function(){
-      const response = await fetch("/bb3/redraft/api/#{id}");
+      let path = window.location.pathname.split("/");
+
+      const response = await fetch(`/bb3/redraft/api/${path[path.length-1]}`);
       if (!response.ok) return; 
       model = new RedraftModel(await response.json());
       ko.applyBindings(model);
