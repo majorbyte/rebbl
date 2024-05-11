@@ -44,7 +44,7 @@ block content
           input.form-check-input#flexSwitchCheckChecked(type="checkbox" role="switch" data-bind="checked: mock")
           label.form-check-label(for="flexSwitchCheckChecked") Mock draft, when enabled, changes will not be saved to the server, no rolls made etc. 
       .col-4
-        button.float-end.btn.btn-sm.btn-success(data-bind="attr: {disabled:mock || !valid() }") Confirm
+        button.float-end.btn.btn-sm.btn-success(data-bind="{attr: {disabled:mock || !valid() }, click:showConfirmation}") Confirm
 
     .clearfix
 
@@ -213,6 +213,27 @@ block content
           button#btnProceed.btn.btn-success(type="button" data-bind="click:proceed") Proceed
             #spinner.d-none.spinner-grow.spinner-grow-sm.ms-2(role="status")
 
+  #confirmationModal.modal.fade(data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmationModal" aria-hidden="true")
+    .modal-dialog.modal-xl
+      .modal-content 
+        .modal-header 
+          h1.modal-title#titleName Confirm your choices
+          button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+        .modal-body 
+          .modal-page
+            p You are about to confirm your redraft.
+            p If you continue, the following will happen in-game:
+            ul 
+              li Your team will have its rerolls, cheerleaders, assistant coaches and apothecary adjusted if necessary;
+              li Injuries on players in-game will be adjusted according to the draft result ;
+              li Cash will be awarded to your team for for you to buy new rookies.
+
+            .p-3.text-bg-warning.border-start.border-2.border-warning-subtle Don't forget to sack the players that need sacking, and to complete the redraft on rebbl.net by validating it against the ingame changes.
+
+        .modal-footer(style="justify-content: space-between") 
+          button#btnCancel.btn.btn-primary(type="button" data-bs-dismiss="modal") Cancel
+          button#btnProceed.btn.btn-success(type="button" data-bind="click:confirm") Proceed
+            #spinner.d-none.spinner-grow.spinner-grow-sm.ms-2(role="status")
 
 block scripts 
   script(src="https://cdn.rebbl.net/scripts/knockout-3.5.1.js")
@@ -439,6 +460,25 @@ block scripts
         this.modal.hide();
       }
 
+      async showConfirmation(){
+
+        const modal = new bootstrap.Modal('#confirmationModal', {});
+
+        modal.show();
+      }
+
+
+      async confirm(){
+        if (this.mock) return;
+        const response = await fetch(`/bb3/redraft/api/${this.id}/confirm`,{method: "POST"});
+
+        if (response.ok){}
+
+        const modal = new bootstrap.Modal('#confirmationModal', {});
+
+        modal.hide();
+      }
+
       async reload(){
         this.roster.forEach(x => x.loading =true);
         const response = await fetch(`/bb3/redraft/api/${this.id}`);
@@ -455,6 +495,7 @@ block scripts
         return playerCountValid && withinBudget && positionsValid;
       }
 
+      
 
       getSkill = id => skills.find(x => x.id == id);
       getSkillByName = name => skills.find(x => x.name == name);

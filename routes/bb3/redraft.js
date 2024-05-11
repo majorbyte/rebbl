@@ -20,10 +20,12 @@ class Redraft{
   #redraftPreview = async (req, res) => res.render("bb3/redraft/preview", {team: await redraftService.checkRedraft(req.params.teamId, res.locals.user)});
 
   #startRedraft = async (req,res) => {
-    const result =  await redraftService.startRedraft(req.params.teamId, res.locals.user);
-
-    if (result?.error) res.status(400).json(result);
-    else res.json({redirect: `/bb3/redraft/${req.params.teamId}`});
+    try{
+      const result =  await redraftService.startRedraft(req.params.teamId, res.locals.user);
+      res.json({redirect: `/bb3/redraft/${req.params.teamId}`});
+    } catch (ex) {
+     res.status(400).json(ex);
+    }
   }
 
   #draftPlayer = async (req,res) =>  {
@@ -58,10 +60,30 @@ class Redraft{
       res.status(400).json(ex);
     }
   }
+  #confirmRedraft = async (req, res) => {
+    try{
+      await redraftService.confirmDraft(req.params.teamId, res.locals.user);
+      res.status(200).json();
+    } catch (ex) {
+      res.status(400).json(ex);
+    }
+  }
+
+  #validateRedraft = async (req, res) => {
+    try{
+      await redraftService.validateDraft(req.params.teamId, res.locals.user);
+      res.status(200).json();
+    } catch (ex) {
+      res.status(400).json(ex);
+    }
+  }
 
 
   #teamData = async (req,res) => {
     const team = await dataService.getTeam({id: req.params.teamId});
+    team.redraft.id = team.id;
+    team.redraft.name = team.name;
+    team.redraft.logo = team.logo;
     res.json(team.redraft);
   }
 
@@ -72,6 +94,8 @@ class Redraft{
     this.router.post("/:teamId", util.ensureAuthenticated, this.#startRedraft);
     
     this.router.post("/api/:teamId", util.ensureAuthenticated, this.#startRedraft);
+    this.router.post("/api/:teamId/confirm", util.ensureAuthenticated, this.#confirmRedraft);
+    this.router.get("/api/:teamId/validate", util.ensureAuthenticated, this.#validateRedraft);
     
     this.router.put("/api/:teamId/improvement", util.ensureAuthenticated, this.#updateImprovement);
     this.router.put("/api/:teamId/position", util.ensureAuthenticated, this.#updatePosition);
