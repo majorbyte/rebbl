@@ -49,8 +49,8 @@ block scripts
       }
 
       self.adminType.subscribe(function(newValue){
-        self.homeTeamSelected(newValue === "homewin");
-        self.awayTeamSelected(newValue === "awaywin");
+        self.homeTeamSelected(newValue === "homewin" || newValue.indexOf("Draw") > -1 );
+        self.awayTeamSelected(newValue === "awaywin" || newValue.indexOf("Draw") > -1 );
 
       });
 
@@ -63,7 +63,11 @@ block scripts
           case "homewin":
             return `1 MVP, 2 TDs.`;
           case "awaywin":
-            return `1 MVP's, 1 TD.`;
+            return `1 MVP, 1 TD.`;
+          case "validDraw":
+            return `1 MVP, 1 TD.`;
+          case "invalidDraw":
+            return `1 MVP, 0 TD.`;
         }
 
       });
@@ -76,7 +80,11 @@ block scripts
           case "homewin":
             return `1 MVP, 1 TD.`;
           case "awaywin":
-            return `1 MVP's, 2 TDs.`;
+            return `1 MVP, 2 TDs.`;
+          case "validDraw":
+            return `1 MVP, 1 TD.`;
+          case "invalidDraw":
+            return `1 MVP, 0 TD.`;
         }
 
       });
@@ -353,6 +361,8 @@ block content
               option(value="byeweek") bye week
               option(value="homewin") home: 2 away: 1
               option(value="awaywin") home: 1 away: 2
+              option(value="validDraw") home: 1 away: 1
+              option(value="invalidDraw") home: 0 away: 0
               //option(value="custom") custom
 
           div(data-bind="attr: {class: homeCardClass}, click: selectHome " style="width:50%;--bs-bg-opacity: .5;")

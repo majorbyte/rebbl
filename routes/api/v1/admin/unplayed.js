@@ -35,8 +35,21 @@ const express = require('express')
   router.post('/admin/:matchId', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
-      if (req.body.type === 'byeweek') await adminMatchService.concedeMatch(req.params.matchId, req.body.teamId);
-      else await adminMatchService.adminMatch(req.params.matchId, req.body.teamId, req.body.type);
+      switch(req.body.type){
+        case "byeweek" :
+          await adminMatchService.concedeMatch(req.params.matchId, req.body.teamId);
+          break;
+        case "validDraw" :
+          await adminMatchService.adminDrawMatch(req.param.matchId, false);
+          break;
+        case "invalidDraw" :
+          await adminMatchService.adminDrawMatch(req.param.matchId, true);
+          break;
+        default:
+          await adminMatchService.adminMatch(req.params.matchId, req.body.teamId, req.body.type);
+          break;
+      }
+
       res.status(200).send();
     } catch(err){
       console.log(err);
