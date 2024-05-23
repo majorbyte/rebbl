@@ -117,10 +117,12 @@ block content
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
         a(class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Players
         a(class="nav-item nav-link" id="nav-matches-tab" data-bs-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches
-    div(class="tab-content" id="tabContent")
-      div(class="tab-pane fade col-12 show active table-responsive-md" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab")
-        table(class="table table-striped")
-            thead(class="headerText")
+    - let teamPositions = [...new Set(team.roster.map(x => x.player.position))]
+    - let borders = ["border-success","border-warning","border-primary","border-light","border-info","border-secondary"]  
+    .tab-content#tabContent
+      .tab-pane.fade.col-12.show.active.table-responsive-md#nav-home(role="tabpanel" aria-labelledby="nav-home-tab")
+        table.table.table-striped
+            thead.headerText
               tr
                 th(scope="col") #
                 th(scope="col") name
@@ -144,7 +146,7 @@ block content
                       .match-stats-TeamLabel-name=player.player.name
                   td
                     - let p = getPosition(player.player.position)
-                    img.silhouette-shadow(src=getSilhouette(player.player.position) title=p)
+                    img(src=getSilhouette(player.player.position) title=p class=`silhouette-shadow border border-3 rounded-pill ${borders[teamPositions.indexOf(player.player.position)]}`)
                   - let c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)
                   td= c ? c.value : "-"
                   - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)
