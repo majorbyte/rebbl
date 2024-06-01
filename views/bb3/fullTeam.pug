@@ -56,9 +56,9 @@ block content
       - if (team.improvements[0].quantity > 0)
         div(class="col-md-1 col-6")
           img(src="https://cdn.rebbl.net/images/bb3/apo.png")
-      - if (user)     
+      - if (user && user.bb3id === team.coach.id)
         .col
-          button.float-end.btn.btn-sm.btn-success(onclick="redraft()") Redraft
+          a.float-end.btn.btn-sm.btn-success(href=`/bb3/redraft/${team.id}/preview`) Redraft
 
     //div(class="row" style="margin-left:0px")
       div(class="col-12 table-responsive-md")
@@ -233,10 +233,7 @@ block content
           | Something went wrong, please contact the admins.
         button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")
 
-    #redraftToast.toast.align-items-center.text-bg-danger.border-0(role="alert" aria-live="assertive" aria-atomic="true")
-      .d-flex
-        .toast-body#redraftError
-        button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")        
+
 
 
 block scripts 
@@ -330,22 +327,6 @@ block scripts
       playerModal.hide();
     }
 
-    async function redraft(){
-      const response = await fetch(`/bb3/redraft/api/#{team.id}`, {method:"POST"});
-      if (response.ok){
-        const data = await response.json();
-        window.location.href = data.redirect;
-      } else {
-        const data = await response.json();
-        const e = document.getElementById("redraftToast");
-        const d = document.getElementById("redraftError");        
-        d.innerHTML = data.error;
-        
-        const toast = new bootstrap.Toast(e);
-        toast.show();
-      }
-
-    }
 
     function showModal(id, name){
       $("#consent")[0].checked = false;

@@ -31,7 +31,7 @@ block head
 block content
   - let path = `https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : 'BB3Standard'}`
 
-  .container
+  .container.position-relative
     .col-12.d-flex.flex-wrap.align-items-center
       img(data-bind="attr:{src:`https://cdn.rebbl.net/images/bb3/Logos/${logo.icon}`}" class="align-top" style="height:50px")
       span(style="font-size:2rem;font-weight:700" data-bind="text: name")
@@ -40,11 +40,18 @@ block content
 
     .row.g-0
       .col-8
+        //ko if: status !== "confirmed"
         .form-check.form-switch
           input.form-check-input#flexSwitchCheckChecked(type="checkbox" role="switch" data-bind="checked: mock")
           label.form-check-label(for="flexSwitchCheckChecked") Mock draft, when enabled, changes will not be saved to the server, no rolls made etc. 
+        // /ko
       .col-4
+        //ko if: status !== "confirmed"
         button.float-end.btn.btn-sm.btn-success(data-bind="{attr: {disabled:mock || !valid() }, click:showConfirmation}") Confirm
+        // /ko
+        //ko if: status === "confirmed"
+        button.float-end.btn.btn-sm.btn-success(data-bind="{click:showValidation}") Validate
+        // /ko
 
     .clearfix
 
@@ -172,22 +179,19 @@ block content
           img(data-bind="{attr: {src: '" + path + "/' + $root.getSkillByName($root.getSkillName(skill)).icon }}" alt="" style="z-index:9999" )
           // /ko
         td.text-center
-          input.form-control-sm.w-25(data-bind="{value: quantity, attr:{max:calculatedMax()}, css: {'border-danger': quantity > calculatedMax() }}" type="number" min="0" step="1" onfocus="this.previousValue = this.value" onkeydown="this.previousValue = this.value" oninput="validity.valid || (value = this.previousValue)" )
+          input.form-control-sm.w-25(data-bind="{value: quantity, attr:{max:calculatedMax(), disabled:draftLocked}, css: {'border-danger': quantity > calculatedMax() }}" type="number" min="0" step="1" onfocus="this.previousValue = this.value" onkeydown="this.previousValue = this.value" oninput="validity.valid || (value = this.previousValue)" )
         td.text-end(data-bind="text: cost/1000")
         td.text-end(data-bind="text: totalCost()")
 
 
-  .toast-container.top-0.start-50
-    #successToast.toast.align-items-center.text-bg-success.border-0(role="alert" aria-live="assertive" aria-atomic="true")
+    #successToast.toast.align-items-center.text-bg-success.border-0.top-0.end-0.position-absolute(role="alert" aria-live="assertive" aria-atomic="true")
       .d-flex
-        .toast-body
-          | Player has been successfully retired.
+        .toast-body#successMessage
         button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")
 
-    #errorToast.toast.align-items-center.text-bg-danger.border-0(role="alert" aria-live="assertive" aria-atomic="true")
+    #errorToast.toast.align-items-center.text-bg-danger.border-0.top-0.end-0.position-absolute(role="alert" aria-live="assertive" aria-atomic="true")
       .d-flex
-        .toast-body
-          | Something went wrong, please contact the admins.
+        .toast-body#errorMessage
         button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")
 
   #playerModal.modal.fade(data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="playerModal" aria-hidden="true")
@@ -232,7 +236,7 @@ block content
 
         .modal-footer(style="justify-content: space-between") 
           button#btnCancel.btn.btn-primary(type="button" data-bs-dismiss="modal") Cancel
-          button#btnProceed.btn.btn-success(type="button" data-bind="click:confirm") Proceed
+          button#btnProceed.btn.btn-success(type="button" data-bind="click:confirm, attr:{disabled:inProgress}") Proceed
             #spinner.d-none.spinner-grow.spinner-grow-sm.ms-2(role="status")
 
 block scripts 
@@ -273,15 +277,32 @@ block scripts
       return false;
     }
 
+    const showError = function(obj){
+      const e = document.getElementById("errorToast");
+      const d = document.getElementById("errorMessage");        
+      d.innerHTML = obj.error;
+      
+      const toast = new bootstrap.Toast(e);
+      toast.show();
+    }
+    const showSuccess = function(msg){
+      const e = document.getElementById("successToast");
+      const d = document.getElementById("successMessage");        
+      d.innerHTML = msg;
+      
+      const toast = new bootstrap.Toast(e);
+      toast.show();
+    }
+
     class ImprovementModel{
       constructor(data,teamId){
         this.quantity = data.quantity;
         this.min = data.min;
         this.max = data.max;
-        this.locked = data.locked || false;
+        this.draftLocked = data.draftLocked || false;
         this.improvement = Number(data.improvement);
         this.cost = Number(data.cost) / (this.improvement === 4 ? 2000 : 1000);
-        this.disabled = this.improvement == 5 || this.max == 0 || this.locked;
+        this.disabled = this.improvement == 5 || this.max == 0 || this.draftLocked;
         this.icon = [                    
           null,"https://cdn.rebbl.net/images/bb3/apo.png","https://cdn.rebbl.net/images/bb3/cheerleader.png","https://cdn.rebbl.net/images/bb3/assistant_coach.png","https://cdn.rebbl.net/images/bb3/reroll.png","https://cdn.rebbl.net/images/bb3/dedicated_fan.png"][this.improvement];
         this.teamId = teamId;
@@ -294,10 +315,11 @@ block scripts
       }
 
       async updateImprovement(quantity){
-        if (model.mock) return;
+        if (this.draftLocked || model.mock ) return;
 
         const body = {improvement: this.improvement, quantity:Number(quantity)};
         const response = await fetch(`/bb3/redraft/api/${this.teamId}/improvement`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
+        if (!response.ok) showError(await response.json());
         if (this.improvement === 1) model.apo = this.quantity == 1;
       }
     }
@@ -340,7 +362,7 @@ block scripts
       }
 
       select = async (e) => {
-        if (this.locked) return;
+        if (this.locked || this.draftLocked) return;
         
         if (model.mock){
           this.selected = !this.selected;
@@ -358,7 +380,7 @@ block scripts
           this.loading = true;
           const response = await fetch(`/bb3/redraft/api/${this.teamId}/${this.id}`,{method: !this.selected ? "PUT" : "DELETE"});
           if (response.ok) this.selected = !this.selected;
-
+          else showError(await response.json());
           this.loading = false;
         }
       }
@@ -402,17 +424,23 @@ block scripts
         return this.quantity <= this.calculatedMax();
       }
       async updatePosition(quantity){
+        if (this.draftLocked) return;
+
         this.quantityAsNumber = Number(quantity);
+        
         if (model.mock) return;
+        
 
         const body = {id:this.id, quantity:Number(quantity)};
         const response = await fetch(`/bb3/redraft/api/${this.teamId}/position`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
+        if (!response.ok) showError(await response.json());
       }
     }
 
     class RedraftModel{
       constructor(data){
         this.mock = true;
+        this.inProgress = false;
         this.map(data);
         ko.track(this);
 
@@ -421,10 +449,17 @@ block scripts
 
       
       map(data){
-        this.roster = data.roster.map(x => {return new PlayerModel(x, data.id)});
-        this.improvements = data.improvements.map(x => {return new ImprovementModel(x,data.id)});
+        this.roster = data.roster.map(x => {
+          x.draftLocked = data.status === "confirmed" || data.status === "validated";
+          return new PlayerModel(x, data.id)
+        });
+        this.improvements = data.improvements.map(x => {
+          x.draftLocked = data.status === "confirmed" || data.status === "validated";
+          return new ImprovementModel(x,data.id)
+          });
         this.allowedPositions = data.allowedPositions.map(x => {
           x.players = this.roster.filter(player => player.position == x.id );
+          x.draftLocked = data.status === "confirmed" || data.status === "validated";
           return new PositionModel(x,data.id);
         });
         this.retiredPlayers = data.retiredPlayers;
@@ -434,6 +469,9 @@ block scripts
         this.selectedPlayer = null;
         this.modal = null
         this.id = data.id;
+        this.confirmed = data.status === "confirmed";
+        this.validated = data.status === "validated";
+        this.status = data.status;
         this.apo = this.improvements.some(x => x.improvement === 1 && x.quantity === 1);
       }
 
@@ -449,34 +487,45 @@ block scripts
       }
 
       async proceed(){
-        if (this.mock) return;
+        if (this.mock || this.confirmed || this.validated) return;
+        this.inProgress = true;
         const response = await fetch(`/bb3/redraft/api/${this.id}/${this.selectedPlayer.id}`,{method: "PUT"});
 
         if (response.ok){
           const index = this.roster.findIndex(x => x.id === this.selectedPlayer.id);
           this.roster.splice(index,1, new PlayerModel(await response.json()));
         }
+        else showError(await response.json());
 
         this.modal.hide();
+        this.inProgress = false;
       }
 
       async showConfirmation(){
 
-        const modal = new bootstrap.Modal('#confirmationModal', {});
+        this.modal = new bootstrap.Modal('#confirmationModal', {});
 
-        modal.show();
+        this.modal.show();
       }
 
+      async showValidation(){
+        const response = await fetch(`/bb3/redraft/api/${this.id}/validate`);
+
+        if (response.ok){ 
+          showSuccess("You redraft is successfully validated!");
+          return;
+        } 
+      }
 
       async confirm(){
-        if (this.mock) return;
+        if (this.mock || this.confirmed || this.validated) return;
+        this.inProgress = true;
         const response = await fetch(`/bb3/redraft/api/${this.id}/confirm`,{method: "POST"});
 
-        if (response.ok){}
+        if (!response.ok) showError(await response.json());
 
-        const modal = new bootstrap.Modal('#confirmationModal', {});
-
-        modal.hide();
+        this.modal.hide();
+        this.inProgress = false;
       }
 
       async reload(){
@@ -511,7 +560,10 @@ block scripts
       let path = window.location.pathname.split("/");
 
       const response = await fetch(`/bb3/redraft/api/${path[path.length-1]}`);
-      if (!response.ok) return; 
+      if (!response.ok) {
+        showError(await response.json());
+        return;
+      }
       model = new RedraftModel(await response.json());
       ko.applyBindings(model);
     });

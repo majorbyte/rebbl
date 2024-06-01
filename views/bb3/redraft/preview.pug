@@ -31,7 +31,7 @@ block head
 
 block content
   - let icons = [null,"https://cdn.rebbl.net/images/bb3/apo.png","https://cdn.rebbl.net/images/bb3/cheerleader.png","https://cdn.rebbl.net/images/bb3/assistant_coach.png","https://cdn.rebbl.net/images/bb3/reroll.png","https://cdn.rebbl.net/images/bb3/dedicated_fan.png"]
-  .container
+  .container.position-relative
     svg.d-none(xmlns="http://www.w3.org/2000/svg")
       symbol#check-circle-fill(viewBox="0 0 16 16")
         path(d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z")
@@ -86,7 +86,7 @@ block content
                 span.badge.text-bg-success=team.budget.treasury
 
 
-      //- if (team.mustRollExpensiveMistake == "1")
+      - if (team.mustRollExpensiveMistake == "1")
         .d-flex.flex-wrap.justify-content-between.alert.alert-warning
           div 
             svg.bi.flex-shrink-0.me-2(role="img" aria-label="Info:")
@@ -124,23 +124,37 @@ block content
           .w-100.collapse#collapseJourneyman.mt-2
             .card.card-body
               | Your team is flagged by BB3 for having journeyman or resurrected players available for hire. For redraft to be able to continue, this needs to be solved first. You can either buy the players, or contact one of the admins and ask for an admin loss which should clear the flag.
+      - if (team.wrongCompetition)
+        .d-flex.flex-wrap.justify-content-between.alert.alert-warning
+          div 
+            svg.bi.flex-shrink-0.me-2(role="img" aria-label="Info:")
+              use(xlink:href="#exclamation-triangle-fill")
+            | The team is not part of the ReBBL Redraft competition, please join this competition ingame.
+      - if (team.hasPlayerThatMustLevelUp == "0" && team.mustRollExpensiveMistake == "0" && team.hasRecrutableJourneymen == "0" && !team.wrongCompetition)
+        .d-flex.flex-wrap.justify-content-between.alert.alert-success
+          div 
+            svg.bi.flex-shrink-0.me-2(role="img" aria-label="Info:")
+              use(xlink:href="#check-circle-fill")
+            | The team is ready for the re-draft.
+          .float-end
+            button.btn.btn-warning.btn-sm.border.border-1.border-warning-subtle(type="button" data-bs-toggle="collapse" data-bs-target="#collapseStart" aria-expanded="false" aria-controls="collapseStart")
+              | Start redraft
+          .w-100.collapse#collapseStart.mt-2
+            .card
+              .card-body.text-bg-info
+                p Be sure to have bought what you need. The redraft process only allows for removing improvements, not increasing them.
+                p.p-2.border.border-2.border-warning.rounded You can't buy Rerolls, Assistant Coaches, Cheerleaders, and Apothecary during redraft.
+                p Make sure you are finished with picking skills. Since picking skills should be part of the Post Match sequence, you will not be allowed to skill players between the start of the redraft and the Post Match of next season's round 1 match. Since this can't enforced by the client, rebbl.net will keep track of your players. The site and the community are watching you! 
+                p.p-2.border.border-2.border-danger.rounded In case you would skill a player during this period, you will be forced to recreate the player, and any random skill advantages are forfeited.
+              .card-footer.text-bg-info 
+                button.float-end.btn.btn-sm.btn-success(onclick="redraft()") proceed
 
-      - if (team.hasPlayerThatMustLevelUp == "0" && team.mustRollExpensiveMistake == "0" && team.hasRecrutableJourneymen == "1")
-      .d-flex.flex-wrap.justify-content-between.alert.alert-success
-        div 
-          svg.bi.flex-shrink-0.me-2(role="img" aria-label="Info:")
-            use(xlink:href="#check-circle-fill")
-          | The team is ready for the re-draft.
-        .float-end
-          button.btn.btn-warning.btn-sm.border.border-1.border-warning-subtle(type="button" data-bs-toggle="collapse" data-bs-target="#collapseStart" aria-expanded="false" aria-controls="collapseStart")
-            | Start redraft
-        .w-100.collapse#collapseStart.mt-2
-          .card
-            .card-body.text-bg-info
-              p Make sure you are finished with picking skills. Since picking skills should be part of the Post Match sequence, you will not be allowed to skill players between the start of the redraft and the Post Match of next season's round 1 match. Since this can't enforced by the client, rebbl.net will keep track of your players. The site and the community are watching you! 
-              p.border.border-2.border-danger.rounded In case you would skill a player during this period, you will be forced to recreate the player, and any random skill advantages are forfeited.
-            .card-footer.text-bg-info 
-              button.float-end.btn.btn-sm.btn-success(onclick="redraft()") proceed
+    #redraftToast.toast.align-items-center.text-bg-danger.border-0.top-0.end-0.position-absolute(role="alert" aria-live="assertive" aria-atomic="true")
+      .d-flex
+        .toast-body#redraftError
+        button.btn-close.btn-close-white.me-2.m-auto( type="button" data-bs-dismiss="toast" aria-label="Close")        
+
+
 
   block scripts
     script.
