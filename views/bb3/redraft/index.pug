@@ -239,6 +239,20 @@ block content
           button#btnProceed.btn.btn-success(type="button" data-bind="click:confirm, attr:{disabled:inProgress}") Proceed
             #spinner.d-none.spinner-grow.spinner-grow-sm.ms-2(role="status")
 
+  #validationModal.modal.fade(data-bs-backdrop="static"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="validationModal" aria-hidden="true")
+    .modal-dialog.modal-xl
+      .modal-content 
+        .modal-header 
+          h1.modal-title#titleName Validation result
+          button.btn-close(type="button"  data-bs-dismiss="modal" aria-label="Close")
+        .modal-body 
+          ul.list-group
+            // ko foreach: errors
+            li.list-group-item(data-bind="text: $data.error")
+            // /ko
+        .modal-footer(style="justify-content: space-between") 
+          button#btnCancel.btn.btn-primary(type="button" data-bs-dismiss="modal") Close
+
 block scripts 
   script(src="https://cdn.rebbl.net/scripts/knockout-3.5.1.js")
   script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
@@ -441,6 +455,7 @@ block scripts
       constructor(data){
         this.mock = true;
         this.inProgress = false;
+        this.errors = [];
         this.map(data);
         ko.track(this);
 
@@ -515,6 +530,12 @@ block scripts
           showSuccess("You redraft is successfully validated!");
           return;
         } 
+
+        this.errors = await response.json();
+        this.modal = new bootstrap.Modal('#validationModal', {});
+
+        this.modal.show();
+
       }
 
       async confirm(){

@@ -17,7 +17,11 @@ class Redraft{
     return res.render("bb3/redraft/index", {id:req.params.teamId});
   }
 
-  #redraftPreview = async (req, res) => res.render("bb3/redraft/preview", {team: await redraftService.checkRedraft(req.params.teamId, res.locals.user)});
+  #redraftPreview = async (req, res) => {
+    const team = await redraftService.checkRedraft(req.params.teamId, res.locals.user);
+    if (team.redraft) res.redirect(`/bb3/redraft/${req.params.teamId}`);
+    else res.render("bb3/redraft/preview", {team});
+  };
 
   #startRedraft = async (req,res) => {
     try{
