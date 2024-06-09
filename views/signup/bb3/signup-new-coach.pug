@@ -20,7 +20,8 @@ block append scripts
 
 
 block content
-  form(action="/signup/bb3/confirm" method="post" class="container signup")
+  - let action = rookie ? '/signup/confirm-new-rebbrl' : '/signup/bb3/confirm'
+  form(action=action method="post" class="container signup")
     input#teamName(type="hidden" name="name")
     input#teamValue(type="hidden" name="value")
     input#teamRace(type="hidden" name="race")
@@ -47,7 +48,7 @@ block content
                 option(value=team.id data-race=team.race data-tv=team.value data-name=team.name )= team.name
             span#teamData
             br    
-            span You can only sign up with a new, unexperienced team. Unfortunately if you join a competition, your team will be flagged as experienced.
+            span You can only sign up with a new, unexperienced team, or your team from the last season if is has been redrafted. Unfortunately if you join a competition, your team will be flagged as experienced.
             
             - if (user.error && user.error.team)
               p(class="alert-danger my-0")= user.error.team        

@@ -4,6 +4,7 @@ const accountService = require('../../lib/accountService.js')
   , discordService = require('../../lib/DiscordService.js')
   , apiService = require('../../lib/apiService.js')
   , cyanideService = require('../../lib/CyanideService.js')
+  , dataService = require('../../lib/DataServiceBB3.js').rebbl3
   , express = require('express')
   , util = require('../../lib/util.js')
   , signupService = require('../../lib/signupService.js')
@@ -46,9 +47,9 @@ class Signup{
 
   routesConfig(){
 
-    const bb3Open = false;
+    const bb3Open = true;
     const rebblOpen = false;
-    const rookiesOpen = false
+    const rookiesOpen = true;
 
     if (!bb3Open && !rebblOpen && !rookiesOpen){
       this.router.get('/', async function(req, res){
@@ -76,11 +77,7 @@ class Signup{
       this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll.bind(this));
   
       this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew.bind(this));
-      
-      //this.router.post('/confirm-rampup',util.ensureLoggedIn, this._confirmRampup.bind(this));
-      //this.router.post('/confirm-greenhorn', util.ensureAuthenticated, this._confirmGreenhornCup);
-  
-      //this.router.post('/resign-greenhorn', util.ensureAuthenticated, this._resignGreenhornCup);
+
     }
     
     if (rookiesOpen){
@@ -128,13 +125,19 @@ class Signup{
         signups.push(signup);
       }
       
-      signup = await signupService.getSignUp(req.user.name,"rebbl3","season 1");
+      signup = await signupService.getSignUp(req.user.name,"rebbl3","season 2");
 
       if (signup){
         signup.signedUp = true;
         signups.push(signup);
       }
 
+      signup = await signupService.getSignUp(req.user.name,"rebbrl3","season 2");
+
+      if (signup){
+        signup.signedUp = true;
+        signups.push(signup);
+      }
       
       if (signups.length === 0 && user) {
         user.signedUp = false;
@@ -205,10 +208,17 @@ class Signup{
     } else {
       let teams = await bb3Service.searchTeams(account.bb3id, '%');
       teams = teams.filter(x => !x.experienced);
+
+      const lastSeasonTeam = await dataService.getTeam({"coach.id": account.bb3id, "redraft.status":"validated"});
+      if (lastSeasonTeam) {
+        const races = await dataService.getRaces();
+        lastSeasonTeam.race = races.find(x => x.code == lastSeasonTeam.race).data;
+        teams.push(lastSeasonTeam);
+      }
+
       res.render('signup/bb3/signup-new-coach', {user: {account: account}, teams});
     }
   }
-      
   async #confirmNewBB3(req,res){
     try {
       let signup = {
@@ -221,7 +231,9 @@ class Signup{
         league: req.body.league
       };
 
-      signup.saveType = "new";
+      const team = await dataService.getTeam({id: signup.team.id});
+
+      signup.saveType = (team && team.redraft) ? "returning" : "new";
       signup.type="rebbl3";
 
       let account = await accountService.getAccount(req.user.name);
@@ -238,7 +250,8 @@ class Signup{
   }
   async #resignBB3(req,res){
     try{
-      await signupService.resign(req.user.name,"rebbl3","season 1");
+      await signupService.resign(req.user.name,"rebbl3","season 2");
+      await signupService.resign(req.user.name,"rebbrl3","season 2");
       res.redirect('/signup');
     } catch (err){
       console.log(err);
@@ -394,73 +407,6 @@ class Signup{
     }
   }
 
-  /* open invitational */
-  async _signupOpenInvitational(req, res){
-    try{
-
-      let user = await signupService.getSignUp(req.user.name,"rebbl");
-
-      res.render('signup/signup-confirmed-oi', {user: user});
-    } catch (err){
-      console.log(err);
-    }
-  }
-  
-  async _confirmOpenInvitational(req, res){
-    try{
-      await signupService.saveOISignUp(req.user.name);
-
-      res.redirect('/signup');
-    } catch (err){
-      console.log(err);
-    }
-  }
-
-  async _resignOpenInvitational(req,res){
-    try{
-      await signupService.resignOI(req.user.name);
-      res.redirect('/signup');
-    } catch (err){
-      console.log(err);
-    }
-  }
-  
-  /* rampup */  
-  async _confirmRampup(req, res){
-    try {
-
-      let signup = req.body;
-
-      signup.saveType = "rampup";
-      signup.type ="rebbl";
-
-      let account = await accountService.getAccount(req.user.name);
-      signup.coach = account.coach;
-
-      let coachRecord = await this.getTeam(signup, req.app.locals.cyanideEnabled);
-      coachRecord.account = account;
-
-      if (coachRecord.error){
-        res.render("signup/signup-rampup", {user:coachRecord} );
-        return;
-      }
-      
-      signup.coach = coachRecord.User;
-
-
-      let user = await signupService.saveSignUp(req.user.name, signup);
-
-      if (user.error){
-        res.render('signup/signup-rampup', {user: user});
-      } else {
-        res.redirect('/signup');
-      }
-    } catch (err){
-      console.log(err);
-    }
-  }
-
-
   async getTeam(signup, cyanideEnabled){
     let coach = await apiService.findCoach(signup.coach).catch(err => console.trace(err));
     if (!coach) {
@@ -547,23 +493,33 @@ class Signup{
 
   async _rebbrl(req, res, league){
     try {
-      let signup = await signupService.getSignUp(req.user.name,"rebbrl");
+      let signup = await signupService.getSignUp(req.user.name,"rebbrl3");
       let account = await accountService.getAccount(req.user.name);
 
-      if (!signup){
-        if(account){
-          res.render('signup/signup-new-coach-rebbrl', {user: {account: account, league: league}, reserve: req.reserve});
-        } else {
-          res.render('signup/signup-new-coach-rebbrl', {user: req.user.name});
-        }
-        return;
+      if (!account.bb3coach) {
+        res.render('signup/bb3/fix-account');
+      } else {
+        let teams = await bb3Service.searchTeams(account.bb3id, '%');
+        teams = teams.filter(x => !x.experienced);
+  
+        res.render('signup/bb3/signup-new-coach', {user: {account: account}, teams, rookie:true});
       }
+  
 
-      if(account){
-        signup.account = account;
-        signup.league = league;
-      }
-      res.render('signup/signup-new-coach-rebbrl', {user: signup, reserve: req.reserve});
+      // if (!signup){
+      //   if(account){
+      //     res.render('signup/signup-new-coach-rebbrl', {user: {account: account, league: league}, reserve: req.reserve});
+      //   } else {
+      //     res.render('signup/signup-new-coach-rebbrl', {user: req.user.name});
+      //   }
+      //   return;
+      // }
+
+      // if(account){
+      //   signup.account = account;
+      //   signup.league = league;
+      // }
+      // res.render('signup/signup-new-coach-rebbrl', {user: signup, reserve: req.reserve});
 
     } catch (err){
       console.log(err);
@@ -579,20 +535,21 @@ class Signup{
       } else {
         signup.saveType = "new";
       }
-      signup.type ="rebbrl";
+      signup.type ="rebbrl3";
 
       let account = await accountService.getAccount(req.user.name);
       signup.coach = account.coach;
 
-      let coachRecord = await this.getTeam(signup, req.app.locals.cyanideEnabled);
-      coachRecord.account = account;
+      signup.reddit = account.reddit;
 
-      if (coachRecord.error){
-        res.render("signup/signup-new-coach-rebbrl", {user:coachRecord} );
-        return;
-      }
+      signup.team = {
+        id: req.body.id,
+        value: Number(req.body.value),
+        race:req.body.race,
+        name: req.body.name,
+      };
 
-      let user = await signupService.saveSignUp(req.user.name, req.body);
+      let user = await signupService.saveSignUpBB3Rookies(signup);
 
       if (user.error){
         res.render('signup/signup-new-coach-rebbrl', {user});
