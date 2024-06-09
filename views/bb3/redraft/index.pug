@@ -373,6 +373,7 @@ block scripts
         if(data){
           Object.assign(this, data);
         }
+        if (this.skills == "") this.skills = {skillsItem:[]};
       }
 
       select = async (e) => {
