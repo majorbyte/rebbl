@@ -130,6 +130,7 @@ block content
             svg.bi.flex-shrink-0.me-2(role="img" aria-label="Info:")
               use(xlink:href="#exclamation-triangle-fill")
             | The team is not part of the ReBBL Redraft competition, please join this competition ingame.
+            p.p-2.border.border-2.border-danger.rounded.alert.alert-danger If your team is part of the play-ins/playoffs, don't start the redraft until you are done for season 1.
       - if (team.hasPlayerThatMustLevelUp == "0" && team.mustRollExpensiveMistake == "0" && team.hasRecrutableJourneymen == "0" && !team.wrongCompetition)
         .d-flex.flex-wrap.justify-content-between.alert.alert-success
           div 
