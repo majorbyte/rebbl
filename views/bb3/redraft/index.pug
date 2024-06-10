@@ -232,6 +232,8 @@ block content
               li Injuries on players in-game will be adjusted according to the draft result ;
               li Cash will be awarded to your team for for you to buy new rookies.
 
+            p Please observe that there's a 1-2 minute delay between rebbl.net having confirmed the redraft and necessary changes being applied in-game.
+
             .p-3.text-bg-warning.border-start.border-2.border-warning-subtle Don't forget to sack the players that need sacking, and to complete the redraft on rebbl.net by validating it against the ingame changes.
 
         .modal-footer(style="justify-content: space-between") 
@@ -496,7 +498,7 @@ block scripts
       }
 
       totalCost(){
-        let cost = this.roster.map(x => x.selected ? Number(x.value)/1000 : 0).reduce((p,c) => p+c,0);
+        let cost = this.roster.map(x => x.selected ? Number(x.cost)/1000 : 0).reduce((p,c) => p+c,0);
         cost += this.allowedPositions?.map(x => x.totalCost()).reduce((p,c) => p+c,0);
         cost += this.improvements?.map(x => x.totalCost()).reduce((p,c) => p+c,0);
         return cost;
@@ -547,6 +549,7 @@ block scripts
         if (!response.ok) showError(await response.json());
 
         this.modal.hide();
+        this.status = "confirmed";
         this.inProgress = false;
       }
 
