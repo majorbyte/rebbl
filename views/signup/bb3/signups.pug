@@ -15,6 +15,7 @@ block append vars
         case "Human": return "Logo_Human_10.png";
         case "Imperial Nobility": return "Logo_ImperialNobility_10.png";
         case "Lizardman": return "Logo_Lizardman_10.png";
+        case "Necromantic Horror": return "Logo_Necromantic_10.png";
         case "Nurgle": return "Logo_Nurgle_10.png";
         case "OldWorld Alliance": return "Logo_Neutre_10.png";
         case "Orc": return "Logo_Orc_10.png";
@@ -42,7 +43,7 @@ block content
             | you go!
 
         //- let races = ["Human","Dwarf","Skaven","Orc","Lizardman","Goblin","WoodElf","Chaos Chosen","Dark Elf","Shambling Undead","Halfling","Elven Union","Necromantic Horror","Nurgle","Underworld Denizen","Khorne","Imperial Nobility","Slaanesh","Black Orc","Chaos Renegade","OldWorld Alliance","Tzeentch"]
-        - let races = ["Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen","Wood Elf"]
+        - let races = ["Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Necromantic Horror","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen","Wood Elf"]
         div(style="grid-template-columns: auto;display:grid;clear:both;" class="table-responsive mb-3")
           div(class="table-striped TeamLabel-info")
             div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
@@ -69,21 +70,21 @@ block content
           div(class="table-striped TeamLabel-info" style="width:640px" )
             div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
               div(style=";display: table-cell;min-width:110px" class="Standings-header sticky_column") League
-              // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
+              // ko foreach: {data: ["returning", "fresh", "college"], as:'d'}
               div(style="display: table-cell;" class="Standings-header" data-bind="text:d")
               // /ko
             // ko foreach: {data: leagues, as: 'league'}
             div(class="TableRow" )
               div(style="display: table-cell;min-width:110px" data-bind="text:league" class="sticky_column")
-              // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
-              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0)")
-              // /ko
+              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.type === 'rebbl3' && c.saveType === 'returning' ? p+1 : p; }, 0)")
+              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.type === 'rebbl3' && c.saveType === 'new' ? p+1 : p; }, 0)")
+              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.type === 'rebbrl3' ? p+1 : p; }, 0)")
             // /ko
             div(class="TableRow")
               div(style="display: table-cell;min-width:110px" class="sticky_column") Total
-              // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
-              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.saveType === d ? p+1 : p; }, 0)")
-              // /ko
+              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.type === 'rebbl3' && c.saveType === 'returning' ? p+1 : p; }, 0)")
+              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.type === 'rebbl3' && c.saveType === 'new' ? p+1 : p; }, 0)")
+              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.type === 'rebbrl3'  ? p+1 : p; }, 0)")
               //div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
         div(style="grid-template-columns: auto;clear:both; display:grid" class="table-responsive")
           div(class="table-striped TeamLabel-info")
@@ -110,7 +111,7 @@ block content
               div(style="white-space: nowrap;display: table-cell;width: 160px;" data-bind="text:signup.TV")
               div(style="white-space: nowrap;display: table-cell;width: 160px;" data-bind="text:signup.race.trim()")
               div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.league")
-              div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.saveType.replace('existing', 'staying').replace('reroll', 'rerolling')")
+              div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text: signup.type == 'rebbrl3' ? 'college' : signup.saveType.replace('new', 'fresh')")
               div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.timezone")
             // /ko
 
@@ -130,7 +131,7 @@ block append scripts
       self.users = ko.observableArray([]);
       self.loading = ko.observable(true);
       self.leagues = ko.observableArray(["BIG O","GMAN","REL"]);
-      self.races = ko.observableArray(["Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen", "Wood Elf"]);
+      self.races = ko.observableArray(["Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Necromantic Horror","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen", "Wood Elf"]);
 
       self.OI = ko.observable(false);
       self.greenhorn = ko.observable(false);

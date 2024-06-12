@@ -23,10 +23,10 @@ router.get('/', util.ensureAuthenticated, util.hasRole("admin"), async function(
 
 
 router.get('/page', util.cache(10*60), async function(req, res){
-  const data = await db.getSignUps();
+  const data = await db.getSignUps({season:"season 25"});
 
   const ret = data.all.map(function(row){
-
+    console.log(`coach ${row.coach} - race ${row.race}`)
     return {
       team: row.team,
       teamId: row.teamId,
@@ -46,7 +46,7 @@ router.get('/page', util.cache(10*60), async function(req, res){
 });
 
 router.get('/bb3', util.cache(10*60), async function(req, res){
-  const data = await db.getSignupsBB3({season:"season 2", type:"rebbl3"});
+  const data = await db.getSignupsBB3({season:"season 2", type:{$in:["rebbl3","rebbrl3"]}});
 
   const mapEntry = entry => {
     return {
@@ -56,6 +56,7 @@ router.get('/bb3', util.cache(10*60), async function(req, res){
       race: entry.team.race,
       timezone: entry.timezone,
       saveType: entry.saveType,
+      type: entry.type,
       TV: entry.team.value / 1000,
       league: entry.league,
       signupDate: entry.signupDate
