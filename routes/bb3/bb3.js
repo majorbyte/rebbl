@@ -19,7 +19,11 @@ class BB3{
     res.render("bb3/match", {match, user:res.locals.user});
   };
   competitions = async (req,res) => res.render("bb3/competitions", {competitions:await dataService.getCompetitions({$or:[{format:2},{format:1}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}})});
-  competition = async (req,res) =>  res.render("bb3/competition", {competition:await dataService.getCompetition({id:req.params.competitionId})});
+  competition = async (req,res) =>  {
+    const competition = await dataService.getCompetition({id:req.params.competitionId});
+    if (competition.format == 2) res.render("bb3/competition", {competition});
+    else res.render("bb3/playoffs/knockout", {competition});
+  }
   schedules = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}}) });
   round = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId, round:Number(req.params.round)}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}})});
   unplayed = async (req,res) => res.render("bb3/unplayed",{matches: await bb3Service.getUnplayedMatch(req.params.id)});
@@ -104,7 +108,7 @@ class BB3{
   routesConfig(){
     this.router.get("/", util.cache(10*60), util.checkAuthenticated, this.competitions);
     this.router.use("/redraft", new redraft().routesConfig());
-    this.router.get("/competition/:competitionId", util.cache(10*60), util.checkAuthenticated, this.competition);
+    this.router.get("/competition/:competitionId", util.cache(1), util.checkAuthenticated, this.competition);
     this.router.get("/competition/:competitionId/schedules", util.cache(10*60), util.checkAuthenticated, this.schedules);
     this.router.get("/competition/:competitionId/schedules/:round", util.cache(10*60), util.checkAuthenticated, this.round);
     this.router.get("/team/:id", util.cache(/*10*60*/1), util.checkAuthenticated, this.team);

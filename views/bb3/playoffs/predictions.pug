@@ -1,0 +1,178 @@
+extends ../../no-cache-sub-relayout.pug
+
+
+block append scripts
+
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/knockout.css")
+
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    
+    link(rel="stylesheet" href="/styles/v2/knockout.css")
+
+
+  style.
+    body{ padding-top:50px !important; }
+    .split-two .round {
+      right: 25px;
+      margin-left: auto;
+    }
+    .round{
+      width:225px;
+    }
+    .split{width:25%}
+    .center{width:50%}
+
+  script.
+
+    function PlayoffModel(data){
+      const self = this;
+
+      self.matches = ko.observableArray([]);
+      self.selectedLeagues = ko.observableArray([]);
+      self.selectedDivisions = ko.observableArray([]);
+
+      self.selectLeague = function(e){
+        if (self.selectedLeagues.indexOf(e) === -1) self.selectedLeagues.push(e);
+        else self.selectedLeagues.splice(self.selectedLeagues.indexOf(e),1);
+
+        if (self.selectedLeagues().length === 0) self.selectedDivisions.splice(0);
+      }
+
+      self.selectDivision = function(e){
+        if (self.selectedDivisions.indexOf(e) === -1) self.selectedDivisions.push(e);
+        else self.selectedDivisions.splice(self.selectedDivisions.indexOf(e),1);
+      }
+
+      self.leagues = function(){
+        const values = [];
+        self.matches().map(m => m.opponents.map(o =>  {
+          if (values.indexOf(o.coach.league) === -1) values.push(o.coach.league);
+        }));
+        
+        return [...new Set(values.filter(x => x))];
+      }
+
+      self.getCss = function(c){
+        let css = "";
+        if (!c.league) return "";
+        
+        if (self.selectedLeagues.indexOf(c.league) > -1 && self.selectedDivisions.indexOf(c.division) > -1)
+        {
+          switch(c.position)
+          {
+            case 1: return "bg-success";
+            case 2: return "bg-info";
+            case 3: return "bg-warning";
+            case 4: return "bg-danger";
+          }
+        }
+        else if (self.selectedDivisions().length === 0 && self.selectedLeagues.indexOf(c.league) > -1) css = "bg-info";
+        return css;
+
+      }
+
+
+      self.divisions = ko.computed(function(){
+        if (self.selectedLeagues().length === 0) return [];
+        const values = [];
+        self.matches().map(m => m.opponents.map(o =>  {
+          if(self.selectedLeagues.indexOf(o.coach.league) === -1) return;
+          if (values.indexOf(o.coach.division) === -1) values.push(o.coach.division);
+        }));
+
+        return [...new Set(values.filter(x => x).sort())];
+      });
+    }
+
+    let model;
+
+  - if (playoffs)
+    script.
+      $(document).ready(async function(){
+        const result = await fetch(`/api/v2/playoffs/playoffs`);
+        if (result.ok){
+            model = new PlayoffModel(); 
+            model.matches(await result.json());
+            ko.applyBindings(model);
+        }
+      });
+  - else
+    script.
+      $(document).ready(async function(){
+        const result = await fetch(`/api/v2/playoffs/challengers`);
+        if (result.ok){
+            model = new PlayoffModel(); 
+            model.matches(await result.json());
+            ko.applyBindings(model);
+        }
+      });
+
+
+block vars
+  - var options = {active: league, title: league, company:"rebbl"}
+
+block navigation
+
+
+block content
+  section(id="bracket")
+    div(class="container-ko" style="margin-top:20px")
+      div(class="split split-one")
+        div(class='round round-one' data-bind="{template: { name: 'knockoutTemplate', foreach: matches.slice(0,16), as: 'match' }}")
+      div(class="center")
+        .btn-group-toggle(data-bs-toggle="buttons")
+          // ko foreach: leagues()
+          label.btn.btn-sm.btn-outline-primary(style="margin: 2px 15px 2px 0px;" data-bind="click: $root.selectLeague")
+            input(type="checkbox" checked autocomplete="off")       
+            span(data-bind="text: $data")
+          // /ko
+        .btn-group-toggle(data-bs-toggle="buttons")
+          // ko foreach: divisions()
+          label.btn.btn-sm.btn-outline-primary(style="margin: 2px 15px 2px 0px;" data-bind="click: $root.selectDivision")
+            input(type="checkbox" checked autocomplete="off")       
+            span(data-bind="text: $data")
+          // /ko
+        // ko if: selectedDivisions().length > 0
+        .row.my-1
+          .col-3.align-center.bg-success 1st place
+          .col-3.align-center.bg-info 2nd place
+          .col-3.align-center.bg-warning 3rd place
+          .col-3.align-center.bg-danger 4th place
+        // /ko
+
+        
+
+      div(class="split split-two" )
+        div(class='round round-one' data-bind="{template: { name: 'knockoutTemplate', foreach: matches.slice(16,32), as: 'match' }}")
+
+  script(type="text/html" id="knockoutTemplate")
+    div(class="gameinfo" )
+      ul(class="" )
+        li(class=`team team-top` data-bind="{css: $root.getCss(match.opponents[0].coach)  }")
+          //ko if: match.opponents[0].team.logo.length > 0
+          img(class="" style="max-height:24px;max-width:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/logo/logo_${match.opponents[0].team.logo.toLowerCase()}.png`}}")
+          // /ko
+          //ko if: match.opponents[0].team.id > 0
+          div(class="teamname" data-bind="{attr: {title:match.opponents[0].team.name}}")
+              a(data-bind="{attr:{href: `/rebbl/team/${match.opponents[0].team.id}`},text: match.opponents[0].coach.name }" target="_blank")
+          // /ko
+          //ko if: match.opponents[0].team.id === 0
+          div(class="teamname" data-bind="{attr: {title:match.opponents[0].team.name}, text: match.opponents[0].coach.name}")
+          // /ko
+        li(class=`team team-bottom ` data-bind="{css: $root.getCss(match.opponents[1].coach) }")
+          // ko if: match.opponents[1].team.logo.length > 0
+          img(class="" style="max-height:24px;max-width:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/logo/logo_${match.opponents[1].team.logo.toLowerCase()}.png`}}")
+          // /ko
+          //ko if: match.opponents[1].team.id > 0
+          div(class="teamname" data-bind="{attr: {title:match.opponents[1].team.name}}")
+              a(data-bind="{attr:{href: `/rebbl/team/${match.opponents[1].team.id}`},text: match.opponents[1].coach.name }" target="_blank")
+          // /ko
+          //ko if: match.opponents[1].team.id === 0
+          div(class="teamname" data-bind="{attr: {title:match.opponents[1].team.name}, text: match.opponents[1].coach.name}")
+          // /ko

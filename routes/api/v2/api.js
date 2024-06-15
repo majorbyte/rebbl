@@ -3,6 +3,7 @@
 const express = require("express")
   /* Endpoints */
   , accountApi = require("./account.js")
+  , bb3Api = require("./bb3.js")
   , bloodbowlApi = require("./bloodbowl.js")
   , campingApi = require("./camping.js")
   , clanApi = require("./clan.js")
@@ -48,6 +49,8 @@ class ApiV2{
     this.router.use("/coach", new coachApi().routesConfig());
 
     this.router.use("/playoffs", new playoffsApi().routesConfig());
+
+    this.router.use("/bb3", new bb3Api().routesConfig());
 
     return this.router;
   }

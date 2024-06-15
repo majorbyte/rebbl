@@ -1,0 +1,351 @@
+extends ../../no-cache-sub-relayout.pug
+
+
+block append scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/knockout.css")
+
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+    link(rel="stylesheet" href="/styles/v2/knockout.css")
+
+  script.
+
+    function PlayoffModel(data){
+      this.map = (data) => {
+        if (data) {
+          this.matches = data.matches;
+          this.dates = data.dates;
+          this.round =  data.round;
+          this.spoiled = true;
+        } else{
+          this.seasons = [];
+        }
+        
+      };
+      this.collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base", ignorePunctuation:true});
+      this.season = "!{division}"
+      this.map(data);
+      this.roundCSS = ["zero","one","two","three","four","five","six"];
+      this.selected = null;
+
+
+      this.select = function(d,e){
+        this.selected = d;
+      }.bind(this);
+      this.getUrl = function(team,n){
+        return `https://cdn.rebbl.net/images/bb3/Logos/${team.logo}`;
+      }
+      this.spoil = function(){
+        this.spoiled = !this.spoiled;
+      }.bind(this);
+
+
+      this.getTitle = function(){
+       // if (window.location.href.indexOf("Challenger") > -1) return "Challenger's Cup " + this.season.season.split(" ").pop(); 
+        return "Superbowl " ;// + this.season.season.split(" ").pop(); 
+      };
+
+
+      this.loadSeasons = async function(){
+        /*let response = await fetch('/api/v1/playoffs/seasons');
+        if (response.ok){
+          let seasons =  await response.json();
+          if (window.location.href.indexOf("Challenger") > -1){
+            seasons = seasons.filter(x => x.divisions.some(y => y.indexOf('Challenger') > -1));
+          }
+          this.seasons = seasons.sort((a,b) => this.collator.compare(a.season, b.season));
+          this.season = seasons[seasons.length-1];
+        }*/
+        this.seasons = [];
+      };
+
+      this.loadSeason = async function(season){
+        const isChallenger = window.location.href.indexOf("Challenger") > -1;
+        let response = await fetch(`/api/v2/bb3/playoffs/d8f5368b-23e4-11ef-895c-bc24112ec32e`);
+        if (response.ok){
+          this.season = season;
+          let data =  await response.json();
+          this.map(data);
+        }
+      };
+
+
+      ko.track(this);
+    }
+
+    function MatchModel(data){
+      this.map = (data) => {
+        if (data) {
+          for(var p in data)
+            this[p] = data[p];
+        }
+      };
+      this.map(data);
+      ko.track(this);
+    }
+
+    let model;
+
+    $(document).ready(async function(){
+      const result = await fetch (`/api/v2/bb3/playoffs/!{competition.id}`);
+      if (result.ok){
+        model = new PlayoffModel(await result.json()); 
+      }
+      await model.loadSeasons();
+      ko.applyBindings();
+
+      $('li').click(function(e){
+        
+        let elm = e.currentTarget.attributes['data-coachid'];
+        if (!elm) return;
+        let v = e.currentTarget.attributes['data-coachid'].nodeValue;
+        let s = "li[data-coachid='" + v + "']" ;
+        $(s).toggleClass("highlight");
+
+      });
+    });
+
+
+block vars
+  - var options = {active: league, title: league, company:"rebbl"}
+
+block navigation
+  li.nav-item.dropdown.mr-3
+    a#navbarSeason.nav-link.text-light.dropdown-toggle(alt='' role='button' data-bs-toggle='dropdown')
+      | Season
+    div
+      .dropdown-menu.bg-dark(aria-labelledby='navbarSeason')
+        //ko foreach: model.seasons.reverse()
+        a.dropdown-item.text-light(data-bind="text:$data.season,click:model.loadSeason.bind(model)")
+        // /ko
+
+block content
+  section(id="bracket")
+    div(class="row col-12")
+      div
+        label(class="switch")
+          input(type="checkbox" id="spoiled-switch" data-bind="checked: model.spoiled")
+          span(class="slider" data-bind="click: model.spoil")
+        | don't spoil me!
+    div(class="container-ko")
+      div(class="split split-one")
+        div(class='round round-one' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['1'].slice(0,16), as: 'match' }}")
+        div(class='round round-two' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['2'].slice(0,8), as: 'match' }}")
+        div(class='round round-three' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['3'].slice(0,4), as: 'match' }}")
+        div(class='round round-four')
+          // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(0,1), as: 'match' }
+          // /ko
+          // ko with: model.matches['5'][0]
+          div(class="gameinfo semis-l" style="width: 121%;margin-left: -40px;margin-top: -86px;" )
+            div(class="round-details" style="font-size: 20px;" ) semifinals
+            ul(class ="matchup championship" style="padding:0px" data-bind="{css: $data.status > 1 && $data.round === model.round ? 'spoiler played': ''}")
+              // ko if:  $data.home?.team.name.toLowerCase().indexOf("admin") === -1 && $data.away?.team.name.toLowerCase().indexOf("admin") === -1  
+              li(class=`team team-top` )
+                //ko if: $data.home?.team.logo.length > 0
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/{$data.home?.team.logo}`}}")
+                // /ko
+                div(class="teamname" data-bind="{attr: {title:home.team.name}, text: $data.home?.coach.name}")
+                div(class="score") 
+                  // ko if: $data.status > 1 
+                  strong(data-bind="text: $data.home?.score")
+                  // /ko
+                  // ko notif: $data.status > 1
+                  div(data-bind="text: $data.home?.score")
+                  // /ko
+              li(class=`team team-bottom`)
+                // ko if: $data.away?.team.logo.length > 0
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${$data.away?.team.logo}`}}")
+                // /ko
+                div(class="teamname" data-bind="{attr: {title:$data.away?.team.name}, text: $data.away?.coach.name}")
+                div(class="score")
+                  // ko if: $data.status > 1 
+                  strong(data-bind="text: $data.away?.score")
+                  // /ko
+                  // ko notif: $data.status > 1
+                  div(data-bind="text: $data.away?.score")
+                  // /ko
+              // /ko
+            div(class="info" data-bs-toggle="modal" data-bs-target=`#trophy` data-bind="click: model.select")  
+          // /ko        
+          // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(1,2), as: 'match' }
+          // /ko
+      div(class="champion")
+        div(class="final")
+          i(class="fa-solid fa-trophy")
+          div(class="round-details" data-bind="text: model.getTitle()" style="margin-bottom:45px") 
+          // ko with: model.matches['6'][0]
+          ul(class="matchup championship" data-bind="{css: model.spoiled && $data.status > 1 && $data.round === model.round ? 'spoiler played': ''}")
+            li(class=`team team-top`)
+              div(class="teamname" data-bind="{attr: {title:$data.home?.team.name}, text: $data.home?.coach.name}")
+              div(class="score") 
+                // ko if: $data.status > 1 
+                strong(data-bind="text: home.score")
+                // /ko
+                // ko if: ($data.status > 1 )
+                div(data-bind="text: home.score")
+                // /ko
+            li(class=`team team-bottom` ) 
+              div(class="score") 
+                // ko if: $data.status > 1 
+                strong(data-bind="text: $data.away?.score")
+                // /ko
+                // ko if: $data.status > 1 
+                div(data-bind="text: $data.away?.score")
+                // /ko
+              div(class="teamname" data-bind="{attr: {title:$data.away?.team.name}, text: $data.away?.coach.name}")
+          // /ko
+
+      div(class="split split-two" )
+        div(class='round round-four')
+          // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(2,3), as: 'match' }
+          // /ko
+          // ko with: model.matches['5'][1]
+          div(class="gameinfo semis-r" style="width: 121%;margin-top: -86px;" )
+            div(class="round-details" style="font-size: 20px;") semifinals
+            ul(class ="matchup championship" style="padding:0px" data-bind="{css: $data.status > 1 &&  $data.round === model.round  ? 'spoiler played': ''}")
+              // ko if:  $data.home?.team.name.toLowerCase().indexOf("admin") === -1 && $data.away?.team.name.toLowerCase().indexOf("admin") === -1  
+              li(class=`team team-top` )
+                //ko if: $data.home?.team.logo.length > 0
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${$data.home?.team.logo}`}}")
+                // /ko
+                div(class="teamname" data-bind="{attr: {title:home.team.name}, text: $data.home?.coach.name}")
+                div(class="score") 
+                  // ko if: $data.status > 1 
+                  strong(data-bind="text: $data.home?.score")
+                  // /ko
+                  // ko notif: $data.status > 1 
+                  div(data-bind="text: $data.home?.score")
+                  // /ko
+              li(class=`team team-bottom ` )
+                // ko if: $data.away?.team.logo.length > 0
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${$data.away?.team.logo}`}}")
+                // /ko
+                div(class="teamname" data-bind="{attr: {title:$data.away?.team.name}, text: $data.away?.coach.name}")
+                div(class="score")
+                  // ko if: $data.status > 1 
+                  strong(data-bind="text: $data.away?.score")
+                  // /ko
+                  // ko notif: $data.status > 1 
+                  div(data-bind="text: $data.away?.score")
+                  // /ko
+              // /ko
+            div(class="info" data-bs-toggle="modal" data-bs-target=`#trophy` data-bind="click: model.select")  
+
+          // /ko  
+
+          // ko template: { name: 'knockoutTemplate', foreach: model.matches['4'].slice(3,4), as: 'match' }
+          // /ko
+        div(class='round round-three' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['3'].slice(4,8), as: 'match' }}")
+        div(class='round round-two' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['2'].slice(8,16), as: 'match' }}")
+        div(class='round round-one' data-bind="{template: { name: 'knockoutTemplate', foreach: model.matches['1'].slice(16,32), as: 'match' }}")
+
+
+      div(class="modal" tabindex="-1" role="dialog" id=`trophy`)
+        div(class="modal-dialog modal-lg modal-dialog-centered" role="document")
+          div(class="modal-content" style="background-color: #32383e;")
+            // ko if: model.selected
+            div(class="modal-body col-12")
+              div(class="col-12 row")
+                div(class="col-4")
+                  img(data-bind="attr:{src:model.getUrl(model.selected.home.team)}" style="width:48px")
+                div(class="col-4 row" style="margin:auto 0")
+                  // ko if: model.selected.status > 1
+                  div(class="col-5")
+                    h1(class="pull-right" data-bind="text:model.selected.home?.score")
+                  div(class="col-2")
+                    h1 -      
+                  div(class="col-5")
+                    h1(data-bind="text:model.selected.away?.score")
+                  // /ko
+                div(class="col-4")
+                  img(data-bind="attr:{src:model.getUrl(model.selected.away.team)}"  style="width:48px")
+              div(class="col-12 row")
+                // ko if: model.selected.status > 1
+                div(class="col-6 offset-3 text-center")
+                  a(data-bind="attr:{href: '/bb3/match/' + model.selected.gameId }" target="_blank")
+                    span(class="winner") match summary
+                // /ko
+                // ko if: model.selected.status == 1
+                div(class="col-6 offset-3 text-center")
+                  a(data-bind="attr:{href: `/rebbl/match/unplayed/${ model.selected.contest_id}`}" target="_blank")
+                    span matchup summary
+                // /ko
+              div(class="col-12 row")
+                div(class="col-6")
+                  a(class="pull-left" data-bind="{text: model.selected.home?.team.name, attr: {href: '/team/'+model.selected.home?.team.id}}" target="_blank")
+                  br(style="clear:both")
+                  a(class="pull-left" data-bind="{text: model.selected.home?.coach.name, attr: {href: '/coach/'+model.selected.home?.coach.id}}" target="_blank")
+                div(class="col-6")
+                  a(class="pull-right" data-bind="{text: model.selected.away?.team.name, attr: {href: '/team/'+model.selected.away?.team.id}}" target="_blank")
+                  br(style="clear:both")
+                  a(class="pull-right" data-bind="{text: model.selected.away?.coach.name, attr: {href: '/coach/'+model.selected.away?.coach.id}}" target="_blank")
+            // /ko
+
+
+  script(type="text/html" id="knockoutTemplate")
+    div(class="gameinfo" )
+      ul(class="matchup" data-bind="{css: model.spoiled && match.status > 1 && match.round === model.round ? 'spoiler played': ''}")
+        // ko if:  match.home?.team.name.toLowerCase().indexOf("admin") === -1 && match.away?.team.name.toLowerCase().indexOf("admin") === -1  
+        li(class=`team team-top` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id == match.away?.coach.id ? 'looser' :''  }")
+          //ko if: match.home?.team.logo.length > 0
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${match.home?.team.logo}`}}")
+          // /ko
+          div(class="teamname" data-bind="{attr: {title:match.home?.team.name}, text: match.home?.coach.name}")
+          div(class="score") 
+            // ko if: match.winner && match.winner.coach && match.winner.coach.id === match.home?.coach.id
+            strong(data-bind="text: match.home?.score")
+            // /ko
+            // ko notif: match.winner && match.winner.coach && match.winner.coach.id === match.home?.coach.id
+            div(data-bind="text: match.home?.score")
+            // /ko
+        li(class=`team team-bottom ` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id == match.home?.coach.id ? 'looser' :'' }")
+          // ko if: match.away?.team.logo.length > 0
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${match.away?.team.logo}`}}")
+          // /ko
+          div(class="teamname" data-bind="{attr: {title:match.away?.team.name}, text: match.away?.coach.name}")
+          div(class="score")
+            // ko if: match.winner && match.winner.coach && match.winner.coach.id === match.away?.coach.id
+            strong(data-bind="text: match.away?.score")
+            // /ko
+            // ko notif: match.winner && match.winner.coach && match.winner.coach.id === match.away?.coach.id
+            div(data-bind="text: match.away?.score")
+            // /ko
+        // /ko    
+      div(class="info" data-bs-toggle="modal" data-bs-target=`#trophy` data-bind="click: model.select")  
+
+  script(type="text/html" id="knockoutTemplateRev")
+    div(class="gameinfo")
+      ul(class="matchup" data-bind="{css: match.winner && match.winner.coach && match.round === model.round ? 'spoiler played': ''}")
+        // ko if:  match.home?.team.name.toLowerCase().indexOf("admin") === -1 && match.away?.team.name.toLowerCase().indexOf("admin") === -1  
+        li(class=`team team-top` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id === match.away?.coach.id ? 'looser' :''  }")
+          div(class="score") 
+            // ko if: match.winner && match.winner.coach && match.winner.coach.id === match.home?.coach.id
+            strong(data-bind="text: match.home?.score")
+            // /ko
+            // ko notif: match.winner && match.winner.coach && match.winner.coach.id === match.home?.coach.id
+            div(data-bind="text: match.home?.score")
+            // /ko
+          div(class="teamname" data-bind="{attr: {title:match.home?.team.name}, text: match.home?.coach.name}")
+          //ko if: match.home?.team.logo.length > 0
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${match.home?.team.logo}`}}")
+          // /ko
+        li(class=`team team-bottom` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id === match.home?.coach.id ? 'looser' :''  }")
+          div(class="score")
+            // ko if: match.winner && match.winner.coach && match.winner.coach.id === match.away?.coach.id
+            strong(data-bind="text: match.away?.score")
+            // /ko
+            // ko notif: match.winner && match.winner.coach && match.winner.coach.id === match.away?.coach.id
+            div(data-bind="text: match.away?.score")
+            // /ko
+          div(class="teamname" data-bind="{attr: {title:match.away?.team.name}, text: match.away?.coach.name}")
+          // ko if: match.away?.team.logo.length > 0
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${match.away?.team.logo}`}}")
+          // /ko
+        // /ko
+      div(class="info" data-bs-toggle="modal" data-bs-target=`#trophy` data-bind="click: model.select")  
