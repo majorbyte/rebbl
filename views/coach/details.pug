@@ -127,6 +127,20 @@ block content
               div
                 label(for="bb3coach") Blood Bowl 3 coach name
                 input(type="text" id="bb3coach" name="bb3coach" value=(coachDetails.bb3coach)  disabled)
+                - let src = ''
+                case coachDetails.bb3service
+                  when "steam"
+                    - src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+                  when "psn"
+                    - src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
+                  when "switch"
+                    - src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
+                  when "xbl"
+                    - src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
+                  when "eos"
+                    - src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
+                img#bb3coachService(style="width:32px" src=src)
+
               div
                 label(for="coach") Reddit
                 input(type="text" id="reddit" name="coach" value="/u/" + coachDetails.reddit.toLowerCase()  disabled)

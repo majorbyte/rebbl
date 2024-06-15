@@ -37,9 +37,7 @@ block content
       h2
         span(class="highlight")= user || account.reddit
 
-      p To be able to play in ReBBL you we would like to know your Blood Bowl 2 coach name and your timezone.
-      p Steam and Twitch is optional
-
+      p To be able to play in ReBBL you we would like to know your Blood Bowl 3 coach name and your timezone.
       h3 Your data
 
       -if (account)
@@ -48,45 +46,162 @@ block content
             span(class="warning")=account.err.message
 
         div
-          label(for="coach") Blood Bowl 2 coach name
-          input(type="text" id="coach" name="coach" value=account.coach  required)
+          label(for="coach") Blood Bowl 3 coach name
+          input(type="text" id="coach" name="coach" value=account.bb3coach  required)
+          input(type="text" id="bb3Id" name="id" value=account.bb3id  required)
         div
           label(for="timezone") Timezone
           select(id="timezone" name="timezone" required title="timezone" value=account.timezone)
           label(id="tz_info")
-        //div
-          label(for="discord") Discord
-          input(type="text" id="discord" name="discord" value=account.discord )
-        div
-          label(for="steam") Steam
-          input(type="text" id="steam" name="steam" value=account.steam )
-        div
-          label(for="twitch") Twitch
-          input(type="text" id="twitch" name="twitch" value=account.twitch )
-        div
-          input(type="checkbox" id="useDark" name="useDark" checked=account.useDark style="height:25px;width:25px") 
-          label(for="useDark" style="display:inline;verticle-align:middle;margin-left:6px") Use rebbl dark mode
       -if (!account)
-        div
-          label(for="coach") Blood Bowl 2 coach name
-          input(type="text" id="coach" required name="coach")
+        div(style="width: 500px;")
+          label(for="coach") Blood Bowl 3 coach name
+          input#bb3coach(type="text" name="bb3coach")
+          input#bb3coachId(type="hidden" name="bb3id")
+          button#searchButton.btn.btn-primary.btn-sm.mx-2(onclick="search()")
+            span Search
+            span#spinner.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+          label#bb3coachSelectLabel.hidden(for="bb3coachSelect" ) select the correct coach 
+          select#bb3coachSelect.hidden(onchange="updateFields()")
+          div
+            img#bb3coachService(style="width:32px").hidden
+            span#bb3displayId.hidden
+          br
         div
           label(for="timezone") Timezone
           select(id="timezone" name="timezone" required title="timezone")
           label(id="tz_info")
-        //div
-          label(for="discord") Discord
-          input(type="text" id="discord" name="discord")
-        div
-          label(for="steam") Steam
-          input(type="text" id="steam" name="steam")
-        div
-          label(for="twitch") Twitch
-          input(type="text" id="twitch" name="twitch")
-        div
-          input(type="checkbox" id="useDark" name="useDark" checked=false style="height:25px;width:25px") 
-          label(for="useDark" style="display:inline;verticle-align:middle;margin-left:6px") Use rebbl dark mode
       div(style="clear:both")
         <button type="submit">Save</button>
         br
         br                
+
+    script.
+
+      let coachNames;
+
+      function updateFields(e){
+        const select = document.getElementById("bb3coachSelect");
+        const input = document.getElementById("bb3coach");
+        const id = document.getElementById("bb3coachId");
+        const img = document.getElementById("bb3coachService");
+        const displayId = document.getElementById("bb3displayId");
+
+
+        id.value = select.value;
+        const coach = coachNames.find(x => x.id === id.value);
+        input.value = coach.name;
+
+        displayId.innerHTML = coach.displayId.toUpperCase();
+        displayId.classList.remove("hidden");
+
+        switch (coach.service){
+          case "steam":
+            img.src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+            break;
+          case "psn":
+            img.src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
+            break;
+          case "switch":
+            img.src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
+            break;
+          case "xbl":
+            img.src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
+            break;
+          case "eos":
+            img.src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
+            break;
+          default:
+            img.src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+            break;
+
+        }
+
+        img.classList.remove("hidden");
+        const saveButton = document.getElementById("saveButton");
+        saveButton.classList.remove("hidden");
+      }
+
+      async function search(e){
+
+        const btn = document.getElementById("searchButton");
+        const input = document.getElementById("bb3coach");
+        const spinner = document.getElementById("spinner");
+        const select = document.getElementById("bb3coachSelect");
+        const selectLabel = document.getElementById("bb3coachSelectLabel");
+        
+        btn.disabled = true;
+        btn.classList.add("btn-primary")<
+        btn.classList.remove("btn-danger")
+        spinner.classList.remove("hidden");
+
+        const response = await fetch(`/api/v2/account/bb3/${input.value}`);
+
+        if (response.ok){
+          const coaches = await response.json();
+          coachNames = coaches;
+          if (Array.isArray(coaches)){
+            const select = document.getElementById("bb3coachSelect");
+            const selectLabel = document.getElementById("bb3coachSelectLabel");
+
+            select.innerHTML = '';
+
+            const o =  document.createElement("option");
+            o.disabled = true;
+            o.selected = true;
+            o.text = "Select your account";
+            select.add(o,null);
+
+            coaches.forEach(coach => {
+              const opt = document.createElement("option");
+
+              opt.value = coach.id;
+              opt.text = `${coach.service}: ${coach.name}`;
+              select.add(opt,null);
+            });
+
+            select.classList.remove("hidden");
+            selectLabel.classList.remove("hidden");
+          } else if (coaches != null) {
+            const input = document.getElementById("bb3coach");
+            const id = document.getElementById("bb3coachId");
+            const saveButton = document.getElementById("saveButton");
+            select.classList.add("hidden");
+            selectLabel.classList.add("hidden");
+
+            id.value = coaches.id;
+            input.value = coaches.name;
+
+            saveButton.classList.remove("hidden");
+          } else{
+            btn.disabled = false;
+            spinner.classList.add("hidden");
+            btn.classList.remove("btn-primary")<
+            btn.classList.add("btn-danger")
+          }
+
+        }
+
+        spinner.classList.add("hidden");
+        btn.disabled = false;
+      }
+
+      async function savebb3(){
+        const input = document.getElementById("bb3coach");
+        const id = document.getElementById("bb3coachId");
+        const spinner = document.getElementById("spinnerSave");
+        const coach = coachNames.find(x => x.id === id.value);
+
+        spinner.classList.remove("hidden");
+
+        const response = await fetch(`/api/v2/account/bb3`,{
+          method:'POST',
+          headers:{'Content-Type': 'application/json'},
+          body:JSON.stringify({id:id.value, name:input.value, service:coach.service, displayId:coach.displayId})
+        });
+        if (response.ok){
+          location.reload();
+        }
+
+        spinner.classList.add("hidden");
+      }

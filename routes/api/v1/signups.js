@@ -26,7 +26,6 @@ router.get('/page', util.cache(10*60), async function(req, res){
   const data = await db.getSignUps({season:"season 25"});
 
   const ret = data.all.map(function(row){
-    console.log(`coach ${row.coach} - race ${row.race}`)
     return {
       team: row.team,
       teamId: row.teamId,

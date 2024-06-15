@@ -137,7 +137,7 @@ class AccountApi{
     });
 
 
-    this.router.get('/bb3/:name', util.ensureAuthenticated, async function(req,res){
+    this.router.get('/bb3/:name', util.ensureLoggedIn, async function(req,res){
       res.json(await accountService.getBB3Account(req.params.name));
     });
     

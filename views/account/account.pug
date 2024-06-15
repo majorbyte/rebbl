@@ -80,11 +80,39 @@ block append scripts
         const select = document.getElementById("bb3coachSelect");
         const input = document.getElementById("bb3coach");
         const id = document.getElementById("bb3coachId");
+        const img = document.getElementById("bb3coachService");
+        const displayId = document.getElementById("bb3displayId");
+
 
         id.value = select.value;
         const coach = coachNames.find(x => x.id === id.value);
         input.value = coach.name;
 
+        displayId.innerHTML = coach.displayId.toUpperCase();
+        displayId.classList.remove("hidden");
+
+        switch (coach.service){
+          case "steam":
+            img.src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+            break;
+          case "psn":
+            img.src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
+            break;
+          case "switch":
+            img.src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
+            break;
+          case "xbl":
+            img.src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
+            break;
+          case "eos":
+            img.src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
+            break;
+          default:
+            img.src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+            break;
+        }
+
+        img.classList.remove("hidden");
         const saveButton = document.getElementById("saveButton");
         saveButton.classList.remove("hidden");
       }
@@ -116,14 +144,14 @@ block append scripts
             const o =  document.createElement("option");
             o.disabled = true;
             o.selected = true;
-            o.text = "Select a steam account";
+            o.text = "Select your account";
             select.add(o,null);
 
             coaches.forEach(coach => {
               const opt = document.createElement("option");
 
               opt.value = coach.id;
-              opt.text = coach.steamName;
+              opt.text = `${coach.service}: ${coach.name}`;
               select.add(opt,null);
             });
 
@@ -157,12 +185,14 @@ block append scripts
         const input = document.getElementById("bb3coach");
         const id = document.getElementById("bb3coachId");
         const spinner = document.getElementById("spinnerSave");
+        const coach = coachNames.find(x => x.id === id.value);
+
         spinner.classList.remove("hidden");
 
         const response = await fetch(`/api/v2/account/bb3`,{
           method:'POST',
           headers:{'Content-Type': 'application/json'},
-          body:JSON.stringify({id:id.value, name:input.value})
+          body:JSON.stringify({id:id.value, name:input.value, service:coach.service, displayId:coach.displayId})
         });
         if (response.ok){
           location.reload();
@@ -188,15 +218,30 @@ block content
             span coach team &amp; stats: &nbsp;
             a(href=`/coach/${user.coach}`)= user.coach
           div
-            div(style="width: 375px;")
+            div(style="width: 410px;")
               label(for="bb3coach") Blood Bowl 3 coach name 
               - if (user.bb3coach)
                 input#bb3coach(type="text" name="bb3coach" value=user.bb3coach  disabled)
+                - let src = ''
+                case user.bb3service
+                  when "steam"
+                    - src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+                  when "psn"
+                    - src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
+                  when "switch"
+                    - src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
+                  when "xbl"
+                    - src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
+                  when "eos"
+                    - src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
+                img#bb3coachService(style="width:32px" src=src)
               - else              
                 input#bb3coach(type="text" name="bb3coach" value=user.bb3coach)
                 input#bb3coachId(type="hidden")
-                label#bb3coachSelectLabel.hidden(for="bb3coachSelect" ) select correct coach by steam name
+                label#bb3coachSelectLabel.hidden(for="bb3coachSelect" ) select the correct coach
                 select#bb3coachSelect.hidden(onchange="updateFields()")
+                img#bb3coachService(style="width:32px").hidden
+                span#bb3displayId.hidden
                 br
                 button#searchButton.btn.btn-primary.btn-sm(onclick="search()")
                   span Search
