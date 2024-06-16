@@ -319,6 +319,13 @@ class Maintenance{
       }
       res.redirect('/');
     });
+    
+    
+    this.router.get('/updateteam', util.verifyMaintenanceToken, async function(req, res){
+      bb3Service.updateTeam(req.query.id);
+      res.redirect('/');
+    });
+
 
     this.router.get('/checksignups',util.verifyMaintenanceToken, async function(req, res){
       if (req.app.locals.cyanideEnabled) signUp.checkTeams({'teamExist':false});
