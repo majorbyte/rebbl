@@ -41,14 +41,19 @@ block content
               p(class="alert-danger my-0")= user.error.coach
               p(class="alert-info my-0") This is probably due to a typo in your coachname, contact an admin on our discord to have it corrected.
           div
-            label(for="id") Team name
-            select(id="id" name="id" required)
-              option(disabled selected value="") Select your team
-              each team of teams 
-                option(value=team.id data-race=team.race data-tv=team.value data-name=team.name )= team.name
-            span#teamData
-            br    
-            span You can only sign up with a new, unexperienced team, or your team from the last season if is has been redrafted. Unfortunately if you join a competition, your team will be flagged as experienced.
+            - if (teams.length === 0)
+              p.alert.alert-danger No viable teams found to sign up with.
+
+            - if (teams.length > 0)
+              label(for="id") Team name
+              select(id="id" name="id" required)
+                option(disabled selected value="") Select your team
+
+                each team of teams 
+                  option(value=team.id data-race=team.race data-tv=team.value data-name=team.name )= team.name
+              span#teamData
+              br    
+              span You can only sign up with a new, unexperienced team, or your team from the last season if is has been redrafted. Unfortunately if you join a competition, your team will be flagged as experienced.
             
             - if (user.error && user.error.team)
               p(class="alert-danger my-0")= user.error.team        
@@ -64,6 +69,7 @@ block content
             h3 By pressing complete, you confirm that you have read and will abide by our rules
               a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " as described here"
               span .
-        button(type="submit" class="btn btn-primary") Complete
+        - if (teams.length > 0)
+          button(type="submit" class="btn btn-primary") Complete
         br
         br
