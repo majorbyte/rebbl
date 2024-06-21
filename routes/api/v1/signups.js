@@ -52,6 +52,7 @@ router.get('/bb3', util.cache(10*60), async function(req, res){
       team: entry.team.name,
       teamId: entry.team.id,
       coach: entry.coach,
+      coachId: entry.coachId,
       race: entry.team.race,
       timezone: entry.timezone,
       saveType: entry.saveType,

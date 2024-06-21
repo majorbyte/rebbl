@@ -237,7 +237,8 @@ class Signup{
       signup.type="rebbl3";
 
       let account = await accountService.getAccount(req.user.name);
-      signup.coach = account.coach;
+      signup.coach = account.bb3coach;
+      signup.coachId = account.bb3id;
       signup.reddit = account.reddit;
       signup.timezone = account.timezone
 
@@ -538,7 +539,8 @@ class Signup{
       signup.type ="rebbrl3";
 
       let account = await accountService.getAccount(req.user.name);
-      signup.coach = account.coach;
+      signup.coach = account.bb3coach;
+      signup.coachId = account.bb3id;
 
       signup.reddit = account.reddit;
 
