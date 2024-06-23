@@ -10,6 +10,7 @@ const express = require("express")
   , coachApi = require("./coach.js")
   , crackerApi = require("./cracker.js")
   , divisionApi = require("./division.js") 
+  , hooksApi = require("./hooks.js") 
   , leagueApi = require("./league.js")
   , matchApi = require("./match.js")
   , playoffsApi = require("./playoffs.js")
@@ -51,6 +52,8 @@ class ApiV2{
     this.router.use("/playoffs", new playoffsApi().routesConfig());
 
     this.router.use("/bb3", new bb3Api().routesConfig());
+
+    this.router.use("/hooks", new hooksApi().routesConfig());
 
     return this.router;
   }
