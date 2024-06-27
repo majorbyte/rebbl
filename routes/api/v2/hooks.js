@@ -12,6 +12,15 @@ class HooksApi{
     this.router = express.Router({mergeParams: true});
   }
 
+  routesConfig(){
+    this.router.get("/", util.ensureAuthenticated, this.#getHooks);
+    this.router.post("/", util.ensureAuthenticated, this.#createHook.bind(this));
+    this.router.put("/:id", util.ensureAuthenticated, this.#updateHook.bind(this));
+    this.router.delete("/:id", util.ensureAuthenticated, this.#deleteHook);
+
+    return this.router;
+  }
+
   async #getHooks(req,res){
     try {
       let data = await dataService.getHooks({owner:req.user.name});
@@ -49,6 +58,7 @@ class HooksApi{
       hook.guidlId = webhook.guild_id;
       
       await dataService.insertHook(hook);
+      dataService.refreshHooks();
   
       res.json({});
     }
@@ -74,6 +84,7 @@ class HooksApi{
       }
 
       dataService.updateHook({_id:hook._id},hook);
+      dataService.refreshHooks();
   
       res.json({});
     }
@@ -90,15 +101,6 @@ class HooksApi{
     catch (e){
       res.status(400).json({message: e.message});
     }
-  }
-
-  routesConfig(){
-    this.router.get("/", util.ensureAuthenticated, this.#getHooks);
-    this.router.post("/", util.ensureAuthenticated, this.#createHook.bind(this));
-    this.router.put("/:id", util.ensureAuthenticated, this.#updateHook.bind(this));
-    this.router.delete("/:id", util.ensureAuthenticated, this.#deleteHook);
-
-    return this.router;
   }
 
   async #checkWebhook(url){
