@@ -341,9 +341,9 @@ block content
                         input.form-check-input(type="checkbox" role="switch" value="8" data-bind="checked: $data.reportCoach") 
                         label Report matches for my coach.
 
-              button.accordion-button.alert.alert-danger(type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample" style="margin-bottom:0px !important")
+              button.collapsed.accordion-button.alert.alert-danger(data-bind="attr: {'data-bs-target':`#collapse-${$data.id}`, 'aria-controls':`collapse-${$data.id}`}" type="button" data-bs-toggle="collapse" aria-expanded="false" style="margin-bottom:0px !important")
                 Accordion Danger
-              .collapse#collapseExample
+              .collapse(data-bind="attr: {id: `collapse-${$data.id}` }")
                 .card.card-body.d-md-block
                   p.alert.alert-danger Clicking delete will remove this webhook registration
                     button.my-0.border.border-warning.btn.btn-danger.float-end(style="margin-top:-7px !important" data-bind="click: $data.delete") delete
