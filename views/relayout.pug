@@ -22,6 +22,32 @@ html(lang="en")
       - else
         link(rel="stylesheet" href="/styles/v2/bootstrap.min.css")
         link(rel="stylesheet" href="/styles/v2/style.css")
+    style. 
+      .callout {
+        padding:1.25rem;
+        margin-top:1.25rem;
+        margin-bottom:1.25rem;
+        color:var(--callout-color, inherit);
+        background-color:var(--callout-bg, var(--bs-gray-100));
+        border-left:0.25rem solid var(--callout-border, var(--bs-gray-300))
+      }
+
+    - if (user && user.useDark || user && user.account && user.account.useDark) 
+      style. 
+        .callout-info {
+          --callout-color: : rgb(110, 223, 246);
+          --callout-bg: rgb(3, 40, 48);
+          --callout-border: #087990;
+        }        
+
+    - else
+      style. 
+        .callout-info {
+          --callout-color: var(--bs-info-text-emphasis);
+          --callout-bg: var(--bs-info-bg-subtle);
+          --callout-border: var(--bs-info-border-subtle)
+        }        
+
     style.
       body{padding-top: 3rem;padding-bottom: 1rem;}
       main{min-height: calc(100% - 3rem)}

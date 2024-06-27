@@ -34,6 +34,7 @@ class Account{
     this.router.get('/nodiscord', util.checkAuthenticated, util.ensureAuthenticated, this._noDiscord);
 
     this.router.get('/match',util.checkAuthenticated, util.ensureAuthenticated, this._getMatch);
+    this.router.get('/reports',util.checkAuthenticated, util.ensureAuthenticated, async (_,res) => res.render("account/reports") );
     this.router.get('/trophies',util.checkAuthenticated, util.ensureAuthenticated, this._getTrophies);
     this.router.get('/discord/delete', util.checkAuthenticated, util.ensureAuthenticated, this._removeDiscord);
 
@@ -98,6 +99,9 @@ class Account{
       console.log(err);
     }
   }
+
+  
+  
 
   async _getTrophies(req, res){
     try{

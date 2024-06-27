@@ -71,12 +71,12 @@ class Maintenance{
         //bb3Service.calculateStandings("abecb238-c1ed-11ee-a745-02000090a64f")
 
         for(const leagueId of ["94f0d3aa-e9ba-11ee-a745-02000090a64f"]){
-          const competitions = await bb3.getCompetitions({leagueId:leagueId,format:2});
+          const competitions = await bb3.getCompetitions({leagueId:leagueId});
           for (const competition of competitions){
-            const matches = await bb3.getMatches({"competition.id": competition.id});
+            const matches = await bb3.getMatches({"competition.id": competition.id,$or:[{reported:false},{reported:{$exists:false}}]});
             for (const match of matches){
               try{
-                await bb3MatchReport.matchReport(match.matchId, process.env.BB3Hook);
+                await bb3MatchReport.matchReport(match.matchId);
               } catch(e){
                 loggingService.error(e);
                 loggingService.information(match.matchId);
@@ -168,30 +168,30 @@ class Maintenance{
       res.redirect('/');
     });
     
-    this.router.get('/updatebb3', util.verifyMaintenanceToken, async function(req, res){
-      updateBB3();
-      res.redirect('/');
-    });
+    // this.router.get('/updatebb3', util.verifyMaintenanceToken, async function(req, res){
+    //   updateBB3();
+    //   res.redirect('/');
+    // });
 
-    const updateBB3 = async function (){
-      const compIds = ["5d031521-b151-11ed-80a8-020000a4d571","2b791aa6-b14d-11ed-80a8-020000a4d571"];
+    // const updateBB3 = async function (){
+    //   const compIds = ["5d031521-b151-11ed-80a8-020000a4d571","2b791aa6-b14d-11ed-80a8-020000a4d571"];
 
-      for(const id of compIds){
-        const ids = await bb3Service.getRanking(id);
-        if (ids.length === 0) continue;
+    //   for(const id of compIds){
+    //     const ids = await bb3Service.getRanking(id);
+    //     if (ids.length === 0) continue;
         
-        await bb3Service.getTeams(ids);
-        const matchIds = await bb3Service.updateMatches(ids,id);
-        await bb3Service.calculateStandings(id);
+    //     await bb3Service.getTeams(ids);
+    //     const matchIds = await bb3Service.updateMatches(ids,id);
+    //     await bb3Service.calculateStandings(id);
     
-        const hookUrl = id === "2b791aa6-b14d-11ed-80a8-020000a4d571" 
-          ? process.env.BB3Hook
-          : process.env.BB3RookiesHook;
-        for(const matchId of matchIds){
-          await bb3MatchReport.matchReport(matchId, hookUrl);
-        }
-      }      
-    }
+    //     const hookUrl = id === "2b791aa6-b14d-11ed-80a8-020000a4d571" 
+    //       ? process.env.BB3Hook
+    //       : process.env.BB3RookiesHook;
+    //     for(const matchId of matchIds){
+    //       await bb3MatchReport.matchReport(matchId, hookUrl);
+    //     }
+    //   }      
+    // }
 
     const updateClan = async function(req){
       try{
