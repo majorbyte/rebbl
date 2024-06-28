@@ -19,56 +19,62 @@ router.get('/seasons', util.cache(60*60*24), async function(req,res){
 });
 
 router.get('/:division', util.cache(10*60), async function(req,res) {
-  let data = {matches: null, league: req.params.league, competition: req.params.division, round:1};
-  
-  let leagueRegex = new RegExp(`^ReBBL Playoffs`,'i');
-  let divRegex = new RegExp(`^${req.params.division}$`, 'i');
-  
-  data.matches = await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
+  try{
 
-  let missing = ['2','3','4','5','6'];
-  let sizes = [32,16,8,4,2,1];
+    let data = {matches: null, league: req.params.league, competition: req.params.division, round:1};
+    
+    let leagueRegex = new RegExp(`^ReBBL Playoffs`,'i');
+    let divRegex = new RegExp(`^${req.params.division}$`, 'i');
+    
+    data.matches = await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
 
-  if (data.matches['1'].length < 32){
-    for(let k of Object.keys(data.matches).sort((a,b) => b-a)){
-      data.matches[`${parseInt(k)+1}`] = data.matches[k];
+    let missing = ['2','3','4','5','6'];
+    let sizes = [32,16,8,4,2,1];
+
+    if (data.matches['1'].length < 32){
+      for(let k of Object.keys(data.matches).sort((a,b) => b-a)){
+        data.matches[`${parseInt(k)+1}`] = data.matches[k];
+      }
+      data.matches['1'] = [];
     }
-    data.matches['1'] = [];
-  }
 
-  let dummy = {"opponents":[{
-    "coach":{"id":null,"name":"","twitch":null,"youtube":null,"country":"","lang":""},
-    "team":{"id":null,"name":"","logo":"","value":null,"motto":"","score":null,"death":null,"race":""}
-    },{
+    let dummy = {"opponents":[{
       "coach":{"id":null,"name":"","twitch":null,"youtube":null,"country":"","lang":""},
       "team":{"id":null,"name":"","logo":"","value":null,"motto":"","score":null,"death":null,"race":""}
-    }
-  ]};
-  if (req.app.locals.cyanideEnabled)
-    data.round = await db.getRound("ReBBL Playoffs", req.params.division);
-  else 
-    data.round = 0;
-
-  missing.map(m=>{
-
-    if (!data.matches[m]){
-      let x = sizes[parseInt(m) -1]; 
-      data.matches[m] = [];
-      while (x) {
-        data.matches[m].push(dummy);
-        x--;
+      },{
+        "coach":{"id":null,"name":"","twitch":null,"youtube":null,"country":"","lang":""},
+        "team":{"id":null,"name":"","logo":"","value":null,"motto":"","score":null,"death":null,"race":""}
       }
+    ]};
+    if (req.app.locals.cyanideEnabled)
+      data.round = await db.getRound("ReBBL Playoffs", req.params.division);
+    else 
+      data.round = 0;
+
+    missing.map(m=>{
+
+      if (!data.matches[m]){
+        let x = sizes[parseInt(m) -1]; 
+        data.matches[m] = [];
+        while (x) {
+          data.matches[m].push(dummy);
+          x--;
+        }
+      }
+    });
+
+    let ids = [];
+    for(var prop in data.matches){
+      data.matches[prop].map(m => ids.push(m.contest_id));
     }
-  });
 
-  let ids = [];
-  for(var prop in data.matches){
-    data.matches[prop].map(m => ids.push(m.contest_id));
+    data.dates = await datingService.search({"id":{$in:ids}});
+
+    res.status(200).send(data);
   }
-
-  data.dates = await datingService.search({"id":{$in:ids}});
-
-  res.status(200).send(data);
+  catch(e){
+    res.status(400).send(e.message);
+  }
 });
 
 module.exports = router;
