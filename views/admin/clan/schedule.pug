@@ -1,0 +1,74 @@
+extends ../layout.pug
+include ../nav-link
+
+block head
+  style.
+
+block content
+  .container
+    .row.col-12
+      label(for="round") round #
+      input#round.form-control(type="text" name="round" data-bind="value: round")
+
+      label(for="data") schedule
+      textarea#data.form-control(rows="9" type="text" name="data" data-bind="value: input")
+
+
+      // ko foreach: schedules()
+      .col-12 
+        span(data-bind="text: $data.home")
+        | -
+        span(data-bind="text: $data.away")
+      // /ko
+    .row 
+      .col.px-0.mx-0
+        br
+        button.btn.btn-primary(data-bind="click: create,enable: round>0 && schedules().length > 0 ")  Add schedules
+    .row 
+      p(data-bind="text: feedback, attr:{class:{'d-none':feedback == '' }}")
+
+block scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
+
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+    class Schedule{
+      constructor(){
+        
+        this.input = "";
+        this.feedback = "";
+        this.round = 0;
+
+        ko.track(this);
+      }      
+
+      schedules(){
+        return this.input.length > 0 ? JSON.parse(this.input).map(x => {x.away = x.away.trim(); x.home = x.home.trim(); return x;})  : [];
+      }
+      async create(){
+        const response = await fetch(`/admin/clan/schedule`,{
+          method: "POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+            schedules: this.schedules(),
+            round: this.round
+          })
+        });
+
+        if (response.ok) this.feedback = "created successfully.";
+        else this.feedback = (await response.json()).error;
+
+      }
+
+    }
+
+
+    let model = new Schedule();
+    ko.applyBindings(model);
