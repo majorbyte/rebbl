@@ -60,6 +60,8 @@ block append scripts
         this.id = data.id;
         this.url = `https://discord.com/api/webhooks/${data.id}/***`;
         this.name = data.name;
+        this.displayName = data.displayName || null;
+        this.avatarUrl = data.avatarUrl || null;
         this.image = data.image;
         this.races = data.races;
         this.competitions = data.competitions;
@@ -95,12 +97,26 @@ block append scripts
             id: this.id,
             races: this.races,
             competitions: this.competitions,
-            reportCoach: this.reportCoach
+            reportCoach: this.reportCoach,
+            displayName: this.displayName || null,
+            avatarUrl: this.avatarUrl || null
           })
         });
 
         if (response.ok) showSuccess("Webhook settings updated.");
         else showError(await response.json());
+      }
+
+      async refresh(){
+        const response = await fetch(`/api/v2/hooks/${this.id}/refresh`,{
+          method: "PUT",
+          headers:{"Content-Type":"application/json"},
+          body: null
+        });
+
+        if (response.ok) model.load();
+        else showError(await response.json());
+
       }
 
       async delete (){
@@ -205,10 +221,22 @@ block content
               .accordion-body
                 .row 
                   .col-12 
+                    button.btn.btn-warning.float-start(title="refresh name & avater")
+                      i.fa.fa-recycle(data-bind="click: $data.refresh")
                     button.btn.btn-success.float-end(data-bind="{attr: {disabled: !$data.isDirty()}, click: $data.save}") save
                 label(for="url") Webhook URL
                 input.form-control(type="text", name="url" data-bind="value: $data.url" disabled)
-                
+
+                label(for="url") Display name
+                input.form-control(type="text", name="url" data-bind="value: $data.displayName" )
+
+                label(for="url") Alternative avatar
+                .input-group
+                  input.form-control(type="text", name="url" data-bind="value: $data.avatarUrl" )
+                  span.input-group-text
+                    img(data-bind="attr: {src: $data.avatarUrl}, css:{'d-none': $data.avatarUrl == null}" style="width:40px;height:40px")
+
+
                 h3 filters
                 .col-12.callout.callout-info
                   | All filters work as 

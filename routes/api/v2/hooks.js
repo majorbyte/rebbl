@@ -16,6 +16,7 @@ class HooksApi{
     this.router.get("/", util.ensureAuthenticated, this.#getHooks);
     this.router.post("/", util.ensureAuthenticated, this.#createHook.bind(this));
     this.router.put("/:id", util.ensureAuthenticated, this.#updateHook.bind(this));
+    this.router.put("/:id/refresh", util.ensureAuthenticated, this.#refreshWebhook.bind(this));
     this.router.delete("/:id", util.ensureAuthenticated, this.#deleteHook);
 
     return this.router;
@@ -75,6 +76,9 @@ class HooksApi{
 
       hook.races = req.body.races || hook.races;
       hook.competitions = req.body.competitions || hook.competitions;
+      
+      hook.displayName = req.body.displayName || false;
+      hook.avatarUrl = req.body.avatarUrl || false;
 
       if (req.body.reportCoach){
         const account = await accountService.getAccount(req.user.name);
@@ -89,6 +93,28 @@ class HooksApi{
       res.json({});
     }
     catch (e){
+      res.status(400).json({message: e.message});
+    }
+  }
+
+  async #refreshWebhook(req,res){
+    try{
+      const hook =  await dataService.getHook({id:req.params.id});
+
+      if (hook.owner !== req.user.name) throw new Error ("You are not the owner of this hook.");
+
+      const url = `https://discord.com/api/webhooks/${hook.id}/${this.#decrypt(hook.token)}`;
+
+      const webhook = await this.#checkWebhook(url);
+      hook.image = this.#getAvatar(webhook);
+      hook.name = webhook.name;
+  
+      dataService.updateHook({_id:hook._id},hook);
+      dataService.refreshHooks();
+
+      res.json({});
+
+    }catch(e){
       res.status(400).json({message: e.message});
     }
   }
@@ -111,6 +137,8 @@ class HooksApi{
     throw new Error("invalid webhook");
   }
 
+
+
   #getAvatar(webhook){
     if (webhook.avatar) return `https://cdn.discordapp.com/avatars/${webhook.id}/${webhook.avatar}.png`;
 
@@ -131,6 +159,18 @@ class HooksApi{
   
     return `${encryptedMessage}:${iv}:${salt}`;
   }
+
+  #decrypt(encryptedData) {
+    const [msg, iv, salt] = encryptedData.split(":");
+    const password = process.env['encryptionKey'];
+    
+    const key = crypto.scryptSync(password, salt, 32);
+    
+    const decipher = crypto.createDecipheriv('aes-256-ctr', key, iv);
+    let decrypted = decipher.update(Buffer.from(msg, 'hex'), 'hex', 'utf-8');
+    decrypted += decipher.final('utf-8');
+    return decrypted;
+}
 }
 
 module.exports = HooksApi;
