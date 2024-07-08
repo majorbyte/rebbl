@@ -75,10 +75,11 @@ block scripts
       },
       computed: {
         numberOfRounds() {
+          if (this.schedules[0].season === "season 18") return 7;
           return this.schedules.length % 5 === 0 ? 5 : 4;
         },
         numberOfRows() {
-          const numberOfRounds = this.schedules.length % 5 === 0 ? 5 : 4;
+          const numberOfRounds = (this.schedules[0].season === "season 18") ? 7 : this.schedules.length % 5 === 0 ? 5 : 4;
           return Math.ceil(this.schedules.length / numberOfRounds );
         }
       },
