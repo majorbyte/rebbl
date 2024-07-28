@@ -52,19 +52,21 @@ block content
                 span &nbsp;to view all current signups
             - else if (signup.type==="rebbl3")
               h3= "REBBL BB3 Season 2 - " + signup.league
-              div(style="display:flex")
-                form(action="/signup/bb3/resign" method="post" style="display:flex" )
-                  br
-                  button(type="submit"  class="btn btn-primary") Resign
+              - if (signup.open)
+                div(style="display:flex")
+                  form(action="/signup/bb3/resign" method="post" style="display:flex" )
+                    br
+                    button(type="submit"  class="btn btn-primary") Resign
               p Nagivate 
                 a(href="/signup/bb3/signups" class="highlighted-rules") here
                 span &nbsp;to view all current signups
             - else if (signup.type==="rebbrl3")
               h3= "REBBL BB3 College Season 2 - " + signup.league
-              div(style="display:flex")
-                form(action="/signup/bb3/resign" method="post" style="display:flex" )
-                  br
-                  button(type="submit"  class="btn btn-primary") Resign
+              - if (signup.open)
+                div(style="display:flex")
+                  form(action="/signup/bb3/resign" method="post" style="display:flex" )
+                    br
+                    button(type="submit"  class="btn btn-primary") Resign
               p Nagivate 
                 a(href="/signup/bb3/signups" class="highlighted-rules") here
                 span &nbsp;to view all current signups
@@ -91,10 +93,6 @@ block content
               h3 You can still sign up for THE GREENHORN CUP
               a(href="/signup/signup-greenhorn") Sign me up for The Greenhorn Cup
       hr.my-4
-    h2= "Welcome to REBBL, "
-      span(class="highlight")= user.coach
-      span !
-
     - if (signups.every(x => x.type !==  "rebbrl3") && signups.every(x => x.type !==  "rebbl3"))
 
       .jumbotron

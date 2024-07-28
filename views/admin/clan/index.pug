@@ -2,7 +2,7 @@ extends ../layout.pug
 include ../nav-link
 
 block vars
-  - let options = {active: league, title: "REBBL season 17", company:"clan"}
+  - let options = {active: league, title: "REBBL season 18", company:"clan"}
   - let fullJquery = true
   - if (!active) { var active =  (options && options.active) ? options.active : "" }
   - let company = "clan";
@@ -53,12 +53,12 @@ block content
 
       template(v-if="!showCoaches && !schedule && schedules.length > 0")
         .row
-          template(v-for="row in numberOfRows")
+          template(v-for="row in numberOfRounds")
             br
             .col.table-striped(style="width:unset;display:unset" )
               .col-12.TableHeader(style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
                 .Standings-details.Standings-header.highlight(title="") Round {{row}}
-              template(v-for="col in numberOfRounds")
+              template(v-for="col in numberOfHouses")
                 .MatchRow-contentWrapper.MatchRow-contentWrapper--hover(@click="showMatchup(_schedule(row,col))")
                   .MatchRow-team
                     .TeamLabel.TeamLabel--reverse
@@ -504,11 +504,10 @@ block scripts
       },
       computed: {
         numberOfRounds() {
-          return this.schedules.length % 5 === 0 ? 5 : 4;
+          return [... new Set(this.schedules.map(x => x.round))].length ;
         },
-        numberOfRows() {
-          const numberOfRounds = this.schedules.length % 5 === 0 ? 5 : 4;
-          return Math.ceil(this.schedules.length / numberOfRounds );
+        numberOfHouses() {
+          return this.schedules.filter(x => x.round ===1).length;
         },
         sortedMatches(){
           return this.schedule.matches.sort(function(a,b){return a.competition > b.competition;})
@@ -528,9 +527,8 @@ block scripts
         }
       },
       methods:{
-        _schedule: function(r,c){
-          const numberOfRounds = this.schedules.length % 5 === 0 ? 5 : 4;
-          return this.schedules[(r - 1) * numberOfRounds + (c - 1)];
+        _schedule: function(round,house){
+          return this.schedules.find(x => x.round == round && x.house == house );
         },
         isIncomplete: function(schedule){
           const l = schedule.matches.filter(x => x.status === 'played').length;
@@ -540,7 +538,7 @@ block scripts
           this.schedule = null;
           this.showCoaches = false;
           this.missingGames =[];
-          let response = await fetch(`/api/v2/clan/schedule/season 17/${division}`);
+          let response = await fetch(`/api/v2/clan/schedule/season 18/${division}`);
           let data = await response.json();
           this.schedules = data.sort((a,b)=>{
               if(a.round > b.round) return 1;
@@ -552,7 +550,7 @@ block scripts
         },
         async showMatchup(s){
           this.reset();
-          let response = await fetch(`/api/v2/clan/season 17/${s.competition}/${s.round}/${s.house}`);
+          let response = await fetch(`/api/v2/clan/season 18/${s.competition}/${s.round}/${s.house}`);
 
           this.schedule = await response.json();
           if(this.schedule.matches.length < 5){
@@ -593,13 +591,13 @@ block scripts
             side.clan.powers[power]--; 
             if(side.usedPowers[power]) side.usedPowers[power]++; 
             else side.usedPowers[power] = 1;
-            await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${side.clan.name}/usepower/${power}`, {
+            await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${side.clan.name}/usepower/${power}`, {
               method: "PUT"
             });
           } else if(e.target.attributes["aria-pressed"].value === "true") {
             side.clan.powers[power]++;
             side.usedPowers[power]--;
-            await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${side.clan.name}/unusepower/${power}`, {
+            await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${side.clan.name}/unusepower/${power}`, {
               method: "PUT"
             });
           }
@@ -609,7 +607,7 @@ block scripts
           return (side.usedPowers[power] || 0) >= i;
         },
         doDraftProcess:async function(schedule,part){
-          await fetch(`/api/v2/clan/draft/season 17/${schedule.competition}/${schedule.round}/${schedule.house}/${part}`, {
+          await fetch(`/api/v2/clan/draft/season 18/${schedule.competition}/${schedule.round}/${schedule.house}/${part}`, {
             method: "PUT"
           });
         },
@@ -617,17 +615,17 @@ block scripts
           return `btn btn-outline-info btn-sm ${this.powerUsed(side,power,i) ? 'active':''}`;   
         },
         saveClanScore:async function(){
-          await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.home.clan.name}/score/${this.schedule.home.win}/${this.schedule.home.draw}/${this.schedule.home.loss}`, {
+          await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.home.clan.name}/score/${this.schedule.home.win}/${this.schedule.home.draw}/${this.schedule.home.loss}`, {
             method: "PUT"
           });
-          await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.away.clan.name}/score/${this.schedule.away.win}/${this.schedule.away.draw}/${this.schedule.away.loss}`, {
+          await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.schedule.away.clan.name}/score/${this.schedule.away.win}/${this.schedule.away.draw}/${this.schedule.away.loss}`, {
             method: "PUT"
           });
           $('#clanScore').modal('hide');
           this.reset();
         },
         resetMatch:async function(match){
-          let response = await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${match.contest_id}/reset`, {
+          let response = await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${match.contest_id}/reset`, {
             method: "PUT"
           });
           if (response.ok) match.counted = false;
@@ -642,10 +640,10 @@ block scripts
           await fetch(`/api/v2/clan/refreshMatch/${id}`);
         },
         saveMatchScore:async function(){
-         await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${this.selectedMatch.contest_id}/0/score/${this.selectedMatch.opponents[0].team.score}`, {
+         await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${this.selectedMatch.contest_id}/0/score/${this.selectedMatch.opponents[0].team.score}`, {
             method: "PUT"
           });
-          await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${this.selectedMatch.contest_id}/1/score/${this.selectedMatch.opponents[1].team.score}`, {
+          await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/game/${this.selectedMatch.contest_id}/1/score/${this.selectedMatch.opponents[1].team.score}`, {
             method: "PUT"
           });
           $('#clanScore').modal('hide');
@@ -702,7 +700,7 @@ block scripts
           this.selectedSide.clan.powers['emergencyIntensiveCare']--; 
           if(this.selectedSide.usedPowers['emergencyIntensiveCare']) this.selectedSide.usedPowers['emergencyIntensiveCare']++; 
           else this.selectedSide.usedPowers['emergencyIntensiveCare'] = 1;
-          await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.selectedSide.clan.name}/usepower/emergencyIntensiveCare`, {
+          await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.selectedSide.clan.name}/usepower/emergencyIntensiveCare`, {
             method: "PUT"
           });
 
@@ -719,7 +717,7 @@ block scripts
           this.selectedSide.clan.powers['newBlood']--; 
           if(this.selectedSide.usedPowers['newBlood']) this.selectedSide.usedPowers['newBlood']++; 
           else this.selectedSide.usedPowers['newBlood'] = 1;
-          await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.selectedSide.clan.name}/usepower/newBlood`, {
+          await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.selectedSide.clan.name}/usepower/newBlood`, {
             method: "PUT"
           });
 
@@ -736,7 +734,7 @@ block scripts
           this.selectedSide.clan.powers['assassination']--; 
           if(this.selectedSide.usedPowers['assassination']) this.selectedSide.usedPowers['assassination']++; 
           else this.selectedSide.usedPowers['assassination'] = 1;
-          await fetch(`/api/v2/clan/season 17/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.selectedSide.clan.name}/usepower/assassination`, {
+          await fetch(`/api/v2/clan/season 18/${this.schedule.competition}/${this.schedule.round}/${this.schedule.house}/${this.selectedSide.clan.name}/usepower/assassination`, {
             method: "PUT"
           });
 

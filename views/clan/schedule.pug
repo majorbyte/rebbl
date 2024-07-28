@@ -16,11 +16,11 @@ block content
     div(class="container navcontainer" data-index="0" id="app")
       h1(class="u-no-text-transform u-verticalMargin--xx-small") {{schedules[0] ? schedules[0].competition : ''}}
       div(class="row col-12 justify-content-center" )
-        template(v-for="row in numberOfRows")
+        template(v-for="row in numberOfRounds")
           div(class="col-12 col-lg-6 col-xl-4 col-md-6 mx-auto table-striped" style="display:unset" )
             div(class="col-12 TableHeader col-md-11 col-xl-12 col-lg-12 col-sm-12" style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
               div(title="" class="Standings-details Standings-header highlight" ) Round {{row}}
-            template(v-for="col in numberOfRounds" )
+            template(v-for="col in numberOfHouses" )
               a(:set="_schedule = schedule(row,col)" class="row col-12 g-0 col-md-11 col-xl-12 col-lg-12 col-sm-12" v-bind:href="'/clan/'+ _schedule.season + '/' + _schedule.competition + '/' + _schedule.round + '/' + _schedule.house" style="padding-left:15px;padding-right:15px")
                 .col.row.g-0
                   .col.text-start
@@ -75,21 +75,15 @@ block scripts
       },
       computed: {
         numberOfRounds() {
-          if (this.schedules[0].season === "season 18") return 7;
-          return this.schedules.length % 5 === 0 ? 5 : 4;
+          return [... new Set(this.schedules.map(x => x.round))].length ;
         },
-        numberOfRows() {
-          const numberOfRounds = (this.schedules[0].season === "season 18") ? 7 : this.schedules.length % 5 === 0 ? 5 : 4;
-          return Math.ceil(this.schedules.length / numberOfRounds );
+        numberOfHouses() {
+          return this.schedules.filter(x => x.round ===1).length;
         }
       },
       methods:{
-        schedule: function(r,c){
-          const numberOfRounds = this.schedules.length % 5 === 0 ? 5 : 4;
-          if (r == 7 && c == 2) {
-            let s = this.schedules[(r - 1) * numberOfRounds + (c - 1)];
-          }
-          return this.schedules[(r - 1) * numberOfRounds + (c - 1)];
+        schedule: function(round, house){
+          return this.schedules.find(x => x.round == round && x.house == house )
         }
       },
       // methods that implement data logic.

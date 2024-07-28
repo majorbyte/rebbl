@@ -47,7 +47,7 @@ class Signup{
 
   routesConfig(){
 
-    const bb3Open = true;
+    const bb3Open = false;
     const rebblOpen = false;
     const rookiesOpen = true;
 
@@ -63,7 +63,7 @@ class Signup{
     this.router.get('/discord/callback', this._authDiscordCallback);
 
     if (bb3Open || rebblOpen || rookiesOpen)
-      this.router.get('/', util.ensureAuthenticated, this.#getStatus);
+      this.router.get('/', util.ensureAuthenticated, async (req,res) => this.#getStatus(req,res, bb3Open,rookiesOpen));
 
     if (rebblOpen){
       this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
@@ -106,7 +106,7 @@ class Signup{
     return this.router;
   }
 
-  async #getStatus(req, res){
+  async #getStatus(req, res, bb3open, rookiesOpen){
     try{
       let user = await signupService.getExistingTeam(req.user.name);
       let signups = [];
@@ -129,13 +129,15 @@ class Signup{
 
       if (signup){
         signup.signedUp = true;
+        signup.open = bb3open;
         signups.push(signup);
       }
 
       signup = await signupService.getSignUp(req.user.name,"rebbrl3","season 2");
 
       if (signup){
-        signup.signedUp = true;
+        signup.signedUp = true
+        signup.open = rookiesOpen;;
         signups.push(signup);
       }
       
