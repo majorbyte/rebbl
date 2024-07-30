@@ -1,50 +1,49 @@
-extends ../no-cache-sub-relayout.pug
-include ../nav-link
 include functions.pug 
 
-block append vars
-  - let options = {company: company}
-
-block head
-  style.
-    h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
-
-block content
-  .container
-    div
+.season-table(style="margin-bottom:40px;")  
+  div
+    .d-flex.justify-content-between
       a(href=`/bb3/competition/${competition.id}/schedules` class="highlight")
         h2=competition.name
-    .season-table(style="margin-bottom:40px;")  
-      .row(style="border-bottom: 3px solid #bdbcbccf;")
-        .col-8.col-md-6(style="font-size:1.25em")
+      - if (competition.status === 1)
+        h2 Waiting for teams
+      - if (competition.status === 2)
+        h2 Waiting to start
+      - if (competition.status === 3)
+        h2= `Round ${competition.day}`
+      - if (competition.status === 4)
+        h2 Finished  
+  .row(style="border-bottom: 3px solid #bdbcbccf;")
+    .col-8.col-md-6(style="font-size:1.25em")
+      .row
+        .col-1 #
+        .col Coach
+        .col Team
+    .col-2.d-none.d-md-block(style="font-size:1.25em") Race
+    .col-4(style="font-size:1.25em")
+      .row
+        .col-4.col-md-2 Pts.
+        .col-2.d-none.d-md-block W  
+        .col-2.d-none.d-md-block D  
+        .col-2.d-none.d-md-block L
+        .col-4.col-md-2 P
+        .col-4.col-md-2.text-end ΔTD
+  - if (competition.standings)
+    each rank,index in competition.standings
+      .row.season-table-row(id=rank.id)
+        .col-8.col-md-6
           .row
-            .col-1 #
-            .col Coach
-            .col Team
-        .col-2.d-none.d-md-block(style="font-size:1.25em") Race
-        .col-4(style="font-size:1.25em")
+            .col-2=rank.position
+            .col(style=";overflow:hidden") 
+              a(href=`/coach/bb3/${rank.id}`)=rank.name
+            .col(style=";overflow:hidden") 
+              a(href=`/bb3/team/${rank.teamId}`)=rank.team
+        .col-2.d-none.d-md-block(style=";overflow:hidden")=getRace(rank.race)
+        .col-4
           .row
-            .col-4.col-md-2 Pts.
-            .col-2.d-none.d-md-block W  
-            .col-2.d-none.d-md-block D  
-            .col-2.d-none.d-md-block L
-            .col-4.col-md-2 P
-            .col-4.col-md-2.text-end ΔTD
-      each rank,index in competition.standings
-        .row.season-table-row
-          .col-8.col-md-6
-            .row
-              .col-2=rank.position
-              .col(style=";overflow:hidden") 
-                a(href=`/coach/bb3/${rank.id}`)=rank.name
-              .col(style=";overflow:hidden") 
-                a(href=`/bb3/team/${rank.teamId}`)=rank.team
-          .col-2.d-none.d-md-block(style=";overflow:hidden")=getRace(rank.race)
-          .col-4
-            .row
-              .col-4.col-md-2=rank.points
-              .col-2.d-none.d-md-block=rank.win
-              .col-2.d-none.d-md-block=rank.draw
-              .col-2.d-none.d-md-block=rank.loss
-              .col-4.col-md-2=(Number(rank.win)+Number(rank.loss)+Number(rank.draw))
-              .col-4.col-md-2.text-end=(rank.tddiff)
+            .col-4.col-md-2=rank.points
+            .col-2.d-none.d-md-block=rank.win
+            .col-2.d-none.d-md-block=rank.draw
+            .col-2.d-none.d-md-block=rank.loss
+            .col-4.col-md-2=(Number(rank.win)+Number(rank.loss)+Number(rank.draw))
+            .col-4.col-md-2.text-end=(rank.tddiff)

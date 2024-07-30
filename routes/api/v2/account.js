@@ -119,21 +119,8 @@ class AccountApi{
 
     this.router.get("/me",util.ensureAuthenticatedNoRedirect, async function(req,res){
       const account = await accountService.getAccount(req.user.name);
-      const regex = new RegExp(`^${account.coach}$`,"i");
-      
-      const schedules = await leagueService.searchLeagues({round:1, season:"season 25", league:/rebbl - /i, "opponents.coach.name":regex});
 
-
-      let schedule = schedules.find(s => regex.test(s.opponents[0].coach.name) && /^(?!\[admin]).+/i.test(s.opponents[0].team.name)); 
-      if (!schedule) schedule = schedules.find(s => regex.test(s.opponents[1].coach.name) && /^(?!\[admin]).+/i.test(s.opponents[1].team.name));
-
-      let ret = {coach: account.coach, division:"", league:"", icon:account.icon || "BB3Standard", doNotLoadSchedules:account.doNotLoadSchedules || false};
-      if (schedule ){
-        ret.division = schedule.competition;
-        ret.league = schedule.league;
-      }
-
-      res.status(200).send(ret);
+      res.status(200).send({reddit:account.reddit, bb3id:account.bb3id, coach: account.coach, bb3coach:account.bb3coach, bb3displayId:account.bb3displayId, icon:account.icon || "BB3Standard", doNotLoadSchedules:account.doNotLoadSchedules || false});
     });
 
 

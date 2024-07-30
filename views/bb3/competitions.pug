@@ -1,6 +1,8 @@
 extends ../no-cache-sub-relayout.pug
 include ../nav-link
 
+
+
 block vars
   - let options = {company: company}
 
@@ -10,30 +12,49 @@ block head
     .card{width: 12rem;}
 
 block content
-  div.Background.u-bottomPadding--large.u-topPadding--medium
-    div.container.navcontainer(style="display:flex;flex-flow:wrap" data-index="0")
-      - let compName = ""
-      each comp, index in competitions.sort(function(a,b){return a.name > b.name})
-        - if (compName != "" && compName != comp.name.split(" ")[0])
-          div.col-12
-        - compName = comp.name.split(" ")[0]  
-        div.card.m-1
-          img.card-img-top(src=`https://cdn.rebbl.net/images/bb3/Logos/${comp.logo}` alt="...")
-          div.card-body
-            h5.card-title(style="color: rgb(24, 119, 162)")= comp.name
-            - if (comp.status === 1)
-              p.card-text Waiting for teams
-            - if (comp.status === 2)
-              p.card-text Waiting to start
-            - if (comp.status === 3)
-              p.card-text Running
-              p.card-text= `Round ${comp.day}`
-              a(style="    position: absolute;bottom: 10px;right: 10px;font-size: 2em;" href="/bb3/competition/" + comp.id)
-                i(class="fa-solid fa-arrow-circle-right")
-            - if (comp.status === 4)
-              p.card-text Finished
-              a(style="    position: absolute;bottom: 10px;right: 10px;font-size: 2em;" href="/bb3/competition/" + comp.id)
-                i(class="fa-solid fa-arrow-circle-right")
-              
+  //div.container.navcontainer(style="display:flex;flex-flow:wrap" data-index="0")
+  .container
+    - let compName = ""
+    each competition, index in competitions.sort(function(a,b){return a.name > b.name})
+      //- if (compName != "" && compName != comp.name.split(" ")[0])
+        div.col-12
+      //- compName = comp.name.split(" ")[0]  
+      //div.card.m-1
+        img.card-img-top(src=`https://cdn.rebbl.net/images/bb3/Logos/${comp.logo}` alt="...")
+        div.card-body
+          h5.card-title(style="color: rgb(24, 119, 162)")= comp.name
+          - if (comp.status === 1)
+            p.card-text Waiting for teams
+          - if (comp.status === 2)
+            p.card-text Waiting to start
+          - if (comp.status === 3)
+            p.card-text Running
+            p.card-text= `Round ${comp.day}`
+            a(style="    position: absolute;bottom: 10px;right: 10px;font-size: 2em;" href="/bb3/competition/" + comp.id)
+              i(class="fa-solid fa-arrow-circle-right")
+          - if (comp.status === 4)
+            p.card-text Finished
+            a(style="    position: absolute;bottom: 10px;right: 10px;font-size: 2em;" href="/bb3/competition/" + comp.id)
+              i(class="fa-solid fa-arrow-circle-right")
+      include ./competition.pug              
 
+block scripts
+
+  script. 
+    async function scrollDivision(){
+      const response = await fetch("/api/v2/account/me");
+
+      if (!response.ok || response.redirected) return;
+
+      const me = await response.json();
+
+      const el = document.getElementById(me.bb3id);
+      if (!el) return;
+      const y = el.parentElement.getBoundingClientRect().top + window.pageYOffset -70 ;
+      window.scrollTo({top: y});
+    }
+
+    $(document).ready(function(){
+      scrollDivision();
+    });
 
