@@ -30,7 +30,7 @@ include functions.pug
         .col-4.col-md-2.text-end ΔTD
   - if (competition.standings)
     each rank,index in competition.standings
-      .row.season-table-row(id=rank.id)
+      .row.season-table-row(id= rank.team.startsWith("[ADMIN]") ? "": rank.id)
         .col-8.col-md-6
           .row
             .col-2=rank.position

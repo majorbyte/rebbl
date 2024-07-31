@@ -217,7 +217,7 @@ class Maintenance{
     const doUpdates = async function(req){
       if (req.app.locals.cyanideEnabled){
         try{
-          await maintenanceService.getRebblData(req.query.league);
+          //await maintenanceService.getRebblData(req.query.league);
           //await ts.checkTickets();
         }
         catch(e){
@@ -225,8 +225,8 @@ class Maintenance{
           loggingService.error(e);
         }
         try{
-          await maintenanceService.getNewRebblData(req.query.league);
-          await maintenanceService.getContests(req.query.league);
+          //await maintenanceService.getNewRebblData(req.query.league);
+          //await maintenanceService.getContests(req.query.league);
         }
         catch(e){
           console.dir(e);
@@ -275,30 +275,30 @@ class Maintenance{
           loggingService.error(e);
         }
         try{
-          signupService.checkTeams();
+          //signupService.checkTeams();
         }
         catch(e){
           console.dir(e);
           loggingService.error(e);
         }  
-        try{
-          let seasons = [configurationService.getActiveSeason()];
+        // try{
+        //   let seasons = [configurationService.getActiveSeason()];
     
-          seasons.map(season => {
-            season.leagues.map(league =>{
-              league.divisions.map(division => standingsService.updateStandings(season.name, league.name,division));
+        //   seasons.map(season => {
+        //     season.leagues.map(league =>{
+        //       league.divisions.map(division => standingsService.updateStandings(season.name, league.name,division));
     
-              cache.keys().map(key => {
-                if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
-                  cache.del(key);
-                }
-              });
-            });
-          });          
-        }
-        catch(e){
-          console.dir(e);
-        }
+        //       cache.keys().map(key => {
+        //         if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
+        //           cache.del(key);
+        //         }
+        //       });
+        //     });
+        //   });          
+        // }
+        // catch(e){
+        //   console.dir(e);
+        // }
       }
     };
 
