@@ -3,22 +3,38 @@ extends ../layout.pug
 
 
 block scripts
-  - if (process.env.NODE_ENV === 'production')
-    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
-  - else
-    script(src="/scripts/knockout-3.4.2.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+  script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
   script.
+
+    class User{
+      constructor(data){
+        const self = this;
+        self.coach = data.coach;
+        self.bb3coach = data.bb3coach;
+        self.discord = data.discord;
+        self.reddit = data.reddit;
+        self.timezone = data.timezone;
+        self.roles = data.roles;
+
+        ko.track(this);
+
+      }
+    }
+
     function DateModel() {
         const self = this;
         // Editable data
         self.users = ko.observableArray([]);
         self.coach = ko.observable();
+        self.bb3coach = ko.observable();
         self.discord = ko.observable();
         self.reddit = ko.observable();
         self.loading = ko.observable(true);
         self.filteredUsers = ko.computed(function() {
-          if(!self.coach() && !self.reddit() && !self.discord()) {
-              return self.users().sort((a,b) => a.coach.toLowerCase() > b.coach.toLowerCase() ? 1 : -1 ); 
+          if(!self.coach() && !self.reddit() && !self.discord()&& !self.bb3coach()) {
+              return self.users().sort((a,b) => a.coach?.toLowerCase() > b.coach?.toLowerCase() ? 1 : -1 ); 
           } else {
             
             let users = null;
@@ -27,6 +43,13 @@ block scripts
               users= ko.utils.arrayFilter(self.users(), function(user) {
                 let regex = new RegExp("^"+self.coach(), "i");
                 return regex.test(user.coach);
+              });
+            }
+
+            if(self.bb3coach()){
+              users= ko.utils.arrayFilter(self.users(), function(user) {
+                let regex = new RegExp("^"+self.bb3coach(), "i");
+                return regex.test(user.bb3coach);
               });
             }
 
@@ -50,32 +73,12 @@ block scripts
         });
     }
 
-    ko.bindingHandlers.foreachprop = {
-        transformObject: function (obj) {
-            var properties = [];
-            ko.utils.objectForEach(obj, function (key, value) {
-                if (["coach","reddit","discord","timezone"].indexOf(key)>-1)
-                  properties.push({ key: key, value: value });
-            });
-            properties = properties.sort(function(a,b){return a.key > b.key ? 1 : -1;})
-            return properties;
-        },
-        init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-            var properties = ko.pureComputed(function () {
-            var obj = ko.utils.unwrapObservable(valueAccessor());
-            return ko.bindingHandlers.foreachprop.transformObject(obj);
-            });
-            ko.applyBindingsToNode(element, { foreach: properties }, bindingContext);
-            return { controlsDescendantBindings: true };
-        }
-    };
-
     const model = new DateModel();
     $(document).ready(async function(){
         ko.applyBindings(model);
 
         const response = await fetch("/api/v1/admin/user");
-        if (response.ok) model.users(await response.json());
+        if (response.ok) model.users((await response.json()).map(x => new User(x)));
         
         model.loading(false);
     });
@@ -85,7 +88,8 @@ block scripts
 block content
   div(class="container")
     div(class="row col-12")
-      div(class="col-2") Coach
+      div(class="col-2") BB2 Coach
+      div(class="col-2") BB3 Coach
       div(class="col-2") Discord
       div(class="col-2") Reddit
       div(class="col-2") Timezone
@@ -94,6 +98,8 @@ block content
       div(class="col-2") 
         label(style="float: left; margin-left: -75px;") search
         input(data-bind="textInput : coach")
+      div(class="col-2") 
+        input(data-bind="textInput : bb3coach")
       div(class="col-2") 
         input(data-bind="textInput : discord")
       div(class="col-2") 
@@ -109,10 +115,12 @@ block content
             //ko if: $data.roles && $data.roles.indexOf('admin') > -1
             i(class="fa-solid fa-star" style="color: #e67b00;float:left" title="admin")
             // /ko
-          div(class="col-12 row" data-bind="foreachprop: $data")
-            // ko if: key !== 'roles'
-            div(data-bind="text: value" class="col-2" style="overflow:hidden;")
-            // /ko
+          div(class="col-12 row" )
+            div(data-bind="text: $data.coach" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: $data.bb3coach" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: $data.discord" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: $data.reddit" class="col-2" style="overflow:hidden;")
+            div(data-bind="text: $data.timezone" class="col-2" style="overflow:hidden;")
 
 
 

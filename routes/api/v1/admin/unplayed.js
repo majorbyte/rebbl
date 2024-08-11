@@ -12,13 +12,14 @@ const express = require('express')
     try{
       
 
-      let competitions = await dataService.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f"});
+      let competitions = await dataService.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f",season:"season 2"});
       let data = [];
       for(const competition of competitions){
         const schedules = await dataService.getSchedules({competitionId:competition.id, $or:[{status:1},{status:2}]});
         schedules.forEach(x => x.competition = competition.name);
         for(const schedule of schedules.filter(x => x.status === 2)){
           const match = await dataService.getMatch({matchId:schedule.matchId});
+          if (!match) continue;
           schedule.validatedBy = match.validatedBy;
           schedule.notValidatedBy = match.notValidatedBy;
         }
