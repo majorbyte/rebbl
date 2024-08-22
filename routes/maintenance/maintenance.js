@@ -55,7 +55,17 @@ class Maintenance{
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       try{
 
-        await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
+        //await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
+
+        const test = require ("../../lib/createScheduleService.js");
+
+        await test.deleteCompetition("dbf045a9-4cc7-11ef-be7b-bc24112ec32e");
+
+        //update round
+
+        const id = await test.create("dbf045a9-4cc7-11ef-be7b-bc24112ec32e");
+
+        await test.swap("dbf045a9-4cc7-11ef-be7b-bc24112ec32e",id,0);
 
       } catch(e) {
         console.log(e);

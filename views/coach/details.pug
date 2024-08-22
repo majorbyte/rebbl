@@ -140,7 +140,9 @@ block content
                   when "eos"
                     - src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
                 img#bb3coachService(style="width:32px" src=src)
-
+              div 
+                label(for="bb3displayId") Blood Bowl 3 gamer id
+                input(type="text" id="bb3displayId" name="bb3displayId" value=(coachDetails.bb3displayId || "")  disabled)
               div
                 label(for="coach") Reddit
                 input(type="text" id="reddit" name="coach" value="/u/" + coachDetails.reddit.toLowerCase()  disabled)
