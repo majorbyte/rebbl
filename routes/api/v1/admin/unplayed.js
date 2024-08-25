@@ -15,7 +15,14 @@ const express = require('express')
       let competitions = await dataService.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f",season:"season 2"});
       let data = [];
       for(const competition of competitions){
-        const schedules = await dataService.getSchedules({competitionId:competition.id, $or:[{status:1},{status:2}]});
+        let schedules = await dataService.getSchedules({competitionId:competition.id, $or:[{status:1},{status:2}]});
+        
+        const children = await dataService.getCompetitions({parentId:competition.id});
+        if (children.length > 0) {
+          const ids = children.map(x => x.id);
+          schedules = schedules.concat(await dataService.getSchedules({competitionId:{$in:ids}, $or:[{status:1},{status:2}]}));
+        }
+
         schedules.forEach(x => x.competition = competition.name);
         for(const schedule of schedules.filter(x => x.status === 2)){
           const match = await dataService.getMatch({matchId:schedule.matchId});
@@ -41,10 +48,10 @@ const express = require('express')
           await adminMatchService.concedeMatch(req.params.matchId, req.body.teamId);
           break;
         case "validDraw" :
-          await adminMatchService.adminDrawMatch(req.param.matchId, false);
+          await adminMatchService.adminDrawMatch(req.params.matchId, false);
           break;
         case "invalidDraw" :
-          await adminMatchService.adminDrawMatch(req.param.matchId, true);
+          await adminMatchService.adminDrawMatch(req.params.matchId, true);
           break;
         default:
           await adminMatchService.adminMatch(req.params.matchId, req.body.teamId, req.body.type);

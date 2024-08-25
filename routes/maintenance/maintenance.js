@@ -271,13 +271,6 @@ class Maintenance{
         }
         
         try{
-          reddit.check();
-        }
-        catch(e){
-          console.dir(e);
-          loggingService.error(e);
-        }
-        try{
           reddit.getAnnouncements();
         }
         catch(e){
