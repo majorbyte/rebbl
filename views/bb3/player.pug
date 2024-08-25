@@ -24,7 +24,13 @@ mixin player(player, stats, mvp)
     // number
     td(class="MatchRow-status" style="font-size:1em;text-align:center")
       span= player ? player.number : ""
-      img(src="https://cdn.rebbl.net/images/skills/" + player.level + ".png" alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+      - if (player.id)
+        img(src=`https://cdn.rebbl.net/images/skills/${player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+      - else if (player.type.startsWith("neutral_")) 
+        img(src=`https://cdn.rebbl.net/images/bb3/hud_inducement_StarPlayer.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+      - else
+        img(src=`https://cdn.rebbl.net/images/bb3/hud_mercenary_tile_picto_mercenary.png` alt="mercenary" title="mercenary" class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+
     // player
     td
         div(class="match-stats-TeamLabel-name")= playerName

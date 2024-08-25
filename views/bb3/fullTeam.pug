@@ -145,8 +145,14 @@ block content
                   td=player.player.number
                   td
                     div
-                      img(src=`https://cdn.rebbl.net/images/skills/${player.player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                      - if (player.player.id)
+                        img(src=`https://cdn.rebbl.net/images/skills/${player.player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                      - else if (player.player.type.startsWith("neutral_")) 
+                        img(src=`https://cdn.rebbl.net/images/bb3/hud_inducement_StarPlayer.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                      - else
+                        img(src=`https://cdn.rebbl.net/images/bb3/hud_mercenary_tile_picto_mercenary.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
                       .match-stats-TeamLabel-name=player.player.name
+
                   td
                     - let p = getPosition(player.player.position)
                     img(src=getSilhouette(player.player.position) title=p class=`silhouette-shadow border border-3 rounded-pill ${borders[teamPositions.indexOf(player.player.position)]}`)
@@ -172,7 +178,7 @@ block content
                         img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${d[0]}` title=d[1])
                     if player.player.missNextGame == "1"
                         img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
-                    if retiredPlayers.some(x => x.id === player.player.id)
+                    if retiredPlayers.some(x => x.id === player.player.id && x.active)
                       span.badge.text-bg-success.ms-2 retired    
                     if user && user.bb3id === team.coachId && team.allowRetire && team.allowRetire.some(x => x === player.player.id)
                       button.btn.btn-sm.btn-success.ms-2(type="button" onclick=`showModal("${player.player.id}","${player.player.name}")`) TR
