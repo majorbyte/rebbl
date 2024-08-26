@@ -14,7 +14,9 @@ const express = require('express')
   , RedditStrategy = require('./strategies/reddit.js')
   , dataService = require("./lib/DataService.js")
   , dataBB3Service = require("./lib/DataServiceBB3.js")
-  , configurationService = require("./lib/ConfigurationService.js");
+  , configurationService = require("./lib/ConfigurationService.js")
+  , createScheduleService = require("./lib/createScheduleService.js");
+
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -207,6 +209,7 @@ class Server{
     await this.appConfig();
     this.includeRoutes();
     this.startSocketIOAndServer();
+    setTimeout(() => createScheduleService.processQueue(), 10_000)
   }
 }
 

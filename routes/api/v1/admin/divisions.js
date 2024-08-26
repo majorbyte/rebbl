@@ -3,6 +3,7 @@
 const express = require("express")
   , api = require("../../../../lib/apiService.js")
   , bb3Service = require("../../../../lib/bb3Service.js")
+  , createScheduleService = require("../../../../lib/createScheduleService.js")
   , cache = require("memory-cache")
   , cyanideService = require("../../../../lib/CyanideService.js")
   , dataService = require("../../../../lib/DataService").rebbl
@@ -52,6 +53,17 @@ const express = require("express")
     }
   });
 
+  router.get("/bb3/:competitionId/state", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
+    try{
+      
+      let data = await dataServiceBB3.getCompetition({id: req.params.competitionId});
+
+      res.status(200).send(data.rollingState);
+    } catch(err){
+      console.log(err); 
+    }
+  });
+
   router.get("/bb3/:competitionId/:day", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
@@ -62,6 +74,7 @@ const express = require("express")
       console.log(err); 
     }
   });
+
 
   router.get("/admins", util.ensureAuthenticated, async function(req, res){
     let users = await dataService.getAccounts({roles:"admin"});
@@ -167,7 +180,7 @@ const express = require("express")
   router.put("/bb3/:competitionId/advance", util.ensureAuthenticated, util.hasRole("admin"), async function(req,res){
     try{
 
-      await bb3Service.advanceCompetition(req.params.competitionId);
+      createScheduleService.queueCompetition(req.params.competitionId);
       
       res.status(200).send("ok");
     } catch(err){

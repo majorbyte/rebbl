@@ -33,6 +33,7 @@ block scripts
         self.day = data.day;
         self.admin = data.admin;
         self.schedule = new ScheduleModel({});
+        self.rollingState = data.rollingState || "done";
       }
       self.map(data);
 
@@ -55,6 +56,7 @@ block scripts
         if (result.ok){
             self.schedule = new ScheduleModel(await result.json());
         }
+        setTimeout(() => model.checkRollingState(),10_000);
       }
 
     }
@@ -82,12 +84,30 @@ block scripts
 
 
         self.checkState = async function(){
-          for(const competition of self.competitions){
+
+          const fn = async function(competition) {
             let result = await fetch(`/api/v1/admin/divisions/bb3/${competition.id}/${competition.day}`);
             if (result.ok){
               competition.schedule = new ScheduleModel(await result.json());
             }
           }
+
+          await Promise.all(self.competitions.map(fn));
+          self.checkRollingState();
+        }
+
+        self.checkRollingState = async function(){
+          const competitions = self.competitions.filter(x => ["done","error",null,undefined].indexOf(x.rollingState) === -1);
+          if (competitions.length === 0) return;
+
+          for(const competition of competitions){
+            let result = await fetch(`/api/v1/admin/divisions/bb3/${competition.id}/state`);
+            if (result.ok){
+              competition.rollingState = await result.text();
+            }
+          }
+          setTimeout(() => self.checkRollingState(),10_000)
+
         }
 
         ko.track(this);
@@ -120,6 +140,7 @@ block content
           th division 
           th round 
           th.text-center unplayed/played/confirmed
+          th state
           th actions
       tbody 
         //ko foreach: competitions
@@ -127,6 +148,14 @@ block content
           td(data-bind="text: $data.name")
           td(data-bind="text: $data.day")
           td.text-center(data-bind="text: `${$data.schedule.unplayed}/${$data.schedule.played}/${$data.schedule.confirmed}`")
+          td 
+            // ko if: rollingState !== "done"
+            // ko if: rollingState !== "queued"
+            .spinner-grow.spinner-grow-sm(role="status")
+              span.visually-hidden Loading...
+            // /ko
+            span(data-bind="text: rollingState")  
+            // /ko
           td
             // ko if: $data.schedule.canAdvance
             button.btn.btn-sm.btn-primary(data-bind="click: $data.advance") advance 
