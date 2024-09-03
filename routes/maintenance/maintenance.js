@@ -59,13 +59,13 @@ class Maintenance{
 
         const test = require ("../../lib/createScheduleService.js");
 
-        await test.deleteCompetition("dbf045a9-4cc7-11ef-be7b-bc24112ec32e");
+        //await test.deleteCompetition("dbf045a9-4cc7-11ef-be7b-bc24112ec32e");
 
         //update round
 
-        const id = await test.create("dbf045a9-4cc7-11ef-be7b-bc24112ec32e");
+        const id = await test.create("594eecd4-4cc8-11ef-be7b-bc24112ec32e");
 
-        await test.swap("dbf045a9-4cc7-11ef-be7b-bc24112ec32e",id,0);
+        await test.swap("594eecd4-4cc8-11ef-be7b-bc24112ec32e",id,0);
 
       } catch(e) {
         console.log(e);
@@ -74,6 +74,7 @@ class Maintenance{
     });
 
     this.router.get('/bb3', util.verifyMaintenanceToken, async function(req, res){
+      if (!configurationService.updateAllowed()) return;
       try{
         //await bb3Service.updateCompetitions("3c9429cd-b146-11ed-80a8-020000a4d571");
         
