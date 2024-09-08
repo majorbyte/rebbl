@@ -63,7 +63,7 @@ class Server{
     this.app.set('view engine', 'pug');
 
     // set views for error and 404 pages
-    this.app.set('views', [path.join(__dirname, 'views'), path.join(__dirname, 'views', "league"), path.join(__dirname, 'views')]);
+    this.app.set('views', [path.join(__dirname, 'views')/*, path.join(__dirname, 'views', "league"), path.join(__dirname, 'views')*/]);
 
     // Passport session setup.
     //   To support persistent login sessions, Passport needs to be able to
