@@ -20,7 +20,7 @@ const express = require('express')
         const children = await dataService.getCompetitions({parentId:competition.id});
         if (children.length > 0) {
           const ids = children.map(x => x.id);
-          schedules = schedules.concat(await dataService.getSchedules({competitionId:{$in:ids}, $or:[{status:1},{status:2}]}));
+          schedules = await dataService.getSchedules({competitionId:{$in:ids}, $or:[{status:1},{status:2}]});
         }
 
         schedules.forEach(x => x.competition = competition.name);
