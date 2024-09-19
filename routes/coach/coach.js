@@ -15,7 +15,7 @@ class Coach{
     this.router.get('/bb3/:coach_id', util.cache(10*60), async function(req, res){
       const coach = await accountService.searchAccount({"bb3id": req.params.coach_id});
 
-      if (coach.coach) {
+      if (coach && coach.coach) {
         res.redirect(`/coach/${coach.coach}/details`);
       } else {
         let data = {};
