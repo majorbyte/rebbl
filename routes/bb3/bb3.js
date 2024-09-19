@@ -20,6 +20,7 @@ class BB3{
     let schedule = null;
     // game is played, but not synced properly, show intermediate screen
     if (!match) schedule = await dataService.getSchedule({gameId:req.params.id}); 
+    if (!schedule) schedule = await dataService.getSchedule({matchId:req.params.id}); 
 
     res.render("bb3/match", {match, schedule, user:res.locals.user});
       

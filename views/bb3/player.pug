@@ -80,4 +80,6 @@ mixin player(player, stats, mvp)
     // SPP
     td(class="match-stats")
       div=player.xpGained
+    td(class="match-stats")
+      div=Number(player.xpGained) + Number(player.xp)
 

@@ -1,5 +1,6 @@
 'use strict';
 
+const adminMatchService = require("../../lib/adminMatchService.js");
 const bb3MatchReport = require("../../lib/bb3MatchReport.js");
 const bb3Service = require("../../lib/bb3Service.js");
 
@@ -57,16 +58,18 @@ class Maintenance{
 
         //await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
 
-        const test = require ("../../lib/createScheduleService.js");
+        //const test = require ("../../lib/createScheduleService.js");
 
         //await test.deleteCompetition("dbf045a9-4cc7-11ef-be7b-bc24112ec32e");
 
         //update round
 
-        const id = await test.create("594eecd4-4cc8-11ef-be7b-bc24112ec32e");
+        //const id = await test.create("594eecd4-4cc8-11ef-be7b-bc24112ec32e");
 
-        await test.swap("594eecd4-4cc8-11ef-be7b-bc24112ec32e",id,0);
+        //await test.swap("594eecd4-4cc8-11ef-be7b-bc24112ec32e",id,0);
 
+
+        //await adminMatchService.mockConcedeMatch("fa01ab2f-9c61-41eb-a86d-d59572260347","30e3a678-e0b9-11ee-a745-02000090a64f");
       } catch(e) {
         console.log(e);
       }
