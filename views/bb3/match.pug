@@ -70,10 +70,11 @@ block content
                       span(class="MatchStatus-score")= match.homeScore
                       span(class="MatchStatus-score") -
                       span(class="MatchStatus-score")= match.awayScore
-                  if user && (match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) &&  (!match.validated || match.hasPendingValidation === "1")  && ((!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1) &&   (!match.notValidatedBy ||  match.notValidatedBy.indexOf(user.bb3id) === -1))
-                    .MatchStatus.col-12 
-                      form(action=`/bb3/match/${match.gameId}/invalidate` method="POST")
-                        button.btn.btn-sm.btn-danger.mx-2(style="vertical-align:top;padding:1px") Do not validate
+                  if !match.validated && match.hasPendingValidation !== "0"
+                    if user && (match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) &&  (!match.validated || match.hasPendingValidation === "1")  && ((!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1) &&   (!match.notValidatedBy ||  match.notValidatedBy.indexOf(user.bb3id) === -1))
+                      .MatchStatus.col-12 
+                        form(action=`/bb3/match/${match.gameId}/invalidate` method="POST")
+                          button.btn.btn-sm.btn-danger.mx-2(style="vertical-align:top;padding:1px") Do not validate
               div(class="MatchRow-team")
                 div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                   div(class="TeamLabel")

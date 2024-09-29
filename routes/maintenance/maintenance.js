@@ -98,7 +98,7 @@ class Maintenance{
             }
           }
         }
-
+        await bb3Service.checkUnvalidatedMatchState();
         await bb3Service.checkRetiredPlayers();
 
         res.redirect('/');
