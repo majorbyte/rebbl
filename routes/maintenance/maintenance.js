@@ -56,6 +56,11 @@ class Maintenance{
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       try{
 
+
+        const competitions = await bb3.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f"});
+        for (const competition of competitions) await bb3Service.calculateStandings(competition.id);
+          
+
         //await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
 
         //const test = require ("../../lib/createScheduleService.js");

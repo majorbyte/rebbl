@@ -35,7 +35,20 @@ class BB3{
     if (competition.format == 2) res.render("bb3/competition", {competition});
     else res.render("bb3/playoffs/knockout", {competition});
   }
-  schedules = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}}) });
+  schedules = async (req,res) => {
+    
+    const competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}})
+    let schedules = await dataService.getSchedules({competitionId:req.params.competitionId});
+    const name = new RegExp(`${competition.name} Swiss`,"i");
+    const swissSchedules = await dataService.getSchedules({competitionName:name});
+
+    for(const schedule of swissSchedules){
+      schedule.round +=  competition.day;
+      schedules.push(schedule);
+    }
+
+    res.render("bb3/schedules", {league:"REBBL", schedules, competition})
+  }
   round = async (req,res) => res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({competitionId:req.params.competitionId, round:Number(req.params.round)}), competition:await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}})});
   unplayed = async (req,res) => res.render("bb3/unplayed",{matches: await bb3Service.getUnplayedMatch(req.params.id)});
 
