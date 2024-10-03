@@ -13,6 +13,7 @@ const express = require('express')
       
 
       let competitions = await dataService.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f",season:"season 2"});
+      competitions = competitions.concat(await dataService.getCompetitions({id:{$in:["02299a2a-7aad-11ef-be7b-bc24112ec32e","37b0277b-7aad-11ef-be7b-bc24112ec32e","61b800d9-7aad-11ef-be7b-bc24112ec32e"]}}));
       let data = [];
       for(const competition of competitions){
         let schedules = await dataService.getSchedules({competitionId:competition.id, $or:[{status:1},{status:2}]});
