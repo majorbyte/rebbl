@@ -1,0 +1,44 @@
+extends layout.pug
+
+mixin fixture(entry)
+  .row.col-12.align-items-center
+    .col 
+      img.img-fluid(src=`images/zfl/${entry.home.team.logo}` style="padding:0px")
+    .col.text-center.row.align-items-center
+      .col.d-none.d-lg-block 
+        span home
+      .col
+        h1 vs
+      .col.d-none.d-lg-block
+        span away
+    .col 
+      img.img-fluid(src=`images/zfl/${entry.away.team.logo}` style="padding:0px")
+
+
+
+
+block head
+  style.
+    h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
+    .card{width: 12rem;}
+
+    .table > :not(caption) > * > * {padding:0px !important;}
+block main
+
+  - let rounds = ["","7th October - 21st October","5th November - 18th November","19th November - 2nd December","31st December - 13th January","14th January - 27th January","28th January - 10th February","18th February - 3rd March","4th March - 17th March","18th March - 31st March","8th April - 21st April","22nd April - 5th May"]
+
+  .container-fluid
+    .row
+      -for(let x = 1; x < 12; x++)
+        .row.col-12.text-center 
+          h1= `Round ${x}`
+          span= rounds[x]
+        .row.col-12.col-xl-6.text-center
+          h2 Elite Division
+          each fixture of competitions[0].fixtures.filter(f => f.round == x)
+            +fixture(fixture) 
+        .row.col-12.col-xl-6.text-center
+          h2 Second Division
+          each fixture of competitions[1].fixtures.filter(f => f.round == x) 
+            +fixture(fixture) 
+        .row.col-12 &nbsp;

@@ -16,8 +16,8 @@ const
   , auth = require("./account/auth.js")
   , admin = require("./admin/admin.js")
   , clan = require("./clan/clan.js")
-  , bb3 = require("./bb3/bb3.js")
-  , zfl = require("./zfl/zfl.js");
+  , bb3 = require("./bb3/bb3.js");
+  //zfl = require("./zfl/zfl.js");
 
 
 class Routes{
@@ -93,7 +93,7 @@ class Routes{
 
     this.router.use("/clan",new clan().routesConfig());
     this.router.use("/bb3",new bb3().routesConfig());
-    this.router.use("/zfl",new zfl().routesConfig());
+    //this.router.use("/zfl",new zfl().routesConfig());
 
     this.router.use('/coach', new coach().routesConfig());
     this.router.use('/team', require(`./team/team.js`));

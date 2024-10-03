@@ -1,0 +1,42 @@
+extends layout.pug
+
+
+block head
+  style.
+    h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
+    .card{width: 12rem;}
+
+    .table > :not(caption) > * > * {padding:0px !important;}
+    td > img {max-height:56px}
+block main
+  .container
+    each competition of competitions
+      h1= competition.name
+      table.table.table-dark
+        thead 
+          th
+          th.align-middle.text-center faction 
+          th.align-middle.text-center played 
+          th.align-middle.text-center wins 
+          th.align-middle.text-center draws 
+          th.align-middle.text-center losses 
+          th.align-middle.text-center TD+
+          th.align-middle.text-center TD-
+          th.align-middle.text-center TD diff
+          th.align-middle.text-center points
+      
+        tbody
+          each entry of competition.standings 
+            tr 
+              td 
+                img(src=`images/zfl/${entry.logo}` style="padding:0px")
+              td.align-middle.text-center human
+              td.align-middle.text-center= entry.games 
+              td.align-middle.text-center= entry.wins 
+              td.align-middle.text-center= entry.draws 
+              td.align-middle.text-center= entry.losses 
+              td.align-middle.text-center= entry.tdFor
+              td.align-middle.text-center= entry.tdAgainst
+              td.align-middle.text-center= entry.tdDiff
+              td.align-middle.text-center= entry.points
+            

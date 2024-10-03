@@ -1,0 +1,110 @@
+
+extends layout.pug
+
+block vars
+  - page = "account"
+
+
+
+block head
+  style.
+    .backdrop{max-width: 210px;padding: 0px;position: relative;overflow: clip;}
+    .backdrop.mini{max-width:135px;max-height: 135px;}
+    .backdrop.common{background-color: #00FF34;}
+    .backdrop.uncommon{background-color: #00E5FF;}
+    .backdrop.rare{background-color: #00E5FF;}
+    .backdrop.epic{background-color: #7F00FF;}
+    .backdrop.legendary{background-color: #FF7E00;}
+    .highlight{height: 210px;overflow: clip;}
+    .highlight.mini{height: 135px;}
+    .highlight.common{opacity:0.6}
+    .highlight.uncommon{opacity:0.6}
+    .highlight.rare{opacity:0.6}
+    .highlight.epic{opacity:0.4}
+    .highlight.legendary{opacity:0.4}
+    .image{width:210px;position: absolute;top: 0px;left: 0px;}
+    .price{color: #48ec2a;font-weight: bold;vertical-align:middle}
+
+    .followed {
+      width: 32px;
+      height: 32px;
+      background: url('/images/sprite_check_32.png') left center;
+      animation: play .25s steps(5) 1;
+      animation-fill-mode: forwards;
+    }
+
+    .unfollowed {
+      width: 32px;
+      height: 32px;
+      background: url('/images/sprite_check_32.png') left center;
+      animation: play .25s steps(6) 1;
+      animation-fill-mode: forwards;
+      animation-direction:reverse;
+    }
+
+    @keyframes play {from { background-position-x: 0px;} to {background-position-x: -160px;}}    
+
+    .item .show-on-hover {
+      visibility: hidden;
+    }
+    .item:hover .show-on-hover {
+      visibility: visible;
+    }
+
+
+block main 
+  main.container
+    .row
+      .card.overflow-hidden
+        .card-body.p-0
+          .bg-primary.row(style="height: 48px;")
+          .row.align-items-center(style="background-color:#e3e3e3")
+
+            .col-6.mt-n3.order-lg-2.order-1
+              .mt-n5.mx-4
+                .d-flex.align-items-center.justify-content-start.mb-2(style="margin-top:-25px")
+                  .linear-gradient.d-flex.align-items-center.justify-content-center.rounded-circle(style='width: 110px; height: 110px;')
+                    .border.border-4.border-white.d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 100px; height: 100px;')
+                      img.w-100.h-100(src=`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar.startsWith("a_") ? "gif" : "png"}`)
+                .text-left
+                  h5.fs-5.mb-4= user.username
+            //.col-lg-4.order-lg-1.order-1
+              .d-flex.align-items-center.justify-content-around.m-4
+                .text-center
+                  i.fa.fa-file.fs-6.d-block.mb-2
+                  h4.mb-0.fw-semibold.lh-1 938
+                  p.mb-0.fs-4 Posts
+                .text-center
+                  i.fa.fa-user.fs-6.d-block.mb-2
+                  h4.mb-0.fw-semibold.lh-1 3,586
+                  p.mb-0.fs-4 Followers
+                .text-center
+                  i.fa.fa-check.fs-6.d-block.mb-2
+                  h4.mb-0.fw-semibold.lh-1 2,659
+                  p.mb-0.fs-4 Following                
+            //.col-6.order-last
+              ul.list-unstyled.d-flex.align-items-center.justify-content-center.justify-content-lg-end.my-3.gap-3.me-3
+                li.position-relative
+                  a.text-white.d-flex.align-items-center.justify-content-center.bg-primary.p-2.fs-4.rounded-circle(href='javascript:void(0)' width='30' height='30')
+                    i.fa.fa-facebook
+                li.position-relative
+                  a.text-white.bg-secondary.d-flex.align-items-center.justify-content-center.p-2.fs-4.rounded-circle(href='javascript:void(0)')
+                    i.fa.fa-twitter
+                li.position-relative
+                  a.text-white.bg-secondary.d-flex.align-items-center.justify-content-center.p-2.fs-4.rounded-circle(href='javascript:void(0)')
+                    i.fa.fa-dribbble
+                li.position-relative
+                  a.text-white.bg-danger.d-flex.align-items-center.justify-content-center.p-2.fs-4.rounded-circle(href='javascript:void(0)')
+                    i.fa.fa-youtube
+                li
+                  button.btn.btn-primary Logout
+
+          .row.align-items-center(style="background-color:#e3e3e3") 
+            .col.mb-2.item(style="max-width:218px;width:218px")
+              label(for="coachName") Coach Name
+            .col.mb-2.item(style="max-width:218px;width:218px")
+              input.form-control(type="text" id="coachName" )
+            .col.mb-2.item(style="max-width:218px;width:218px")
+              label(for="zflCoachName") ZFL Coach Name
+            .col.mb-2.item(style="max-width:218px;width:218px")
+              input.form-control(type="text" id="zflCoachName" )

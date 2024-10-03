@@ -12,6 +12,7 @@ const express = require('express')
   , bodyParser = require("body-parser")
   , MongoDBStore = require('connect-mongodb-session')(session)
   , RedditStrategy = require('./strategies/reddit.js')
+  , DiscordStrategy = require('./strategies/discord.js').Strategy
   , dataService = require("./lib/DataService.js")
   , dataBB3Service = require("./lib/DataServiceBB3.js")
   , configurationService = require("./lib/ConfigurationService.js")
@@ -94,6 +95,25 @@ class Server{
           return done(null, profile);
         }
       ));
+
+      const strategyOptions = {
+        clientID: process.env.discordClientId,
+        clientSecret: process.env.discordClientSecret,
+        callbackURL: process.env.zflCallbackURL,
+        scope: ['identify']
+      };
+    
+      // Define your verify function
+      const verifyFunction = async (accessToken, refreshToken, profile, done) => {
+        delete profile.email;
+        return done(null, profile);
+      }
+        
+      // Create a new AtsumiFlex strategy
+      const discordStrategy = new DiscordStrategy(strategyOptions, verifyFunction);   
+      
+      this.passport.use(discordStrategy);
+
     }
 
     if (process.env.NODE_ENV === 'production'){
@@ -124,7 +144,13 @@ class Server{
     }
   }
 
+  host = (host, fn) =>  function(req,res,next){
+    if (req.hostname === host) return fn(req,res,next);
+    next();
+  }
+
   includeRoutes(){
+
     //new routes(this.app).routesConfig();
     // serve static files
     this.app.use(express.static(path.join(__dirname, 'public-images'), {maxAge: 7*24*60*60*1000, etag: false }));
@@ -148,10 +174,15 @@ class Server{
 
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-    const textRoutes = require('./routes/text/routes.js');
+
+    const zflRoutes = require('./routes/zfl/zfl.js');
+    this.app.use(this.host('zfl.ovh',zflRoutes.router));
+
     const routes = require("./routes/routes.js");
-    this.app.use(this.subdomain('text', new textRoutes().routesConfig()));
-    this.app.use('/', new routes().routesConfig());
+    this.app.use(this.host('localhost.com', new routes().routesConfig()));
+    this.app.use(this.host('rebbl.net', new routes().routesConfig()));
+
+
 
     this.app.use(function(err, res){
       // log it
