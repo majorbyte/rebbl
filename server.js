@@ -176,7 +176,8 @@ class Server{
 
 
     const zflRoutes = require('./routes/zfl/zfl.js');
-    this.app.use(this.host('zfl.ovh',zflRoutes.router));
+    if (process.env.NODE_ENV === 'production') this.app.use(this.host('zfl.ovh',zflRoutes.router));
+    else this.app.use(this.host('zfl.localhost.com',zflRoutes.router));
 
     const routes = require("./routes/routes.js");
     this.app.use(this.host('localhost.com', new routes().routesConfig()));

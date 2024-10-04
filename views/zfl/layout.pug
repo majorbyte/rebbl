@@ -34,7 +34,6 @@ body(style="background-color: #212529;")
   nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark.p-0
     .container-fluid
       - if (page != "account")
-        - console.dir(user)
         a.navbar-brand(href=user ? '/account' : '/login') 
           .d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 38px;')
             img.w-100.h-100(src=user ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/2.png `)

@@ -50,61 +50,281 @@ block head
     .item:hover .show-on-hover {
       visibility: visible;
     }
+    .hidden {
+     display:none;
+    }
+
+    .card {
+        margin-bottom: 30px;
+    }
+    .form-image{
+      width: 38px;
+      background-color: var(--bs-tertiary-bg);
+      border: var(--bs-border-width) solid var(--bs-border-color);
+      border-radius: var(--bs-border-radius);
+      margin-bottom: 0px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .headerImg{
+      background-image: URL("/images/BB3_hero_Standard.webp");
+      height: 300px;
+      background-position-x: -125px;
+      background-position-y: -75px;      
+    }
 
 
 block main 
   main.container
-    .row
-      .card.overflow-hidden
-        .card-body.p-0
-          .bg-primary.row(style="height: 48px;")
-          .row.align-items-center(style="background-color:#e3e3e3")
+    .card.overflow-hidden.g-0
+      .card-body.p-0
+        .headerImg
+        .row.align-items-center(style="background-color:#e3e3e3")
+          .col-lg-4.order-lg-1.order-1
+            //.d-flex.align-items-center.justify-content-around.m-4
+              .text-center
+                i.fa.fa-file.fs-6.d-block.mb-2
+                h4.mb-0.fw-semibold.lh-1 938
+                p.mb-0.fs-4 Posts
+              .text-center
+                i.fa.fa-user.fs-6.d-block.mb-2
+                h4.mb-0.fw-semibold.lh-1 3,586
+                p.mb-0.fs-4 Followers
+              .text-center
+                i.fa.fa-check.fs-6.d-block.mb-2
+                h4.mb-0.fw-semibold.lh-1 2,659
+                p.mb-0.fs-4 Following                
 
-            .col-6.mt-n3.order-lg-2.order-1
-              .mt-n5.mx-4
-                .d-flex.align-items-center.justify-content-start.mb-2(style="margin-top:-25px")
-                  .linear-gradient.d-flex.align-items-center.justify-content-center.rounded-circle(style='width: 110px; height: 110px;')
-                    .border.border-4.border-white.d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 100px; height: 100px;')
-                      img.w-100.h-100(src=`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar.startsWith("a_") ? "gif" : "png"}`)
-                .text-left
-                  h5.fs-5.mb-4= user.username
-            //.col-lg-4.order-lg-1.order-1
-              .d-flex.align-items-center.justify-content-around.m-4
-                .text-center
-                  i.fa.fa-file.fs-6.d-block.mb-2
-                  h4.mb-0.fw-semibold.lh-1 938
-                  p.mb-0.fs-4 Posts
-                .text-center
-                  i.fa.fa-user.fs-6.d-block.mb-2
-                  h4.mb-0.fw-semibold.lh-1 3,586
-                  p.mb-0.fs-4 Followers
-                .text-center
-                  i.fa.fa-check.fs-6.d-block.mb-2
-                  h4.mb-0.fw-semibold.lh-1 2,659
-                  p.mb-0.fs-4 Following                
-            //.col-6.order-last
-              ul.list-unstyled.d-flex.align-items-center.justify-content-center.justify-content-lg-end.my-3.gap-3.me-3
-                li.position-relative
-                  a.text-white.d-flex.align-items-center.justify-content-center.bg-primary.p-2.fs-4.rounded-circle(href='javascript:void(0)' width='30' height='30')
-                    i.fa.fa-facebook
-                li.position-relative
-                  a.text-white.bg-secondary.d-flex.align-items-center.justify-content-center.p-2.fs-4.rounded-circle(href='javascript:void(0)')
-                    i.fa.fa-twitter
-                li.position-relative
-                  a.text-white.bg-secondary.d-flex.align-items-center.justify-content-center.p-2.fs-4.rounded-circle(href='javascript:void(0)')
-                    i.fa.fa-dribbble
-                li.position-relative
-                  a.text-white.bg-danger.d-flex.align-items-center.justify-content-center.p-2.fs-4.rounded-circle(href='javascript:void(0)')
-                    i.fa.fa-youtube
-                li
-                  button.btn.btn-primary Logout
+          .col-lg-4.order-lg-1.order-1.text-center
+            .d-flex.align-items-center.justify-content-center.mb-2(style="margin-top:-25px")
+              .linear-gradient.d-flex.align-items-center.justify-content-center.rounded-circle(style='width: 110px; height: 110px;')
+                .border.border-2.d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 100px; height: 100px;border-color:#e3e3e3')
+                  img.w-100.h-100(src=`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar.startsWith("a_") ? "gif" : "png"}`)
+            .text-left
+              h5.fs-5.mb-4= user.username
+          .col-lg-4.order-lg-1.order-1
+            ul.list-unstyled.d-flex.align-items-center.justify-content-center.justify-content-lg-end.my-3.gap-3.me-3
+              //li.position-relative
+                a.text-white.d-flex.align-items-center.justify-content-center.bg-primary.p-2.fs-4.rounded-circle(href='javascript:void(0)' width='30' height='30')
+                  i.fa.fa-facebook
+              //li.position-relative
+                a.text-white.bg-secondary.d-flex.align-items-center.justify-content-center.p-2.fs-4.rounded-circle(href='javascript:void(0)')
+                  i.fa.fa-twitter
+              //li.position-relative
+                a.text-white.bg-secondary.d-flex.align-items-center.justify-content-center.p-2.fs-4.rounded-circle(href='javascript:void(0)')
+                  i.fa.fa-dribbble
+              //li.position-relative
+                a.text-white.bg-danger.d-flex.align-items-center.justify-content-center.p-2.fs-4.rounded-circle(href='javascript:void(0)')
+                  i.fa.fa-youtube
+              li
+                a.btn.btn-primary(href="/logout") Logout
 
-          .row.align-items-center(style="background-color:#e3e3e3") 
-            .col.mb-2.item(style="max-width:218px;width:218px")
-              label(for="coachName") Coach Name
-            .col.mb-2.item(style="max-width:218px;width:218px")
-              input.form-control(type="text" id="coachName" )
-            .col.mb-2.item(style="max-width:218px;width:218px")
-              label(for="zflCoachName") ZFL Coach Name
-            .col.mb-2.item(style="max-width:218px;width:218px")
-              input.form-control(type="text" id="zflCoachName" )
+
+    #pills-tabContent.tab-content
+      #pills-profile.tab-pane.fade.show.active(role='tabpanel' aria-labelledby='pills-profile-tab' tabindex='0')
+        .row
+          .col-lg-4
+            .card.shadow-none.border
+              .card-body
+                h4.fw-semibold.mb-3 Bio
+                each paragraph of account.bio.split("\n\n")
+                  p#bioBio= paragraph
+                ul.list-unstyled.mb-0
+                  li.d-flex.align-items-center.gap-3.mb-4
+                    i.fa.fa-briefcase.text-dark.fs-6
+                    h6#bioCoachName.fs-4.fw-semibold.mb-0= account.zflCoachName
+          .col-lg-8
+            .card.shadow-none.border
+              .card-body
+                .row.align-items-center 
+                  - if (account.coach)
+                    .input-group
+                      span.input-group-text BB3 Coach Name
+                      input.form-control(type="text" id="coachName" value=account.coach ? account.coach.name : "" disabled)
+                  - else
+                    .input-group.mb-2              
+                      span.input-group-text BB3 Coach Name
+                      input.form-control#bb3coach(type="text" name="bb3coach" value="")
+                      input.form-control#bb3coachId(type="hidden")
+                      button#searchButton.btn.btn-primary.btn-sm(onclick="search()")
+                        span Search
+                        span#spinner.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+
+                    .input-group.mb-2
+                      span#bb3coachSelectLabel.input-group-text.hidden(for="bb3coachSelect" ) select the correct coach
+                      select.form-select#bb3coachSelect.hidden(onchange="updateFields()")
+                    .input-group.mb-2  
+                      img#bb3coachService.form-image.hidden
+                      input.form-control#bb3displayId.hidden
+                      button#saveButton.btn.btn-success.hidden.btn-sm(style="float:right" onclick="updateBB3Coach()" ) Save
+                        span#spinnerSave.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+
+            .card.shadow-none.border
+              .card-body
+                .input-group.mb-3
+                  span.input-group-text ZFL Coach Name
+                  input#zflCoachName.form-control(type="text" value=account.zflCoachName)
+                .row.mb-3
+                  .col
+                    label.form-label.pb-7(for='bio') Coach Bio
+                    textarea#bio.form-control(placeholder='Write a short bio here' style='height: 137px')= account.bio
+                button#saveButton.btn.btn-success.btn-sm(style="float:right" onclick="updateZFLCoach()" ) Save
+                  span#spinnerSaveZFL.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+
+
+block scripts
+  - if (!account.coach)
+    script.
+      function updateFields(e){
+        const select = document.getElementById("bb3coachSelect");
+        const input = document.getElementById("bb3coach");
+        const id = document.getElementById("bb3coachId");
+        const img = document.getElementById("bb3coachService");
+        const displayId = document.getElementById("bb3displayId");
+
+
+        id.value = select.value;
+        const coach = coachNames.find(x => x.id === id.value);
+        input.value = coach.name;
+
+        displayId.value = coach.displayId.toUpperCase();
+        displayId.classList.remove("hidden");
+
+        switch (coach.service){
+          case "steam":
+            img.src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+            break;
+          case "psn":
+            img.src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
+            break;
+          case "switch":
+            img.src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
+            break;
+          case "xbl":
+            img.src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
+            break;
+          case "eos":
+            img.src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
+            break;
+          default:
+            img.src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+            break;
+        }
+
+        img.classList.remove("hidden");
+        const saveButton = document.getElementById("saveButton");
+        saveButton.classList.remove("hidden");
+      }
+
+      async function search(e){
+
+        const btn = document.getElementById("searchButton");
+        const input = document.getElementById("bb3coach");
+        const spinner = document.getElementById("spinner");
+        const select = document.getElementById("bb3coachSelect");
+        const selectLabel = document.getElementById("bb3coachSelectLabel");
+        
+        btn.disabled = true;
+        btn.classList.add("btn-primary")<
+        btn.classList.remove("btn-danger")
+        spinner.classList.remove("hidden");
+
+        const response = await fetch(`/api/bb3/${input.value}`);
+
+        if (response.ok){
+          const coaches = await response.json();
+          coachNames = coaches;
+          if (Array.isArray(coaches)){
+            const select = document.getElementById("bb3coachSelect");
+            const selectLabel = document.getElementById("bb3coachSelectLabel");
+
+            select.innerHTML = '';
+
+            const o =  document.createElement("option");
+            o.disabled = true;
+            o.selected = true;
+            o.text = "Select your account";
+            select.add(o,null);
+
+            coaches.forEach(coach => {
+              const opt = document.createElement("option");
+
+              opt.value = coach.id;
+              opt.text = `${coach.service}: ${coach.name}`;
+              select.add(opt,null);
+            });
+
+            select.classList.remove("hidden");
+            selectLabel.classList.remove("hidden");
+          } else if (coaches != null) {
+            const input = document.getElementById("bb3coach");
+            const id = document.getElementById("bb3coachId");
+            const saveButton = document.getElementById("saveButton");
+            select.classList.add("hidden");
+            selectLabel.classList.add("hidden");
+
+            id.value = coaches.id;
+            input.value = coaches.name;
+
+            saveButton.classList.remove("hidden");
+          } else{
+            btn.disabled = false;
+            spinner.classList.add("hidden");
+            btn.classList.remove("btn-primary")<
+            btn.classList.add("btn-danger")
+          }
+
+        }
+
+        spinner.classList.add("hidden");
+        btn.disabled = false;
+      }
+
+      async function updateBB3Coach(){
+        const input = document.getElementById("bb3coach");
+        const id = document.getElementById("bb3coachId");
+        const spinner = document.getElementById("spinnerSave");
+        const coach = coachNames.find(x => x.id === id.value);
+
+        spinner.classList.remove("hidden");
+        const response = await fetch(`/api/account/bb3`,{
+          method:'PATCH',
+          headers:{'Content-Type': 'application/json'},
+          body:JSON.stringify({id:id.value, name:input.value, service:coach.service, displayId:coach.displayId})
+        });
+        if (response.ok){
+          location.reload();
+        }
+
+        spinner.classList.add("hidden");
+      }
+
+  script.
+
+    async function updateZFLCoach(){
+      const zflCoachNameElement = document.getElementById("zflCoachName");
+      const bioElement = document.getElementById("bio");
+      const spinner = document.getElementById("spinnerSaveZFL");
+
+      spinner.classList.remove("hidden");
+
+      const zflCoachName = zflCoachNameElement.value;
+      const bio = bioElement.value;
+
+      const response = await fetch(`/api/account/zfl`,{
+        method:'PATCH',
+        headers:{'Content-Type': 'application/json'},
+        body:JSON.stringify({bio, zflCoachName})
+      });
+      if (response.ok){
+        const bioCoachName = document.getElementById("bioCoachName");
+        const bioBio = document.getElementById("bioBio");
+
+        bioBio.innerHTML = bio;
+        bioCoachName.innerHTML = zflCoachName;
+
+      }
+
+      spinner.classList.add("hidden");
+    }
