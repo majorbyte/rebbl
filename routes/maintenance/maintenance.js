@@ -57,9 +57,10 @@ class Maintenance{
       try{
 
 
-        const competitions = await bb3.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f"});
-        for (const competition of competitions) await bb3Service.calculateStandings(competition.id);
+        //const competitions = await bb3.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f"});
+        //for (const competition of competitions) await bb3Service.calculateStandings(competition.id);
           
+        await bb3Service.updateTeam("45602e32-7817-11ef-be7b-bc24112ec32e",true);
 
         //await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
 
@@ -84,10 +85,10 @@ class Maintenance{
     this.router.get('/bb3', util.verifyMaintenanceToken, async function(req, res){
       if (!configurationService.updateAllowed()) return;
       try{
-        //await bb3Service.updateCompetitions("3c9429cd-b146-11ed-80a8-020000a4d571");
         
         await bb3Service.updateCompetitions("94f0d3aa-e9ba-11ee-a745-02000090a64f");
-        //bb3Service.calculateStandings("abecb238-c1ed-11ee-a745-02000090a64f")
+
+        await bb3Service.calculateLeagueStandings("94f0d3aa-e9ba-11ee-a745-02000090a64f");
 
         for(const leagueId of ["94f0d3aa-e9ba-11ee-a745-02000090a64f"]){
           const competitions = await bb3.getCompetitions({leagueId:leagueId});
