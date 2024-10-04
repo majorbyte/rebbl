@@ -2,7 +2,7 @@
 extends layout.pug
 
 block vars
-  - page = "account"
+  - page = "profile"
 
 
 
@@ -139,4 +139,27 @@ block main
                   .input-group
                     span.input-group-text BB3 Coach Name
                     input.form-control(type="text" id="coachName" value=account.coach ? account.coach.name : "" disabled)
+
+            - if (team)
+              - if (!team.kit) team.kit = {homeKit1:"#ffffff", homeKit2: "#ffffff", homeKit3: "#ffffff", awayKit1:"#ffffff", awayKit2: "#ffffff", awayKit3: "#ffffff"}
+              .card.shadow-none.border
+                .card-body
+                  .row
+                    .col
+                      h3= team.name
+                      .row.mb-3
+                        .col
+                          span#bb3coachSelectLabel home kit colours
+                          .col#away1(style="padding: 15px;width: 90px;background-color:"+team.kit.homeKit1) 
+                            .col#away2(style="padding: 15px;background-color:"+team.kit.homeKit2) 
+                              .col#away3(style="background-color:"+team.kit.homeKit3) &nbsp;
+
+                        .col
+                          span#bb3coachSelectLabel away kit colours
+                          .col#away1(style="padding: 15px;width: 90px;background-color:"+team.kit.awayKit1) 
+                            .col#away2(style="padding: 15px;background-color:"+team.kit.awayKit2) 
+                              .col#away3(style="background-color:"+team.kit.awayKit3) &nbsp;
+                    .col-1
+                      img.float-end(src=`https://cdn.rebbl.net/images/bb3/Logos/${team.logo.icon}` class="align-top" style="height:150px")
+
 

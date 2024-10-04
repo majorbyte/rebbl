@@ -73,6 +73,10 @@ block head
       background-position-x: -125px;
       background-position-y: -75px;      
     }
+    .w-35 {
+      width:35%!important
+    }
+
 
 
 block main 
@@ -171,6 +175,52 @@ block main
                     textarea#bio.form-control(placeholder='Write a short bio here' style='height: 137px')= account.bio
                 button#saveButton.btn.btn-success.btn-sm(style="float:right" onclick="updateZFLCoach()" ) Save
                   span#spinnerSaveZFL.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+            - if (team)
+              - if (!team.kit) team.kit = {homeKit1:null, homeKit2: null, homeKit3: null, awayKit1:null, awayKit2: null, awayKit3: null}
+              .card.shadow-none.border
+                .card-body
+                  .row
+                    .col
+                      h3= team.name
+                      .row.mb-3
+                        .col
+                          span#bb3coachSelectLabel.form-label(for="bb3coachSelect" ) select your home kit colours
+                          .input-group
+                            span.input-group-text.w-35 Primary
+                            select.form-select#homeKit1(onchange="setColor('home',1)" value=team.kit.homeKit1)
+                          .input-group
+                            span.input-group-text.w-35 Secondary
+                            select.form-select#homeKit2(onchange="setColor('home',2)" value=team.kit.homeKit2)
+                          .input-group
+                            span.input-group-text.w-35 Tertiery
+                            select.form-select#homeKit3(onchange="setColor('home',3)" value=team.kit.homeKit3)
+                        .col
+                          .col#home1(style="padding: 15px;width: 90px;margin-top: 45px;}") 
+                            .col#home2(style="padding: 15px;") 
+                              .col#home3 &nbsp;
+
+                      .row.mb-3                      
+                        .col
+                          span#bb3coachSelectLabel.form-label(for="bb3coachSelect" ) select your away kit colours
+                          .input-group
+                            span.input-group-text.w-35 Primary
+                            select.form-select#awayKit1(onchange="setColor('away',1)" value=team.kit.awayKit1)
+                          .input-group
+                            span.input-group-text.w-35 Secondary
+                            select.form-select#awayKit2(onchange="setColor('away',2)" value=team.kit.awayKit2)
+                          .input-group
+                            span.input-group-text.w-35 Tertiery
+                            select.form-select#awayKit3(onchange="setColor('away',3)" value=team.kit.awayKit3)
+                        .col
+                          .col#away1(style="padding: 15px;width: 90px;margin-top: 45px;}") 
+                            .col#away2(style="padding: 15px;") 
+                              .col#away3 &nbsp;
+                    .col-1
+                      img.float-end(src=`https://cdn.rebbl.net/images/bb3/Logos/${team.logo.icon}` class="align-top" style="height:150px")
+
+                  button#saveButton.btn.btn-success.btn-sm(style="float:right" onclick="updateTeamColors()" ) Save
+                    span#spinnerSaveZFL.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+                      
 
 
 block scripts
@@ -328,3 +378,215 @@ block scripts
 
       spinner.classList.add("hidden");
     }
+
+    async function updateTeamColors(){
+      const data = {
+        homeKit1: document.getElementById(`homeKit1`).value,
+        homeKit2: document.getElementById(`homeKit2`).value,
+        homeKit3: document.getElementById(`homeKit3`).value,
+        awayKit1: document.getElementById(`awayKit1`).value,
+        awayKit2: document.getElementById(`awayKit2`).value,
+        awayKit3: document.getElementById(`awayKit3`).value,
+      };
+
+      const response = await fetch(`/api/team/#{team.id}/kit`,{
+        method:'PATCH',
+        headers:{'Content-Type': 'application/json'},
+        body:JSON.stringify(data)
+      });
+    }
+
+    function setColor(target,lvl){
+      const e = document.getElementById(`${target}Kit${lvl}`);
+      const t = document.getElementById(`${target}${lvl}`);
+    
+      t.style.backgroundColor = e.value;
+    }
+
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+
+        const c = colours.sort((a,b) => a.name > b.name);
+
+        const selected = {
+          homeKit1 : "#{team.kit.homeKit1}",
+          homeKit2 : "#{team.kit.homeKit2}",
+          homeKit3 : "#{team.kit.homeKit3}",
+          awayKit1 : "#{team.kit.awayKit1}",
+          awayKit2 : "#{team.kit.awayKit2}",
+          awayKit3 : "#{team.kit.awayKit3}"
+        };
+
+        ['home','away'].forEach(kit => {
+          [1,2,3].forEach(x => {
+            const key = `${kit}Kit${x}`;
+            const e = document.getElementById(key);
+            c.forEach(y => {
+                const opt = document.createElement("option");
+
+                opt.value = y.hex;
+                opt.text = y.name;
+                opt.selected = selected[key] == y.hex;
+                e.add(opt,null);
+            });
+            setColor(kit,x);
+          });
+        });
+
+    });
+
+
+    const colours = [
+      { hex: '#000000', name: 'Chaos Black' },
+      { hex: '#000000', name: 'Abaddon Black' },
+      { hex: '#989c94', name: 'Administratum Grey' },
+      { hex: '#a9311e', name: 'Astorath Red' },
+      { hex: '#fbb81c', name: 'Averland Sunset' },
+      { hex: '#00708a', name: 'Ahriman Blue' },
+      { hex: '#f3abca', name: 'Changeling Pink' },
+      { hex: '#2f4f85', name: 'Alaitoc Blue' },
+      { hex: '#4b90cf', name: 'Chronus Blue' },
+      { hex: '#451636', name: 'Barak-Nar Burgundy' },
+      { hex: '#2d4696', name: 'Altdorf Guard Blue' },
+      { hex: '#697068', name: 'Dawnstone' },
+      { hex: '#804c43', name: 'Bugman‘s Glow' },
+      { hex: '#e8c07f', name: 'Eldar Flesh' },
+      { hex: '#366699', name: 'Caledor Sky' },
+      { hex: '#54bdca', name: 'Baharroth Blue' },
+      { hex: '#9eb5ce', name: 'Etherium Blue' },
+      { hex: '#003d15', name: 'Caliban Green' },
+      { hex: '#8f7c68', name: 'Baneblade Brown' },
+      { hex: '#8ba3a3', name: 'Celestra Grey' },
+      { hex: '#875408', name: 'Balor Brown' },
+      { hex: '#8f502a', name: 'Golgfag Brown' },
+      { hex: '#442b25', name: 'Catachan Fleshtone' },
+      { hex: '#d08951', name: 'Bestigor Flesh' },
+      { hex: '#7fc1a5', name: 'Hellion Green' },
+      { hex: '#264715', name: 'Castellan Green' },
+      { hex: '#6a4848', name: 'Bloodreaver Flesh' },
+      { hex: '#fff55a', name: 'Hexos Palesun' },
+      { hex: '#dbd1b2', name: 'Wraithbone' },
+      { hex: '#ffffff', name: 'Corax White' },
+      { hex: '#9eb5ce', name: 'Blue Horror' },
+      { hex: '#988e56', name: 'Zandri Dust' },
+      { hex: '#171314', name: 'Corvus Black' },
+      { hex: '#208abf', name: 'Imrik Blue' },
+      { hex: '#655f81', name: 'Daemonette Hide' },
+      { hex: '#c47652', name: 'Cadian Fleshtone' },
+      { hex: '#f69c82', name: 'Kindleflame' },
+      { hex: '#6d774d', name: 'Death Guard Green' },
+      { hex: '#2a497f', name: 'Calgar Blue' },
+      { hex: '#dbdcc6', name: 'Longbeard Grey' },
+      { hex: '#3d4539', name: 'Death Korps Drab' },
+      { hex: '#b598c9', name: 'Lucius Lilac' },
+      { hex: '#556229', name: 'Deathworld Forest' },
+      { hex: '#a8908a', name: 'Canoptek Alloy' },
+      { hex: '#2b2a24', name: 'Dryad Bark' },
+      { hex: '#354d4c', name: 'Dark Reaper' },
+      { hex: '#378c35', name: 'Niblet Green' },
+      { hex: '#4b213c', name: 'Gal Vorbak Red' },
+      { hex: '#697068', name: 'Dawnstone' },
+      { hex: '#7e975e', name: 'Nurgling Green' },
+      { hex: '#af634f', name: 'Deathclaw Brown' },
+      { hex: '#ffffff', name: 'Praxeti White' },
+      { hex: '#a2a5a7', name: 'Grey Seer' },
+      { hex: '#b598c9', name: 'Dechala Lilac' },
+      { hex: '#f16c23', name: 'Ryza Rust' },
+      { hex: '#082e32', name: 'Incubi Darkness' },
+      { hex: '#a9b79f', name: 'Deepkin Flesh' },
+      { hex: '#97a384', name: 'Ionrach Skin' },
+      { hex: '#570003', name: 'Doombull Brown' },
+      { hex: '#54bdca', name: 'Skink Blue' },
+      { hex: '#fff55a', name: 'Dorn Yellow' },
+      { hex: '#6b8c37', name: 'Elysian Green' },
+      { hex: '#5a7fa3', name: 'Stormfang' },
+      { hex: '#ed3814', name: 'Jokaero Orange' },
+      { hex: '#b74073', name: "Emperor's Children" },
+      { hex: '#4e483b', name: 'Sylvaneth Bark' },
+      { hex: '#02134e', name: 'Kantor Blue' },
+      { hex: '#484b4e', name: 'Eshin Grey' },
+      { hex: '#c8b79d', name: 'Terminatus Stone' },
+      { hex: '#650001', name: 'Khorne Red' },
+      { hex: '#c01411', name: 'Evil Sunz Scarlet' },
+      { hex: '#6d94b3', name: 'Fenrisian Grey' },
+      { hex: '#c8c483', name: 'Tyrant Skull' },
+      { hex: '#002c2b', name: 'Lupercal Green' },
+      { hex: '#f4874e', name: 'Fire Dragon Bright' },
+      { hex: '#bcbb7e', name: 'Underhive Ash' },
+      { hex: '#0f3d7c', name: 'Macragge Blue' },
+      { hex: '#fff300', name: 'Flash Gitz Yellow' },
+      { hex: '#7e3331', name: 'Verminlord Hide' },
+      { hex: '#39484a', name: 'Mechanicus Standard Grey' },
+      { hex: '#eec483', name: 'Flayed One Flesh' },
+      { hex: '#d3d0cf', name: 'Wrack White' },
+      { hex: '#960c09', name: 'Mephiston Red' },
+      { hex: '#f3abca', name: 'Fulgrim Pink' },
+      { hex: '#c0a973', name: 'Morghast Bone' },
+      { hex: '#490f06', name: 'Mournfang Brown' },
+      { hex: '#7fc1a5', name: 'Gauss Blaster Green' },
+      { hex: '#3b2b50', name: 'Naggaroth Night' },
+      { hex: '#002b5c', name: 'Night Lords Blue' },
+      { hex: '#7658a5', name: 'Genestealer Purple' },
+      { hex: '#162a29', name: 'Nocturne Green' },
+      { hex: '#5f463f', name: 'Gorthor Brown' },
+      { hex: '#440052', name: 'Phoenician Purple' },
+      { hex: '#9c998d', name: 'Rakarth Flesh' },
+      { hex: '#4c78af', name: 'Hoeth Blue' },
+      { hex: '#a86648', name: 'Ratskin Flesh' },
+      { hex: '#008962', name: 'Kabalite Green' },
+      { hex: '#462f30', name: 'Rhinox Hide' },
+      { hex: '#8869ae', name: 'Kakophoni Purple' },
+      { hex: '#b7945c', name: 'Karak Stone' },
+      { hex: '#7a0e44', name: 'Screamer Pink' },
+      { hex: '#d1a570', name: 'Kislev Flesh' },
+      { hex: '#996563', name: 'Knight-Questor Flesh' },
+      { hex: '#584e2d', name: 'Steel Legion Drab' },
+      { hex: '#bcbb7e', name: 'Krieg Khaki' },
+      { hex: '#06455d', name: 'Stegadon Scale Green' },
+      { hex: '#405b71', name: 'The Fang' },
+      { hex: '#486c25', name: 'Loren Forest' },
+      { hex: '#00506f', name: 'Thousand Sons Blue' },
+      { hex: '#2c9bcc', name: 'Lothern Blue' },
+      { hex: '#0b3b36', name: 'Waaagh! Flesh' },
+      { hex: '#f69b82', name: 'Lugganath Orange' },
+      { hex: '#3daf44', name: 'Moot Green' },
+      { hex: '#7e975e', name: 'Nurgling Green' },
+      { hex: '#6c4811', name: 'XV-88' },
+      { hex: '#96a648', name: 'Ogryn Camo' },
+      { hex: '#caccbb', name: 'Pallid Wych Flesh' },
+      { hex: '#ffe200', name: 'Phalanx Yellow' },
+      { hex: '#8e2757', name: 'Pink Horror' },
+      { hex: '#507085', name: 'Russ Grey' },
+      { hex: '#b9c099', name: 'Screaming Skull' },
+      { hex: '#588f6b', name: 'Skarsnik Green' },
+      { hex: '#45413b', name: 'Skavenblight Dinge' },
+      { hex: '#8b4806', name: 'Skrag Brown' },
+      { hex: '#8b8893', name: 'Slaanesh Grey' },
+      { hex: '#00545e', name: 'Sons of Horus Green' },
+      { hex: '#0b6371', name: 'Sotek Green' },
+      { hex: '#a74d42', name: 'Squig Orange' },
+      { hex: '#6d655f', name: 'Stormvermin Fur' },
+      { hex: '#597f1c', name: 'Straken Green' },
+      { hex: '#17a166', name: 'Sybarite Green' },
+      { hex: '#a07409', name: 'Tallarn Sand' },
+      { hex: '#bc6b10', name: 'Tau Light Ochre' },
+      { hex: '#3877bf', name: 'Teclis Blue' },
+      { hex: '#239489', name: 'Temple Guard Blue' },
+      { hex: '#396a70', name: 'Thunderhawk Blue' },
+      { hex: '#f16c23', name: 'Troll Slayer Orange' },
+      { hex: '#863231', name: 'Tuskgor Fur' },
+      { hex: '#c4ddd5', name: 'Ulthuan Grey' },
+      { hex: '#d1a560', name: 'Ungor Flesh' },
+      { hex: '#aba173', name: 'Ushabti Bone' },
+      { hex: '#223c2e', name: 'Vulkan Green' },
+      { hex: '#317e57', name: 'Warboss Green' },
+      { hex: '#66656e', name: 'Warpfiend Grey' },
+      { hex: '#620104', name: 'Word Bearers Red' },
+      { hex: '#e82e1b', name: 'Wild Rider Red' },
+      { hex: '#ffffff', name: 'White Scar' },
+      { hex: '#880804', name: 'Wazdakka Red' },
+      { hex: '#0f702a', name: 'Warpstone Glow' },
+      { hex: '#47125a', name: 'Xereus Purple' },
+      { hex: '#ffd900', name: 'Yriel Yellow' },
+      { hex: '#d89d1b', name: 'Zamesi Desert' } 
+    ]

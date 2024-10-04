@@ -31,6 +31,7 @@ class ZFL{
     this.router.get('/api/bb3/:name', this.#ensureLoggedIn, async (req,res) => res.json(await accountService.getBB3Account(req.params.name)));
     this.router.patch('/api/account/bb3', this.#ensureLoggedIn, this.#updateCoach);
     this.router.patch('/api/account/zfl', this.#ensureLoggedIn, this.#updateZflName);
+    this.router.patch('/api/team/:id/kit', this.#ensureLoggedIn, this.#updateKit);
 
   }
 
@@ -52,7 +53,7 @@ class ZFL{
   }
 
   async #loginSucces(user,res){
-    res.redirect('/');
+    res.redirect('/account');
   }
 
   async #getAccount(_,res){
@@ -64,19 +65,41 @@ class ZFL{
         coach: null,
         zflCoachName: null,
         bio:"",
+        teamId: null,
         roles:[]
       } 
       dataService.insertZFLAccount(account);
     }
-    res.render("zfl/account" , {account} );
+    let team = null
+    if (account.teamId){
+      team = await dataService.getZFLTeam({id:account.teamId},{projection:{roster:0}});
+    }
+    res.render("zfl/account" , {account,team} );
   }
 
   async #getProfile(req,res){
     let account = await dataService.getZFLAccount({"coach.id":req.params.id});
+    let team = null;
+    if (account.teamId){
+      team = await dataService.getZFLTeam({id:account.teamId},{projection:{roster:0}});
+    }
 
-    res.render("zfl/profile" , {account} );
+    res.render("zfl/profile" , {account, team} );
   }
 
+
+  async #updateKit(req,res){
+    const data = {
+      homeKit1: req.body.homeKit1,
+      homeKit2: req.body.homeKit2,
+      homeKit3: req.body.homeKit3,
+      awayKit1: req.body.awayKit1,
+      awayKit2: req.body.awayKit2,
+      awayKit3: req.body.awayKit3,
+    }
+    await dataService.updateZFLTeam({id:req.params.id},{$set:{kit:data}});
+    res.status(200).send();
+  }
 
   async #updateCoach(req,res) {
     await dataService.updateZFLAccount({id:req.user.id},{$set:{coach:{id:req.body.id, name:req.body.name, service:req.body.service, displayId:req.body.displayId}}});
