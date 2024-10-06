@@ -1,21 +1,32 @@
 extends layout.pug
 
+block vars
+  - const isDM = account && account.roles && account.roles.some(x => x == "dm");
+
 mixin fixture(entry)
   .row.col-12.align-items-center
     .col 
-      img.img-fluid(src=`images/zfl/${entry.home.team.logo}` style="padding:0px")
+      a(href=`/team/${entry.home.team.id}` target="_blank")
+        img.img-fluid(src=`images/zfl/${entry.home.team.logo}` style="padding:0px")
     .col.text-center.row.align-items-center
       .col.d-none.d-lg-block 
-        span home
+        - if (entry.released || (isDM && entry.updated))
+          h1= entry.home.score
+        -else 
+          span home
       .col
-        h1 vs
+        - if (isDM && entry.updated && !entry.released)
+          button.btn.btn-sm.btn-primary.mx-2.mb-2(id=entry.matchId onclick=`releaseFixture("${entry.matchId}")`) release
+        - else
+          h1 vs
       .col.d-none.d-lg-block
-        span away
+        - if (entry.released || (isDM && entry.updated))
+          h1= entry.away.score
+        -else 
+          span away
     .col 
-      img.img-fluid(src=`images/zfl/${entry.away.team.logo}` style="padding:0px")
-
-
-
+      a(href=`/team/${entry.away.team.id}` target="_blank")
+        img.img-fluid(src=`images/zfl/${entry.away.team.logo}` style="padding:0px")
 
 block head
   style.
@@ -32,13 +43,85 @@ block main
       -for(let x = 1; x < 12; x++)
         .row.col-12.text-center 
           h1= `Round ${x}`
+            - if (isDM && competitions[0].round == x && !competitions[0].completed)
+              button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`completeCompetitions(${x})`) complete
+            - else if (isDM && competitions[0].round +1 == x && competitions[0].completed)
+              button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`createCompetitions(${x})`) create
           span= rounds[x]
+          - if (competitions[0].round == x)
+            .toast-container.end-0.p-3
+              .toast.align-items-center.text-bg-success.border-0#successToast(role="alert" aria-live="assertive" aria-atomic="true")
+                .d-flex
+                  .toast-body#successBody
+                  button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")
+
+              .toast.align-items-center.text-bg-danger.border-0#errorToast(role="alert" aria-live="assertive" aria-atomic="true")
+                .d-flex
+                  .toast-body#errorBody
+                  button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")
+
         .row.col-12.col-xl-6.text-center
-          h2 Elite Division
-          each fixture of competitions[0].fixtures.filter(f => f.round == x)
-            +fixture(fixture) 
+          .row.col-12.align-items-center
+            h2 Elite Division
+          .row.col-12
+            each fixture of competitions[0].fixtures.filter(f => f.round == x)
+              +fixture(fixture) 
         .row.col-12.col-xl-6.text-center
-          h2 Second Division
-          each fixture of competitions[1].fixtures.filter(f => f.round == x) 
-            +fixture(fixture) 
+          .row.col-12.align-items-center
+            h2 Second Division
+          .row.col-12
+            each fixture of competitions[1].fixtures.filter(f => f.round == x)
+              +fixture(fixture) 
         .row.col-12 &nbsp;
+
+    //.toast-container.top-0.end-0.p-3
+      .toast.align-items-center.text-bg-success.border-0#successToast(role="alert" aria-live="assertive" aria-atomic="true")
+        .d-flex
+          .toast-body#successBody
+          button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")
+
+      .toast.align-items-center.text-bg-danger.border-0#errorToast(role="alert" aria-live="assertive" aria-atomic="true")
+        .d-flex
+          .toast-body#errorBody
+          button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")
+
+
+block scripts 
+  script.
+    async function releaseFixture(matchId){
+      const response = await fetch(`/api/competition/${matchId}/release`,{
+        method:'PATCH',
+        headers:{'Content-Type': 'application/json'}
+      });
+
+      const btn = document.getElementById(matchId);
+
+      let toast = body = null;
+      if (response.ok){
+        body = document.getElementById('successBody');
+        toast = new bootstrap.Toast(document.getElementById('successToast'));
+
+        body.innerHTML = "match released succesfully";
+        
+        const h1 = document.createElement("h1");
+        h1.innerHTML = "VS";
+
+        btn.parentNode.replaceChild(h1,btn);
+
+      } else {
+        body = document.getElementById('errorBody');
+        toast = new bootstrap.Toast(document.getElementById('errorToast'));
+      
+        body.innerHTML = await response.text();
+      }
+
+      toast.show();
+
+    }
+    async function completeCompetitions(round){
+
+      
+    }
+    async function createCompetitions(round){
+      
+    }        

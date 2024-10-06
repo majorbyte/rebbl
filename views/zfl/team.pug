@@ -1,10 +1,9 @@
-extends ../no-cache-sub-relayout.pug
+extends layout.pug
 include functions.pug
 
 block append vars
   -
     let options = {company:"Team"}
-    const getPlayerCasualtyIcon = (cas) => `ico_action_${cas}.png`;
     
 block head 
   style.
@@ -13,31 +12,31 @@ block head
       filter: drop-shadow(0px 0px 1px black);
     }
 
-block content
-  div(class="container")
-    div(class="col-12 d-flex flex-wrap align-items-center")
-      img(src=`https://cdn.rebbl.net/images/bb3/Logos/${team.logo.replace("Neutral","Neutre").replace("ChaosChosen","Chaos")}.png` class="align-top" style="height:100px")
+block main
+  .container-fluid.px-5
+    .col-12.d-flex.flex-wrap.align-items-center.px-5
+      img(src=`https://cdn.rebbl.net/images/bb3/Logos/${team.logo.icon}` class="align-top" style="height:100px")
       span(class="h1")=team.name
-      div(class="row col-12")
+      .row.col-12
         h3(style="margin-top: 0px;")
           i= team.motto
-    div(class="clearfix")
-    div(class="row" style="margin-left:0px")
-      div(class="col-md-2 col-6")
+    .clearfix
+    .row(style="margin-left:0px").px-5
+      .col-md-2.col-6
         strong=`Current TV: ${team.value}`
-      div(class="col-md-2 col-6")
-        strong=`Cash: ${team.cash}`
+      .col-md-2.col-6
+        strong=`Cash: ${team.treasury}`
 
     br
-    nav(class="col-12")
-      div(class="nav nav-tabs" id="nav-tab" role="tablist")
-        a(class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Players
+    nav.col-12.px-5
+      .nav.nav-tabs.bg-dark(data-bs-theme="dark" id="nav-tab" role="tablist")
+        a.nav-item.nav-link.active(id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Players
         //a(class="nav-item nav-link" id="nav-matches-tab" data-bs-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches
-    - let teamPositions = [...new Set(team.roster.map(x => x.type))]
+    - let teamPositions = [...new Set(team.roster.map(x => x.player.position))]
     - let borders = ["border-success","border-warning","border-primary","border-light","border-info","border-secondary"]  
-    .tab-content#tabContent
+    .tab-content.tab-dark#tabContent.px-5
       .tab-pane.fade.col-12.show.active.table-responsive-md#nav-home(role="tabpanel" aria-labelledby="nav-home-tab")
-        table.table.table-striped
+        table.table.table-striped.table-dark
             thead.headerText
               tr
                 th(scope="col") #
@@ -50,99 +49,50 @@ block content
                 th(scope="col") AV
                 th(scope="col" style="min-width:160px") Skills
                 th(scope="col") CAS
-                th(scope="col") GP
                 th(scope="col") SPP
                 th(scope="col") Value
             tbody
               - for(let player of team.roster)
-                tr(class=Number(player.missNextGame)==1?"player-out":"player-in") 
-                  td=player.number
+                tr(class=Number(player.player.missNextGame)==1?"player-out":"player-in") 
+                  td=player.player.number
                   td
                     div
-                      - if (player.id)
-                        img(src=`https://cdn.rebbl.net/images/skills/${player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
-                      - else if (player.type.startsWith("neutral_")) 
-                        img(src=`https://cdn.rebbl.net/images/bb3/hud_inducement_StarPlayer.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                      - if (player.player.id)
+                        img(src=`https://cdn.rebbl.net/images/skills/${player.player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                      - else if (player.player.type.startsWith("neutral_")) 
+                        img(src=`https://cdn.rebbl.net/images/bb3/hud_inducement_Starplayer.player.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
                       - else
                         img(src=`https://cdn.rebbl.net/images/bb3/hud_mercenary_tile_picto_mercenary.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
-                      .match-stats-TeamLabel-name=player.name
+                      .match-stats-TeamLabel-name=player.player.name
 
                   td
-                    img(src=getSilhouetteByName(player.type) title=player.type class=`silhouette-shadow border border-3 rounded-pill ${borders[teamPositions.indexOf(player.type)]}`)
-                  //- let c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)
-                  td= player.attributes.ma
-                  //- c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)
-                  td= player.attributes.st
-                  //- c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==2)
-                  td= player.attributes.ag
-                  //- c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==3)
-                  td= player.attributes.pa
-                  //- c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==4)
-                  td= player.attributes.av
+                    img(src=getSilhouette(player.player.position) title=player.player.type class=`silhouette-shadow border border-3 rounded-pill ${borders[teamPositions.indexOf(player.player.position)]}`)
+                  - let c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)
+                  td= c.value
+                  - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)
+                  td= c.value
+                  - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==2)
+                  td= c.value
+                  - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==3)
+                  td=  c ? c.value : "-"
+                  - c = player.player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==4)
+                  td= c.value
                   td(class="td-prevent")
-                    - for(let skill of player.skills)
-                      - skill = skill?.replace("+","").replace("(","").replace(")","").replace("-"," ").trim().replace(/(^\w|\s\w)/g, m => m.toUpperCase()).replace(/ /g,"");
-                      - let s = skills.find(x => x.name == skill)
+                    - if (!player.player.skills.skillsItem) player.player.skills = {skillsItem:[]}
+                    - if (!Array.isArray(player.player.skills.skillsItem)) player.player.skills.skillsItem = [player.player.skills.skillsItem]
+                    - for(let skill of player.player.skills.skillsItem)
+                      - let s = skills.find(x => x.id == skill)
                       - if (s)
                         img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt="" style="z-index:9999" )
                   td.pull-right
-                    each cas in player.casualties_state
-                      -let d = getPlayerCasualtyIcon(cas)
-                      if d
-                        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${d}`)
-                    if player.missNextGame == "1"
-                        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
+                    - if (player.player.casualties.casualtiesItem)
+                      - if (!Array.isArray(player.player.casualties.casualtiesItem)) player.player.casualties.casualtiesItem = [player.player.casualties.casualtiesItem]
+                      each cas in player.player.casualties.casualtiesItem
+                        -let d = getPlayerCasualtyIcon(cas)[0]
+                        if d
+                          img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${d}`)
+                      if player.player.missNextGame == "1"
+                          img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
 
-                  td=player.gamesPlayed 
-                  td=player.xp
-                  td(data-bind="text:value")=player.value
-              tr
-                td(colspan="13") Retired players
-              - for(let player of team.pastPlayers)
-                tr(class=Number(player.missNextGame)==1?"player-out":"player-in") 
-                  td=player.number
-                  td
-                    div
-                      - if (player.id)
-                        img(src=`https://cdn.rebbl.net/images/skills/${player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
-                      - else if (player.type.startsWith("neutral_")) 
-                        img(src=`https://cdn.rebbl.net/images/bb3/hud_inducement_StarPlayer.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
-                      - else
-                        img(src=`https://cdn.rebbl.net/images/bb3/hud_mercenary_tile_picto_mercenary.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
-                      .match-stats-TeamLabel-name=player.name
-
-                  td
-                    img(src=getSilhouetteByName(player.type) title=player.type class=`silhouette-shadow border border-3 rounded-pill ${borders[teamPositions.indexOf(player.type)]}`)
-                  //- let c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)
-                  td= player.attributes.ma
-                  //- c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)
-                  td= player.attributes.st
-                  //- c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==2)
-                  td= player.attributes.ag
-                  //- c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==3)
-                  td= player.attributes.pa
-                  //- c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==4)
-                  td= player.attributes.av
-                  td(class="td-prevent")
-                    - for(let skill of player.skills.InnateSkills.concat(player.skills.AcquiredSkills))
-                      - skill = skill?.replace("+","").replace("(","").replace(")","").replace("-"," ").trim().replace(/(^\w|\s\w)/g, m => m.toUpperCase()).replace(/ /g,"");
-                      - let s = skills.find(x => x.name == skill)
-                      - if (s)
-                        img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt="" style="z-index:9999" )
-                  td.pull-right
-                    each cas in player.casualties.PreviousCasualty.concat( player.casualties.NewCasualty)
-                      -let d = getPlayerCasualtyIcon(cas)
-                      if d
-                        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${d}`)
-                    if player.missNextGame == "1"
-                        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
-
-                  td=player.gamesPlayed 
-                  td=player.xp
-                  td(data-bind="text:value")=player.value
-
-
-
-
-
-
+                  td=player.player.spp
+                  td(data-bind="text:value")=player.player.value

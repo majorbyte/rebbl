@@ -1,5 +1,5 @@
 extends layout.pug
-
+include functions.pug
 
 block head
   style.
@@ -7,7 +7,7 @@ block head
     .card{width: 12rem;}
 
     .table > :not(caption) > * > * {padding:0px !important;}
-    td > img {max-height:56px}
+    td > * >  img {max-height:64px}
 block main
   .container
     each competition of competitions
@@ -15,7 +15,7 @@ block main
       table.table.table-dark
         thead 
           th
-          th.align-middle.text-center faction 
+          th.align-middle.text-start faction 
           th.align-middle.text-center played 
           th.align-middle.text-center wins 
           th.align-middle.text-center draws 
@@ -29,8 +29,9 @@ block main
           each entry of competition.standings 
             tr 
               td 
-                img(src=`images/zfl/${entry.logo}` style="padding:0px")
-              td.align-middle.text-center human
+                a(href=`/team/${entry.id}` target="_blank")
+                  img(src=`images/zfl/${entry.logo}` style= "padding:0px")
+              td.align-middle.text-start.fw-bold= getRace(entry.race)
               td.align-middle.text-center= entry.games 
               td.align-middle.text-center= entry.wins 
               td.align-middle.text-center= entry.draws 

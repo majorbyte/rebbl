@@ -145,6 +145,7 @@ class Server{
   }
 
   host = (host, fn) =>  function(req,res,next){
+    if (Array.isArray(host) && host.some(x => req.hostname === x)) return fn(req,res,next);
     if (req.hostname === host) return fn(req,res,next);
     next();
   }
@@ -176,28 +177,33 @@ class Server{
 
 
     const zflRoutes = require('./routes/zfl/zfl.js');
-    if (process.env.NODE_ENV === 'production') this.app.use(this.host('zfl.ovh',zflRoutes.router));
-    else this.app.use(this.host('zfl.localhost.com',zflRoutes.router));
+     this.app.use(this.host(['zfl.ovh','zfl.localhost.com'],zflRoutes.router));
 
     const routes = require("./routes/routes.js");
-    this.app.use(this.host('localhost.com', new routes().routesConfig()));
-    this.app.use(this.host('rebbl.net', new routes().routesConfig()));
+    this.app.use(this.host(['localhost.com','rebbl.net'], new routes().routesConfig()));
 
 
+    this.app.use(this.host(['localhost.com','rebbl.net'], function(){
+      var err = new Error('Not Found');
+      err.status = 404;
+      next(err);
+    }));
 
-    this.app.use(function(err, res){
-      // log it
-        if (!module.parent) console.error(err.stack);
-
-
+    this.app.use(this.host(['localhost.com','rebbl.net'], function(err, res){
       // error page
+      res.status(err.status || 500);
+      console.error(err.message);
       res.status(500).render('5xx');
-    });
+    }));
 
-    // assume 404 since no middleware responded
-    this.app.use(function(req, res){
-      res.status(404).render('404', { url: req.originalUrl });
-    });
+    this.app.use(this.host(['zfl.ovh','zfl.localhost.com'], function(_,res){
+      res.redirect("/standings");
+    }));
+
+    this.app.use(this.host(['zfl.ovh','zfl.localhost.com'], function(err, res){
+      console.error(err.message);
+      res.redirect("/standings");
+    }));
   }
 
   startSocketIOAndServer(){
