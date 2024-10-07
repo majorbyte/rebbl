@@ -27,8 +27,9 @@ class ZFL{
     this.router.get("/account", this.#checkAuth, this.#getAccount );
     this.router.get("/profile/:id", this.#getProfile );
 
-    this.router.get("/standings", util.cache(1), async (_,res) => res.render("zfl/standings" , {competitions:await dataService.getZFLCompetitions({})} ) );
+    this.router.get("/standings", util.cache(60*1000), async (_,res) => res.render("zfl/standings" , {competitions:await dataService.getZFLCompetitions({})} ) );
     this.router.get('/fixtures', util.cache(1), this.#getFixtures.bind(this));
+    this.router.get('/fixtures/admin', this.#ensureLoggedIn, this.#getFixturesAdmin.bind(this));
 
     this.router.get('/team/:id', util.cache(1), async (req,res) => res.render("zfl/team" , {team:await dataService.getZFLTeam({id: req.params.id, year:this.year}) }) );
 
@@ -58,15 +59,24 @@ class ZFL{
   }
 
   async #loginSucces(user,res){
-    res.redirect('/account');
+    res.redirect('/account'); 
   }
 
   async #getFixtures(_,res){
     let account = null;
     if (res.locals.user) account = await dataService.getZFLAccount({id:res.locals.user.id});
     
-    res.render("zfl/fixtures" , {account, competitions:await dataService.getZFLCompetitions({year:this.year}) });
+    res.render("zfl/fixtures" , {isDM:account && account.roles && account.roles.some(x => x == "dm"), competitions:await dataService.getZFLCompetitions({year:this.year}) });
   }
+
+  async #getFixturesAdmin(_,res){
+    let account = null;
+    if (res.locals.user) account = await dataService.getZFLAccount({id:res.locals.user.id});
+    
+    if (account && account.roles && account.roles.some(x => x == "dm")) res.render("zfl/fixtures" , {isDM:true, isAdminMode:true, competitions:await dataService.getZFLCompetitions({year:this.year}) });
+    else res.render("zfl/fixtures" , {competitions:await dataService.getZFLCompetitions({year:this.year}) });
+  }
+
 
   async #getAccount(_,res){
     let account = await dataService.getZFLAccount({id:res.locals.user.id});

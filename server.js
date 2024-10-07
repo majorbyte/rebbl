@@ -183,7 +183,7 @@ class Server{
     this.app.use(this.host(['localhost.com','rebbl.net'], new routes().routesConfig()));
 
 
-    this.app.use(this.host(['localhost.com','rebbl.net'], function(){
+    this.app.use(this.host(['localhost.com','rebbl.net'], function(req,res,next){
       var err = new Error('Not Found');
       err.status = 404;
       next(err);
@@ -191,12 +191,15 @@ class Server{
 
     this.app.use(this.host(['localhost.com','rebbl.net'], function(err, res){
       // error page
-      res.status(err.status || 500);
-      console.error(err.message);
-      res.status(500).render('5xx');
+      if (err.status == 404){
+        res.status(404).render('404');
+      } else {
+        console.error(err.message);
+        res.status(500).render('5xx');
+      }
     }));
 
-    this.app.use(this.host(['zfl.ovh','zfl.localhost.com'], function(_,res){
+    this.app.use(this.host(['zfl.ovh','zfl.localhost.com'], function(req,res,next){
       res.redirect("/standings");
     }));
 

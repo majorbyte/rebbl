@@ -1,32 +1,29 @@
 extends layout.pug
 
-block vars
-  - const isDM = account && account.roles && account.roles.some(x => x == "dm");
-
 mixin fixture(entry)
   .row.col-12.align-items-center
     .col 
       a(href=`/team/${entry.home.team.id}` target="_blank")
-        img.img-fluid(src=`images/zfl/${entry.home.team.logo}` style="padding:0px")
+        img.img-fluid(src=`/images/zfl/${entry.home.team.logo}` style="padding:0px")
     .col.text-center.row.align-items-center
       .col.d-none.d-lg-block 
-        - if (entry.released || (isDM && entry.updated))
+        - if (entry.released || (isAdminMode && entry.updated))
           h1= entry.home.score
         -else 
           span home
       .col
-        - if (isDM && entry.updated && !entry.released)
+        - if (isAdminMode && entry.updated && !entry.released)
           button.btn.btn-sm.btn-primary.mx-2.mb-2(id=entry.matchId onclick=`releaseFixture("${entry.matchId}")`) release
         - else
           h1 vs
       .col.d-none.d-lg-block
-        - if (entry.released || (isDM && entry.updated))
+        - if (entry.released || (isAdminMode && entry.updated))
           h1= entry.away.score
         -else 
           span away
     .col 
       a(href=`/team/${entry.away.team.id}` target="_blank")
-        img.img-fluid(src=`images/zfl/${entry.away.team.logo}` style="padding:0px")
+        img.img-fluid(src=`/images/zfl/${entry.away.team.logo}` style="padding:0px")
 
 block head
   style.
@@ -34,8 +31,16 @@ block head
     .card{width: 12rem;}
 
     .table > :not(caption) > * > * {padding:0px !important;}
-block main
 
+block nav  
+  ul.navbar-nav.ms-auto.mb-2.mb-md-0
+    li.nav-item
+      -if (!isAdminMode && isDM)
+        a.btn.btn-sm.btn-primary.mx-2.mb-2(href="/fixtures/admin") admin mode
+      -if (isAdminMode)
+        a.btn.btn-primary.mx-2.mb-2(href="/fixtures") exit
+
+block main
   - let rounds = ["","7th October - 21st October","5th November - 18th November","19th November - 2nd December","31st December - 13th January","14th January - 27th January","28th January - 10th February","18th February - 3rd March","4th March - 17th March","18th March - 31st March","8th April - 21st April","22nd April - 5th May"]
 
   .container-fluid
@@ -43,9 +48,9 @@ block main
       -for(let x = 1; x < 12; x++)
         .row.col-12.text-center 
           h1= `Round ${x}`
-            - if (isDM && competitions[0].round == x && !competitions[0].completed)
+            - if (isAdminMode && competitions[0].round == x && !competitions[0].completed)
               button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`completeCompetitions(${x})`) complete
-            - else if (isDM && competitions[0].round +1 == x && competitions[0].completed)
+            - else if (isAdminMode && competitions[0].round +1 == x && competitions[0].completed)
               button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`createCompetitions(${x})`) create
           span= rounds[x]
           - if (competitions[0].round == x)
@@ -73,18 +78,6 @@ block main
             each fixture of competitions[1].fixtures.filter(f => f.round == x)
               +fixture(fixture) 
         .row.col-12 &nbsp;
-
-    //.toast-container.top-0.end-0.p-3
-      .toast.align-items-center.text-bg-success.border-0#successToast(role="alert" aria-live="assertive" aria-atomic="true")
-        .d-flex
-          .toast-body#successBody
-          button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")
-
-      .toast.align-items-center.text-bg-danger.border-0#errorToast(role="alert" aria-live="assertive" aria-atomic="true")
-        .d-flex
-          .toast-body#errorBody
-          button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")
-
 
 block scripts 
   script.
