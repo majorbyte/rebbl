@@ -143,10 +143,11 @@ block content
           .w-100.collapse#collapseStart.mt-2
             .card
               .card-body.text-bg-info
+                p.p-2.border.border-2.border-danger.rounded.bg-danger Do not start the redraft process if you want to participate in the Ure Trophy.
                 p Be sure to have bought what you need. The redraft process only allows for removing improvements, not increasing them.
-                p.p-2.border.border-2.border-warning.rounded You can't buy Rerolls, Assistant Coaches, Cheerleaders, and Apothecary during redraft.
+                p.p-2.border.border-2.border-warning.rounded.bg-warning You can't buy Rerolls, Assistant Coaches, Cheerleaders, and Apothecary during redraft.
                 p Make sure you are finished with picking skills. Since picking skills should be part of the Post Match sequence, you will not be allowed to skill players between the start of the redraft and the Post Match of next season's round 1 match. Since this can't enforced by the client, rebbl.net will keep track of your players. The site and the community are watching you! 
-                p.p-2.border.border-2.border-danger.rounded In case you would skill a player during this period, you will be forced to recreate the player, and any random skill advantages are forfeited.
+                p.p-2.border.border-2.border-danger.rounded.bg-danger In case you would skill a player during this period, you will be forced to recreate the player, and any random skill advantages are forfeited.
               .card-footer.text-bg-info 
                 button.float-end.btn.btn-sm.btn-success(onclick="redraft()") proceed
 
@@ -157,22 +158,22 @@ block content
 
 
 
-  block scripts
-    script.
+block scripts
+  script.
 
-      const redraft = async function (){
-        const response = await fetch(`/bb3/redraft/api/#{team.id}`, {method:"POST"});
-        if (response.ok){
-          const data = await response.json();
-          window.location.href = data.redirect;
-        } else {
-          const data = await response.json();
-          const e = document.getElementById("redraftToast");
-          const d = document.getElementById("redraftError");        
-          d.innerHTML = data.error;
-          
-          const toast = new bootstrap.Toast(e);
-          toast.show();
-        }
-
+    const redraft = async function (){
+      const response = await fetch(`/bb3/redraft/api/#{team.id}`, {method:"POST"});
+      if (response.ok){
+        const data = await response.json();
+        window.location.href = data.redirect;
+      } else {
+        const data = await response.json();
+        const e = document.getElementById("redraftToast");
+        const d = document.getElementById("redraftError");        
+        d.innerHTML = data.error;
+        
+        const toast = new bootstrap.Toast(e);
+        toast.show();
       }
+
+    }
