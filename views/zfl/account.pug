@@ -389,7 +389,7 @@ block scripts
         awayKit3: document.getElementById(`awayKit3`).value,
       };
 
-      const response = await fetch(`/api/team/#{team.id}/kit`,{
+      const response = await fetch(`/api/team/#{team ? team.id : 0}/kit`,{
         method:'PATCH',
         headers:{'Content-Type': 'application/json'},
         body:JSON.stringify(data)
@@ -409,12 +409,12 @@ block scripts
         const c = colours.sort((a,b) => a.name > b.name);
 
         const selected = {
-          homeKit1 : "#{team.kit.homeKit1}",
-          homeKit2 : "#{team.kit.homeKit2}",
-          homeKit3 : "#{team.kit.homeKit3}",
-          awayKit1 : "#{team.kit.awayKit1}",
-          awayKit2 : "#{team.kit.awayKit2}",
-          awayKit3 : "#{team.kit.awayKit3}"
+          homeKit1 : "#{team && team.kit ? team.kit.homeKit1 : '#ffffff'}",
+          homeKit2 : "#{team && team.kit ? team.kit.homeKit2 : '#ffffff'}",
+          homeKit3 : "#{team && team.kit ? team.kit.homeKit3 : '#ffffff'}",
+          awayKit1 : "#{team && team.kit ? team.kit.awayKit1 : '#ffffff'}",
+          awayKit2 : "#{team && team.kit ? team.kit.awayKit2 : '#ffffff'}",
+          awayKit3 : "#{team && team.kit ? team.kit.awayKit3 : '#ffffff'}"
         };
 
         ['home','away'].forEach(kit => {

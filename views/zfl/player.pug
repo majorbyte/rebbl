@@ -1,0 +1,84 @@
+mixin player(player, stats, mvp)
+  - let levels = [0,0,6,16,31,51,76,176,"*"]
+  - let xp_gain = 0
+  - let playerName = (player.number === 0 ? player.position : player.name) + ""
+  
+  - 
+    const getCasualtyIcon = function(){
+      if (player.casualties.length === 0) return false;
+      switch(player.casualties[0]){
+        case 1 : return "ico_action_badly_hurt.png";
+        case 2 : return "ico_action_seriously_hurt.png";
+        case 3 : return "ico_action_serious_injury.png";
+        case 4 : return "ico_action_lasting_injury.png";
+        case 5 : return "ico_action_smashed_knee.png";
+        case 6 : return "ico_action_head_injury.png";
+        case 7 : return "ico_action_broken_arm.png";
+        case 8 : return "ico_action_neck_injury.png";
+        case 9 : return "ico_action_dislocated_shoulder.png";
+        case 10 : return "ico_action_dead.png";
+      }
+      return "ico_action_seriously_hurt.png";
+    }
+  tr
+    // number
+    td.d-flex.justify-content-center
+      span= player ? player.number : ""
+      - if (player.id)
+        img(src=`https://cdn.rebbl.net/images/skills/${player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+      - else if (player.type.startsWith("neutral_")) 
+        img(src=`https://cdn.rebbl.net/images/bb3/hud_inducement_StarPlayer.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+      - else
+        img(src=`https://cdn.rebbl.net/images/bb3/hud_mercenary_tile_picto_mercenary.png` alt="mercenary" title="mercenary" class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+
+    // player
+    td: div(class="match-stats-TeamLabel-name")= playerName
+    // position
+    td
+      -if (player.type)
+        div(class="TeamLabel-name ")= player.type.split("_")[1].replace(/([A-Z])/g, ' $1')
+    // skills
+    td
+      div
+        -if (player.type)
+          //- let playerSkills = Array.isArray(player.skills.skillsItem) ? player.skills.skillsItem : [player.skills.skillsItem]
+          - for(let skill of player.skills)
+            - let s = skills.find(x => x.id == skill)
+            - if (s)
+              img(src=`https://cdn.rebbl.net/images/skills/BB3Standard/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999" )
+          if player.skills.filter(s => s).length > 0
+            span.style(style="margin-left: 32px")
+    td(class="match-stats")
+      -if (player.type && player.stats)
+        div(style="margin-left:15px")= player.stats.pass_reception_success > 0 ? player.stats.pass_reception_success : ""
+    // TD
+    td(class="match-stats")
+      -if (player.type && player.stats)
+        div(style="margin-left:15px")= player.stats.touchdowns_scored > 0 ? player.stats.touchdowns_scored : ""
+    // INT
+    td(class="match-stats")
+      -if (player.type && player.stats)
+        div(style="margin-left:15px")= player.stats.interception_success > 0 ? player.stats.interception_success : ""
+    // CAS
+    td(class="match-stats")
+      -if (player.type && player.stats)
+        div(style="margin-left:15px")= player.stats.casualties_inflicted > 0 ? player.stats.casualties_inflicted : ""
+
+    td.text-center
+      if player.mvp
+        img(src="https://cdn.rebbl.net/images/bb3/mvp.png" title="MVP")
+      if getStat(stats,62) > 0
+        img(src=`https://cdn.rebbl.net/images/bb3/ico_action_expelled_.png`)
+      if getCasualtyIcon()
+        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${getCasualtyIcon()}` title=getCasualtyIcon().replace("ico_action_","").replace("_", " ").replace(".png",""))
+
+    //each id in [53,18,55,19,47]
+      td(class="match-stats")
+        div(style="margin-left:15px")= getStat(stats, id)
+
+    // SPP
+    td(class="match-stats")
+      div=player.xpGained
+    td(class="match-stats")
+      div=Number(player.xpGained) + Number(player.xp)
+

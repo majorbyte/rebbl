@@ -1,0 +1,141 @@
+extends layout.pug
+include functions.pug
+
+
+block append vars
+  -
+    let options = {company:company}
+    //const homeTeamStats = match?.statistics.homeGamerStatistics?.teamStatistics.statistics.statistic || []
+    //const awayTeamStats = match?.statistics.awayGamerStatistics?.teamStatistics.statistics.statistic || []
+    
+block head 
+  style.
+    table img {width: 40px;height: 40px;}    
+
+block main
+  .container
+    .row
+      .col-12.text-center
+        h3= match.competition.name
+    .row.g-0
+      .col-4.row.g-0
+        .col-4
+          div: img.img-fluid(src=`https://cdn.rebbl.net/images/bb3/Logos/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
+        .col-8.text-end
+            div
+              a.fs-4(href=`/team/${match.homeTeam.id}` )= match.homeTeam.name
+            div
+              a.fs-4(href=`/profile/${match.homeGamer.id}`)= match.homeGamer.name
+            div.fs-4= "winnings: " + (match.homeGameResultGain.newTreasury - match.homeGameResultGain.previousTreasury - match.homeGameResultGain.cashSpentDuringMatch)
+            div.fs-4= "fan attendance: " + (match.homeGameResultGain.fanAttendance)
+            - let homeFans = Number(match.homeGameResultGain.newDedicatedFans) - Number(match.homeGameResultGain.previousDedicatedFans)
+            - if (homeFans != 0)
+              div.fs-4(title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans " + (homeFans > 0 ? `(+${homeFans})` : `(${homeFans})`)
+            -else 
+              div.fs-4(title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
+      .col-4.text-center 
+        if !match.released 
+          .col-12(style="justify-content: end;padding: 0px;background-color: unset;}")
+            span.fs-4.badge.text-bg-warning unreleased
+
+        span
+          if match.homeScore > match.awayScore
+            span.fs-2(class="MatchStatus-score is-winner")= match.homeScore
+            span.fs-2(class="MatchStatus-score") -
+            span.fs-2(class="MatchStatus-score")= match.awayScore
+          else if match.awayScore > match.homeScore
+            span.fs-2(class="MatchStatus-score")= match.homeScore
+            span.fs-2(class="MatchStatus-score") -
+            span.fs-2(class="MatchStatus-score is-winner")= match.awayScore
+          else
+            span.fs-2(class="MatchStatus-score")= match.homeScore
+            span.fs-2(class="MatchStatus-score") -
+            span.fs-2(class="MatchStatus-score")= match.awayScore
+        if (match.replayFile)
+          .col-12
+            a(href=`https://replays.rebbl.net/bb3/${match.replayFile}`)
+              img(src=`https://cdn.rebbl.net/images/Rare.png` style="height:60px" alt="Download replay" title="Download replay")
+
+
+      .col-4.row.g-0
+        .col-8
+          div
+            a.fs-4(href=`/team/${match.awayTeam.id}` )= match.awayTeam.name
+          div
+            a.fs-4(href=`/profile/${match.awayGamer.id}`)= match.awayGamer.name
+          div.fs-4= "winnings: " + (match.awayGameResultGain.newTreasury - match.awayGameResultGain.previousTreasury - match.awayGameResultGain.cashSpentDuringMatch)
+          div.fs-4= "fan attendance: " + (match.awayGameResultGain.fanAttendance)
+          - let awayFans = Number(match.awayGameResultGain.newDedicatedFans) - Number(match.awayGameResultGain.previousDedicatedFans)
+          - if ( awayFans != 0)
+            div.fs-4(title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans " + (awayFans > 0 ? `(+${awayFans})` : `(${awayFans})`)
+          -else 
+            div.fs-4(title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans"
+        .col-4
+          div: img.img-fluid(src=`https://cdn.rebbl.net/images/bb3/Logos/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
+                      
+    .row
+      if match.homeHasConceded == "0" && match.awayHasConceded == "0"
+        .col-12
+          br
+        .col-12.d-flex
+          table.table.table-dark
+            thead 
+              tr 
+                th statistic 
+                th= match.homeTeam.name
+                th= match.awayTeam.name
+
+            tbody
+              tr
+                td Team value
+                td= match.homeTeam.value
+                td= match.awayTeam.value
+
+                //each stat in homeTeamStats.filter(x => x.categoryId != 2 && [18,27,31].indexOf(Number(x.id)) === -1)
+                  +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
+                //+teamStat("Spent on inducements", [67], homeTeamStats, awayTeamStats)
+                  +teamStat("Possession (total / own / oppo)", [63,64,65], homeTeamStats, awayTeamStats)
+                  +teamStat("Pass (try/success/yards)", [1009], homeTeamStats, awayTeamStats)
+                  +teamStat("Catch (try/success)", [1002], homeTeamStats, awayTeamStats)
+                  +teamStat("Interceptions", [1004], awayTeamStats, homeTeamStats)
+                  +teamStat("Dodge (try/success)", [1003], homeTeamStats, awayTeamStats)
+                  +teamStat("Rush (try/success)", [1011], homeTeamStats, awayTeamStats)
+          table.table.table-dark
+            thead 
+              tr 
+                th statistic 
+                th= match.homeTeam.name
+                th= match.awayTeam.name
+
+            tbody
+              tr
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+              - const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+              //each stat in homeTeamStats.filter(x => x.categoryId == 2).sort((a,b) => collator.compare(a.name, b.name))
+                +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
+
+              //+teamStat("Blocks succeeded", [26], homeTeamStats, awayTeamStats)
+                +teamStat("Armour breaks", [61], homeTeamStats, awayTeamStats)
+                +teamStat("Knockout (inflicted/sustained)", [25,29], homeTeamStats, awayTeamStats)
+                +teamStat("Casualties (inflicted/sustained)", [19,28], homeTeamStats, awayTeamStats)
+                +teamStat("Kills / Deaths", [21,31], homeTeamStats, awayTeamStats)
+                +teamStat("Surfs", [57], homeTeamStats, awayTeamStats)
+                +teamStat("Fouls / Expulsion", [47,62], homeTeamStats, awayTeamStats)
+                +teamStat("Throw Team-Mate success", [69], homeTeamStats, awayTeamStats)
+
+      - match.homeTeam.mvp = match.homeMvp
+      //- let roster = Array.isArray(match.spp.homeTeamSppResult.playerSppResults.playerSppResult) ? match.spp.homeTeamSppResult.playerSppResults.playerSppResult : [match.spp.homeTeamSppResult.playerSppResults.playerSppResult]
+      //- match.homeTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
+      //- - match.homeTeam.rosterStatistics = match.statistics.homeGamerStatistics.teamStatistics.playerStatistics
+      - match.awayTeam.mvp = match.awayMvp
+      //- - roster = Array.isArray(match.spp.awayTeamSppResult.playerSppResults.playerSppResult) ? match.spp.awayTeamSppResult.playerSppResults.playerSppResult : [match.spp.awayTeamSppResult.playerSppResults.playerSppResult]
+      //- - match.awayTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
+      //- - match.awayTeam.rosterStatistics = match.statistics.awayGamerStatistics.teamStatistics.playerStatistics
+      hr
+      - match.homeTeam.coach = match.homeGamer 
+      - match.awayTeam.coach = match.awayGamer 
+      table.table.table-dark
+        each team in [match.homeTeam, match.awayTeam]
+          include matchTeam.pug

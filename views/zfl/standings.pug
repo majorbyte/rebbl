@@ -15,6 +15,7 @@ block main
       table.table.table-dark
         thead 
           th
+          th.align-middle.text-start coach 
           th.align-middle.text-start faction 
           th.align-middle.text-center played 
           th.align-middle.text-center wins 
@@ -31,7 +32,13 @@ block main
               td 
                 a(href=`/team/${entry.id}` target="_blank")
                   img(src=`images/zfl/${entry.logo}` style= "padding:0px")
-              td.align-middle.text-start.fw-bold= getRace(entry.race)
+              - let account = accounts.find(x => x.teamId == entry.id)
+              - if (account)
+                td.align-middle.text-start.fw-bold.fs-4
+                  a.link-underline.link-underline-opacity-0(href=`/profile/${entry.coach.id}`)= account.zflCoachName || entry.coach.name
+              - else
+                td.align-middle.text-start.fw-bold.fs-4= entry.coach.name
+              td.align-middle.text-start.fw-bold.fs-4= getRace(entry.race)
               td.align-middle.text-center= entry.games 
               td.align-middle.text-center= entry.wins 
               td.align-middle.text-center= entry.draws 
@@ -39,5 +46,5 @@ block main
               td.align-middle.text-center= entry.tdFor
               td.align-middle.text-center= entry.tdAgainst
               td.align-middle.text-center= entry.tdDiff
-              td.align-middle.text-center= entry.points
+              td.align-middle.text-center.fs-3= entry.points
             

@@ -104,3 +104,5 @@ certificates
 .vscode/
 grunk.js
 temp.js
+replays/
+zflstats/

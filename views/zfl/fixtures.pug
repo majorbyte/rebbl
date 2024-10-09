@@ -1,23 +1,29 @@
 extends layout.pug
 
 mixin fixture(entry)
+  - 
+    let canSee = entry.released
+    canSee = canSee || (isAdminMode && isDM && entry.updated)
+    canSee = canSee || (isAdminMode && isAdmin && entry.updated && (teamIds.some(x => x.id == entry.home.team.id ) || teamIds.some(x => x.id == entry.away.team.id)))
   .row.col-12.align-items-center
     .col 
       a(href=`/team/${entry.home.team.id}` target="_blank")
         img.img-fluid(src=`/images/zfl/${entry.home.team.logo}` style="padding:0px")
     .col.text-center.row.align-items-center
       .col.d-none.d-lg-block 
-        - if (entry.released || (isAdminMode && entry.updated))
+        - if (canSee)
           h1= entry.home.score
         -else 
           span home
       .col
-        - if (isAdminMode && entry.updated && !entry.released)
+        if canSee && !entry.released
           button.btn.btn-sm.btn-primary.mx-2.mb-2(id=entry.matchId onclick=`releaseFixture("${entry.matchId}")`) release
-        - else
+        else
           h1 vs
+        if canSee 
+          a.btn.btn-sm.btn-success.mx-2.mb-2(href=`/match/${entry.gameId}` target="_blank") report
       .col.d-none.d-lg-block
-        - if (entry.released || (isAdminMode && entry.updated))
+        - if (canSee)
           h1= entry.away.score
         -else 
           span away
@@ -35,7 +41,7 @@ block head
 block nav  
   ul.navbar-nav.ms-auto.mb-2.mb-md-0
     li.nav-item
-      -if (!isAdminMode && isDM)
+      -if (!isAdminMode && (isDM || isAdmin))
         a.btn.btn-sm.btn-primary.mx-2.mb-2(href="/fixtures/admin") admin mode
       -if (isAdminMode)
         a.btn.btn-primary.mx-2.mb-2(href="/fixtures") exit

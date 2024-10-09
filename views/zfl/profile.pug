@@ -74,6 +74,10 @@ block head
       background-position-y: -75px;      
     }
 
+    h1{
+      color: var(--bs-heading-color);
+    }
+
 
 block main 
   main.container
@@ -97,12 +101,8 @@ block main
                 p.mb-0.fs-4 Following                
 
           .col-lg-4.order-lg-1.order-1.text-center
-            .d-flex.align-items-center.justify-content-center.mb-2(style="margin-top:-25px")
-              .linear-gradient.d-flex.align-items-center.justify-content-center.rounded-circle(style='width: 110px; height: 110px;')
-                .border.border-2.d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 100px; height: 100px;border-color:#e3e3e3')
-                  //img.w-100.h-100(src=`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar.startsWith("a_") ? "gif" : "png"}`)
             .text-left
-              h5.fs-5.mb-4= user.username
+              h1.bold.m-2= account.zflCoachName
           .col-lg-4.order-lg-1.order-1
             ul.list-unstyled.d-flex.align-items-center.justify-content-center.justify-content-lg-end.my-3.gap-3.me-3
               //li.position-relative
@@ -133,13 +133,6 @@ block main
                     i.fa.fa-briefcase.text-dark.fs-6
                     h6#bioCoachName.fs-4.fw-semibold.mb-0= account.zflCoachName
           .col-lg-8
-            .card.shadow-none.border
-              .card-body
-                .row.align-items-center 
-                  .input-group
-                    span.input-group-text BB3 Coach Name
-                    input.form-control(type="text" id="coachName" value=account.coach ? account.coach.name : "" disabled)
-
             - if (team)
               - if (!team.kit) team.kit = {homeKit1:"#ffffff", homeKit2: "#ffffff", homeKit3: "#ffffff", awayKit1:"#ffffff", awayKit2: "#ffffff", awayKit3: "#ffffff"}
               .card.shadow-none.border
@@ -161,5 +154,12 @@ block main
                               .col#away3(style="background-color:"+team.kit.awayKit3) &nbsp;
                     .col-1
                       img.float-end(src=`https://cdn.rebbl.net/images/bb3/Logos/${team.logo.icon}` class="align-top" style="height:150px")
+            .card.shadow-none.border
+              .card-body
+                .row.align-items-center 
+                  .input-group
+                    span.input-group-text BB3 Coach Name
+                    input.form-control(type="text" id="coachName" value=account.coach ? account.coach.name : "" disabled)
+
 
 

@@ -6,6 +6,8 @@ node-modules
 public-images/images/logos
 public-images/images/portraits
 public-images/images/skills
+replays
+zflstats
 
 .git
 .vscode

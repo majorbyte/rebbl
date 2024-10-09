@@ -22,10 +22,23 @@ block main
           i= team.motto
     .clearfix
     .row(style="margin-left:0px").px-5
-      .col-md-2.col-6
+      .col-md-2.col-4
         strong=`Current TV: ${team.value}`
-      .col-md-2.col-6
+      .col-md-2.col-4
         strong=`Cash: ${team.treasury}`
+      .col-md-2.col-4
+        - if (isAdmin)
+          strong admin 
+          select#adminId(name="" value=team.admin ? team.admin.id : null onchange="onValueChange()")
+            -if (!team.admin)
+              option(selected disabled) choose admin
+            each admin of admins.sort((a,b) => a.coach.name > b.coach.name)  
+              - if (team.admin)
+                option(value=admin.coach.id selected=admin.coach.id == team.admin.id && 'selected' )= admin.coach.name
+              - else
+                option(value=admin.coach.id )= admin.coach.name
+        - else if (team.admin)
+          strong=`admin: ${team.admin.name}`
 
     br
     nav.col-12.px-5
@@ -96,3 +109,16 @@ block main
 
                   td=player.player.spp
                   td(data-bind="text:value")=player.player.value
+block scripts 
+  script.
+    async function onValueChange(admin){
+      const e = document.getElementById("adminId");
+
+      console.log(`/api/team/#{team.id}/admin/${e.value}`)
+
+      const response = await fetch(`/api/team/#{team.id}/admin/${e.value}`,{
+        method:'PATCH',
+        headers:{'Content-Type': 'application/json'},
+      });
+
+    }

@@ -1,0 +1,38 @@
+include player.pug
+
+colgroup
+  col(span="5")
+  col.odd
+  col.even
+  col.odd
+  col.even
+  col.odd
+  col.even
+  col.odd
+thead
+  tr
+    th(colspan="11")
+      h2= team.name
+
+thead
+  tr
+    th.align-center(style="width:50px;") #
+    th.align-left Player
+    th.align-left Position
+    th.align-left(style="min-width:160px") Skills
+    th.align-center Comp
+    th.align-center TD
+    th.align-center INT
+    th.align-center CAS
+    th.align-center 
+    //th(class="align-center") Foul
+    th.align-center SPP
+    th.align-center( title="What your SPP should be at after the match is validated") Σ SPP
+- let index = 0
+tbody
+  - let isAdminned = team.mvp != 1
+  - let pageSkills = []
+  each player in team.roster
+    -if (player.type || player.position)
+      - const stats = team.rosterStatistics ? team.rosterStatistics.find(x => x.id === player.id).statistics : []
+      +player(player, stats, team.mvp)
