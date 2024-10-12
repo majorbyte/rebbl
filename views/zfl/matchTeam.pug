@@ -1,38 +1,69 @@
 include player.pug
 
-colgroup
-  col(span="5")
-  col.odd
-  col.even
-  col.odd
-  col.even
-  col.odd
-  col.even
-  col.odd
-thead
-  tr
-    th(colspan="11")
-      h2= team.name
 
 thead
   tr
+    th(colspan="12")
+      h2= team.name
+
+
+thead
+  tr
+    th(data-type="match" colspan="9")
+    th.d-none(data-type="stats" colspan="2")
+    th.text-center.d-none(data-type="stats" colspan="4") 
+      div Sustained
+    th.text-center.d-none(data-type="stats" colspan="3") 
+      div Inflicted
+    th.text-center(colspan="3")
+      .row
+        .col.d-none(data-type="stats") Others
+        .col.align-end
+          .form-check.form-switch.form-check-reverse
+            input.form-check-input(type="checkbox" role="switch" onchange=`toggleStats("${team.id}")`)
+            label.form-check-label(for="flexSwitchCheckDefault") Show stats
+  tr
     th.align-center(style="width:50px;") #
     th.align-left Player
-    th.align-left Position
-    th.align-left(style="min-width:160px") Skills
-    th.align-center Comp
-    th.align-center TD
-    th.align-center INT
-    th.align-center CAS
-    th.align-center 
-    //th(class="align-center") Foul
-    th.align-center SPP
-    th.align-center( title="What your SPP should be at after the match is validated") Σ SPP
-- let index = 0
+    th.align-left(data-type="match") Position
+    th.align-left(data-type="match" style="min-width:160px") Skills
+    th.align-center(data-type="match") Comp
+    th.align-center(data-type="match") TD
+    th.align-center(data-type="match") INT
+    th.align-center(data-type="match") Sacks
+    th.align-center(data-type="match") Kills
+    th.align-center(data-type="match") 
+    th.align-center(data-type="match") SPP
+    th.align-center(data-type="match" title="What your SPP should be at after the match is validated") Σ SPP
+    th.text-center.d-none(data-type="stats") Armor Rolls
+    th.text-center.d-none(data-type="stats") Cas
+    th.text-center.d-none(data-type="stats") Fouls
+    th.text-center.d-none(data-type="stats") Surfs
+    th.text-center.d-none(data-type="stats") Cas
+    th.text-center.d-none(data-type="stats") Fouls
+    th.text-center.d-none(data-type="stats") Surfs
+    th.text-center.d-none(data-type="stats") Expulsions
+    th.text-center.d-none(data-type="stats") DodgeTurnovers
+    th.text-center.d-none(data-type="stats") Dubskulls Rolled
+
 tbody
+  colgroup.d-none(data-type="stats")
+    col(class="odd")
+    col(class="odd")
+    col(class="odd")
+    col(class="odd")
+    col(class="odd")
+    col(class="odd")
+    col(class="even")
+    col(class="even")
+    col(class="even")
+    col(class="odd")
+    col(class="odd")
+    col(class="odd")
+
   - let isAdminned = team.mvp != 1
   - let pageSkills = []
   each player in team.roster
     -if (player.type || player.position)
-      - const stats = team.rosterStatistics ? team.rosterStatistics.find(x => x.id === player.id).statistics : []
+      - const stats = team.statistics.find(x => x.LobbyId === player.id) 
       +player(player, stats, team.mvp)

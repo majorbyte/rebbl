@@ -15,7 +15,7 @@ block content
   //div.container.navcontainer(style="display:flex;flex-flow:wrap" data-index="0")
   .container
     - let compName = ""
-    each competition, index in competitions.sort(function(a,b){return a.name > b.name})
+    each competition, index in competitions.filter(x => x.name.indexOf(" R") ===-1) .sort(function(a,b){return a.name > b.name})
       //- if (compName != "" && compName != comp.name.split(" ")[0])
         div.col-12
       //- compName = comp.name.split(" ")[0]  

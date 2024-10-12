@@ -40,6 +40,8 @@ class ZFL{
     this.router.patch('/api/team/:id/admin/:adminId', this.#ensureLoggedIn, this.#setTeamAdmin.bind(this));
     this.router.patch('/api/competition/:id/release', this.#ensureLoggedIn, this.#releaseMatch.bind(this));
 
+    this.router.post('/upload', util.verifyMaintenanceHeader, this.#updateStats);
+
     this.router.get('/update',util.verifyMaintenanceToken, async (req,res) => {
       await zflService.updateCompetitions("9a2ffa7c-ab2a-11ee-a745-02000090a64f");
       await zflService.updateCompetitions("e3500321-83d6-11ef-be7b-bc24112ec32e");
@@ -213,6 +215,20 @@ class ZFL{
       res.status(400).send(e.message);
     }
 
+  }
+
+  async #updateStats(req,res){
+    try{
+      await dataService.updateZFLMatch({gameId:req.body.id},{$set:{
+        "homeTeam.statistics":req.body.home.players,
+        "awayTeam.statistics":req.body.away.players, 
+        "homeGameResultGain.fanAttendanceRoll":req.body.home.fans, 
+        "awayGameResultGain.fanAttendanceRoll":req.body.away.fans
+      }});
+      res.status(200).send();
+    } catch (ex){
+      console.error(ex);
+    }
   }
 
   async #releaseMatch(req,res){

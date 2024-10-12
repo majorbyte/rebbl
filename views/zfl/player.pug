@@ -34,11 +34,11 @@ mixin player(player, stats, mvp)
     // player
     td: div(class="match-stats-TeamLabel-name")= playerName
     // position
-    td
+    td(data-type="match")
       -if (player.type)
         div(class="TeamLabel-name ")= player.type.split("_")[1].replace(/([A-Z])/g, ' $1')
     // skills
-    td
+    td(data-type="match")
       div
         -if (player.type)
           //- let playerSkills = Array.isArray(player.skills.skillsItem) ? player.skills.skillsItem : [player.skills.skillsItem]
@@ -48,37 +48,60 @@ mixin player(player, stats, mvp)
               img(src=`https://cdn.rebbl.net/images/skills/BB3Standard/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999" )
           if player.skills.filter(s => s).length > 0
             span.style(style="margin-left: 32px")
-    td(class="match-stats")
+    td.text-center(class="match-stats" data-type="match")
       -if (player.type && player.stats)
         div(style="margin-left:15px")= player.stats.pass_reception_success > 0 ? player.stats.pass_reception_success : ""
     // TD
-    td(class="match-stats")
+    td.text-center(class="match-stats" data-type="match")
       -if (player.type && player.stats)
         div(style="margin-left:15px")= player.stats.touchdowns_scored > 0 ? player.stats.touchdowns_scored : ""
     // INT
-    td(class="match-stats")
-      -if (player.type && player.stats)
+    td.text-center(class="match-stats" data-type="match")
+      if player.type && player.stats
         div(style="margin-left:15px")= player.stats.interception_success > 0 ? player.stats.interception_success : ""
-    // CAS
-    td(class="match-stats")
-      -if (player.type && player.stats)
-        div(style="margin-left:15px")= player.stats.casualties_inflicted > 0 ? player.stats.casualties_inflicted : ""
+    // Sacks
+    td.text-center(class="match-stats" data-type="match")
+      if (stats)
+        div(style="margin-left:15px")= stats.Sacks > 0 ? stats.Sacks : ""
+    // Kills
+    td.text-center(class="match-stats" data-type="match")
+      if (stats)
+        div(style="margin-left:15px")= stats.Kills > 0 ? stats.Kills : ""
 
-    td.text-center
+    td.text-center( data-type="match")
       if player.mvp
         img(src="https://cdn.rebbl.net/images/bb3/mvp.png" title="MVP")
-      if getStat(stats,62) > 0
+      if stats && stats.Expulsions > 0
         img(src=`https://cdn.rebbl.net/images/bb3/ico_action_expelled_.png`)
       if getCasualtyIcon()
         img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${getCasualtyIcon()}` title=getCasualtyIcon().replace("ico_action_","").replace("_", " ").replace(".png",""))
 
-    //each id in [53,18,55,19,47]
-      td(class="match-stats")
-        div(style="margin-left:15px")= getStat(stats, id)
-
     // SPP
-    td(class="match-stats")
+    td.text-center(class="match-stats" data-type="match")
       div=player.xpGained
-    td(class="match-stats")
+    td.text-center(class="match-stats" data-type="match")
       div=Number(player.xpGained) + Number(player.xp)
+
+
+    td.d-none(data-type="stats")
+      .text-center= stats.ArmorRollsSustained
+    td.align-center.d-none(data-type="stats")
+      .text-center= stats.CasSustained
+    td.align-center.d-none(data-type="stats")
+      .text-center= stats.FoulsSustained
+    td.align-center.d-none(data-type="stats")
+      .text-center= stats.SurfsSustained
+    td.align-center.d-none(data-type="stats")
+      .text-center= stats.CasInflicted
+    td.align-center.d-none(data-type="stats")
+      .text-center= stats.FoulsInflicted
+    td.align-center.d-none(data-type="stats")
+      .text-center= stats.SurfsInflicted
+    td.align-center.d-none(data-type="stats")
+      .text-center= stats.Expulsions
+    td.align-center.d-none(data-type="stats")
+      .text-center= stats.DodgeTurnovers
+    td.align-center.d-none(data-type="stats")
+      .text-center= stats.DubskullsRolled
+
 
