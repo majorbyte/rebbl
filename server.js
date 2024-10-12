@@ -177,14 +177,15 @@ class Server{
 
 
     const zflRoutes = require('./routes/zfl/zfl.js');
-     this.app.use(this.host(['zfl.ovh','zfl.localhost.com'],zflRoutes.router));
+    this.app.use(this.host(['zfl.ovh','zfl.localhost.com'],zflRoutes.router));
 
     const routes = require("./routes/routes.js");
     this.app.use(this.host(['localhost.com','rebbl.net'], new routes().routesConfig()));
 
 
     this.app.use(this.host(['localhost.com','rebbl.net'], function(req,res,next){
-      var err = new Error('Not Found');
+      const cause = new Error(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+      const err = new Error('Not Found', {cause});
       err.status = 404;
       next(err);
     }));

@@ -11,21 +11,22 @@ mixin fixture(entry)
         img.img-fluid(src=`/images/zfl/${entry.home.team.logo}` style="padding:0px")
     .col.text-center.row.align-items-center
       .col.d-none.d-lg-block 
-        - if (canSee)
+        if canSee
           h1= entry.home.score
-        -else 
+        else 
           span home
       .col
         if canSee && !entry.released
           button.btn.btn-sm.btn-primary.mx-2.mb-2(id=entry.matchId onclick=`releaseFixture("${entry.matchId}")`) release
+        if canSee
+          h1 
+            a(href=`/match/${entry.gameId}` target="_blank") vs
         else
           h1 vs
-        if canSee 
-          a.btn.btn-sm.btn-success.mx-2.mb-2(href=`/match/${entry.gameId}` target="_blank") report
       .col.d-none.d-lg-block
-        - if (canSee)
+        if canSee
           h1= entry.away.score
-        -else 
+        else 
           span away
     .col 
       a(href=`/team/${entry.away.team.id}` target="_blank")
@@ -41,9 +42,9 @@ block head
 block nav  
   ul.navbar-nav.ms-auto.mb-2.mb-md-0
     li.nav-item
-      -if (!isAdminMode && (isDM || isAdmin))
+      if !isAdminMode && (isDM || isAdmin)
         a.btn.btn-sm.btn-primary.mx-2.mb-2(href="/fixtures/admin") admin mode
-      -if (isAdminMode)
+      if isAdminMode
         a.btn.btn-primary.mx-2.mb-2(href="/fixtures") exit
 
 block main
@@ -51,15 +52,15 @@ block main
 
   .container-fluid
     .row
-      -for(let x = 1; x < 12; x++)
+      - for(let x = 1; x < 12; x++)
         .row.col-12.text-center 
           h1= `Round ${x}`
-            - if (isAdminMode && competitions[0].round == x && !competitions[0].completed)
+            if isAdminMode && competitions[0].round == x && !competitions[0].completed
               button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`completeCompetitions(${x})`) complete
-            - else if (isAdminMode && competitions[0].round +1 == x && competitions[0].completed)
+            else if isAdminMode && competitions[0].round +1 == x && competitions[0].completed
               button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`createCompetitions(${x})`) create
           span= rounds[x]
-          - if (competitions[0].round == x)
+          if competitions[0].round == x
             .toast-container.end-0.p-3
               .toast.align-items-center.text-bg-success.border-0#successToast(role="alert" aria-live="assertive" aria-atomic="true")
                 .d-flex

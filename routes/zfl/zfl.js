@@ -219,12 +219,18 @@ class ZFL{
 
   async #updateStats(req,res){
     try{
-      await dataService.updateZFLMatch({gameId:req.body.id},{$set:{
-        "homeTeam.statistics":req.body.home.players,
-        "awayTeam.statistics":req.body.away.players, 
-        "homeGameResultGain.fanAttendanceRoll":req.body.home.fans, 
-        "awayGameResultGain.fanAttendanceRoll":req.body.away.fans
-      }});
+      if (!req.body.id) {
+        res.status(204).send();
+        return;
+      }
+      await dataService.updateZFLMatch({gameId:req.body.id},{
+        $set:{
+          "homeTeam.statistics":req.body.home.players,
+          "awayTeam.statistics":req.body.away.players, 
+          "homeGameResultGain.fanAttendanceRoll":req.body.home.fans, 
+          "awayGameResultGain.fanAttendanceRoll":req.body.away.fans
+        }
+      });
       res.status(200).send();
     } catch (ex){
       console.error(ex);
@@ -236,10 +242,7 @@ class ZFL{
       let account = await dataService.getZFLAccount({id:res.locals.user.id});
       if (!account.roles.some(x => x == "dm")) throw new Error("Insufficient rights");
 
-      await dataService.updateZFLCompetition({"fixtures.matchId":req.params.id},{$set:{"fixtures.$.released":true}});
-
-      await dataService.updateZFLMatch({"matchId":req.params.id},{$set:{"released":true}});
-
+      zflService.ReleaseAndUpdate();
 
       res.status(200).send();
     }
