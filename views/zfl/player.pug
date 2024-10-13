@@ -2,7 +2,7 @@ mixin player(player, stats, mvp)
   - let levels = [0,0,6,16,31,51,76,176,"*"]
   - let xp_gain = 0
   - let playerName = (player.number === 0 ? player.position : player.name) + ""
-  
+  - if (!stats) stats = { TouchdownsScored : 0, CasInflicted : 0, CasSustained : 0, PassCompletions : 0, FoulsInflicted : 0, FoulsSustained : 1, SppEarned : 0, Sacks : 0, Kills : 0, SurfsInflicted : 0, SurfsSustained : 0, Expulsions : 0, DodgeTurnovers : 0, DubskullsRolled : 0, ArmorRollsSustained : 6}
   - 
     const getCasualtyIcon = function(){
       if (player.casualties.length === 0) return false;

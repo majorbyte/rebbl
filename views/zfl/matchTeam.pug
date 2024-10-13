@@ -65,5 +65,5 @@ tbody
   - let pageSkills = []
   each player in team.roster
     -if (player.type || player.position)
-      - const stats = team.statistics.find(x => x.LobbyId === player.id) 
+      - const stats = team.statistics?.find(x => x.LobbyId === player.id) 
       +player(player, stats, team.mvp)

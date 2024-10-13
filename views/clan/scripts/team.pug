@@ -67,6 +67,8 @@ script.
     playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
     hasLegacyPlayer = () => this.roster.some(player => player.id > 0);
     positions = () => {
+      console.dir(this.race);
+      console.dir(playerTypes);
       if (!this.race || this.roster.length >= 16) return [];
 
       const types = playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b);

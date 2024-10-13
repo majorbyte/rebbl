@@ -21,6 +21,7 @@ USER node
 
 RUN mkdir /home/node/code
 RUN mkdir /home/node/code/replays
+RUN mkdir /home/node/code/zflstats
 
 WORKDIR /home/node/code
 
@@ -32,4 +33,4 @@ RUN npm prune --production
 
 COPY --chown=node:node . .
 
-CMD ["node","server.js"]
+CMD ["node","server.js"] 
