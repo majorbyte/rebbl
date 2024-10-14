@@ -43,7 +43,6 @@ block main
               a.fs-4(href=`/team/${match.homeTeam.id}` )= match.homeTeam.name
             div
               a.fs-4(href=`/profile/${match.homeGamer.id}`)= match.homeGamer.name
-            div.fs-4= "winnings: " + (match.homeGameResultGain.newTreasury - match.homeGameResultGain.previousTreasury - match.homeGameResultGain.cashSpentDuringMatch)
             div.fs-4= "Fairweather fans: " + (match.homeGameResultGain.fanAttendanceRoll * 1000)
             - let homeFans = Number(match.homeGameResultGain.newDedicatedFans) - Number(match.homeGameResultGain.previousDedicatedFans)
             - if (homeFans != 0)
@@ -80,7 +79,6 @@ block main
             a.fs-4(href=`/team/${match.awayTeam.id}` )= match.awayTeam.name
           div
             a.fs-4(href=`/profile/${match.awayGamer.id}`)= match.awayGamer.name
-          div.fs-4= "winnings: " + (match.awayGameResultGain.newTreasury - match.awayGameResultGain.previousTreasury - match.awayGameResultGain.cashSpentDuringMatch)
           div.fs-4= "Fairweather fans: " + (match.awayGameResultGain.fanAttendanceRoll * 1000)
           - let awayFans = Number(match.awayGameResultGain.newDedicatedFans) - Number(match.awayGameResultGain.previousDedicatedFans)
           - if ( awayFans != 0)
@@ -129,5 +127,5 @@ block main
       - match.homeTeam.coach = match.homeGamer 
       - match.awayTeam.coach = match.awayGamer 
       each team in [match.homeTeam, match.awayTeam]
-        table.table.table-dark(id=`table-${team.id}`)
+        table.table.table-dark.table-striped(id=`table-${team.id}`)
           include matchTeam.pug

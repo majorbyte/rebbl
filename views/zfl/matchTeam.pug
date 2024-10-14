@@ -1,5 +1,19 @@
 include player.pug
 
+colgroup.d-none(data-type="stats")
+  col(class="odd")
+  col(class="odd")
+  col(class="odd")
+  col(class="odd")
+  col(class="odd")
+  col(class="odd")
+  col(class="even")
+  col(class="even")
+  col(class="even")
+  col(class="odd")
+  col(class="odd")
+  col(class="odd")
+
 
 thead
   tr
@@ -20,21 +34,21 @@ thead
         .col.d-none(data-type="stats") Others
         .col.align-end
           .form-check.form-switch.form-check-reverse
-            input.form-check-input(type="checkbox" role="switch" onchange=`toggleStats("${team.id}")`)
+            input.form-check-input(type="checkbox" role="switch" onchange=`toggleStats("${team.id}")` id=`sw-${team.id}`)
             label.form-check-label(for="flexSwitchCheckDefault") Show stats
   tr
-    th.align-center(style="width:50px;") #
+    th.align-middle(style="width:50px;") #
     th.align-left Player
     th.align-left(data-type="match") Position
     th.align-left(data-type="match" style="min-width:160px") Skills
-    th.align-center(data-type="match") Comp
-    th.align-center(data-type="match") TD
-    th.align-center(data-type="match") INT
-    th.align-center(data-type="match") Sacks
-    th.align-center(data-type="match") Kills
-    th.align-center(data-type="match") 
-    th.align-center(data-type="match") SPP
-    th.align-center(data-type="match" title="What your SPP should be at after the match is validated") Σ SPP
+    th.align-middle(data-type="match") Comp
+    th.align-middle(data-type="match") TD
+    th.align-middle(data-type="match") INT
+    th.align-middle(data-type="match") Sacks
+    th.align-middle(data-type="match") Kills
+    th.align-middle(data-type="match") 
+    th.align-middle(data-type="match") SPP
+    th.align-middle(data-type="match" title="What your SPP should be at after the match is validated") Σ SPP
     th.text-center.d-none(data-type="stats") Armor Rolls
     th.text-center.d-none(data-type="stats") Cas
     th.text-center.d-none(data-type="stats") Fouls
@@ -46,20 +60,7 @@ thead
     th.text-center.d-none(data-type="stats") DodgeTurnovers
     th.text-center.d-none(data-type="stats") Dubskulls Rolled
 
-tbody
-  colgroup.d-none(data-type="stats")
-    col(class="odd")
-    col(class="odd")
-    col(class="odd")
-    col(class="odd")
-    col(class="odd")
-    col(class="odd")
-    col(class="even")
-    col(class="even")
-    col(class="even")
-    col(class="odd")
-    col(class="odd")
-    col(class="odd")
+tbody(id=`table-${team.id}`)
 
   - let isAdminned = team.mvp != 1
   - let pageSkills = []
