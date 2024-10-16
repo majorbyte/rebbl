@@ -26,6 +26,7 @@ class ZFL{
     this.router.get("/profile/:id", this.#getProfile );
 
     this.router.get("/standings", async (_,res) => res.render("zfl/standings" , {competitions:await dataService.getZFLCompetitions({year:this.year}), accounts:await dataService.getZFLAccounts({})}));
+    this.router.get("/playerstats", util.cache(60*60), this.#getPlayerStats.bind(this));
     this.router.get('/fixtures',  this.#getFixtures.bind(this));
     this.router.get('/fixtures/admin', this.#ensureLoggedIn, this.#getFixturesAdmin.bind(this));
 
@@ -242,7 +243,7 @@ class ZFL{
       let account = await dataService.getZFLAccount({id:res.locals.user.id});
       if (!account.roles.some(x => x == "dm")) throw new Error("Insufficient rights");
 
-      zflService.ReleaseAndUpdate();
+      zflService.ReleaseAndUpdate(req.params.id);
 
       res.status(200).send();
     }
@@ -250,6 +251,26 @@ class ZFL{
       console.error(e);
       res.status(400).send(e.message);
     }
+  }
+
+  async #getPlayerStats(_,res){
+    const sacks = await dataService.getZFLStats({year:this.year,Sacks:{$gt:0}},{},{Sacks:-1},10);
+    const passes = await dataService.getZFLStats({year:this.year,PassCompletions:{$gt:0}},{},{PassCompletions:-1},10);
+    const touchdowns = await dataService.getZFLStats({year:this.year,TouchdownsScored:{$gt:0}},{},{TouchdownsScored:-1},10);
+    const spp = await dataService.getZFLStats({year:this.year,SppEarned:{$gt:0}},{},{SppEarned:-1},10);
+    const casInflicted = await dataService.getZFLStats({year:this.year,CasInflicted:{$gt:0}},{},{CasInflicted:-1},10);
+    const casSustained = await dataService.getZFLStats({year:this.year,CasSustained:{$gt:0}},{},{CasSustained:-1},10);
+    const foulsInflicted = await dataService.getZFLStats({year:this.year,FoulsInflicted:{$gt:0}},{},{FoulsInflicted:-1},10);
+    const foulsSustained = await dataService.getZFLStats({year:this.year,FoulsSustained:{$gt:0}},{},{FoulsSustained:-1},10);
+    const surfsInflicted = await dataService.getZFLStats({year:this.year,SurfsInflicted:{$gt:0}},{},{SurfsInflicted:-1},10);
+    const surfsSustained = await dataService.getZFLStats({year:this.year,SurfsSustained:{$gt:0}},{},{SurfsSustained:-1},10);
+    const kills = await dataService.getZFLStats({year:this.year,Sacks:{$gt:0}},{},{Sacks:-1},10);
+    const dodgeTurnovers = await dataService.getZFLStats({year:this.year,DodgeTurnovers:{$gt:0}},{},{DodgeTurnovers:-1},10);
+    const dubskullsRolled = await dataService.getZFLStats({year:this.year,DubskullsRolled:{$gt:0}},{},{DubskullsRolled:-1},10);
+    const gamesPlayed = await dataService.getZFLStats({year:this.year,GamesPlayed:{$gt:0}},{},{GamesPlayed:-1},10);
+
+    res.render("zfl/playerstats",{sacks,passes,touchdowns,spp,casInflicted,casSustained,foulsInflicted,foulsSustained,surfsInflicted,surfsSustained,kills,dodgeTurnovers,dubskullsRolled,gamesPlayed});
+
   }
 
 }

@@ -1,10 +1,12 @@
 extends layout.pug
-include functions.pug
 
-block append vars
+block vars
   -
     let options = {company:"Team"}
-    
+    let page ="team"
+
+include functions.pug
+
 block head 
   style.
     .col-12 table img {width: 40px;height: 40px;}

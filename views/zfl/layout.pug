@@ -49,11 +49,11 @@ body(style="background-color: #212529;")
       #navbarCollapse.collapse.navbar-collapse
         ul.navbar-nav.me-auto.mb-2.mb-md-0
           li.nav-item
-            a.nav-link(aria-current='page' href='/standings' class=page == "deals" ? "active" : "" ) Standings
+            a.nav-link(aria-current='page' href='/standings' class=page == "standings" ? "active" : "" ) Standings
           li.nav-item
-            a.nav-link(href='/fixtures'  class=page == "browse" ? "active" : "" ) Fixtures
+            a.nav-link(href='/fixtures'  class=page == "fixtures" ? "active" : "" ) Fixtures
           li.nav-item
-            a.nav-link(href='#'  class=page == "browse" ? "active" : "" ) Player Stats
+            a.nav-link(href='/playerstats'  class=page == "playerstats" ? "active" : "" ) Player Stats
           li.nav-item
             a.nav-link(href='#'  class=page == "browse" ? "active" : "" ) Team Stats
         block nav  

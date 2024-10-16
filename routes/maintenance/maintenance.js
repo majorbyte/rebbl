@@ -3,6 +3,7 @@
 const adminMatchService = require("../../lib/adminMatchService.js");
 const bb3MatchReport = require("../../lib/bb3MatchReport.js");
 const bb3Service = require("../../lib/bb3Service.js");
+const ZFLService = require("../../lib/ZFLService.js");
 
 const 
   cache = require("memory-cache")
@@ -60,7 +61,9 @@ class Maintenance{
         //const competitions = await bb3.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f"});
         //for (const competition of competitions) await bb3Service.calculateStandings(competition.id);
           
-        await bb3Service.updateTeam("45602e32-7817-11ef-be7b-bc24112ec32e",true);
+        //await bb3Service.updateTeam("45602e32-7817-11ef-be7b-bc24112ec32e",true);
+
+        await ZFLService.calculateAllStandings();
 
         //await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
 

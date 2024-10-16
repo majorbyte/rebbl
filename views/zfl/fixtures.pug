@@ -31,6 +31,8 @@ mixin fixture(entry)
     .col 
       a(href=`/team/${entry.away.team.id}` target="_blank")
         img.img-fluid(src=`/images/zfl/${entry.away.team.logo}` style="padding:0px")
+block vars 
+  - let page ="fixtures"
 
 block head
   style.
