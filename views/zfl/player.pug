@@ -20,7 +20,7 @@ mixin player(player, stats, mvp)
       }
       return "ico_action_seriously_hurt.png";
     }
-  tr
+  tr(id=player.id)
     // number
     td.d-flex.justify-content-center
       span= player ? player.number : ""
@@ -103,5 +103,3 @@ mixin player(player, stats, mvp)
       .text-center= stats.DodgeTurnovers
     td.align-middle.d-none(data-type="stats")
       .text-center= stats.DubskullsRolled
-
-

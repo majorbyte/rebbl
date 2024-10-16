@@ -3,7 +3,7 @@ extends layout.pug
 
 mixin stats(title, stats, prop)
   - const logos = [ { "name" : "Miszville Mavericks", "id" : "f26711ee-abfb-11ee-a745-02000090a64f", "logo" : "MAVERICKS.png", }, { "name" : "Black Crag Bozos", "id" : "ffc90c1b-acc5-11ee-a745-02000090a64f", "logo" : "BOZOS.png", }, { "name" : "Royal Santa Magritta", "id" : "45602e32-7817-11ef-be7b-bc24112ec32e", "logo" : "ROYALS.png", }, { "name" : "Tor Lithanel Rangers", "id" : "3bc2f981-7635-11ef-be7b-bc24112ec32e", "logo" : "RANGERS.png", }, { "name" : "Barak Ginn Boozers", "id" : "ff3161f0-ac91-11ee-a745-02000090a64f", "logo" : "BOOZERS.png", }, { "name" : "Espernon Enchanters", "id" : "eb406aad-76e2-11ef-be7b-bc24112ec32e", "logo" : "ENCHANTERS.png", }, { "name" : "Sartosa Deckhands", "id" : "8a212740-aa38-11ee-a745-02000090a64f", "logo" : "DECKHANDS.png", }, { "name" : "Tor Lithanel Celtics", "id" : "674724ac-ab2d-11ee-a745-02000090a64f", "logo" : "CELTICS.png", }, { "name" : "Vinnskor Defiant", "id" : "7b4cf589-8262-11ef-be7b-bc24112ec32e", "logo" : "DEFIANT.png", }, { "name" : "Bilbali Desperados", "id" : "b586951a-752e-11ef-be7b-bc24112ec32e", "logo" : "DESPERADOS.png", }, { "name" : "Red Squigs", "id" : "f0ad5e57-74d6-11ef-be7b-bc24112ec32e", "logo" : "RED SQUIGS.png", }, { "name" : "Quetza Quicks", "id" : "09b7160b-747a-11ef-be7b-bc24112ec32e", "logo" : "QUICKS.png", }, { "name" : "Irukk Mad'Unz", "id" : "8aaaeb2a-6e44-11ef-be7b-bc24112ec32e", "logo" : "MADUNZ.png", }, { "name" : "Salzenmund Puritans", "id" : "f23d24a5-8247-11ef-be7b-bc24112ec32e", "logo" : "PURITANS.png", }, { "name" : "Bluebay Crammers", "id" : "2dcabd5f-7601-11ef-be7b-bc24112ec32e", "logo" : "CRAMMERS.png", }, { "name" : "Cragmere 79ers", "id" : "45bba03e-7900-11ef-be7b-bc24112ec32e", "logo" : "79ERS.png", }, { "name" : "Sotek Supremes", "id" : "c26451ca-74e2-11ef-be7b-bc24112ec32e", "logo" : "SUPREMES.png", }, { "name" : "Quintex City Assassins", "id" : "1c5e4798-7623-11ef-be7b-bc24112ec32e", "logo" : "ASSASSINS.png", }, { "name" : "Phangorn Falcons", "id" : "3a9f0e02-7470-11ef-be7b-bc24112ec32e", "logo" : "FALCONS.png", }, { "name" : "Deadrock Tyrants", "id" : "369bb179-74da-11ef-be7b-bc24112ec32e", "logo" : "TYRANTS 2.png", }, { "name" : "Hansburg Ham-Hawks", "id" : "b921b10d-780c-11ef-be7b-bc24112ec32e", "logo" : "HAM-HAWKS.png", }, { "name" : "The Three Mountains", "id" : "ec64c988-74f9-11ef-be7b-bc24112ec32e", "logo" : "MOUNTAINS.png", }, { "name" : "Verdanos Valor", "id" : "30cf3d7e-750b-11ef-be7b-bc24112ec32e", "logo" : "VALOR.png", }, { "name" : "Skittsburg Stealers", "id" : "e1122762-828e-11ef-be7b-bc24112ec32e", "logo" : "STEALERS.png", } ]
-  .col-6
+  .col-lg-6.col-md-12
     h2= title 
     - let x = 0;  
     table.table.table-dark.table-striped 
@@ -16,10 +16,13 @@ mixin stats(title, stats, prop)
         each stat of stats
           tr 
             - let team = logos.find(x => x.id == stat.TeamId)
-            td.text-center.align-middle.fs-4= ++x 
+            if x == 0	
+              td.text-center.align-middle.fs-3= ++x 
+            else
+              td.text-center.align-middle.fs-4= ++x
             td.text-start.align-middle.fs-4= stat.Name
             td
-              a(href=`/team/${team.id}` target="_blank")
+              a(href=`/team/${team.id}#${stat.LobbyId}` target="_blank")
                 img.img-fluid(src=`/images/zfl/${team.logo}` style="padding:0px")
             td.text-center.align-middle.fs-3= stat[prop]
 block vars 
@@ -31,7 +34,7 @@ block head
     .card{width: 12rem;}
 
     .table > :not(caption) > * > * {padding:0px !important;}
-    td > * >  img {max-height:64px}
+    td > * >  img {max-height:42px}
 
 
 block nav  
@@ -43,25 +46,19 @@ block nav
         a.btn.btn-primary.mx-2.mb-2(href="/fixtures") exit
 
 block main
-  .container-fluid
+  .container-fluid.p-4
     .row
       +stats("Most ZFL Appearances", gamesPlayed, "GamesPlayed")
       +stats("Most SPP Earned", spp, "SppEarned")
-    .row
       +stats("Most ZFL Touchdowns", touchdowns, "TouchdownsScored")
       +stats("Most Passes Completed", passes, "PassCompletions")
-    .row
       +stats("Most Casualties Inflicted", casInflicted, "CasInflicted")
-      +stats("Most Casualties Sustianed", casSustained, "CasSustained")
-    .row
+      +stats("Most Casualties Sustained", casSustained, "CasSustained")
       +stats("Most Fouls Inflicted", foulsInflicted, "FoulsInflicted")
-      +stats("Most Fouls Sustianed", foulsSustained, "FoulsSustained")
-    .row
+      +stats("Most Fouls Sustained", foulsSustained, "FoulsSustained")
       +stats("Most Kills Inflicted", kills, "Kills")
       +stats("Most Sacks", sacks, "Sacks")            
-    .row
       +stats("Most Surfs Inflicted", surfsInflicted, "SurfsInflicted")
-      +stats("Most Surfs Sustianed", surfsSustained, "SurfsSustained")                  
-    .row
+      +stats("Most Surfs Sustained", surfsSustained, "SurfsSustained")                  
       +stats("Most Dodge Turnovers", dodgeTurnovers, "DodgeTurnovers")
       +stats("Most Dub Skulls rolled", dubskullsRolled, "DubskullsRolled")                        

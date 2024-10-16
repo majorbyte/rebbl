@@ -13,6 +13,14 @@ block head
     .silhouette-shadow{
       filter: drop-shadow(0px 0px 1px black);
     }
+    .player-out > td {
+      --bs-table-bg-type: #ab07255e !important;
+    }
+    :target {
+      border: 2px solid #D4D4D4;
+      background-color: orange;
+      color: white;
+    }
 
 block main
   .container-fluid.px-5
@@ -68,7 +76,7 @@ block main
                 th(scope="col") Value
             tbody
               - for(let player of team.roster)
-                tr(class=Number(player.player.missNextGame)==1?"player-out":"player-in") 
+                tr(class=Number(player.player.missNextGame)==1?"player-out":"player-in" id=player.player.id) 
                   td=player.player.number
                   td
                     div

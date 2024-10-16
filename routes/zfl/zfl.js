@@ -26,7 +26,7 @@ class ZFL{
     this.router.get("/profile/:id", this.#getProfile );
 
     this.router.get("/standings", async (_,res) => res.render("zfl/standings" , {competitions:await dataService.getZFLCompetitions({year:this.year}), accounts:await dataService.getZFLAccounts({})}));
-    this.router.get("/playerstats", util.cache(60*60), this.#getPlayerStats.bind(this));
+    this.router.get("/playerstats", util.cache(60*60, true), this.#getPlayerStats.bind(this));
     this.router.get('/fixtures',  this.#getFixtures.bind(this));
     this.router.get('/fixtures/admin', this.#ensureLoggedIn, this.#getFixturesAdmin.bind(this));
 
