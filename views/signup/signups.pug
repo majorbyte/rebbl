@@ -56,14 +56,14 @@ block content
             div(class="TableRow" )
               div(style="display: table-cell;min-width:110px" data-bind="text:league" class="sticky_column")
               // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
-              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.saveType === d ? p+1 : p; }, 0)")
+              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.type === d ? p+1 : p; }, 0)")
               // /ko
               //div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.filteredUsers().reduce(function(p, c){ return c.league === league && c.greenHorn ? p+1 : p; }, 0)")
             // /ko
             div(class="TableRow")
               div(style="display: table-cell;min-width:110px" class="sticky_column") Total
               // ko foreach: {data: ["existing", "reroll", "new"], as:'d'}
-              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.saveType === d ? p+1 : p; }, 0)")
+              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.type === d ? p+1 : p; }, 0)")
               // /ko
               //div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
         div(style="grid-template-columns: auto;clear:both" class="table-responsive mb-3")
@@ -91,7 +91,7 @@ block content
               div(style="white-space: nowrap;display: table-cell;width: 160px;" data-bind="text:signup.TV")
               div(style="white-space: nowrap;display: table-cell;width: 160px;" data-bind="text:signup.race.trim()")
               div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.league")
-              div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.saveType.replace('existing', 'staying').replace('reroll', 'rerolling')")
+              div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.type")
               div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.timezone")
             // /ko
 
@@ -152,8 +152,8 @@ block append scripts
             if (a.league > b.league) return 1;
             if (a.league < b.league) return -1;
 
-            if (a.saveType > b.saveType) return 1;
-            if (a.saveType < b.saveType) return -1;
+            if (a.type > b.type) return 1;
+            if (a.type < b.tpye) return -1;
 
             if (a.coach > b.coach) return 1;
             if (a.coach < b.coach) return -1;

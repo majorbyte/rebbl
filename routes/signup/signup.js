@@ -47,11 +47,10 @@ class Signup{
 
   routesConfig(){
 
-    const bb3Open = false;
-    const rebblOpen = false;
-    const rookiesOpen = true;
+    const bb3Open = true;
+    const rookiesOpen = false;
 
-    if (!bb3Open && !rebblOpen && !rookiesOpen){
+    if (!bb3Open && !rookiesOpen){
       this.router.get('/', async function(req, res){
         res.render('signup/closed');
       });
@@ -62,24 +61,9 @@ class Signup{
 
     this.router.get('/discord/callback', this._authDiscordCallback);
 
-    if (bb3Open || rebblOpen || rookiesOpen)
+    if (bb3Open || rookiesOpen)
       this.router.get('/', util.ensureAuthenticated, async (req,res) => this.#getStatus(req,res, bb3Open,rookiesOpen));
 
-    if (rebblOpen){
-      this.router.get('/change', util.ensureLoggedIn, this._changeSignup.bind(this));
-     
-      this.router.post('/resign', util.ensureAuthenticated, this._resign);
-      
-      this.router.get('/reroll', util.ensureAuthenticated, this._reroll);
-      
-      this.router.post('/confirm-existing',util.ensureAuthenticated, this._confirmReturn);
-  
-      this.router.post('/confirm-reroll', util.ensureAuthenticated, this._confirmReroll.bind(this));
-  
-      this.router.post('/confirm-new', util.ensureLoggedIn, this._confirmNew.bind(this));
-
-    }
-    
     if (rookiesOpen){
       this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
       this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
@@ -90,14 +74,17 @@ class Signup{
     }
 
     if (bb3Open){
-      this.router.get('/bb3/change', util.ensureLoggedIn, this.#changeSignupBB3.bind(this));
+      this.router.get('/bb3/fresh', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,false));
+      this.router.get('/bb3/greenhorn', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,true));
+      this.router.get('/bb3/returning', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,false));
+      this.router.get('/bb3/ure', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,true));
+      
       this.router.post('/bb3/confirm', util.ensureLoggedIn, this.#confirmNewBB3.bind(this));
       this.router.post('/bb3/resign', util.ensureAuthenticated, this.#resignBB3);
     }
 
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
-    this.router.get('/bb3/signups', util.cache(10*60), function(req,res){res.render('signup/bb3/signups');});
-    this.router.get('/signups', function(req,res){res.render('signup/signups', {url: ""});});
+    this.router.get('/signups', util.cache(10*60), function(req,res){res.render('signup/bb3/signups');});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
 
 
@@ -111,21 +98,7 @@ class Signup{
       let user = await signupService.getExistingTeam(req.user.name);
       let signups = [];
 
-      let signup = await signupService.getSignUp(req.user.name,"rebbl");
-
-      if (signup){
-        signup.signedUp = true;
-        signups.push(signup);
-      }
-
-      signup = await signupService.getSignUp(req.user.name,"rebbrl");
-
-      if (signup){
-        signup.signedUp = true;
-        signups.push(signup);
-      }
-      
-      signup = await signupService.getSignUp(req.user.name,"rebbl3","season 2");
+      let signup = await signupService.getSignUp(req.user.name,"season 3");
 
       if (signup){
         signup.signedUp = true;
@@ -133,94 +106,55 @@ class Signup{
         signups.push(signup);
       }
 
-      signup = await signupService.getSignUp(req.user.name,"rebbrl3","season 2");
-
-      if (signup){
-        signup.signedUp = true
-        signup.open = rookiesOpen;;
-        signups.push(signup);
-      }
-      
       if (signups.length === 0 && user) {
         user.signedUp = false;
       }
-      res.render('signup/overview', {signups:signups, user: user});
-    } catch (err){
-      console.log(err);
-    }
-  }
 
-  async _changeSignup(req, res){
-    try {
-      let signup = await signupService.getSignUp(req.user.name,"rebbl");
       let account = await accountService.getAccount(req.user.name);
 
-      // Disabled while during season/
-      
-      let user = await signupService.getExistingTeam(req.user.name);
-      if(!signup && user && user.team){
-        res.render('signup/signup-existing', { user: user});
-        return;
-      }
+      const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": account.bb3id, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},season:"season 2"});
 
-      if (!signup){
-        if(account){
-          res.render('signup/signup-new-coach', {user: {account: account}, teamName : user.teamName});
-          //res.render('signup/signup-rampup', {user: {account: account}});
-        } else {
-          res.render('signup/signup-new-coach', {user: req.user.name, teamName : user.teamName});
-          //res.render('signup/signup-rampup', {user: req.user.name});
-        }
-        return;
-      }
-      let data = Object.assign(signup, account);
-      switch(signup.saveType){
-        case "existing":
-          res.render('signup/signup-existing', { user: data});
-          break;
-        case "reroll":
-          res.render('signup/signup-reroll', {user: data});
-          break;
-        case "new":
-          if(account){
-            signup.account = account;
-          }
-          res.render('signup/signup-new-coach', {user: signup});
-          break;
-        case "rampup":
-          if(account){
-            signup.account = account;
-          }
-          res.render('signup/signup-rampup', {user: signup});
-          break;
-        default:
-          res.render('signup/signup-rampup', {user: req.user.name});
-          break;
-      }
+      res.render('signup/overview', {signups:signups, user: user, canReturn:competition!= null});
     } catch (err){
       console.log(err);
     }
   }
 
-  async #changeSignupBB3(req, res){
+  async #changeSignupBB3(req, res, returning, extra){
     let account = await accountService.getAccount(req.user.name);
 
-    if (!account.bb3coach) {
-      res.render('signup/bb3/fix-account');
-    } else {
-      let teams = await bb3Service.searchTeams(account.bb3id, '%');
-      teams = teams.filter(x => !x.experienced);
+    if (!account.bb3coach) return res.render('signup/bb3/fix-account');
+  
+    if (returning) {
+      const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": account.bb3id, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},season:"season 2"});
 
-      const lastSeasonTeam = await dataService.getTeam({"coach.id": account.bb3id, "redraft.status":"validated"});
-      if (lastSeasonTeam) {
+      if (!competition) return res.redirect("/signup");
+
+      const standing = competition.standings.find(x => x.id === account.bb3id);
+
+      const lastSeasonTeam = await dataService.getTeam({"id": standing.teamId});
+
+      if (extra) {
         const races = await dataService.getRaces();
         lastSeasonTeam.race = races.find(x => x.code == lastSeasonTeam.race).data;
-        teams.push(lastSeasonTeam);
+        return res.render('signup/bb3/signup-new-coach', {user: {account: account}, type:"ure", teams:[lastSeasonTeam]});
       }
-
-      res.render('signup/bb3/signup-new-coach', {user: {account: account}, teams});
+      if (lastSeasonTeam.redraft?.status == "validated" && !extra) {
+        const races = await dataService.getRaces();
+        lastSeasonTeam.race = races.find(x => x.code == lastSeasonTeam.race).data;
+        return res.render('signup/bb3/signup-new-coach', {user: {account: account}, type:"returning", teams:[lastSeasonTeam]});
+      }
+  
+      return res.redirect("/signup");
     }
+
+    let teams = await bb3Service.searchTeams(account.bb3id, '%');
+    teams = teams.filter(x => !x.experienced);
+
+    res.render('signup/bb3/signup-new-coach', {user: {account: account}, type:extra?"greenhorn":"fresh", teams});
   }
+
+
   async #confirmNewBB3(req,res){
     try {
       let signup = {
@@ -230,13 +164,13 @@ class Signup{
           race:req.body.race,
           name: req.body.name,
         },
+        type:req.body.type,
         league: req.body.league
       };
 
       const team = await dataService.getTeam({id: signup.team.id});
 
       signup.saveType = (team && team.redraft) ? "returning" : "new";
-      signup.type="rebbl3";
 
       let account = await accountService.getAccount(req.user.name);
       signup.coach = account.bb3coach;
@@ -253,130 +187,12 @@ class Signup{
   }
   async #resignBB3(req,res){
     try{
-      await signupService.resign(req.user.name,"rebbl3","season 2");
-      await signupService.resign(req.user.name,"rebbrl3","season 2");
+      await signupService.resign(req.user.name,"season 3");
+      await signupService.resign(req.user.name,"season 3");
       res.redirect('/signup');
     } catch (err){
       console.log(err);
     }    
-  }
-
-  /* seasonal */
-  async _reroll(req, res){
-    try {
-      let user = await signupService.getExistingTeam(req.user.name);
-      let signup = await signupService.getSignUp(req.user.name,"rebbl");
-      let account = await accountService.getAccount(req.user.name);
-
-      if (user) {
-        user.team = "";
-        user.race = "";
-        if(signup) {
-          signup.team = "";
-          signup.race = "";
-        }
-        if(account){
-          user = Object.assign(user, account);
-          if(signup) signup = Object.assign(signup, account);
-        }
-        res.render('signup/signup-reroll', { user: signup || user });
-      }
-      else {
-        res.render('signup/signup-new-coach', { user: signup });
-      }
-    } catch (err){
-      console.log(err);
-    }
-  }
-
-  async _confirmReturn(req, res){
-    try{
-      //remove unwanted input
-      delete req.body.coach;
-      delete req.body.team;
-
-      req.body.saveType = "existing";
-      req.body.type="rebbl";
-      await signupService.saveSignUp(req.user.name, req.body);
-
-      res.redirect('/signup');
-    } catch (err){
-      console.log(err);
-    }
-  }
-
-  async _confirmReroll(req, res){
-    try{
-      //remove unwanted input
-      let signup = req.body;
-
-      delete signup.coach;
-
-      signup.saveType = "reroll";
-      signup.type="rebbl";
-
-      let account = await accountService.getAccount(req.user.name);
-      signup.coach = account.coach;
-
-      let coachRecord = await this.getTeam(signup, req.app.locals.cyanideEnabled);
-      coachRecord.account = account;
-
-      if (coachRecord.error){
-        res.render("signup/signup-reroll", {user:coachRecord} );
-      } else{
-        let user = await signupService.saveSignUp(req.user.name, req.body);
-
-        if (user.error){
-          res.render('signup/signup-reroll', {user: user});
-        } else {
-          //res.render('signup/signup-confirmed-greenhorn', {user: user});
-          res.redirect('/signup');
-        }
-      }
-
-    } catch (err){
-      console.log(err);
-    }
-  }
-
-  async _confirmNew(req, res){
-    try {
-      let signup = req.body;
-
-      signup.saveType = "new";
-      signup.type="rebbl";
-
-      let account = await accountService.getAccount(req.user.name);
-      signup.coach = account.coach;
-
-      let coachRecord = await this.getTeam(signup, req.app.locals.cyanideEnabled);
-      coachRecord.account = account;
-
-      if (coachRecord.error){
-        res.render("signup/signup-new-coach", {user:coachRecord} );
-        return;
-      }
-
-      let user = await signupService.saveSignUp(req.user.name, req.body);
-
-      if (user.error){
-        res.render('signup/signup-new-coach', {user: user});
-      } else {
-        //res.render('signup/signup-confirmed-greenhorn', {user: user});
-        res.redirect('/signup');
-      }
-    } catch (err){
-      console.log(err);
-    }
-  }
-
-  async _resign(req,res){
-    try{
-      await signupService.resign(req.user.name,"rebbl");
-      res.redirect('/signup');
-    } catch (err){
-      console.log(err);
-    }
   }
 
   /* greenhorn */

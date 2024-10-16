@@ -25,7 +25,16 @@ block content
     input#teamName(type="hidden" name="name")
     input#teamValue(type="hidden" name="value")
     input#teamRace(type="hidden" name="race")
+    input#type(type="hidden" name="type" value=type)
     div
+        if (type=="fresh")
+          h2.text-primary Signing up with a new team, no Greenhorn Cup 
+        if (type=="greenhorn")
+          h2.text-primary Signing up with a new team for season 3 and the Greenhorn Cup 
+        if (type=="returning")
+          h2.text-primary Signing up with a returning team for season 3, no Ure Trophy
+        if (type=="ure")
+          h2.text-primary Signing up with a returning team for season 3 and the Ure Trophy 
         h3 The first thing what we would like you to do, is to read thoroughly through
           a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " our rules"
           span .
@@ -37,14 +46,21 @@ block content
           div
             label(for="coach") Coach Name
             input(type="text" id="coach" name="coach" value=user.account.coach placeholder="Blood Bowl 3 coach name" title="Blood Bowl 2 coach name" disabled)
-            - if (user.error && user.error.coach)
+            if (user.error && user.error.coach)
               p(class="alert-danger my-0")= user.error.coach
               p(class="alert-info my-0") This is probably due to a typo in your coachname, contact an admin on our discord to have it corrected.
           div
-            - if (teams.length === 0)
+            label(for="league") League
+            select(name="league" id="league" required)
+              option(value="" disabled selected style="color: #9b959166;") Select your league
+              option(value="BIG O" selected=user.league==="BIG O") BIG O - the Oceanic region
+              option(value="GMAN" selected=user.league==="GMAN") GMAN - the European region
+              option(value="REL" selected=user.league==="REL") REL  - the Americas region (North America &amp; South America)
+          div
+            if (teams.length === 0)
               p.alert.alert-danger No viable teams found to sign up with.
 
-            - if (teams.length > 0)
+            if (teams.length > 0)
               label(for="id") Team name
               select(id="id" name="id" required)
                 option(disabled selected value="") Select your team
@@ -55,21 +71,14 @@ block content
               br    
               span You can only sign up with a new, unexperienced team, or your team from the last season if is has been redrafted. Unfortunately if you join a competition, your team will be flagged as experienced.
             
-            - if (user.error && user.error.team)
+            if (user.error && user.error.team)
               p(class="alert-danger my-0")= user.error.team        
 
-          div
-            label(for="league") League
-            select(name="league" id="league" required)
-              option(value="" disabled selected style="color: #9b959166;") Select your league
-              option(value="BIG O" selected=user.league==="BIG O") BIG O - the Oceanic region
-              option(value="GMAN" selected=user.league==="GMAN") GMAN - the European region
-              option(value="REL" selected=user.league==="REL") REL  - the Americas region (North America &amp; South America)
           div
             h3 By pressing complete, you confirm that you have read and will abide by our rules
               a(href="https://www.reddit.com/r/ReBBl/wiki/rules/all" class="highlighted-rules" target="_blank")= " as described here"
               span .
-        - if (teams.length > 0)
+        if (teams.length > 0)
           button(type="submit" class="btn btn-primary") Complete
         br
         br

@@ -76,14 +76,14 @@ block content
             // ko foreach: {data: leagues, as: 'league'}
             div(class="TableRow" )
               div(style="display: table-cell;min-width:110px" data-bind="text:league" class="sticky_column")
-              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.type === 'rebbl3' && c.saveType === 'returning' ? p+1 : p; }, 0)")
-              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.type === 'rebbl3' && c.saveType === 'new' ? p+1 : p; }, 0)")
+              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && (c.type === 'returning' || c.type === 'ure') ? p+1 : p; }, 0)")
+              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && (c.type === 'fresh' || c.type === 'greenhorn') ? p+1 : p; }, 0)")
               div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.type === 'rebbrl3' ? p+1 : p; }, 0)")
             // /ko
             div(class="TableRow")
               div(style="display: table-cell;min-width:110px" class="sticky_column") Total
-              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.type === 'rebbl3' && c.saveType === 'returning' ? p+1 : p; }, 0)")
-              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.type === 'rebbl3' && c.saveType === 'new' ? p+1 : p; }, 0)")
+              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return (c.type === 'returning' || c.type === 'ure') ? p+1 : p; }, 0)")
+              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return (c.type === 'fresh' || c.type === 'greenhorn') ? p+1 : p; }, 0)")
               div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.type === 'rebbrl3'  ? p+1 : p; }, 0)")
               //div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
         div(style="grid-template-columns: auto;clear:both; display:grid" class="table-responsive")
@@ -111,7 +111,7 @@ block content
               div(style="white-space: nowrap;display: table-cell;width: 160px;" data-bind="text:signup.TV")
               div(style="white-space: nowrap;display: table-cell;width: 160px;" data-bind="text:signup.race.trim()")
               div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.league")
-              div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text: signup.type == 'rebbrl3' ? 'college' : signup.saveType.replace('new', 'fresh')")
+              div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text: signup.type == 'rebbrl3' ? 'college' : signup.type")
               div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.timezone")
             // /ko
 
@@ -171,8 +171,8 @@ block append scripts
             if (a.league > b.league) return 1;
             if (a.league < b.league) return -1;
 
-            if (a.saveType > b.saveType) return 1;
-            if (a.saveType < b.saveType) return -1;
+            if (a.type > b.type) return 1;
+            if (a.type < b.type) return -1;
 
             if (a.coach > b.coach) return 1;
             if (a.coach < b.coach) return -1;

@@ -44,8 +44,8 @@ router.get('/page', util.cache(10*60), async function(req, res){
   res.status(200).send(ret);
 });
 
-router.get('/bb3', util.cache(10*60), async function(req, res){
-  const data = await db.getSignupsBB3({season:"season 2", type:{$in:["rebbl3","rebbrl3"]}});
+router.get('/bb3', async function(req, res){
+  const data = await db.getSignupsBB3({season:"season 3"});
 
   const mapEntry = entry => {
     return {
@@ -55,7 +55,6 @@ router.get('/bb3', util.cache(10*60), async function(req, res){
       coachId: entry.coachId,
       race: entry.team.race,
       timezone: entry.timezone,
-      saveType: entry.saveType,
       type: entry.type,
       TV: entry.team.value / 1000,
       league: entry.league,
