@@ -12,7 +12,7 @@ script.
       ko.getObservable(this, 'coach').subscribe(this.onCoachChange.bind(this));
       if (this.isReturningTeam) this.getReturningTeam(this.coach);
     }
-    map(data, updateSkillModel){
+    map(data){
       this.skillModel = new SkillModel();
 
       data.roster?.forEach(x => x.skillModel = this.skillModel);
@@ -45,15 +45,7 @@ script.
       this.skillModel.tier = this.teamTier;
       this.skillModel.race = this.race;
 
-      this.skillModel.rookieCount = this.rookieCount;
-      this.skillModel.superstarCount = this.superstarCount;
       this.proceedDisabled = false;
-      if (updateSkillModel){
-        this.roster.forEach(x => {
-          if (x.skill1) x.updateSkillModel(x.skill1);
-          if (x.skill2) x.updateSkillModel(x.skill2);
-        });
-      }
     }
     isTeamOwner = () => this.coach === me.coach;
     toggleApo = () => this.apothecary = !this.apothecary;
@@ -67,12 +59,11 @@ script.
     playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
     hasLegacyPlayer = () => this.roster.some(player => player.id > 0);
     positions = () => {
-      console.dir(this.race);
-      console.dir(playerTypes);
       if (!this.race || this.roster.length >= 16) return [];
 
-      const types = playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b);
-      return types.filter(t => this.roster.filter(x => x.playerType.type === t.type).length < t.allowed);
+      const types = this.race.positions;// playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b);
+      console.dir(types);
+      return types.filter(t => this.roster.filter(x => x.playerType.data === t.data).length < t.max);
     }
     availableReturningPlayers = () => {
       if (this.isNewBloodTeam) {
@@ -87,7 +78,7 @@ script.
       return [];
     };
     teamValue = () => this.playerCost() + this.subTotalRerolls() + (this.fanfactor < 5 ? this.fanfactor * 10000  : 50000);
-    teamCost = () => this.playerCost() + this.subTotalRerolls() + this.superstarTax();
+    teamCost = () => this.playerCost() + this.subTotalRerolls();
     teamTax = () => TierTax.find(x => x.race === this.race?.name)?.cost || 0;
     teamTier = () => TierTax.find(x => x.race === this.race?.name)?.tier;
     teamTotal = () => this.teamCost() + this.teamTax();
@@ -96,16 +87,6 @@ script.
 
     targetTeamCost = () =>  this.isNewBloodTeam ? (this.returningTeam.teamCost() - this.teamTax()) : this.teamTier() < 7 ? 1_200_000 : 900_000;
 
-    rookieCount = () => this.roster.filter(x => !x.skill1).length;
-    superstarCount = () => this.roster.filter(x => x.skill1 && x.skill2).length;
-
-    superstarTax = () => this.roster.filter(x => x.isSuperstar() || x.isSkilled()).reduce((p,c,i) => {
-      
-      if (c.isSkilled()) p += 10;
-      else p = p + 10*( i + (this.isNewBloodTeam && this.hasLegacyPlayer() ? 2 : 1));
-      return p;
-    }, 0) * 1000
-    
     sppSurplus = () => this.roster.reduce((p,c) => p+c.sppSurplus,0);
     spentSPP = () => this.roster.reduce((p,c) => p+c.spentSPP,0);
     onCoachChange = (coach) => this.getReturningTeam(coach).then (t => t);
@@ -155,7 +136,7 @@ script.
       this.newPlayer.playerType = '';
       this.newPlayer.name = '';
     }
-    isDouble = (player,skill) => player.playerType.doubles.includes(SkillDescriptions.find(x => x.name === skill)?.category ||'');
+    isDouble = (player,skill) => player.playerType.affinities.secondary.includes(SkillDescriptions.find(x => x.name === skill)?.category ||'');
     isIncrease =  (skill) => SkillDescriptions.filter(x => x.category == 'Increase').map(x => x.name).includes(skill);
 
     addReturningPlayer () {
@@ -205,8 +186,6 @@ script.
     }
 
     removePlayer (player){
-      if (player.skill1) player.removeSkillModel(player.skill1);
-      if (player.skill2) player.removeSkillModel(player.skill2);
       this.roster.splice(this.roster.indexOf(player),1);
       if (this.isNewBloodTeam && player.id > 0){
         for(let skill of player.skills){

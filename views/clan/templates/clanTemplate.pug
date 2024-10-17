@@ -27,7 +27,6 @@
         th.table-info returning
         th.table-info # players
         th.table-info normal team cost
-        th.table-info skill tax
         th.table-info tier tax
         th.table-info total cost
         th.table-info  
@@ -51,7 +50,6 @@
           button.btn.btn-sm(data-bind="{text: isReturningTeam ? 'yes' : 'no', click:toggleReturning, css: isReturningTeam ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary', attr:{disabled:hasTraded()}}")
         td.data(data-bind="text: roster?.length || 0")
         td.data(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost() + subTotalRerolls() )") 
-        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(superstarTax())") 
         td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTax())") 
         td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTotal())") 
         td.left-align

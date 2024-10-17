@@ -112,9 +112,9 @@ class Signup{
 
       let account = await accountService.getAccount(req.user.name);
 
-      const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": account.bb3id, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},season:"season 2"});
+      const lastSeasonTeam = await this.#getLastSeasonTeam(account.bb3id);
 
-      res.render('signup/overview', {signups:signups, user: user, canReturn:competition!= null});
+      res.render('signup/overview', {signups:signups, user: user, canReturn:lastSeasonTeam!= null, redrafted:lastSeasonTeam?.redraft?.status == "validated"});
     } catch (err){
       console.log(err);
     }
@@ -123,7 +123,7 @@ class Signup{
   async #changeSignupBB3(req, res, returning, extra){
     let account = await accountService.getAccount(req.user.name);
 
-    if (!account.bb3coach) return res.render('signup/bb3/fix-account');
+    if (!account.bb3coach || account.bb3id.length < 1) return res.render('signup/bb3/fix-account');
   
     if (returning) {
       const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": account.bb3id, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},season:"season 2"});
@@ -154,6 +154,14 @@ class Signup{
     res.render('signup/bb3/signup-new-coach', {user: {account: account}, type:extra?"greenhorn":"fresh", teams});
   }
 
+
+  async #getLastSeasonTeam(coachId){
+    const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": coachId, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},season:"season 2"});
+
+    const standing = competition.standings.find(x => x.id === coachId);
+
+    return await dataService.getTeam({"id": standing.teamId});
+  }
 
   async #confirmNewBB3(req,res){
     try {

@@ -68,9 +68,10 @@ block content
                 each team of teams 
                   option(value=team.id data-race=team.race data-tv=team.value data-name=team.name )= team.name
               span#teamData
-              br    
-              span You can only sign up with a new, unexperienced team, or your team from the last season if is has been redrafted. Unfortunately if you join a competition, your team will be flagged as experienced.
-            
+              br
+              if type === "fresh" || type === "greenhorn"    
+                span You can only sign up with a new, unexperienced team. Unfortunately if you join a competition, your team will be flagged as experienced.
+
             if (user.error && user.error.team)
               p(class="alert-danger my-0")= user.error.team        
 

@@ -120,13 +120,13 @@ block content
             .card-body 
               a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/greenhorn" type='button') Signup
         .col
-          .card.mb-4.rounded-3.shadow-sm(class=`${canReturn ?  "border-primary" :"border-secondary opacity-50"}`)
-            .card-header.py-3(class=`${canReturn ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled"}`)
+          .card.mb-4.rounded-3.shadow-sm.boder-primary
+            .card-header.py-3(class=`${redrafted ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled opacity-50"}`)
               h4.my-0.fw-normal Returning Team
             .card-body
               span.badge.rounded-pill.text-bg-warning returning Team
               ul.list-unstyled.mt-3.mb-4
-                li First you redraft
+                li(class=`${!redrafted ?'text-danger fw-bold' : ''}`) First you redraft
                 li(title="then you statoil") Then you sign up
                 li You wait
                 li &nbsp;
@@ -134,7 +134,7 @@ block content
             .card-body 
               a(href="https://www.reddit.com/r/ReBBl/comments/1dbq4iq/rebbl_bb3_season_2_signups" class="highlighted-rules") Read more here about Season 3
             .card-body 
-              a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/returning" type='button' class=`${canReturn ?  "" : "disabled"}`) Signup
+              a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/returning" type='button' class=`${redrafted ?  "" : "disabled opacity-50"}`) Signup
         .col
           .card.mb-4.rounded-3.shadow-sm(class=`${canReturn ?  "border-primary" :"border-secondary opacity-50"}`)
             .card-header.py-3(class=`${canReturn ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled"}`)

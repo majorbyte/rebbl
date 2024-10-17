@@ -24,7 +24,7 @@ script.
       this.name = data.name ||'';
       this.division = data.division || '';
       this.leader = data.leader;
-      this.season = 'season 18';
+      this.season = 'season 19';
       this.members = data.members?.map(x => new MemberModel(x)) ||[];
       this.editClan = this.name.length > 1;
       this.registerClan = !this.editClan;
@@ -156,7 +156,7 @@ script.
       skills = _skills;
       playerTypes = _playerTypes.filter(x => x.race < 26);
       playerTypes.forEach(x => x.displayName = x.type.substr(x.type.indexOf('_')+1).replace(/([A-Z])/g, ' $1'));
-      races = _races.filter(x => x.id < 26).sort((a,b) => a.name > b.name);
+      races = _races.filter(x =>  [23,29,1004].indexOf(x.id) === -1).sort((a,b) => a.name > b.name);
       SkillDescriptions = skillDescriptions.concat([{name:'Increase Strength',category:'Increase'},{name:'Increase Movement',category:'Increase'},{name:'Increase Agility',category:'Increase'},{name:'Increase Armour',category:'Increase'}]);
       model.map(clan || {});
       model.commit();

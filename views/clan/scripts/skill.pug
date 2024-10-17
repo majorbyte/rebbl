@@ -35,11 +35,12 @@ script.
     */
 
     isAllowed = (category, skill, type) => {
-      if (type === 'Undead_Mummy') return this._isMummyValid(category, skill);
+      /*if (type === 'Undead_Mummy') return this._isMummyValid(category, skill);
       if (type === 'Ogre_Ogre') return this._isOgreValid(category, skill);
       if (category === 'Increase') return this._isStatValid(skill);
       if (this.statsIncreases.length === 1) return this._isValidWithStat(category, skill);
-      return this._isValidWithoutStat(category, skill);
+      return this._isValidWithoutStat(category, skill);*/
+      return true;
     }
 
     _isStatValid = (category, skill) => {

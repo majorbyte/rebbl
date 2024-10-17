@@ -4,8 +4,6 @@ script.
       this.map(data || {});
       ko.track(this);
 
-      ko.getObservable(this, 'skill1').subscribe(this.updateSkillModel.bind(this));
-      ko.getObservable(this, 'skill1').subscribe(this.removeSkillModel.bind(this),null, 'beforeChange');
     }
     map(data){
       this.id = data.id || 0;
@@ -13,7 +11,7 @@ script.
       this.name = data.name || '';
       this.skill1 = data.skill1;
       this.skill2 = data.skill2;
-      this.fixedSkills = data.fixedSkills || [];
+      this.fixedSkills = data.fixedSkills ||  this.playerType?.skills || [];
       this.skills = data.skills || [];
       this.injuries = data.injuries || [];
       this.visible = false;
@@ -32,34 +30,35 @@ script.
 
       if (!this.playerType && data.type){
         this.playerType = playerTypes.find(x => x.type == data.type);
+        this.fixedSkills = playerType.skills;
       }
 
       ko.defineProperty(this, 'ma', function () {
         const cas = this.casualties.filter(x => ['SmashedAnkle','SmashedHip'].includes(x.name) && !x.removed);
         const stats = this.skills.filter(x => x === 'IncreaseMovement');
 
-        const val = this.playerType ? this.playerType.ma - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        const val = this.playerType ? this.playerType.characteristics.ma - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
         return Math.max(1,val);
       });
       ko.defineProperty(this, 'st', function () {
         const cas = this.casualties.filter(x => 'SmashedCollarBone' === x.name && !x.removed);
         const stats = this.skills.filter(x => x === 'IncreaseStrength');
 
-        const val = this.playerType ? this.playerType.st - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        const val = this.playerType ? this.playerType.characteristics.st - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
         return Math.max(1,val);
       });
       ko.defineProperty(this, 'ag', function () {
         const cas = this.casualties.filter(x => 'BrokenNeck' === x.name && !x.removed);
         const stats = this.skills.filter(x => x === 'IncreaseAgility');
 
-        const val = this.playerType ? this.playerType.ag - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        const val = this.playerType ? this.playerType.characteristics.ag - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
         return Math.max(1,val);
       });
       ko.defineProperty(this, 'av', function () {
         const cas = this.casualties.filter(x => ['FracturedSkull','SeriousConcussion'].includes(x.name) && !x.removed);
         const stats = this.skills.filter(x => x === 'IncreaseArmour');
 
-        const val = this.playerType ? this.playerType.av - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
+        const val = this.playerType ? this.playerType.characteristics.av - Math.min(cas.length, 2) + Math.min(stats.length, 2) : 0;
         return Math.max(1,val);
       });
 
@@ -91,154 +90,77 @@ script.
       const nextSPP = SPP.find(x => x.level === this.level+1);
       this.nextLevelSPP = 0;
       if (nextSPP) this.nextLevelSPP = nextSPP.spp - this.xp;
+      
     }
 
     toggleEdit(){
       this.visible = !this.visible;
     }
-    updateSkillModel(skill){
-      if (!this.isDouble(skill) && !this.isIncrease(skill)) return;
-      if (this.isDouble(skill)) this.skillModel.doubleSkills++;
-      switch(this.getCategory(skill)){
-        case 'Increase':
-          this.skillModel.statsIncreases.push(skill);
-          break;
-        case 'General':
-          this.skillModel.doubleGeneralSkills.push(skill);
-          break;
-        case 'Agility':
-          this.skillModel.doubleAgilitySkills.push(skill);
-          break;
-        case 'Passing':
-          this.skillModel.doublePassingSkills.push(skill);
-          break;
-        case 'Strength':
-          this.skillModel.doubleStrengthSkills.push(skill);
-          break;
-        case 'Mutation':
-          this.skillModel.doubleMutationSkills.push(skill);
-          break;
-      }
-
-      /*
-        Special race rules:
-        Undead may only buy 1 double OR 1 statistic on one of their Mummies.
-        Ogres may take either 3 doubles, or 1 double AND 1 statistic, on their Ogres.
-      */
-      switch (this.playerType.type){
-        case 'Undead_Mummy':
-          if (this.isDouble(skill) || this.isIncrease(skill) ) this.skillModel.mummyDoubleCount++;
-          break;
-        case 'Ogre_Ogre':
-          if (this.isDouble(skill) ) this.skillModel.ogreDoubleCount++;
-          else if (this.isIncrease(skill) ) this.skillModel.ogreStatsCount++;
-          break;
-      }
-    }
-    removeSkillModel(oldValue){
-      if (!oldValue) return;
-      switch(this.getCategory(oldValue)){
-        case 'Increase':
-          this.skillModel.statsIncreases.splice(this.skillModel.statsIncreases.indexOf(oldValue),1);
-          break;
-        case 'General':
-          this.skillModel.doubleGeneralSkills.splice(this.skillModel.doubleGeneralSkills.indexOf(oldValue),1);
-          break;
-        case 'Agility':
-          this.skillModel.doubleAgilitySkills.splice(this.skillModel.doubleAgilitySkills.indexOf(oldValue),1);
-          break;
-        case 'Passing':
-          this.skillModel.doublePassingSkills.splice(this.skillModel.doublePassingSkills.indexOf(oldValue),1);
-          break;
-        case 'Strength':
-          this.skillModel.doubleStrengthSkills.splice(this.skillModel.doubleStrengthSkills.indexOf(oldValue),1);
-          break;
-        case 'Mutation':
-          this.skillModel.doubleMutationSkills.splice(this.skillModel.doubleMutationSkills.indexOf(oldValue),1);
-          break;
-      }
-      switch (this.playerType.type){
-        case 'Undead_Mummy':
-          if (this.isDouble(oldValue) || this.isIncrease(oldValue) ) this.skillModel.mummyDoubleCount--;
-          break;
-        case 'Ogre_Ogre':
-          if (this.isDouble(oldValue) ) this.skillModel.ogreDoubleCount--;
-          else if (this.isIncrease(oldValue) ) this.skillModel.ogreStatsCount--;
-          break;
-      }
-    }
 
     getCategory = (skill) => SkillDescriptions.find(x => x.name === skill).category;
-    hasDouble = () => SkillDescriptions.filter(x => this.skill1 === x.name).some(x => this.playerType.doubles.includes(x.category));
+    hasDouble = () => SkillDescriptions.filter(x => this.skill1 === x.name).some(x => this.playerType.affinities.secondary.includes(x.category));
     hasDoubleOrIncrease = () => this.hasDouble() || this.hasIncrease();
     hasIncrease = () => this.increases().includes(this.skill1);
-    isDouble = (skill) => this.playerType.doubles.includes(SkillDescriptions.find(x => x.name === skill)?.category ||'');
+    isDouble = (skill) => this.playerType.affinities.secondary.includes(SkillDescriptions.find(x => x.name === skill)?.category ||'');
     isIncrease = (skill) => SkillDescriptions.filter(x => x.category == 'Increase').map(x => x.name).includes(skill);
     isSuperstar = () => this.skill1 && this.skill2;
     isSkilled = () => this.id > 0 && this.skill1;
 
-    normals = () => SkillDescriptions.filter(x => this.playerType.normal.includes(x.category)).map(x => x.name);
+    normals = () => SkillDescriptions.filter(x => this.playerType.affinities.primary.includes(x.category)).map(x => x.name);
     increases = () => SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.tier > 2 || x.name !== 'Increase Strength').map(x => x.name);
     
     accessibleSkills(){
-      let doubles = SkillDescriptions.filter(x => this.playerType.doubles.includes(x.category));
+      debugger;
+      let secondary = skills.filter(x => this.playerType.affinities.secondary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:true}}); 
+      let primary = skills.filter(x => this.playerType.affinities.primary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:false}}); 
 
-      if (this.id > 0 && this.dice) {
-        let skills = this.normals();
-        if (this.dice[0] === this.dice[1]) skills = skills.concat(doubles.map(x => x.name));
-        if (this.dice[0] + this.dice[1] === 10) {
-          skills.push('Increase Movement');
-          skills.push('Increase Armour');
-        }
-        if (this.dice[0] + this.dice[1] === 11) skills.push('Increase Agility');
-        if (this.dice[0] + this.dice[1] === 12) skills.push('Increase Strength');
-
-        return skills.sort().filter(x => !this.fixedSkills.includes(x) && !this.skills.includes(x));
-      }
-      const increases = SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.skillModel.isAllowed(x.category, x.name, this.playerType.type) || x.name === this.skill1).map(x => x.name);
-
-      doubles = doubles.filter(x => !this.fixedSkills.includes(x.name) && this.skillModel.isAllowed(x.category, x.name, this.playerType.type) || x.name === this.skill1);
-
-
-
-      return this.normals().filter(x => !this.fixedSkills.includes(x)).concat(doubles.map(x => x.name)).concat(increases).sort();
+      return primary.filter(x => !this.fixedSkills.includes(x.name)).concat(secondary.filter(x => !this.fixedSkills.includes(x.name))).sort();
     } 
 
-    getSkills1 = () => !this.skill1 && this.skillModel.rookieCount() <= 3 ? [] : this.accessibleSkills().filter(x => x !== this.skill2);
-    getSkills2 = () => this.hasDoubleOrIncrease() || !this.skill1 || this.skillModel.superstarCount() >= 5 
-      ? ( this.skill2 ? [this.skill2] : [])
-      : this.normals().filter(x => x !== this.skill1 && !this.fixedSkills.includes(x));
+    getSkills1 = () => /*!this.skill1 /*&& this.skillModel.rookieCount() <= 3 ? [] :*/ this.accessibleSkills();//.filter(x => x.name !== this.skill2?.name);
+    getSkills2 = () => /*!this.skill2 /*&& this.skillModel.rookieCount() <= 3 ? [] :*/ this.accessibleSkills().filter(x => x.name !== this.skill1?.name);
 
     medicalBill = () => this.casualties.reduce((p,c) => p += c.removed ? 1 : 0 ,0) * 100_000;
 
-    _getSkillCost = (skill) => {
-        let skillCost = skill ? 20_000 : 0;
-        if (this.isIncrease(skill)) {
-          switch(skill){
-            case 'Increase Movement':
-            case 'Increase Armour':
-              skillCost = 30_000;
-              break;
-            case 'Increase Agility':
-              skillCost = 40_000;
-              break;
-            case 'Increase Strength':
-              skillCost = 50_000;
-              break;
-          }
-        } 
-        else if (this.isDouble(skill)) skillCost = 30_000;
-        return skillCost;
+    _getSkillCost = () => {
+      /*
+                      random primary  select primary/random secondary   select secondary    characteristic
+        Experienced         3                     6                           12                  18
+        Veteran-            4                     8                           14                  20
+        Emerging Star       6                    10                           16                  24
+        Star                8                    12                           18                  28
+        Super Star         10                    14                           20                  32
+        Legend             15                    30                           40                  50      
+      */
+        
+        const secondaryXP = [0,12,14,16,18,20,40];
+        const primaryXP   = [0, 6, 8,10,12,14,30];
+
+        let level = this.skills.length;
+        let secondary = skills.filter(x => this.playerType.affinities.secondary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:true}}); 
+        let primary = skills.filter(x => this.playerType.affinities.primary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:false}}); 
+        
+        let isSecondary = secondary.some(x => x.name == this.skill1?.name);
+        let isPrimary = primary.some(x => x.name == this.skill1?.name);
+
+        let skillCost = isSecondary ? secondaryXP[++level] : isPrimary ? primaryXP[++level] : 0;
+
+        isSecondary = secondary.some(x => x.name == this.skill2?.name);
+        isPrimary = primary.some(x => x.name == this.skill2?.name);
+
+        skillCost += isSecondary ? secondaryXP[++level] : isPrimary ? primaryXP[++level] : 0;
+
+        return skillCost * 5_000  ;
     }
 
     cost() {
       if (this.id && this.id > 0){
-        return this.value * 1000 + this.medicalBill() + this._getSkillCost(this.skill1);
+        return this.value * 1000 + this.medicalBill() + this._getSkillCost();
       }
 
-      return this.playerType.cost + this._getSkillCost(this.skill1) + (this.skill2 ? 20000 : 0 );
+      return this.playerType.cost + this._getSkillCost();
     }
     setClass(option, skill) {
-      if (this.isDouble(skill) || this.isIncrease(skill)) $(option).addClass('bg-double');
+      if (skill?.secondary) $(option).addClass('bg-double');
     }
   }

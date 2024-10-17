@@ -60,61 +60,6 @@ block content
         .col
           a.float-end.btn.btn-sm.btn-success(href=`/bb3/redraft/${team.id}/preview`) Redraft
 
-    //div(class="row" style="margin-left:0px")
-      div(class="col-12 table-responsive-md")
-        table(class="table table-striped") 
-          thead(class="headerText")
-            tr 
-              th
-              th(class="d-none d-md-table-cell") tackles
-              th(class="d-md-none") Tckl
-              th(class="d-none d-md-table-cell") injuries
-              th(class="d-md-none") Inj
-              th stuns
-              th ko
-              th CAS
-              th dead
-              th(class="d-none d-md-table-cell") running (m)
-              th(class="d-md-none") Run (m)
-              th(class="d-none d-md-table-cell") passing (m)
-              th(class="d-md-none") Pas (m)
-              th(class="d-none d-md-table-cell") passes
-              th(class="d-md-none") Pas
-              th(class="d-none d-md-table-cell") interc.
-              th(class="d-md-none") Int
-              th(class="d-none d-md-table-cell") touchdowns
-              th(class="d-md-none") TDs
-              th surfs
-          tbody
-            tr
-              td inflicted
-              td=getStat(team.statistics, 26)
-              td=getStat(team.statistics, 22)
-              td - 
-              td=getStat(team.statistics, 25)
-              td=getStat(team.statistics, 19)
-              td=getStat(team.statistics, 21)
-              td=getStat(team.statistics, 23)
-              td=getStat(team.statistics, 24)
-              td=getStat(team.statistics, 41)
-              td=getStat(team.statistics, 55)
-              td=getStat(team.statistics, 18)
-              td=getStat(team.statistics, 57)
-            tr  
-              td sustained
-              td=getStat(team.statistics, 59)
-              td=getStat(team.statistics, 30)
-              td - 
-              td=getStat(team.statistics, 29)
-              td=getStat(team.statistics, 28)
-              td=getStat(team.statistics, 31)
-              td -
-              td -
-              td -
-              td=getStat(team.statistics, 58)
-              td=getStat(team.statistics, 27)
-              td -
-
     br
     nav(class="col-12")
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
