@@ -160,7 +160,7 @@ class ClanBuildingApi{
   async teamSaveAllowed(req, res, next) {
     const account = await accountService.getAccount(req.user.name);
     //const clan = await clanService.getNewClanByUser(account.coach);
-    const clan = req.params.clan ? await clanService.getClanByNameAndSeason(req.params.clan, "season 18") :  await clanService.getNewClanByUser(account.coach);
+    const clan = req.params.clan ? await clanService.getClanByNameAndSeason(req.params.clan, "season 19") :  await clanService.getNewClanByUser(account.coach);
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
     if(clan.locked) return res.status(400).send({error:'No more updates allowed'});

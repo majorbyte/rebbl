@@ -25,7 +25,7 @@ router.get("/schedule", util.ensureAuthenticated, util.hasRole("admin","clanadmi
 router.post("/schedule", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req, res){
   try{
 
-    const schedules = await dataService.getSchedules({league:"clan",season:"season 18", round:Number(req.body.round)});
+    const schedules = await dataService.getSchedules({league:"clan",season:"season 19", round:Number(req.body.round)});
     
     if (schedules.length > 0) {
       res.status(400).json({error: "Schedules already exist for this round"});
@@ -42,7 +42,7 @@ router.post("/schedule", util.ensureAuthenticated, util.hasRole("admin","clanadm
           competition:name, 
           house:house+1,
           round:round,
-          season:"season 18", 
+          season:"season 19", 
           home:{clan:home, win:0, draw:0,loss:0},
           away:{clan:away, win:0, draw:0,loss:0},
           matches:[]};
