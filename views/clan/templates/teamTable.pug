@@ -21,7 +21,7 @@ table.table.table-striped.table-sm.table-responsive
     // /ko
     // ko if: roster.length === 0
     td(data-bind="css:race ? '' : 'choose-race'") 
-      select(data-bind="options: $root.races(), optionsText: 'name', value: race,optionsCaption: 'Choose...', enable: roster.length == 0")
+      select(data-bind="options: $root.races(), optionsText: 'displayName', value: race,optionsCaption: 'Choose...', enable: roster.length == 0")
     // /ko
   tr 
     th.table-info SPP+

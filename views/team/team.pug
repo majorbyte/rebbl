@@ -856,21 +856,6 @@ block scripts
       }
     }
 
-    class SkillModel{
-      constructor(data){
-        this.map(data);
-        ko.track(this);
-      }
-
-      map(data){
-        if(data){
-          this.id =data.id;
-          this.name = data.name;
-        }
-      }
-
-    }
-
     async function _loadPlayers(type){
       let path = window.location.pathname.split('/');
 

@@ -34,10 +34,10 @@ tr
     // /ko
     // /ko
     // ko if: skill1
-    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/BB3Standard/${skillsData.find(x => x.name.toLowerCase() === skill1.name.replace(/[) (+-]/g,''))?.icon}`,title:skill1.name.replace(/([A-Z])/g, ' $1').trim()}")
+    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/BB3Standard/${skill1?.icon}`,title:skill1.name}")
     // /ko
     // ko if: skill2
-    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/BB3Standard/${skillsData.find(x => x.name.toLowerCase() === skill2.name.replace(/[) (+-]/g,''))?.icon}`,title:skill2.name.replace(/([A-Z])/g, ' $1').trim()}")
+    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/BB3Standard/${skill2?.icon}`,title:skill2.name}")
     // /ko
     // ko foreach: dice
     div(data-bind="css: `dice dice-${$data}` ")
@@ -48,6 +48,7 @@ tr
     // /ko
   td.data
     span(data-bind="text: new Intl.NumberFormat('en-US').format(cost())")
+    // /ko
   td.left-align
     // ko if: !$root.locked || $parent.isNewBloodTeam
     .flex-container
@@ -75,10 +76,6 @@ tr(data-bind="visible: player.visible")
     span skills
   td(colspan='9')
     div(style="display:flex")
-      // ko if: player.getSkills1().length > 0
-      select(aria-labelledby='' data-bind="options:player.getSkills1(), value:skill1, optionsText:'name',optionsCaption:'choose ..',optionsAfterRender: setClass.bind(player)")
-      // /ko
-      // ko if: player.getSkills2().length > 0 
-      select(aria-labelledby='' data-bind="options:player.getSkills2(), value:skill2, optionsText:'name',optionsCaption:'choose ..',optionsAfterRender: setClass.bind(player),  enable:player.skill1 " )
-      // /ko
+      select(aria-labelledby='' data-bind="options:player.getSkills1(), value:player.selectedSkill1, optionsValue:'name',optionsText:'name',optionsCaption:'choose ..'")
+      select(aria-labelledby='' data-bind="options:player.getSkills2(), value:player.selectedSkill2, optionsValue:'name',optionsText:'name',optionsCaption:'choose ..',  enable:player.selectedSkill1" )
   // /ko

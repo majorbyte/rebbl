@@ -133,19 +133,39 @@ script.
       this.registerClan = false;
       this.editClan = false;
       this.editTeam = false;
+      let value = 0;
+      const elm = document.getElementById("pgb");
       let [clan, _me, _skills, /*skillDescriptions, _playerTypes,*/ _races] = await Promise.all([
           fetch('/api/v2/clan/build/#{clan}').then(response =>{ 
+            value += 10;
+            elm.style.width = `${value}%`;
             if (response.redirected) window.location.assign(response.url) ;
             else if (response.ok) return response.json();
             return;
           }),
-          fetch('/api/v2/clan/build/me').then(response => response.json()),
-          fetch('https://cdn.rebbl.net/scripts/data/skills.json').then(response => response.json()),
+          fetch('/api/v2/clan/build/me').then(response => {
+            value += 15;
+            elm.style.width = `${value}%`;
+            return response.json();
+          }),
+          fetch('https://cdn.rebbl.net/scripts/data/skills.json').then(response => {
+            value += 25;
+            elm.style.width = `${value}%`;
+            return response.json();
+          }),
           //fetch('/api/v2/bloodbowl/skilldescriptions').then(response => response.json()),
           //fetch('/api/v2/bloodbowl/playertypes').then(response => response.json()),
           //fetch('/api/v2/bloodbowl/races').then(response => response.json()),
-          fetch('https://cdn.rebbl.net/scripts/data/races.json').then(response => response.json()),
+          fetch('https://cdn.rebbl.net/scripts/data/races.json').then(response => {
+            value += 50;
+            elm.style.width = `${value}%`;
+            return response.json()
+          }),
       ]);
+
+
+
+
 
       let _playerTypes = races.map(x => x.positions.map(y => {
         return {race: y.code, displayName:x.data}}
@@ -170,7 +190,7 @@ script.
       }
 
 
-      this.loading = false;
+      setTimeout(() =>this.loading = false, 400 );
     }
 
     async validate(){

@@ -4,19 +4,21 @@ script.
       this.map(data || {});
       ko.track(this);
 
+      ko.getObservable(this, 'selectedSkill1').subscribe(this.updateSkills.bind(this));
+      ko.getObservable(this, 'selectedSkill2').subscribe(this.updateSkills.bind(this));
     }
     map(data){
       this.id = data.id || 0;
       this.playerType = data.playerType || undefined;
       this.name = data.name || '';
-      this.skill1 = data.skill1;
-      this.skill2 = data.skill2;
+
+      this.selectedSkill1 = data.selectedSkill1;
+      this.selectedSkill2 = data.selectedSkill2;
       this.fixedSkills = data.fixedSkills ||  this.playerType?.skills || [];
       this.skills = data.skills || [];
       this.injuries = data.injuries || [];
       this.visible = false;
       this.tier = data.tier || 1;
-      this.skillModel = data.skillModel || new SkillModel();
       this.value = data.value || 0;
       if (data.casualties_state?.length === 0 && data.casualties_sustained_total && data.casualties_sustained_total?.length !== 0) data.casualties_state = data.casualties_sustained_total;
       if (data.casualties_state) this.casualties = data.casualties_state.filter(x => ['DamagedBack','SmashedKnee','SmashedAnkle','SmashedHip','SmashedCollarBone','BrokenNeck','FracturedSkull','SeriousConcussion'].includes(x) ).map(x => new CasualtyModel({name: x}));
@@ -27,6 +29,10 @@ script.
       this.sppSurplus = data.sppSurplus || 0;
       this.spentSPP = data.spentSPP || 0;
       this.dice = data.dice || undefined;
+      
+      this.skill1 = skillsData.find(x => x.name.toLowerCase() === this.selectedSkill1?.replace(/[) (+-]/g,''));
+      this.skill2 = skillsData.find(x => x.name.toLowerCase() === this.selectedSkill2?.replace(/[) (+-]/g,''));
+
 
       if (!this.playerType && data.type){
         this.playerType = playerTypes.find(x => x.type == data.type);
@@ -93,6 +99,11 @@ script.
       
     }
 
+    updateSkills(){
+      this.skill1 = skillsData.find(x => x.name.toLowerCase() === this.selectedSkill1?.replace(/[) (+-]/g,''));
+      this.skill2 = skillsData.find(x => x.name.toLowerCase() === this.selectedSkill2?.replace(/[) (+-]/g,''));
+    }
+
     toggleEdit(){
       this.visible = !this.visible;
     }
@@ -110,7 +121,6 @@ script.
     increases = () => SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.tier > 2 || x.name !== 'Increase Strength').map(x => x.name);
     
     accessibleSkills(){
-      debugger;
       let secondary = skills.filter(x => this.playerType.affinities.secondary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:true}}); 
       let primary = skills.filter(x => this.playerType.affinities.primary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:false}}); 
 
@@ -140,13 +150,13 @@ script.
         let secondary = skills.filter(x => this.playerType.affinities.secondary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:true}}); 
         let primary = skills.filter(x => this.playerType.affinities.primary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:false}}); 
         
-        let isSecondary = secondary.some(x => x.name == this.skill1?.name);
-        let isPrimary = primary.some(x => x.name == this.skill1?.name);
+        let isSecondary = secondary.some(x => x.name == this.selectedSkill1);
+        let isPrimary = primary.some(x => x.name == this.selectedSkill1);
 
         let skillCost = isSecondary ? secondaryXP[++level] : isPrimary ? primaryXP[++level] : 0;
 
-        isSecondary = secondary.some(x => x.name == this.skill2?.name);
-        isPrimary = primary.some(x => x.name == this.skill2?.name);
+        isSecondary = secondary.some(x => x.name == this.selectedSkill2);
+        isPrimary = primary.some(x => x.name == this.selectedSkill2);
 
         skillCost += isSecondary ? secondaryXP[++level] : isPrimary ? primaryXP[++level] : 0;
 

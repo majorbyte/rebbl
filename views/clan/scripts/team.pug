@@ -1,7 +1,7 @@
 script.
   class TeamModel extends Tracking{
     constructor(data){
-      super(() => new TeamModel(this),['returningPlayers','newPlayer','returningPlayer','skillingPlayer','skillModel']);
+      super(() => new TeamModel(this),['returningPlayers','newPlayer','returningPlayer','skillingPlayer']);
       this.map(data || {});
        
       this._reset = () => this.map(data);
@@ -13,9 +13,7 @@ script.
       if (this.isReturningTeam) this.getReturningTeam(this.coach);
     }
     map(data){
-      this.skillModel = new SkillModel();
-
-      data.roster?.forEach(x => x.skillModel = this.skillModel);
+      console.dir(data.roster)
       this.roster = data.roster?.map(x => new PlayerModel(x)) ||[];
       this.fanfactor = data.fanfactor || 5;
       this.rerolls = data.rerolls || 0;
@@ -42,9 +40,6 @@ script.
       this.newPlayer = new PlayerModel();
       this.skillingPlayer = new PlayerModel();
 
-      this.skillModel.tier = this.teamTier;
-      this.skillModel.race = this.race;
-
       this.proceedDisabled = false;
     }
     isTeamOwner = () => this.coach === me.coach;
@@ -62,7 +57,6 @@ script.
       if (!this.race || this.roster.length >= 16) return [];
 
       const types = this.race.positions;// playerTypes.filter(x => x.race === this.race.id).sort((a,b) => a > b);
-      console.dir(types);
       return types.filter(t => this.roster.filter(x => x.playerType.data === t.data).length < t.max);
     }
     availableReturningPlayers = () => {
@@ -131,7 +125,6 @@ script.
         playerType: this.newPlayer.playerType,
         fixedSkills : skills[this.newPlayer.playerType.type],
         tier: this.teamTier(),
-        skillModel: this.skillModel
       }));
       this.newPlayer.playerType = '';
       this.newPlayer.name = '';
@@ -142,87 +135,9 @@ script.
     addReturningPlayer () {
       this.roster.push(this.returningPlayer);
       const player = this.returningPlayer;
-      if (this.isNewBloodTeam) {
-        for(let skill of player.skills){
-          if (player.fixedSkills.indexOf(skill)>-1) continue;
-          if (!this.isDouble(player,skill) && !this.isIncrease(skill)) return;
-          if (this.isDouble(player,skill)) this.skillModel.doubleSkills++;
-          switch(SkillDescriptions.find(x => x.name === skill).category){
-            case 'Increase':
-              this.skillModel.statsIncreases.push(skill);
-              break;
-            case 'General':
-              this.skillModel.doubleGeneralSkills.push(skill);
-              break;
-            case 'Agility':
-              this.skillModel.doubleAgilitySkills.push(skill);
-              break;
-            case 'Passing':
-              this.skillModel.doublePassingSkills.push(skill);
-              break;
-            case 'Strength':
-              this.skillModel.doubleStrengthSkills.push(skill);
-              break;
-            case 'Mutation':
-              this.skillModel.doubleMutationSkills.push(skill);
-              break;
-          }
-          /*
-            Special race rules:
-            Undead may only buy 1 double OR 1 statistic on one of their Mummies.
-            Ogres may take either 3 doubles, or 1 double AND 1 statistic, on their Ogres.
-          */
-          switch (player.playerType.type){
-            case 'Undead_Mummy':
-              if (this.isDouble(player,skill) || this.isIncrease(skill) ) this.skillModel.mummyDoubleCount++;
-              break;
-            case 'Ogre_Ogre':
-              if (this.isDouble(player,skill) ) this.skillModel.ogreDoubleCount++;
-              else if (this.isIncrease(skill) ) this.skillModel.ogreStatsCount++;
-              break;
-          }   
-        }       
-      }
     }
-
     removePlayer (player){
       this.roster.splice(this.roster.indexOf(player),1);
-      if (this.isNewBloodTeam && player.id > 0){
-        for(let skill of player.skills){
-          if (player.fixedSkills.indexOf(skill)>-1) continue;
-          if (!this.isDouble(player,skill) && !this.isIncrease(skill)) return;
-          if (this.isDouble(player,skill)) this.skillModel.doubleSkills--;
-          switch(SkillDescriptions.find(x => x.name === skill).category){
-            case 'Increase':
-              this.skillModel.statsIncreases.splice(this.skillModel.statsIncreases.indexOf(skill),1);
-              break;
-            case 'General':
-              this.skillModel.doubleGeneralSkills.splice(this.skillModel.doubleGeneralSkills.indexOf(skill),1);
-              break;
-            case 'Agility':
-              this.skillModel.doubleAgilitySkills.splice(this.skillModel.doubleAgilitySkills.indexOf(skill),1);
-              break;
-            case 'Passing':
-              this.skillModel.doublePassingSkills.splice(this.skillModel.doublePassingSkills.indexOf(skill),1);
-              break;
-            case 'Strength':
-              this.skillModel.doubleStrengthSkills.splice(this.skillModel.doubleStrengthSkills.indexOf(skill),1);
-              break;
-            case 'Mutation':
-              this.skillModel.doubleMutationSkills.splice(this.skillModel.doubleMutationSkills.indexOf(skill),1);
-              break;
-          }
-          switch (player.playerType.type){
-            case 'Undead_Mummy':
-              if (this.isDouble(player,skill) || this.isIncrease(skill) ) this.skillModel.mummyDoubleCount--;
-              break;
-            case 'Ogre_Ogre':
-              if (this.isDouble(player,skill) ) this.skillModel.ogreDoubleCount--;
-              else if (this.isIncrease(skill) ) this.skillModel.ogreStatsCount--;
-              break;
-          }
-        }
-      }
     }
 
     showSkillPlayerModal(player){
@@ -282,8 +197,6 @@ script.
       delete data.returningPlayer; 
       delete data.skillingPlayer;
       delete data.newPlayer;
-      delete data.skillModel; 
-      data.roster.forEach(n => delete n.skillModel);      
       context.$root.skilling = true;
       await fetch(`/api/v2/clan/build/${context.$parent.name}/${this.id}/skill` ,{
         method:'PUT',
@@ -301,9 +214,6 @@ script.
         $('#toast-success-message').text(`Player skilled successfully`);
         $('#toast-success').toast('show');
         var index = this.roster.findIndex(x => x.id === player.id);
-        player.skillModel = this.skillModel;
-        player.skillModel.tier = this.teamTier;
-        player.skillModel.race = this.race;
 
         this.roster[index] = new PlayerModel(player);
       } else {

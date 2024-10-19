@@ -1,8 +1,8 @@
 tr.add-player-row
   // ko if: (isReturningTeam || isNewBloodTeam) && availableReturningPlayers().length > 0
-  td.left-align
+  td.align-start
     span(data-bind="text: returningPlayer.name")
-  td.left-align
+  td.align-start
     select(aria-labelledby='position-header' data-bind="options: availableReturningPlayers(),optionsText:(item) => item.playerType.displayName, value:returningPlayer")
   td
     span(data-bind="text:returningPlayer.ma, css:returningPlayer.maColor")
@@ -13,8 +13,9 @@ tr.add-player-row
   td
     span(data-bind="text:returningPlayer.av, css:returningPlayer.avColor")
   td
+  td
     span(data-bind="text: returningPlayer.sppSurplus")            
-  td.left-align
+  td.align-start
     // ko foreach: returningPlayer.fixedSkills
     img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
     // /ko
@@ -29,29 +30,36 @@ tr.add-player-row
     // /ko        
   td.data
     span(data-bind="text: new Intl.NumberFormat('en-US').format(returningPlayer?.value * 1000)")
-  td.left-align
+  td.align-start
     .flex-container
       button.btn.btn-sm.btn-success(title='add player' data-bind="click:addReturningPlayer")
         i.fa-solid.fa-plus-square
   // /ko
 tr.add-player-row
-  td.left-align
+  td.align-start
     input(placeholder='Player Name' data-bind="textInput: newPlayer.name")
-  td.left-align
-    select(aria-labelledby='position-header' data-bind="options: positions(),optionsText: 'data', value:newPlayer.playerType")
+  td.align-start
+    select(aria-labelledby='position-header' data-bind="options: positions(),optionsText: 'displayName', value:newPlayer.playerType")
   td
-    span(data-bind="text:newPlayer.playerType?.ma")
+    span(data-bind="text:newPlayer.playerType.characteristics?.ma")
   td
-    span(data-bind="text:newPlayer.playerType?.st")
+    span(data-bind="text:newPlayer.playerType.characteristics?.st")
   td
-    span(data-bind="text:newPlayer.playerType?.ag")
+    span(data-bind="text:newPlayer.playerType.characteristics?.ag")
   td
-    span(data-bind="text:newPlayer.playerType?.av")
-  td.left-align
+    span(data-bind="text:newPlayer.playerType.characteristics?.pa")
+  td
+    span(data-bind="text:newPlayer.playerType.characteristics?.av")
+  td
+  td.align-start 
     span.skills  
+    // ko foreach: newPlayer.playerType.skills
+    img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/BB3Standard/${skillsData.find(x => x.name.toLowerCase() === $data.replace(/[) (+-]/g,''))?.icon}`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")
+    // /ko
+  td
   td.data
     span(data-bind="text:  new Intl.NumberFormat('en-US').format(newPlayer.playerType?.cost)")
-  td.left-align
+  td.align-start
     .flex-container
       button.btn.btn-sm.btn-success(title='add player' data-bind="click:addPlayer")
         i.fa-solid.fa-plus-square
