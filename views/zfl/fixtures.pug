@@ -50,18 +50,21 @@ block nav
         a.btn.btn-primary.mx-2.mb-2(href="/fixtures") exit
 
 block main
-  - let rounds = ["","7th October - 21st October","5th November - 18th November","19th November - 2nd December","31st December - 13th January","14th January - 27th January","28th January - 10th February","18th February - 3rd March","4th March - 17th March","18th March - 31st March","8th April - 21st April","22nd April - 5th May"]
+  - let rounds = ["","7th October - 21st October", "22nd October - 4th November", "5th November - 18th November","19th November - 2nd December","31st December - 13th January","14th January - 27th January","28th January - 10th February","18th February - 3rd March","4th March - 17th March","18th March - 31st March","8th April - 21st April","22nd April - 5th May"]
 
   .container-fluid
     .row
+      - let dateX = 0;
       - for(let x = 1; x < 12; x++)
+        - dateX++;
+        //- let compName = competitions[0].fixtures.find(x => x.round == x).competition.name
         .row.col-12.text-center 
           h1= `Round ${x}`
             if isAdminMode && competitions[0].round == x && !competitions[0].completed
               button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`completeCompetitions(${x})`) complete
             else if isAdminMode && competitions[0].round +1 == x && competitions[0].completed
               button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`createCompetitions(${x})`) create
-          span= rounds[x]
+          span= rounds[dateX]
           if competitions[0].round == x
             .toast-container.end-0.p-3
               .toast.align-items-center.text-bg-success.border-0#successToast(role="alert" aria-live="assertive" aria-atomic="true")
@@ -78,15 +81,45 @@ block main
           .row.col-12.align-items-center
             h2 Elite Division
           .row.col-12
-            each fixture of competitions[0].fixtures.filter(f => f.round == x)
+            each fixture of competitions[0].fixtures.filter(f => f.round == x && f.competition.name.startsWith("Elite"))
               +fixture(fixture) 
         .row.col-12.col-xl-6.text-center
           .row.col-12.align-items-center
             h2 Second Division
           .row.col-12
-            each fixture of competitions[1].fixtures.filter(f => f.round == x)
+            each fixture of competitions[1].fixtures.filter(f => f.round == x && f.competition.name.startsWith("Second"))
               +fixture(fixture) 
         .row.col-12 &nbsp;
+        if competitions[0].fixtures.some(f => f.round == x && f.competition.name.startsWith("Howitzer"))
+          - dateX++
+          .row.col-12.text-center 
+            h1= `Howitzer Round ${x}`
+              if isAdminMode && competitions[0].round == x && !competitions[0].completed
+                button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`completeCompetitions(${x})`) complete
+              else if isAdminMode && competitions[0].round +1 == x && competitions[0].completed
+                button.btn.btn-sm.btn-primary.mx-2.mb-2(onclick=`createCompetitions(${x})`) create
+            span= rounds[dateX]
+            if competitions[0].round == x
+              .toast-container.end-0.p-3
+                .toast.align-items-center.text-bg-success.border-0#successToast(role="alert" aria-live="assertive" aria-atomic="true")
+                  .d-flex
+                    .toast-body#successBody
+                    button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")
+
+                .toast.align-items-center.text-bg-danger.border-0#errorToast(role="alert" aria-live="assertive" aria-atomic="true")
+                  .d-flex
+                    .toast-body#errorBody
+                    button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")
+
+          .row.col-12.col-xl-6.text-center
+            .row.col-12
+              each fixture of competitions[0].fixtures.filter(f => f.round == x && f.competition.name.startsWith("Howitzer"))
+                +fixture(fixture) 
+          .row.col-12.col-xl-6.text-center
+            .row.col-12
+              each fixture of competitions[1].fixtures.filter(f => f.round == x && f.competition.name.startsWith("Howitzer"))
+                +fixture(fixture) 
+          .row.col-12 &nbsp;
 
 block scripts 
   script.
