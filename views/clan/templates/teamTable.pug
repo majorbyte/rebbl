@@ -1,11 +1,5 @@
 table.table.table-striped.table-sm.table-responsive
   tr
-    th.table-info returning team
-    td 
-      // ko if: isReturningTeam && !isNewBloodTeam
-      a(data-bind="attr:{href:`https://rebbl.net/team/${returningTeam.id}`}, text:returningTeam.name" target="_blank")        
-      // /ko
-  tr
     th.table-info coach name
     td
       input(placeholder='Coach Name' data-bind="value: coach")
@@ -23,13 +17,6 @@ table.table.table-striped.table-sm.table-responsive
     td(data-bind="css:race ? '' : 'choose-race'") 
       select(data-bind="options: $root.races(), optionsText: 'displayName', value: race,optionsCaption: 'Choose...', enable: roster.length == 0")
     // /ko
-  tr 
-    th.table-info SPP+
-    td.data(data-bind="css: sppSurplus() - spentSPP() >= 0 ? '' : 'choose-race'")
-      // ko if: sppSurplus() - spentSPP() < 0
-      i.fa-solid.fa-info-circle.mx-1(title="You have traded outside of your SPP budget")
-      // /ko
-      span(data-bind="text: sppSurplus() - spentSPP()")
   tr 
     th.table-info tier 
     td.data(data-bind="text: teamTier()")

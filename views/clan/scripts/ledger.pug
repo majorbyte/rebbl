@@ -49,23 +49,25 @@ script.
     }
 
     powersTotal =() =>{
-      const powers = ['miscommunication', 'badInducementDeal', 'lastMinuteSwitch', 'assassination', 'inspiration', 'confusion', 'hatredOfPublicTransport', 'financialFairPlay'];
-      let cost = 0;
-      for(const key of powers){
-        cost += Powers.find(x => x.key === key).cost * this[key];
-      }
-      return cost;
+      //- const powers = ['miscommunication', 'badInducementDeal', 'lastMinuteSwitch', 'assassination', 'inspiration', 'confusion', 'hatredOfPublicTransport', 'financialFairPlay'];
+      //- let cost = 0;
+      //- for(const key of powers){
+      //-   cost += Powers.find(x => x.key === key).cost * this[key];
+      //- }
+      //- return cost;
+      return 0;
     }
 
     stuntyTotal = () => {
-      const powers = ['stuntyMiscommunication', 'stuntyLastMinuteSwitch', 'stuntyAssassination', 'stuntyInspiration', 'stuntyBadInducementDeal', 'stuntyConfusion', 'stuntyHatredOfPublicTransport'];
+      //- const powers = ['stuntyMiscommunication', 'stuntyLastMinuteSwitch', 'stuntyAssassination', 'stuntyInspiration', 'stuntyBadInducementDeal', 'stuntyConfusion', 'stuntyHatredOfPublicTransport'];
 
-      let cost = 0;
-      for(const key of powers){
-        cost += Powers.find(x => x.key === key).cost * this[key];
-      }
-      this.updateStunty(cost <= 150_000 * this.stuntyCount());
-      return cost;
+      //- let cost = 0;
+      //- for(const key of powers){
+      //-   cost += Powers.find(x => x.key === key).cost * this[key];
+      //- }
+      //- this.updateStunty(cost <= 150_000 * this.stuntyCount());
+      //- return cost;
+      return 0;
     }
 
     stuntyBudgetLeft = () => 150_000 * this.stuntyCount() - this.stuntyTotal();

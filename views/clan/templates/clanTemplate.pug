@@ -8,11 +8,11 @@
   button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onSaveClan, attr:{disabled: !isDirty()}" title="save clan") 
     i.fa-solid.fa-save
   // /ko
-  button.btn.btn-success.btn-sm.my-1.mx-1(data-bind="click:$root.onValidateClan" title="validate clan") 
+  button.btn.btn-success.btn-sm.my-1.mx-1(data-bind="click:$root.onValidateClan" title="validate clan" disabled) 
     i.fa-solid.fa-check-square 
     span Validate
   // ko if: isClanLeader()
-  button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onLockClan" title="lock clan") 
+  button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onLockClan" title="lock clan" disabled) 
     i.fa-solid.fa-lock
   // /ko
   // /ko
@@ -26,7 +26,7 @@
         th.table-info team name 
         th.table-info returning
         th.table-info # players
-        th.table-info normal team cost
+        th.table-info TV
         th.table-info tier tax
         th.table-info total cost
         th.table-info  
@@ -49,7 +49,7 @@
         td 
           button.btn.btn-sm(data-bind="{text: isReturningTeam ? 'yes' : 'no', click:toggleReturning, css: isReturningTeam ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary', attr:{disabled:hasTraded()}}")
         td.data(data-bind="text: roster?.length || 0")
-        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(playerCost() + subTotalRerolls() )") 
+        td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamValue())") 
         td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTax())") 
         td.data(data-bind="text: new Intl.NumberFormat('en-US').format(teamTotal())") 
         td.left-align
@@ -81,12 +81,12 @@
         td.data
           span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.teamTotal()),css: isTeamCostValid() ? 'valid' : 'invalid'")  
       // /ko
-      tr
+      //tr
         td.data(colspan="9")
           span Powers Total
         td.data
           span(data-bind="text: new Intl.NumberFormat('en-US').format(ledger.powersTotal())")  
-      tr
+      //tr
         td.data(colspan="8")
         td.data(colspan="1" data-bind="css: ledger.stuntyBudgetLeft() > 0 ? 'choose-race' : ''")
           //ko if: ledger.stuntyBudgetLeft() > 0
@@ -100,8 +100,9 @@
           span Clan Total
         td.data
           span(data-bind="text: new Intl.NumberFormat('en-US').format(cost()),css: isTotalCostValid() ? 'valid' : 'invalid'")  
-  //ko template:{name:'clanPowersTemplate', data:ledger}
-  // /ko
+  //
+    //ko template:{name:'clanPowersTemplate', data:ledger}
+    // /ko
 
 .modal.fade#lockClan(aria-labelledby="clanLockLabel" aria-hidden="true")
   .modal-dialog

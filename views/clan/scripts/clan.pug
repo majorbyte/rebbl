@@ -47,10 +47,12 @@ script.
     }
 
     onValidateClan = () =>{
+      return;
       this.validate();
     }
 
     onLockClan = () => {
+      return;
       $('#lockClan').modal('show');
     }
 
@@ -61,11 +63,14 @@ script.
     }
 
     onTeamDoneClick = () => {
+      console.log("clock");
       this.editClan = !this.editClan;
       this.editTeam = !this.editTeam;
       this.showValidation = false;
+
       this.team = null;
     }
+
     async onRegisterClanClick(){
       if (!$("#clanName")[0].checkValidity()) return;
 

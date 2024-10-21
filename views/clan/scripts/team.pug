@@ -13,9 +13,8 @@ script.
       if (this.isReturningTeam) this.getReturningTeam(this.coach);
     }
     map(data){
-      console.dir(data.roster)
       this.roster = data.roster?.map(x => new PlayerModel(x)) ||[];
-      this.fanfactor = data.fanfactor || 5;
+      this.fanfactor = data.fanfactor || 0;
       this.rerolls = data.rerolls || 0;
       this.coaches = data.coaches || 0;
       this.cheerleaders = data.cheerleaders || 0;
@@ -49,7 +48,7 @@ script.
       if (!this.isReturningTeam) this.returningTeam = null;
       else await this.getReturningTeam(this.coach);
     } 
-    subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + Math.max(Number(this.fanfactor) - 5,0)) * 10000 + (this.apothecary ? 50000 : 0);
+    subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + this.fanfactor) * 10000 + (this.apothecary ? 50000 : 0);
     rerollCost = () => this.race ? this.race.reroll : 50000;
     playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
     hasLegacyPlayer = () => this.roster.some(player => player.id > 0);
@@ -71,15 +70,28 @@ script.
       
       return [];
     };
-    teamValue = () => this.playerCost() + this.subTotalRerolls() + (this.fanfactor < 5 ? this.fanfactor * 10000  : 50000);
+    teamValue = () => this.playerCost() + this.subTotalRerolls();
     teamCost = () => this.playerCost() + this.subTotalRerolls();
     teamTax = () => TierTax.find(x => x.race === this.race?.name)?.cost || 0;
     teamTier = () => TierTax.find(x => x.race === this.race?.name)?.tier;
-    teamTotal = () => this.teamCost() + this.teamTax();
+    teamTotal = () => Math.max(this.teamCost() + this.teamTax(), 1_100_000);
 
     isTeamCostValid = () => this.isNewBloodTeam ?  this.teamTotal() >= this.returningTeam.teamTotal() : this.teamCost() >= this.teamTier() < 7 ? 1_200_000 : 900_000;
 
     targetTeamCost = () =>  this.isNewBloodTeam ? (this.returningTeam.teamCost() - this.teamTax()) : this.teamTier() < 7 ? 1_200_000 : 900_000;
+
+    skillsValid(){
+      if (!this.roster) return [];
+      let skills = this.roster.map(x => x.skill1).concat(this.roster.map(x => x.skill2)).filter(x => x?.name.toLowerCase().indexOf("random") === -1);
+      
+      const occurances = skills.filter(x => x).reduce((p, c) => p.set(c.name, (p.get(c.name) || 0) + 1), new Map());
+
+      for (let entry of occurances.entries()) {
+        if (entry[1] < 4) occurances.delete(entry[0]);
+      }
+
+      return [...occurances.keys()];
+    }
 
     sppSurplus = () => this.roster.reduce((p,c) => p+c.sppSurplus,0);
     spentSPP = () => this.roster.reduce((p,c) => p+c.spentSPP,0);

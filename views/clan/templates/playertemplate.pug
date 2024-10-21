@@ -18,12 +18,6 @@ tr
     span(data-bind="text:ag, css:agColor")
   td
     span(data-bind="text:av, css:avColor")
-  td
-    span(data-bind="text: xp")
-  td
-    span(data-bind="text: sppSurplus")
-  td
-    span(data-bind="text: spentSPP")
   td.left-align
     // ko foreach: fixedSkills
     img.skill(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/BB3Standard/${skillsData.find(x => x.name.toLowerCase() === $data.replace(/[) (+-]/g,''))?.icon}`,title:$data.replace(/([A-Z])/g, ' $1').trim()}")

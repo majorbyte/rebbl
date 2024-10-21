@@ -11,7 +11,6 @@ table.table.table-sm.table-borderless
       td(colspan='1' title='Agility') AG 
       td(colspan='1' title='Pass') PA 
       td(colspan='1' title='Armour Value') AV 
-      td(colspan='1' title='Armour Value') SPP+ 
       td(colspan='1' title='Skills') Skills 
       td(colspan='1' title='Casualties') Casualties
       td.data(colspan='1' title='Current Value') Player Cost 
@@ -30,14 +29,18 @@ table(style="width:100%")
       td(colspan='1' title='Strength') ST 
       td(colspan='1' title='Agility') AG 
       td(colspan='1' title='Armour Value') AV 
-      td(colspan='1' title='SPP') SPP 
-      td(colspan='1' title='SPP Surplus') SPP+ 
-      td(colspan='1' title='SPP Spent on skilling') SPP- 
       td(colspan='1' title='Skills') Skills 
       td(colspan='1' title='Casualties') Casualties
       td.data(colspan='1' title='Current Value') Player Cost 
       td(colspan='1' title='Controls')  
   tbody(data-bind="template: { name: 'playerTemplate', foreach: roster, as: 'player' }")
+  tfoot 
+    // ko if: skillsValid().length > 0
+    tr 
+      td(colspan="11")
+        h3.text-danger(data-bind="text: `Following skills are chosen more than 3 times: ${skillsValid().join(', ')}`")
+
+    // /ko
 // /ko
 
 .tables

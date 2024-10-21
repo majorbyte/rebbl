@@ -121,8 +121,14 @@ script.
     increases = () => SkillDescriptions.filter(x => x.category == 'Increase').filter(x => this.tier > 2 || x.name !== 'Increase Strength').map(x => x.name);
     
     accessibleSkills(){
-      let secondary = skills.filter(x => this.playerType.affinities.secondary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:true}}); 
-      let primary = skills.filter(x => this.playerType.affinities.primary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:false}}); 
+      let secondary = skills.filter(x => this.playerType.affinities.secondary.indexOf(x.category)>-1).sort((a,b) => a.data > b.data).map(x => {return {name: x.data, secondary:true}}); 
+      let primary = skills.filter(x => this.playerType.affinities.primary.indexOf(x.category)>-1).sort((a,b) => a.data > b.data).map(x => {return {name: x.data, secondary:false}}); 
+
+
+      secondary.push({name:"random secondary", secondary:true});
+      secondary.push({name:"random characteristic", secondary:false});
+      primary.push({name:"random primary", secondary:false});
+
 
       return primary.filter(x => !this.fixedSkills.includes(x.name)).concat(secondary.filter(x => !this.fixedSkills.includes(x.name))).sort();
     } 
@@ -145,20 +151,45 @@ script.
         
         const secondaryXP = [0,12,14,16,18,20,40];
         const primaryXP   = [0, 6, 8,10,12,14,30];
+        const randomSecondaryXP  = primaryXP;
+        const randomPrimaryXP    = [ 0, 3, 4, 6, 8,10,15];
+        const characteristic     = [ 0,18,20,24,28,32,50];
 
         let level = this.skills.length;
         let secondary = skills.filter(x => this.playerType.affinities.secondary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:true}}); 
         let primary = skills.filter(x => this.playerType.affinities.primary.indexOf(x.category)>-1).map(x => {return {name: x.data, secondary:false}}); 
-        
+
         let isSecondary = secondary.some(x => x.name == this.selectedSkill1);
         let isPrimary = primary.some(x => x.name == this.selectedSkill1);
 
-        let skillCost = isSecondary ? secondaryXP[++level] : isPrimary ? primaryXP[++level] : 0;
+        if (this.selectedSkill1 && !isPrimary && !isSecondary){ 
+          isSecondary = this.selectedSkill1?.indexOf("secondary") > -1;
+          isPrimary = !isSecondary;
+        }
+
+        let isRandom = this.selectedSkill1?.indexOf("random") > -1;
+        let isCharacteristic = this.selectedSkill1?.indexOf("characteristic") > -1;
+
+        let skillCost = 0;
+
+        if (isCharacteristic) skillCost = characteristic[++level];
+        else if (isSecondary) skillCost = (isRandom ? randomSecondaryXP : secondaryXP)[++level];
+        else if (isPrimary)   skillCost = (isRandom ? randomPrimaryXP: primaryXP)[++level];
 
         isSecondary = secondary.some(x => x.name == this.selectedSkill2);
         isPrimary = primary.some(x => x.name == this.selectedSkill2);
 
-        skillCost += isSecondary ? secondaryXP[++level] : isPrimary ? primaryXP[++level] : 0;
+        if (this.selectedSkill2 && !isPrimary && !isSecondary){ 
+          isSecondary = this.selectedSkill2?.indexOf("secondary") > -1;
+          isPrimary = !isSecondary;
+        }
+
+        isRandom = this.selectedSkill2?.indexOf("random") > -1;
+        isCharacteristic = this.selectedSkill2?.indexOf("characteristic") > -1;
+
+        if (isCharacteristic) skillCost += characteristic[++level];
+        else if (isSecondary) skillCost += (isRandom ? randomSecondaryXP : secondaryXP)[++level];
+        else if (isPrimary)   skillCost += (isRandom ? randomPrimaryXP: primaryXP)[++level];
 
         return skillCost * 5_000  ;
     }
