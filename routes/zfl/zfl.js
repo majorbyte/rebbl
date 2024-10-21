@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require("express")
+, cache = require("memory-cache")
 , passport = require("passport")
 , accountService = require("../../lib/accountService.js")
 , dataService = require("../../lib/DataServiceBB3.js").rebbl3
@@ -26,7 +27,7 @@ class ZFL{
     this.router.get("/profile/:id", this.#getProfile );
 
     this.router.get("/standings", async (_,res) => res.render("zfl/standings" , {competitions:await dataService.getZFLCompetitions({year:this.year}), accounts:await dataService.getZFLAccounts({})}));
-    this.router.get("/playerstats", util.cache(60*60, true), this.#getPlayerStats.bind(this));
+    this.router.get("/playerstats", this.#getPlayerStats.bind(this));
     this.router.get('/fixtures',  this.#getFixtures.bind(this));
     this.router.get('/fixtures/admin', this.#ensureLoggedIn, this.#getFixturesAdmin.bind(this));
 
@@ -254,6 +255,10 @@ class ZFL{
   }
 
   async #getPlayerStats(_,res){
+
+    let cachedBody = cache.get("zfl_playerstats");
+    if (cachedBody) return res.render("zfl/playerstats", cachedBody);
+
     const sacks = await dataService.getZFLStats({year:this.year,Sacks:{$gt:0}},{},{Sacks:-1},10);
     const passes = await dataService.getZFLStats({year:this.year,PassCompletions:{$gt:0}},{},{PassCompletions:-1},10);
     const touchdowns = await dataService.getZFLStats({year:this.year,TouchdownsScored:{$gt:0}},{},{TouchdownsScored:-1},10);
@@ -269,7 +274,10 @@ class ZFL{
     const dubskullsRolled = await dataService.getZFLStats({year:this.year,DubskullsRolled:{$gt:0}},{},{DubskullsRolled:-1},10);
     const gamesPlayed = await dataService.getZFLStats({year:this.year,GamesPlayed:{$gt:0}},{},{GamesPlayed:-1},10);
 
-    res.render("zfl/playerstats",{sacks,passes,touchdowns,spp,casInflicted,casSustained,foulsInflicted,foulsSustained,surfsInflicted,surfsSustained,kills,dodgeTurnovers,dubskullsRolled,gamesPlayed});
+    const data = {sacks,passes,touchdowns,spp,casInflicted,casSustained,foulsInflicted,foulsSustained,surfsInflicted,surfsSustained,kills,dodgeTurnovers,dubskullsRolled,gamesPlayed};
+    cache.put("zfl_playerstats", data,60*60*1000);
+
+    res.render("zfl/playerstats",data);
 
   }
 
