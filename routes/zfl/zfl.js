@@ -133,6 +133,8 @@ class ZFL{
 
   async #getProfile(req,res){
     let account = await dataService.getZFLAccount({"coach.id":req.params.id});
+    
+    if (!account) return res.redirect("/");
     let team = null;
     if (account.teamId){
       team = await dataService.getZFLTeam({id:account.teamId},{projection:{roster:0}});

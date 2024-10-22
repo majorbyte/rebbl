@@ -6,11 +6,11 @@ table.table.table-striped.table-sm
     td(data-bind="text: new Intl.NumberFormat('en-US').format(rerollCost())")
     td.data(data-bind="text: new Intl.NumberFormat('en-US').format(rerolls * rerollCost())")
   tr
-    th.table-info fan factor
+    th.table-info dedicated fans
     td 
       input.w-50(type="number" data-bind="textInput:fanfactor" min="1" max="6")
     td 10,000
-    td.data(data-bind="text: new Intl.NumberFormat('en-US').format(fanfactor * 10000)")
+    td.data(data-bind="text: new Intl.NumberFormat('en-US').format((fanfactor-1) * 10000)")
   tr
     th.table-info assistant coaches
     td
