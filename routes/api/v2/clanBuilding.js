@@ -3,7 +3,7 @@
 const express = require('express')
 , accountService = require('../../../lib/accountService.js')
 , clanService = require('../../../lib/ClanService.js')
-, clanValidationService = require('../../../lib/ClanValidationService.js')
+, clanValidationService = require('../../../lib/ClanValidationServiceBB3.js')
 , rateLimit = require('express-rate-limit')
 , util = require('../../../lib/util.js');
 
