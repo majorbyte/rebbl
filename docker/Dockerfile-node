@@ -22,6 +22,8 @@ USER node
 RUN mkdir /home/node/code
 RUN mkdir /home/node/code/replays
 RUN mkdir /home/node/code/zflstats
+RUN mkdir /home/node/code/images
+RUN mkdir /home/node/code/images/clanlogos
 
 WORKDIR /home/node/code
 

@@ -21,18 +21,18 @@ class ClanBuildingApi{
   };
   
   async _getCoach(req,res){
-    const account = await accountService.searchAccount({coach:new RegExp(`^${req.query.coach}$`,'i')});
+    const account = await accountService.searchAccount({bb3coach:new RegExp(`^${req.query.coach}$`,'i')});
     if (!account) res.status(404).json('coach not found');
-    else res.json({reddit: account.reddit, coach:account.coach, discord:account.discord});
+    else res.json({reddit: account.reddit, coach:account.bb3coach, discord:account.discord});
   }
 
   async _getMe(req,res){
     const account = await accountService.getAccount(req.user.name);
-    let oldClan = await clanService.getClanByUser(account.coach);
-    let newClan = await clanService.getNewClanByUser(account.coach);
+    let oldClan = await clanService.getClanByUser(account.bb3coach);
+    let newClan = await clanService.getNewClanByUser(account.bb3coach);
 
     res.json({
-      coach:account.coach,
+      coach:account.bb3coach,
       reddit:account.reddit,
       isClanLeader: account.roles?.includes('clanleader'),
       oldClan: oldClan?.name,
@@ -62,7 +62,7 @@ class ClanBuildingApi{
 
   async _getClan(req,res){
     const account = await accountService.getAccount(req.user.name);
-    let clan = await clanService.getNewClanByUser(account.coach);
+    let clan = await clanService.getNewClanByUser(account.bb3coach);
     res.json(clan);
   }
   async _getClanByName(req,res){
@@ -88,7 +88,7 @@ class ClanBuildingApi{
 
   async _registerClan(req,res){
     const account = await accountService.getAccount(req.user.name);
-    let clan = await clanService.getNewClanByUser(account.coach);
+    let clan = await clanService.getNewClanByUser(account.bb3coach);
     
     if (!clan){
       if (!/^[A-Z|0-9]+$/.test(req.params.clan)){
@@ -96,8 +96,8 @@ class ClanBuildingApi{
       }
   
       clan = clanService.createClan(req.params.clan, {
-        coach: account.coach,
-        coachId: account.coachId || 0,
+        coach: account.bb3coach,
+        coachId: account.bb3coachId || 0,
         reddit: account.reddit,
         discord: account.discord
       });
@@ -160,27 +160,27 @@ class ClanBuildingApi{
   async teamSaveAllowed(req, res, next) {
     const account = await accountService.getAccount(req.user.name);
     //const clan = await clanService.getNewClanByUser(account.coach);
-    const clan = req.params.clan ? await clanService.getClanByNameAndSeason(req.params.clan, "season 19") :  await clanService.getNewClanByUser(account.coach);
+    const clan = req.params.clan ? await clanService.getClanByNameAndSeason(req.params.clan, "season 19") :  await clanService.getNewClanByUser(account.bb3coach);
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
     if(clan.locked) return res.status(400).send({error:'No more updates allowed'});
     res.locals.clan = clan;
     res.locals.account = account;
 
-    const isMember = clan.leader === account.coach || clan.members?.some(x => x.coach === account.coach);
+    const isMember = clan.leader === account.bb3coach || clan.members?.some(x => x.coach === account.bb3coach);
 
     if (!isMember) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
 
-    const isClanLeader = clan.leader === account.coach;
+    const isClanLeader = clan.leader === account.bb3coach;
 
     if (isClanLeader) return next();
 
     const team = clan.ledger.teamBuilding.find(team => team.id === Number(req.params.team));
 
     if (!team) return res.status(404).send({error: 'Team Id not found'});
-    if (!team.coach || team.coach !== account.coach) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
+    if (!team.coach || team.coach !== account.bb3coach) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
 
-    if (account.coach.toLowerCase() !== req.body.coach.toLowerCase()) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
+    if (account.bb3coach.toLowerCase() !== req.body.coach.toLowerCase()) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
 
     return next();
   };
@@ -188,12 +188,12 @@ class ClanBuildingApi{
   async isClanLeader(req, res, next) {
     const account = await accountService.getAccount(req.user.name);
     
-    const clan = req.params.clan ? await clanService.getClanByName(req.params.clan) :  await clanService.getNewClanByUser(account.coach); 
+    const clan = req.params.clan ? await clanService.getClanByName(req.params.clan) :  await clanService.getNewClanByUser(account.bb3coach); 
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
     //if(clan.locked) return res.status(400).send({error:'No more updates allowed'});
 
-    const isClanLeader = clan.leader === account.coach;
+    const isClanLeader = clan.leader === account.bb3coach;
 
     if (!isClanLeader) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
 

@@ -24,10 +24,10 @@ class ClanApi{
   routesConfig(){
     this.router.get("/", util.ensureAuthenticated, async function(req, res){
       const account = await accountService.getAccount(req.user.name);
-      let clan = await clanService.getClanByUser(account.coach); 
-      if (!clan) clan = await clanService.getClanByLeader(account.coach);
+      let clan = await clanService.getClanByUser(account.bb3coach); 
+      if (!clan) clan = await clanService.getClanByLeader(account.bb3coach);
       const leader = await accountService.hasRole(req.user.name, "clanleader");
-      res.json({ clan:clan, leader:leader && account.coach.toLowerCase() === clan?.leader?.toLowerCase() } );
+      res.json({ clan:clan, leader:leader && account.bb3coach.toLowerCase() === clan?.leader?.toLowerCase() } );
     });
 
     this.router.use("/build", new clanBuildingApi().routesConfig());
@@ -463,7 +463,7 @@ class ClanApi{
 
       let clan = await clanService.getClanByName(req.params.clan);
       let account = await accountService.getAccount(req.user.name);
-      if (!clan || clan.leader.toLowerCase() !== account.coach.toLowerCase()){
+      if (!clan || clan.leader.toLowerCase() !== account.bb3coach.toLowerCase()){
         res.status(403).send(`you're not the leader of this clan, ${clan.leader} is.`);
         return;
       }
@@ -472,7 +472,7 @@ class ClanApi{
 
       clanService.setLogo(req.params.clan, `images/clanlogos/${fileName}`);
 
-      res.status(200).send(blobName);
+      res.status(200).send(`images/clanlogos/${fileName}`);
     });
 
     this.router.put("/:season/:division/:round/:house/:clan/score/:win/:draw/:loss", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
