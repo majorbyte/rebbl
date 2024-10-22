@@ -14,7 +14,7 @@ script.
     }
     map(data){
       this.roster = data.roster?.map(x => new PlayerModel(x)) ||[];
-      this.fanfactor = data.fanfactor || 0;
+      this.fanfactor = data.fanfactor || 1;
       this.rerolls = data.rerolls || 0;
       this.coaches = data.coaches || 0;
       this.cheerleaders = data.cheerleaders || 0;
@@ -48,7 +48,7 @@ script.
       if (!this.isReturningTeam) this.returningTeam = null;
       else await this.getReturningTeam(this.coach);
     } 
-    subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + this.fanfactor) * 10000 + (this.apothecary ? 50000 : 0);
+    subTotalRerolls = () => this.rerolls * this.rerollCost() + (Number(this.cheerleaders) + Number(this.coaches) + (this.fanfactor-1)) * 10000 + (this.apothecary ? 50000 : 0);
     rerollCost = () => this.race ? this.race.reroll : 50000;
     playerCost = () => this.roster.reduce((p,c) => p + c.cost() ,0);
     hasLegacyPlayer = () => this.roster.some(player => player.id > 0);
