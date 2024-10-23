@@ -21,7 +21,7 @@ class ClanBuildingApi{
   };
   
   async _getCoach(req,res){
-    const account = await accountService.searchAccount({bb3coach:new RegExp(`^${req.query.coach}$`,'i')});
+    const account = await accountService.searchAccount({bb3coach:new RegExp(`^${req.query.coach.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,'i')});
     if (!account) res.status(404).json('coach not found');
     else res.json({reddit: account.reddit, coach:account.bb3coach, discord:account.discord});
   }

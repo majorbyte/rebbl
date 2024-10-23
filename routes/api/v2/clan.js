@@ -460,19 +460,22 @@ class ClanApi{
     const uploadStrategy = multer({ storage: multerStorage }).single('image');
 
     this.router.post('/:clan/upload', util.ensureAuthenticated, util.hasRole("clanleader"), uploadStrategy, async (req, res) => {
-
-      let clan = await clanService.getClanByName(req.params.clan);
-      let account = await accountService.getAccount(req.user.name);
-      if (!clan || clan.leader.toLowerCase() !== account.bb3coach.toLowerCase()){
-        res.status(403).send(`you're not the leader of this clan, ${clan.leader} is.`);
-        return;
+      try{
+        let clan = await clanService.getClanByName(req.params.clan);
+        let account = await accountService.getAccount(req.user.name);
+        if (!clan || clan.leader.toLowerCase() !== account.bb3coach.toLowerCase()){
+          res.status(403).send(`you're not the leader of this clan, ${clan.leader} is.`);
+          return;
+        }
+  
+        const fileName = `${req.params.clan}-${req.file.originalname}`;
+  
+        clanService.setLogo(req.params.clan, `images/clanlogos/${fileName}`);
+  
+        res.status(200).send(`images/clanlogos/${fileName}`);
+      } catch(ex){
+        console.error(ex);
       }
-
-      const fileName = `${req.params.clan}-${req.file.originalname}`;
-
-      clanService.setLogo(req.params.clan, `images/clanlogos/${fileName}`);
-
-      res.status(200).send(`images/clanlogos/${fileName}`);
     });
 
     this.router.put("/:season/:division/:round/:house/:clan/score/:win/:draw/:loss", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
