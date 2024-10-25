@@ -45,7 +45,6 @@ class ZFL{
     this.router.post('/upload', util.verifyMaintenanceHeader, this.#updateStats);
 
     this.router.get('/update',util.verifyMaintenanceToken, async (req,res) => {
-      await zflService.updateCompetitions("9a2ffa7c-ab2a-11ee-a745-02000090a64f");
       await zflService.updateCompetitions("e3500321-83d6-11ef-be7b-bc24112ec32e");
       res.redirect("/");
     });
