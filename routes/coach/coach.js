@@ -51,7 +51,7 @@ class Coach{
     this.router.get('/:coach_id/trophies', util.cache(10*60), async function(req, res){
       let data = await db.getCoach(req.params.coach_id);
       if (data){
-        data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i")}});
+        data.coachDetails = await accountService.searchAccount({"coach": {$regex: new RegExp(`^${data.name?.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,"i")}});
         data.renderExtra = true;
       }
       data.company = req.params.company;   

@@ -28,6 +28,9 @@ class ClanBuildingApi{
 
   async _getMe(req,res){
     const account = await accountService.getAccount(req.user.name);
+
+    if (!account || !account.bb3coach)return res.status(403).send({error:"Invalid BB3 account data, please visit https://rebbl.net/account"});
+
     let oldClan = await clanService.getClanByUser(account.bb3coach);
     let newClan = await clanService.getNewClanByUser(account.bb3coach);
 
@@ -62,6 +65,8 @@ class ClanBuildingApi{
 
   async _getClan(req,res){
     const account = await accountService.getAccount(req.user.name);
+    if (!account || !account.bb3coach)return res.status(403).send({error:"Invalid BB3 account data, please visit https://rebbl.net/account"});
+
     let clan = await clanService.getNewClanByUser(account.bb3coach);
     res.json(clan);
   }
@@ -88,6 +93,8 @@ class ClanBuildingApi{
 
   async _registerClan(req,res){
     const account = await accountService.getAccount(req.user.name);
+    if (!account || !account.bb3coach)return res.status(403).send({error:"Invalid BB3 account data, please visit https://rebbl.net/account"});
+
     let clan = await clanService.getNewClanByUser(account.bb3coach);
     
     if (!clan){
@@ -160,6 +167,8 @@ class ClanBuildingApi{
   async teamSaveAllowed(req, res, next) {
     const account = await accountService.getAccount(req.user.name);
     //const clan = await clanService.getNewClanByUser(account.coach);
+    if (!account || !account.bb3coach)return res.status(403).send({error:"Invalid BB3 account data, please visit https://rebbl.net/account"});
+
     const clan = req.params.clan ? await clanService.getClanByNameAndSeason(req.params.clan, "season 19") :  await clanService.getNewClanByUser(account.bb3coach);
 
     if(!clan) return res.status(404).send({error:'Clan not found'});
@@ -170,6 +179,7 @@ class ClanBuildingApi{
     const isMember = clan.leader === account.bb3coach || clan.members?.some(x => x.coach === account.bb3coach);
 
     if (!isMember) return res.status(403).send({error: 'You are not allowed to make changes to this team'});
+
 
     const isClanLeader = clan.leader === account.bb3coach;
 
@@ -187,7 +197,9 @@ class ClanBuildingApi{
 
   async isClanLeader(req, res, next) {
     const account = await accountService.getAccount(req.user.name);
-    
+
+    if (!account || !account.bb3coach)return res.status(403).send({error:"Invalid BB3 account data, please visit https://rebbl.net/account"});
+
     const clan = req.params.clan ? await clanService.getClanByName(req.params.clan) :  await clanService.getNewClanByUser(account.bb3coach); 
 
     if(!clan) return res.status(404).send({error:'Clan not found'});

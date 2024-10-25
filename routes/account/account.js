@@ -218,8 +218,8 @@ class Account{
 
   async _createAccount(req, res){
     try{
-      let {bb3coach, bb3id, timezone} = req.body;
-      let account ={bb3coach, bb3id, timezone};
+      let {bb3coach, bb3id, timezone, bb3service, bb3displayId} = req.body;
+      let account ={bb3coach, bb3id, bb3service, bb3displayId, timezone};
        
       account.reddit = req.user.name;
 

@@ -58,6 +58,8 @@ block content
           label(for="coach") Blood Bowl 3 coach name
           input#bb3coach(type="text" name="bb3coach")
           input#bb3coachId(type="hidden" name="bb3id")
+          input#bb3coachServiceInput(type="hidden" name="bb3service")
+          input#bb3coachDisplayId(type="hidden" name="bb3displayId")
           button#searchButton.btn.btn-primary.btn-sm.mx-2(onclick="search()")
             span Search
             span#spinner.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
@@ -84,6 +86,8 @@ block content
         const select = document.getElementById("bb3coachSelect");
         const input = document.getElementById("bb3coach");
         const id = document.getElementById("bb3coachId");
+        const bb3coachService = document.getElementById("bb3coachServiceInput");
+        const bb3coachDisplayId = document.getElementById("bb3coachDisplayId");
         const img = document.getElementById("bb3coachService");
         const displayId = document.getElementById("bb3displayId");
 
@@ -91,6 +95,8 @@ block content
         id.value = select.value;
         const coach = coachNames.find(x => x.id === id.value);
         input.value = coach.name;
+        bb3coachService.value=coach.service;
+        bb3coachDisplayId.value=coach.displayId;
 
         displayId.innerHTML = coach.displayId.toUpperCase();
         displayId.classList.remove("hidden");

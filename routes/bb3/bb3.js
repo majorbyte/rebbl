@@ -27,7 +27,7 @@ class BB3{
   };
   competitions = async (req,res) => {
     const season = req.params.season || "season 2";
-    const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
+    const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
     res.render("bb3/competitions", {competitions})
   };
   competition = async (req,res) =>  {
