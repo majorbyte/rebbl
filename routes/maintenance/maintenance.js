@@ -63,7 +63,7 @@ class Maintenance{
           
         //await bb3Service.updateTeam("45602e32-7817-11ef-be7b-bc24112ec32e",true);
 
-        await ZFLService.recalculateAllStats();
+        await ZFLService.recalculateAllStats()
 
         //await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
 

@@ -27,7 +27,8 @@ class ZFL{
     this.router.get("/profile/:id", this.#getProfile );
 
     this.router.get("/standings", async (_,res) => res.render("zfl/standings" , {competitions:await dataService.getZFLCompetitions({year:this.year}), accounts:await dataService.getZFLAccounts({})}));
-    this.router.get("/playerstats", this.#getPlayerStats.bind(this));
+    this.router.get("/playerstats",  async(_,res) =>  res.render("zfl/playerstats", await dataService.getZFLPlayerStats({statsType:"playerStats"})) ); // this.#getPlayerStats.bind(this));
+    this.router.get("/teamstats",  async(_,res) =>  res.render("zfl/teamstats", await dataService.getZFLPlayerStats({statsType:"teamStatsStandings"})) ); // this.#getPlayerStats.bind(this));
     this.router.get('/fixtures',  this.#getFixtures.bind(this));
     this.router.get('/fixtures/admin', this.#ensureLoggedIn, this.#getFixturesAdmin.bind(this));
 
