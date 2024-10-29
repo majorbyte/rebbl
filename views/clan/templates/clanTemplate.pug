@@ -8,11 +8,11 @@
   button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onSaveClan, attr:{disabled: !isDirty()}" title="save clan") 
     i.fa-solid.fa-save
   // /ko
-  button.btn.btn-success.btn-sm.my-1.mx-1(data-bind="click:$root.onValidateClan" title="validate clan" disabled) 
+  button.btn.btn-success.btn-sm.my-1.mx-1(data-bind="click:$root.onValidateClan" title="validate clan") 
     i.fa-solid.fa-check-square 
     span Validate
   // ko if: isClanLeader()
-  button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onLockClan" title="lock clan" disabled) 
+  button.btn.btn-success.btn-sm.my-1(data-bind="click:$root.onLockClan" title="lock clan") 
     i.fa-solid.fa-lock
   // /ko
   // /ko

@@ -23,7 +23,7 @@ class ClanBuildingApi{
   async _getCoach(req,res){
     const account = await accountService.searchAccount({bb3coach:new RegExp(`^${req.query.coach.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,'i')});
     if (!account) res.status(404).json('coach not found');
-    else res.json({reddit: account.reddit, coach:account.bb3coach, discord:account.discord});
+    else res.json({reddit: account.reddit, coach:account.bb3coach, discord:account.discord, bb3id:account.bb3id});
   }
 
   async _getMe(req,res){
@@ -80,9 +80,13 @@ class ClanBuildingApi{
   async _lockClan(req,res){
     const validation = await clanValidationService.validate(req.params.clan);
     
-    const errorCount = validation.sppTradeErrors.length + validation.sppTradeSkillErrors.length + validation.sppTradeAccounting.length
+    /*const errorCount = validation.sppTradeErrors.length + validation.sppTradeSkillErrors.length + validation.sppTradeAccounting.length
       + validation.incompleteTeamErrors.length + validation.freshTeamErrors.length + validation.returningTeamErros.length
       + validation.clanErrors.length + validation.cheatingErrors.length + validation.teamErrors.length;
+    */  
+    const errorCount = validation.incompleteTeamErrors.length + validation.freshTeamErrors.length /*+ validation.returningTeamErros.length */
+      + validation.clanErrors.length + validation.cheatingErrors.length + validation.teamErrors.length;
+
 
     if (errorCount > 0 || validation.ex) res.status(400).json(validation);
     else {

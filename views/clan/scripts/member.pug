@@ -8,7 +8,7 @@ script.
     }
     map(data){
       this.coach = data.coach || '';
-      this.coachId = data.coachId || 0;
+      this.coachId = data.bb3id || 0;
       this.reddit = data.reddit || '';
       this.discord = data.discord || '';
       this.noLoad = false;
@@ -25,6 +25,7 @@ script.
       this.coach = c.coach;
       this.reddit = c.reddit;
       this.discord = c.discord;
+      this.coachId = c.bb3id;
 
       let index = model.members.findIndex(x => x.coach === this.coach);
       model.ledger.teamBuilding[index].coach = this.coach

@@ -8,6 +8,7 @@ script.
       this.editTeam = false;
       this.showValidation = false;
       this.loading = false;
+      this.validating = false;
       this.skilling = false;
       this.team = null;
       this.newBloodTeam = null;
@@ -47,12 +48,10 @@ script.
     }
 
     onValidateClan = () =>{
-      return;
       this.validate();
     }
 
     onLockClan = () => {
-      return;
       $('#lockClan').modal('show');
     }
 
@@ -142,7 +141,7 @@ script.
       const elm = document.getElementById("pgb");
       let [clan, _me, _skills, /*skillDescriptions, _playerTypes,*/ _races] = await Promise.all([
           fetch('/api/v2/clan/build/#{clan}').then(response =>{ 
-            value += 10;
+            value += 20;
             elm.style.width = `${value}%`;
             if (response.redirected) window.location.assign(response.url) ;
             else if (response.ok) return response.json();
@@ -168,8 +167,12 @@ script.
           }),
       ]);
 
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
 
-
+      await sleep(400);
+      this.loading = false;
 
 
       let _playerTypes = races.map(x => x.positions.map(y => {
@@ -194,22 +197,21 @@ script.
         socket.on("team", this.onTeamReload.bind(this));
       }
 
-
-      setTimeout(() =>this.loading = false, 400 );
+      //setTimeout(() =>this.loading = false, 400 );
     }
 
     async validate(){
       this.editClan = false;
       this.editTeam = false;
-      this.loading = true;
+      this.validating = true;
       let result = await fetch(`/api/v2/clan/build/${this.name}/validate`);
       if (result.ok) this.validationResult = new ValidationModel(await result.json());
       this.showValidation = true;
-      this.loading = false;
+      this.validating = false;
     }
 
     async lock() {
-      this.loading = true;
+      this.validating = true;
       $('#lockClan').trigger('click');
       let result = await fetch(`/api/v2/clan/build/${this.name}/lock`);
       if (!result.ok) {
@@ -227,7 +229,7 @@ script.
 
         this.locked = true;
       }
-      this.loading = false;
+      this.validating = false;
     }
 
     async save(){
