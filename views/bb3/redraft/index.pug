@@ -20,6 +20,7 @@ block head
     .form-check-input:checked {  background-color: RGBA(0,188,140,var(--bs-bg-opacity,1)) ;}
 
     .dice{background: url("/images/dice.png") no-repeat;width: 32px;height: 32px;display: inline-block;background-position-x: 0px;background-position-y:3px;vertical-align: bottom;transform: scale(1.2);}
+    .dice--1{display:none;}
     .dice-1{background-position-x:0px;}
     .dice-2{background-position-x:-32px;}
     .dice-3{background-position-x:-64px;}
@@ -40,16 +41,16 @@ block content
 
     .row.g-0
       .col-8
-        //ko if: status !== "confirmed"
+        //ko if: status !== "confirmed" && status != "validated" 
         .form-check.form-switch
           input.form-check-input#flexSwitchCheckChecked(type="checkbox" role="switch" data-bind="checked: mock")
           label.form-check-label(for="flexSwitchCheckChecked") Mock draft, when enabled, changes will not be saved to the server, no rolls made etc. 
         // /ko
       .col-4
-        //ko if: status !== "confirmed"
+        //ko if: status !== "confirmed" && status != "validated"
         button.float-end.btn.btn-sm.btn-success(data-bind="{attr: {disabled:mock || !valid() }, click:showConfirmation}") Confirm
         // /ko
-        //ko if: status === "confirmed"
+        //ko if: status === "confirmed" && status != "validated"
         button.float-end.btn.btn-sm.btn-success(data-bind="{click:showValidation}") Validate
         // /ko
 
