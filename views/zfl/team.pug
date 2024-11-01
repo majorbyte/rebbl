@@ -8,6 +8,9 @@ block vars
 include functions.pug
 
 block head 
+  script(src="/scripts/tiny-mde.min.js")      
+  link(rel="stylesheet" href="/styles/tiny-mde.min.css")
+
   style.
     .col-12 table img {width: 40px;height: 40px;}
     .silhouette-shadow{
@@ -49,12 +52,11 @@ block main
                 option(value=admin.coach.id )= admin.coach.name
         - else if (team.admin)
           strong=`admin: ${team.admin.name}`
-
-    br
+      br
     nav.col-12.px-5
       .nav.nav-tabs.bg-dark(data-bs-theme="dark" id="nav-tab" role="tablist")
-        a.nav-item.nav-link.active(id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Players
-        //a(class="nav-item nav-link" id="nav-matches-tab" data-bs-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches
+        a.nav-item.nav-link.active#nav-home-tab( data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Players
+        a.nav-item.nav-link#nav-bio-tab(data-bs-toggle="tab" href="#nav-bio" role="tab" aria-controls="nav-bio" aria-selected="false") Bio
     - let teamPositions = [...new Set(team.roster.map(x => x.player.position))]
     - let borders = ["border-success","border-warning","border-primary","border-light","border-info","border-secondary"]  
     .tab-content.tab-dark#tabContent.px-5
@@ -76,8 +78,18 @@ block main
                 th(scope="col") Value
             tbody
               - for(let player of team.roster)
+                - const bio = team.bio?.players?.find(x => x.name === player.player.name.toLowerCase())
                 tr(class=Number(player.player.missNextGame)==1?"player-out":"player-in" id=player.player.id) 
-                  td=player.player.number
+                  td
+                    span.m-0.p-0=player.player.number
+                    if isOwner
+                      span.float-end(onclick=`editBio('${player.player.name}')`)
+                        svg(width="32" height="32" fill="currentColor" viewBox="0 0 16 16")
+                          use(href="/svg/icons.svg#bi-pencil")
+                    if bio
+                      span.float-end(onclick=`showBio('${player.player.name.toLowerCase()}')`)
+                        svg(width="32" height="32" fill="currentColor" viewBox="0 0 16 16" )
+                          use(href="/svg/icons.svg#bi-journal-text")
                   td
                     div
                       - if (player.player.id)
@@ -119,16 +131,127 @@ block main
 
                   td=player.player.spp
                   td(data-bind="text:value")=player.player.value
+            tfoot 
+              tr
+      if team.bio
+        .tab-pane.fade.col-12.table-responsive-md#nav-bio(role="tabpanel" aria-labelledby="nav-bio-tab")
+          |!{team.bio.content}
+
+  #editBioModal.modal.fade(data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1' aria-labelledby='staticBackdropLabel' aria-hidden='true')
+    .modal-dialog.modal-dialog-centered.modal-dialog-scrollable.modal-lg(data-bs-theme="dark")
+      .modal-content
+        .modal-header
+          h1#editBioModalTitle.modal-title.fs-5
+          button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+        .modal-body
+          #tinymde_commandbar
+          #tinymde(style="height:300px; overflow-y:scroll; border:1px solid #c0c0c0")
+          #tinymde_status(style="display:flex")
+            #wc(style="box-sizing:border-box; width:50%; padding:4px 0px; text-align:left")
+            #pos(style="box-sizing:border-box; width:50%; padding:4px 0px; text-align:right") – : –
+        .modal-footer
+          button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Cancel
+          button.btn.btn-primary(type='button' onclick="saveBio()") Save
+
+  #bioModal.modal.fade(data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1' aria-labelledby='staticBackdropLabel' aria-hidden='true')
+    .modal-dialog.modal-dialog-centered.modal-dialog-scrollable.modal-lg(data-bs-theme="dark")
+      .modal-content
+        .modal-header
+          h1#bioModalTitle.modal-title.fs-5
+          button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+        .modal-body#bioModalContent
+        .modal-footer
+          button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+
+  if (team.bio && team.bio.players)
+    each player of team.bio.players 
+      template(id=player.name)
+        |!{player.content}
+
+
 block scripts 
   script.
     async function onValueChange(admin){
       const e = document.getElementById("adminId");
-
-      console.log(`/api/team/#{team.id}/admin/${e.value}`)
 
       const response = await fetch(`/api/team/#{team.id}/admin/${e.value}`,{
         method:'PATCH',
         headers:{'Content-Type': 'application/json'},
       });
 
+    }
+    const tinyMDE = new TinyMDE.Editor({element: "tinymde", content: ""});
+    const commandBar = new TinyMDE.CommandBar({element: "tinymde_commandbar", editor: tinyMDE, commands:['bold', 'italic', 'strikethrough', '|', 'h1', 'h2','h3', 'ul', 'ol','|', 'blockquote', 'hr']});
+    tinyMDE.addEventListener("selection", e => { 
+      let st = `${e.focus ? e.focus.row : '–'} : ${e.focus ? e.focus.col : '–'}`;
+      for (let command in e.commandState) {
+        if (e.commandState[command]) st = command.concat(' ', st);
+      }
+      document.getElementById("pos").innerHTML = st; 
+    });
+    tinyMDE.addEventListener("change", e => { 
+      if (e.content.length > 2000){ 
+        tinyMDE.setContent(e.content.substr(0,2000));
+        e.content = e.content.substr(0,2000);
+      }
+      document.getElementById("wc").innerHTML = `${2000 - e.content.length} characters left`; 
+    });
+
+    const bioModal = new bootstrap.Modal(document.getElementById('bioModal'));
+    const bioModalTitle = document.getElementById("bioModalTitle");
+    const editBioModal = new bootstrap.Modal(document.getElementById('editBioModal'));
+    const editBioModalTitle = document.getElementById("editBioModalTitle");
+    
+    let PlayerName = "";
+
+    function showBio(playerName){
+      PlayerName = playerName;
+      bioModalTitle.innerHTML = playerName;
+
+      const template = document.getElementById(playerName);
+      const clone = template.content.cloneNode(true);
+
+      const target = document.getElementById("bioModalContent");
+      
+      target.innerHTML = "";
+      target.appendChild(clone);
+
+
+      bioModal.show();
+    }
+
+    const editBio = async function(playerName){
+      PlayerName = playerName;
+      editBioModalTitle.innerHTML = playerName;
+
+      const response = await fetch(`/api/team/#{team.name}/bio/${PlayerName}`);
+
+      if (response.ok){
+        tinyMDE.setContent(await response.text());
+      } else {
+        tinyMDE.setContent("");
+      }
+
+      editBioModal.show();
+    }
+
+    const saveBio = async function(){
+      try{
+        const bio = tinyMDE.getContent();
+        const response = await fetch(`/api/team/#{team.name}/bio/${PlayerName}`,{
+          method:'PATCH',
+          headers:{'Content-Type': 'application/json'},
+          body: JSON.stringify({bio})
+        });
+
+        bioModal.hide();
+  
+        let template = document.getElementById(PlayerName.toLowerCase());
+        if (!template) location.reload();
+        template.innerHTML = await response.text();
+
+      }catch(e){
+        console.error(e)
+      }
+      bioModal.hide();
     }

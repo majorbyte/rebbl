@@ -1,62 +1,64 @@
-doctype html
-head
-  script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-  script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
-  script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")      
-  link(rel="stylesheet" href="https://cdn.rebbl.net/styles/shop/style.css")
-  link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
-  link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
-  link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
-  style.
-    body{color:#979797 !important;}
-    /* latin-ext */
-    @font-face {
-      font-family: 'Bungee Inline';
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src: url(/webfonts/bungee-inline.woff2) format('woff2');
-    }
+doctype html 
+html(data-bs-theme="dark")
+  head
+    script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")      
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/shop/style.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
+    style.
+      body{color:#979797 !important;}
+      /* latin-ext */
+      @font-face {
+        font-family: 'Bungee Inline';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url(/webfonts/bungee-inline.woff2) format('woff2');
+      }
 
-    h1,h2 {
-      font-family: "Bungee Inline", sans-serif;
-      font-style: normal;
-      color:#dfdfdf;
-      font-weight:bold;
-    }
-    h1 > a {
-      font-family: "Bungee Inline", sans-serif;
-      font-style: normal;
-      font-weight:bold;
-      text-decoration: none;
-    }
+      h1,h2 {
+        font-family: "Bungee Inline", sans-serif;
+        font-style: normal;
+        color:#dfdfdf;
+        font-weight:bold;
+      }
+      h1 > a {
+        font-family: "Bungee Inline", sans-serif;
+        font-style: normal;
+        font-weight:bold;
+        text-decoration: none;
+      }
 
 
-  block head
+    block head
 
-  block vars
-    - let page = "/"
-body(style="background-color: #212529;")
-  nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark.p-0
-    .container-fluid
-      - if (page != "account")
-        a.navbar-brand(href=user ? '/account' : '/login') 
-          .d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 38px;')
-            img.w-100.h-100(src=user ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/2.png `)
+    block vars
+      - let page = "/"
+  body(style="background-color: #212529;")
+    nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark.p-0
+      .container-fluid
+        - if (page != "account")
+          a.navbar-brand(href=user ? '/account' : '/login') 
+            .d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 38px;')
+              img.w-100.h-100(src=user ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/2.png `)
 
-      button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
-        span.navbar-toggler-icon
-      #navbarCollapse.collapse.navbar-collapse
-        ul.navbar-nav.me-auto.mb-2.mb-md-0
-          li.nav-item
-            a.nav-link(aria-current='page' href='/standings' class=page == "standings" ? "active" : "" ) Standings
-          li.nav-item
-            a.nav-link(href='/fixtures'  class=page == "fixtures" ? "active" : "" ) Fixtures
-          li.nav-item
-            a.nav-link(href='/playerstats'  class=page == "playerstats" ? "active" : "" ) Player Stats
-          li.nav-item
-            a.nav-link(href='/teamstats'  class=page == "teamstats" ? "active" : "" ) Team Stats
-        block nav  
-  div(style="padding-top:48px")
-    block main
-  block scripts
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarCollapse.collapse.navbar-collapse
+          ul.navbar-nav.me-auto.mb-2.mb-md-0
+            li.nav-item
+              a.nav-link(aria-current='page' href='/standings' class=page == "standings" ? "active" : "" ) Standings
+            li.nav-item
+              a.nav-link(href='/fixtures'  class=page == "fixtures" ? "active" : "" ) Fixtures
+            li.nav-item
+              a.nav-link(href='/playerstats'  class=page == "playerstats" ? "active" : "" ) Player Stats
+            li.nav-item
+              a.nav-link(href='/teamstats'  class=page == "teamstats" ? "active" : "" ) Team Stats
+          block nav  
+    div(style="padding-top:48px")
+      block main
+
+    block scripts

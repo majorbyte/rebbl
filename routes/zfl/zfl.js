@@ -3,6 +3,7 @@
 const express = require("express")
 , cache = require("memory-cache")
 , passport = require("passport")
+, markdown =  require("markdown-it")()
 , accountService = require("../../lib/accountService.js")
 , dataService = require("../../lib/DataServiceBB3.js").rebbl3
 , zflService = require("../../lib/ZFLService.js")
@@ -15,6 +16,7 @@ class ZFL{
 
     this.router.use((req, res, next) => { res.locals.user = req.isAuthenticated() ? req.user : null; return next();});
 
+    markdown.disable([ 'link', 'image' ]);
 
     this.router.get("/login", passport.authenticate("discord"));
     this.router.get("/logout", (req, res) => {req.logout(null, _ => _);res.redirect("/");});
@@ -37,8 +39,14 @@ class ZFL{
     this.router.get('/team/:id',  this.#getTeam.bind(this));
 
     this.router.get('/api/bb3/:name', this.#ensureLoggedIn, async (req,res) => res.json(await accountService.getBB3Account(req.params.name)));
+
+    this.router.get('/api/team/:teamName/bio/:playerName', this.#getBio.bind(this));
+    this.router.get('/api/team/:teamName/bio', this.#getBio.bind(this));
+
     this.router.patch('/api/account/bb3', this.#ensureLoggedIn, this.#updateCoach.bind(this));
     this.router.patch('/api/account/zfl', this.#ensureLoggedIn, this.#updateZflName.bind(this));
+    this.router.patch('/api/team/:teamName/bio', this.#ensureLoggedIn, this.#updateBio.bind(this));
+    this.router.patch('/api/team/:teamName/bio/:playerName', this.#ensureLoggedIn, this.#updateBio.bind(this));
     this.router.patch('/api/team/:id/kit', this.#ensureLoggedIn, this.#updateKit.bind(this));
     this.router.patch('/api/team/:id/admin/:adminId', this.#ensureLoggedIn, this.#setTeamAdmin.bind(this));
     this.router.patch('/api/competition/:id/release', this.#ensureLoggedIn, this.#releaseMatch.bind(this));
@@ -100,14 +108,22 @@ class ZFL{
   async #getTeam(req,res){
     const team = await dataService.getZFLTeam({id: req.params.id, year:this.year});
     let isAdmin = false;
+    let isOwner = false;
     let admins = [];
     if (res.locals.user) {
       const account = await dataService.getZFLAccount({id:res.locals.user.id});
       isAdmin = account.roles.some(x => x == "dm");
+      isOwner = account.teamId === team.id;
       admins = await dataService.getZFLAccounts({roles:"admin"});  
     }
+
+    team.bio = await dataService.getZFLBio({team:team.name.toLowerCase()});
+    for(const player of team.bio?.players || []){
+      player.content = markdown.render(player.content);
+    }
+    if (team.bio?.content && team.bio?.content.length > 0) team.bio.content = markdown.render(team.bio.content);
     
-    res.render("zfl/team" , {team, admins, isAdmin}); 
+    res.render("zfl/team" , {team, admins, isAdmin, isOwner}); 
   }
 
   async #getAccount(_,res){
@@ -141,6 +157,55 @@ class ZFL{
     }
 
     res.render("zfl/profile" , {account, team} );
+  }
+
+  async #updateBio(req,res){
+    try{
+
+      const bio = req.body.bio.substr(0,2000);
+      const playerName = req.params.playerName.toLowerCase();
+      const teamName = req.params.teamName.toLowerCase();
+
+      const team = await dataService.getZFLBio({team:teamName});
+      if (!team) await dataService.updateZFLBio({team:teamName},{$set:{team:teamName, players:[]}},{upsert:true});
+
+      if (req.params.playerName && req.params.playerName.length > 0) {
+        const exists = await dataService.getZFLBio({team:teamName, "players.name":playerName});
+        
+        if (exists) await dataService.updateZFLBio({team:teamName, "players.name":playerName},{$set:{"players.$.content":bio}});
+        else await dataService.updateZFLBio({team:teamName},{$addToSet:{players:{"name":playerName,"content":bio}}},{upsert:true});
+      }
+      else await dataService.updateZFLBio({team:teamName},{$set:{content:bio}},{upsert:true});
+      return res.status(200).send(markdown.render(bio));
+    } catch(ex){
+      console.error(ex);
+    }
+    return res.status(400).send();
+  }
+
+  async #getBio(req,res){
+    try{
+
+      const playerName = req.params.playerName.toLowerCase();
+      const teamName = req.params.teamName.toLowerCase();
+
+      if (req.params.playerName && req.params.playerName.length > 0) {
+        const bio = await dataService.getZFLBio({team:teamName, "players.name":playerName});
+        if (!bio) return res.status(404).send();
+        
+        const content = bio.players.find(x => x.name === playerName); 
+        return res.status(200).send(content.content);
+      }
+      else {
+        const bio = await dataService.getZFLBio({team:teamName});
+        if (!bio) return res.status(404).send();
+        
+        return res.status(200).send(bio.content);
+      }
+    } catch(ex){
+      console.error(ex);
+    }
+    return res.status(404).send();
   }
 
 
