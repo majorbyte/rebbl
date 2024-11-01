@@ -69,7 +69,7 @@ const express = require("express")
       
       let data = await dataServiceBB3.getSchedules({competitionId: req.params.competitionId, round:Number(req.params.day)});
 
-      res.status(200).send({canAdvance: data.every(x => x.status === 3), confirmed: data.filter(x=> x.status == 3).length , played: data.filter(x=> x.status == 2).length, unplayed: data.filter(x=> x.status < 2).length  });
+      res.status(200).send({canAdvance: data.every(x => x.status >= 3), confirmed: data.filter(x=> x.status >= 3).length , played: data.filter(x=> x.status == 2).length, unplayed: data.filter(x=> x.status < 2).length  });
     } catch(err){
       console.log(err); 
     }
