@@ -86,7 +86,7 @@ block main
                       span.float-end(onclick=`editBio('${player.player.name}')`)
                         svg(width="32" height="32" fill="currentColor" viewBox="0 0 16 16")
                           use(href="/svg/icons.svg#bi-pencil")
-                    if bio
+                    if bio && bio.content.length > 0
                       span.float-end(onclick=`showBio('${player.player.name.toLowerCase()}')`)
                         svg(width="32" height="32" fill="currentColor" viewBox="0 0 16 16" )
                           use(href="/svg/icons.svg#bi-journal-text")
@@ -244,7 +244,7 @@ block scripts
           body: JSON.stringify({bio})
         });
 
-        bioModal.hide();
+        editBioModal.hide();
   
         let template = document.getElementById(PlayerName.toLowerCase());
         if (!template) location.reload();
@@ -253,5 +253,5 @@ block scripts
       }catch(e){
         console.error(e)
       }
-      bioModal.hide();
+      editBioModal.hide();
     }

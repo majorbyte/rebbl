@@ -119,7 +119,7 @@ class ZFL{
 
     team.bio = await dataService.getZFLBio({team:team.name.toLowerCase()});
     for(const player of team.bio?.players || []){
-      player.content = markdown.render(player.content);
+      if (player.content?.length > 0) player.content = markdown.render(player.content);
     }
     if (team.bio?.content && team.bio?.content.length > 0) team.bio.content = markdown.render(team.bio.content);
     
