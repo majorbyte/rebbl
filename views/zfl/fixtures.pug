@@ -13,8 +13,15 @@ mixin fixture(entry)
       .col.d-none.d-lg-block 
         if canSee
           h1= entry.home.score
-        else 
-          span home
+        else
+          if isDM && isAdminMode
+            select(value=entry.home.kit onchange=`onValueChange(this.value,'${entry.competition.name}','home')`)
+              if !entry.home.kit
+                option(disabled selected) select kit
+              option(value="home" selected=(entry.home.kit=="home")) home 
+              option(value="away" selected=(entry.home.kit=="away")) away 
+          else
+            span= entry.home.kit || ""
       .col
         if canSee && !entry.released
           button.btn.btn-sm.btn-primary.mx-2.mb-2(id=entry.matchId onclick=`releaseFixture("${entry.matchId}")`) release
@@ -27,7 +34,14 @@ mixin fixture(entry)
         if canSee
           h1= entry.away.score
         else 
-          span away
+          if isDM && isAdminMode
+            select(value=entry.away.kit onchange=`onValueChange(this.value,'${entry.competition.name}','away')`)
+              if !entry.away.kit
+                option(disabled selected) select kit
+              option(value="home" selected=(entry.away.kit=="home")) home 
+              option(value="away" selected=(entry.away.kit=="away")) away 
+          else
+            span= entry.away.kit || ""
     .col 
       a(href=`/team/${entry.away.team.id}` target="_blank")
         img.img-fluid(src=`/images/zfl/${entry.away.team.logo}` style="padding:0px")
@@ -160,3 +174,11 @@ block scripts
     async function createCompetitions(round){
       
     }        
+    async function onValueChange(kit, competition, side){
+
+      const response = await fetch(`/api/fixture/${competition}/${side}/${kit}`,{
+        method:'PATCH',
+        headers:{'Content-Type': 'application/json'}
+      });
+
+    }

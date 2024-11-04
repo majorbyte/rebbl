@@ -45,6 +45,9 @@ class ZFL{
 
     this.router.patch('/api/account/bb3', this.#ensureLoggedIn, this.#updateCoach.bind(this));
     this.router.patch('/api/account/zfl', this.#ensureLoggedIn, this.#updateZflName.bind(this));
+
+    this.router.patch('/api/fixture/:competition/:side/:kit', this.#ensureLoggedIn, this.#updateFixtureKit.bind(this));
+
     this.router.patch('/api/team/:teamName/bio', this.#ensureLoggedIn, this.#updateBio.bind(this));
     this.router.patch('/api/team/:teamName/bio/:playerName', this.#ensureLoggedIn, this.#updateBio.bind(this));
     this.router.patch('/api/team/:id/kit', this.#ensureLoggedIn, this.#updateKit.bind(this));
@@ -321,31 +324,25 @@ class ZFL{
     }
   }
 
-  async #getPlayerStats(_,res){
-
-    let cachedBody = cache.get("zfl_playerstats");
-    if (cachedBody) return res.render("zfl/playerstats", cachedBody);
-
-    const sacks = await dataService.getZFLStats({year:this.year,Sacks:{$gt:0}},{},{Sacks:-1},10);
-    const passes = await dataService.getZFLStats({year:this.year,PassCompletions:{$gt:0}},{},{PassCompletions:-1},10);
-    const touchdowns = await dataService.getZFLStats({year:this.year,TouchdownsScored:{$gt:0}},{},{TouchdownsScored:-1},10);
-    const spp = await dataService.getZFLStats({year:this.year,SppEarned:{$gt:0}},{},{SppEarned:-1},10);
-    const casInflicted = await dataService.getZFLStats({year:this.year,CasInflicted:{$gt:0}},{},{CasInflicted:-1},10);
-    const casSustained = await dataService.getZFLStats({year:this.year,CasSustained:{$gt:0}},{},{CasSustained:-1},10);
-    const foulsInflicted = await dataService.getZFLStats({year:this.year,FoulsInflicted:{$gt:0}},{},{FoulsInflicted:-1},10);
-    const foulsSustained = await dataService.getZFLStats({year:this.year,FoulsSustained:{$gt:0}},{},{FoulsSustained:-1},10);
-    const surfsInflicted = await dataService.getZFLStats({year:this.year,SurfsInflicted:{$gt:0}},{},{SurfsInflicted:-1},10);
-    const surfsSustained = await dataService.getZFLStats({year:this.year,SurfsSustained:{$gt:0}},{},{SurfsSustained:-1},10);
-    const kills = await dataService.getZFLStats({year:this.year,Sacks:{$gt:0}},{},{Sacks:-1},10);
-    const dodgeTurnovers = await dataService.getZFLStats({year:this.year,DodgeTurnovers:{$gt:0}},{},{DodgeTurnovers:-1},10);
-    const dubskullsRolled = await dataService.getZFLStats({year:this.year,DubskullsRolled:{$gt:0}},{},{DubskullsRolled:-1},10);
-    const gamesPlayed = await dataService.getZFLStats({year:this.year,GamesPlayed:{$gt:0}},{},{GamesPlayed:-1},10);
-
-    const data = {sacks,passes,touchdowns,spp,casInflicted,casSustained,foulsInflicted,foulsSustained,surfsInflicted,surfsSustained,kills,dodgeTurnovers,dubskullsRolled,gamesPlayed};
-    cache.put("zfl_playerstats", data,60*60*1000);
-
-    res.render("zfl/playerstats",data);
-
+  async #updateFixtureKit(req,res){
+    try{
+      const account = await dataService.getZFLAccount({id:res.locals.user.id});
+      if (!account.roles.some(x => x == "dm")) throw new Error("Insufficient rights");
+  
+      const competition = req.params.competition;
+      const side = req.params.side;
+      const kit = req.params.kit;
+  
+      const result = side == "home" ? {$set:{"fixtures.$.home.kit":kit}} : {$set:{"fixtures.$.away.kit":kit}};
+  
+      await dataService.updateZFLCompetition({"fixtures.competition.name":competition},result);
+  
+      res.status(200).send();
+    }
+    catch(e){
+      console.error(e);
+      res.status(400).send(e.message);
+    }
   }
 
 }
