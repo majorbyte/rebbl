@@ -184,8 +184,8 @@ class Server{
 
 
     this.app.use(this.host(['localhost.com','rebbl.net'], function(req,res,next){
-      const cause = new Error(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
-      const err = new Error('Not Found', {cause});
+      const cause = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+      const err = new Error(`${cause } Not Found`);
       err.status = 404;
       next(err);
     }));
