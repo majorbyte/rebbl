@@ -14,7 +14,6 @@ class ApiV1{
     this.router.use('/signups', require(`./signups.js`));
     this.router.use('/upcoming', require(`./upcoming.js`));
     this.router.use('/admin', require(`./admin/admin.js`));
-    this.router.use('/cripple', require('./cripple.js'));
     this.router.use('/playoffs', require('./playoffs.js'));
     
     return this.router;

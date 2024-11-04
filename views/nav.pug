@@ -29,9 +29,6 @@ mixin nav(company)
                 a.px-1.dropdown-item(href="/clan")
                   img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/clan.png')
                   .col.d-inline-block.text-light Clan
-                a.px-1.dropdown-item(href="https://bounties.rebbl.net" target="_blank")
-                  img.col-2.p-0.d-md-inline-block.align-top.d-none(src='https://cdn.rebbl.net/images/donate.png' style="max-width:20px")
-                  .col.d-inline-block.text-light Bounty Board
           case company
             when "rebbl"
                 li.nav-item.dropdown.mr-3(style="cursor: pointer;")
@@ -72,18 +69,6 @@ mixin nav(company)
                       //.dropdown-divider
                       //a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/seeding/playoffs") Playoffs S17 Seeding
                       //a.dropdown-item.d-inline-block.text-light(href="/rebbl/playoffs/seeding/challengers") Challenger's Cup S17 Seeding
-                    li
-                      .dropdown-divider
-                    li
-                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/Greenhorn Cup") Greenhorn
-                    li
-                      .dropdown-divider
-                    li
-                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/camping/summer") Summer Camp
-                    li
-                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/huge/ladder") HJ Memorial Ladder
-                    li
-                      a.dropdown-item.d-inline-block.text-light(href="/rebbl/camping/winter") Winter Camp
                 block navigation
             when "rebbrl"
                 +nav-item("Minors", "/rebbrl/ReBBRL Minors League")

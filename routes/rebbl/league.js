@@ -2,7 +2,6 @@
 const configuration = require('../../lib/ConfigurationService.js')
   , db = require('../../lib/LeagueService.js')
   , express = require('express')
-  , rampup = require("../../lib/Rampup.js")
   , util = require('../../lib/util.js');
 
 
@@ -66,16 +65,10 @@ class League{
       }
     
       
-      if( req.params.league.toLowerCase() === "rampup"){
-        data.standings = await rampup.getCoachScore();
-        data.rounds = await db.getDivisions(new RegExp(/rampup$/,"i"));
-        res.render('rebbl/league/rampup', data);
-      } else {
-        data.cutoffs = configuration.getPlayoffTickets(req.params.league);
-        data.standings = await db.getCoachScore(league, comp || null, true,season);
-        data.rounds = await db.getDivisions(league);
-        res.render('rebbl/league/index', data);
-      }
+      data.cutoffs = configuration.getPlayoffTickets(req.params.league);
+      data.standings = await db.getCoachScore(league, comp || null, true,season);
+      data.rounds = await db.getDivisions(league);
+      res.render('rebbl/league/index', data);
     
     });
     return this.router;

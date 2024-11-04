@@ -2,8 +2,6 @@
 
 const accountService = require('../../lib/accountService.js')
   , discordService = require('../../lib/DiscordService.js')
-  , apiService = require('../../lib/apiService.js')
-  , cyanideService = require('../../lib/CyanideService.js')
   , dataService = require('../../lib/DataServiceBB3.js').rebbl3
   , express = require('express')
   , util = require('../../lib/util.js')
@@ -232,76 +230,6 @@ class Signup{
       console.log(err);
     }
   }
-
-  async getTeam(signup, cyanideEnabled){
-    let coach = await apiService.findCoach(signup.coach).catch(err => console.trace(err));
-    if (!coach) {
-      signup.error = {coach: "Could not check coach"};
-      return signup
-    }
-    let coachRecord = null;
-    let error = {};
-    if (coach.ResponseSearchCoach.Coaches !== ""){
-      if (!Array.isArray(coach.ResponseSearchCoach.Coaches.DataUser))
-        coach.ResponseSearchCoach.Coaches.DataUser =[coach.ResponseSearchCoach.Coaches.DataUser];
-
-      coachRecord = coach.ResponseSearchCoach.Coaches.DataUser.find(x => x.User.localeCompare(signup.coach,undefined,{sensitivity:"base"}) === 0);
-      if (!coachRecord) error.coach = `Coach ${signup.coach} does not exist.`;
-    } 
-    if (coach.ResponseSearchCoach.Coaches === "") error.coach = `Coach ${signup.coach} does not exist.`;
-    
-    let team;
-    if (cyanideEnabled){
-      team = await cyanideService.team({platform:"pc",name:signup.team});
-
-      if (!team.team) error.team = `Team ${signup.team} not found.`;
-
-      if (team.team && coachRecord && Number(coachRecord.IdUser) !== team.team.idcoach) error.team = `The team ${signup.team} does not belong to this coach.`;
-
-      if (team.team){
-        signup.teamCreated = team.team.created;
-        signup.lastPlayed = team.team.datelastmatch;
-        const race = this.races.find(x => x.id === team.team.idraces);
-        if (race) signup.race = race.name;
-        else error.race = "No mixed race teams";
-      }
-    } else {
-      if (coachRecord){
-        const coach = await apiService.getCoachInfo(coachRecord.IdUser).catch(err => console.trace(err));
-        if (!coach) {
-          signup.error = {coach: "Could not check coach"};
-          return signup
-        }
-    
-        if (!Array.isArray(coach.ResponseGetCoachOverview.Teams.Team))
-          coach.ResponseGetCoachOverview.Teams.Team = [coach.ResponseGetCoachOverview.Teams.Team];
-
-        team = coach.ResponseGetCoachOverview.Teams.Team.find(team => team.Row.Name.localeCompare(signup.team,undefined,{sensitivity:"base"}) === 0);
-        if (!team) error.team = `Team ${signup.team} not found.`;
-        else {
-          signup.race = this.races.find(x => x.id === Number(team.Row.IdRaces)).name;
-
-          const matches = await apiService.getTeamMatches(team.Row.ID.Value.replace(/\D/g,"")).catch(err => console.trace(err));
-          if (!coach) {
-            signup.error = {team: "Could not check team"};
-            return signup
-          }
-
-          if (Number(matches.ResponseGetTeamMatchRecords.TotalRecords) === 0){
-            signup.teamCreated = signup.lastPlayed = "A";
-          } else {
-            signup.teamCreated = "A";
-            signup.lastPlayed = "B";
-          }
-        }
-      }
-    }
-
-    if (error.team || error.coach || error.race) signup.error = error;
-
-    return signup;
-  }
-
 
   /* REBBRL */
   async _college(req, res){

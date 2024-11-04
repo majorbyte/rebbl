@@ -9,7 +9,6 @@ const
   , api = require("./api/api.js")
   , maintenance = require("./maintenance/maintenance.js")
   , rebbl = require("./rebbl/rebbl.js")
-  , cripple = require("./cripple/cripple.js")
   , account = require("./account/account.js")
   , bloodbowl = require("./bloodbowl/bloodbowl.js")
   , signup = require("./signup/signup.js")
@@ -66,17 +65,11 @@ class Routes{
     res.render("rebbl/index", {data:data});
   }
 
-  async _perpetual(req, res){
-    res.render('perpetual/standings');
-  }
-
 	routesConfig(){
 		this.router.use("/api", new api().routesConfig() );
     this.router.get("/test", (req,res) => res.render("test"));
     this.router.get("/guides", (req,res) => res.render("guides"));
     this.router.use("/maintenance", new maintenance().routesConfig());
-    this.router.use("/cripple", new cripple().routesConfig());
-    this.router.get("/perpetual", util.cache(1), this._perpetual);
     this.router.use("/account", new account().routesConfig());
     this.router.use("/bloodbowl", new bloodbowl().routesConfig());
     this.router.use("/signup", new signup().routesConfig());

@@ -7,24 +7,17 @@ const ZFLService = require("../../lib/ZFLService.js");
 
 const 
   cache = require("memory-cache")
-  , campingService = require("../../lib/CampingService.js")
   , clanService = require("../../lib/ClanService.js")
   , configurationService = require("../../lib/ConfigurationService.js")
-  , offseasonService = require('../../lib/OffSeasonService.js')
   , ds = require("../../lib/DraftService.js")
   , dataService = require("../../lib/DataService.js").rebbl
   , bb3 = require("../../lib/DataServiceBB3.js").rebbl3
   , express = require('express')
-  , hjmc = require("../../lib/TourneyService")
   , loggingService = require("../../lib/loggingService.js")
   , maintenanceService = require('../../lib/MaintenanceService.js')
-  , apiService = require('../../lib/apiService.js')
-  , rampupService = require("../../lib/Rampup.js")
   , team = require('../../lib/teamservice.js')
   , signUp = require('../../lib/signupService.js')
   , standingsService = require("../../lib/StandingsService.js")
-  , signupService = require("../../lib/signupService.js")
-  , ts = require("../../lib/TicketService.js")
   , util = require('../../lib/util.js')
   , reddit = require("../../lib/RedditService.js");
 
@@ -37,23 +30,6 @@ class Maintenance{
 
 
   routesConfig(){
-    this.router.get('/update/offseason', util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) {
-        try{
-          offseasonService.getMatches();
-        }
-        catch(e){
-          loggingService.error(e);
-        }
-      }
-      res.redirect('/');
-    });
-
-    this.router.get('/wintercamping', util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) campingService.updateBadges();
-      res.redirect('/');
-    });
-
     this.router.get('/test', util.verifyMaintenanceToken, async function(req, res){
       try{
 
@@ -130,16 +106,6 @@ class Maintenance{
     });
 
 
-    this.router.get('/updateleague/init', util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) maintenanceService.initRebblData(req.query.league, req.query.comp);
-      res.redirect('/');
-    });
-
-    this.router.get('/updateleague/admininit', util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
-      if (req.query.league && req.app.locals.cyanideEnabled) maintenanceService.getRebblData(req.query.league, req.query.comp);
-      res.redirect('/');
-    });
-
     this.router.get('/schedules' , util.verifyMaintenanceToken, async function(req,res){
     
       if (req.query.key){
@@ -181,11 +147,6 @@ class Maintenance{
       res.redirect('/');
     });
 
-    this.router.get('/replays', util.verifyMaintenanceToken, async function(req, res){
-      await apiService.getReplays();
-      res.redirect('/');
-    });
-    
     this.router.get('/updateLegends', util.verifyMaintenanceToken, async function(req, res){
       await maintenanceService.updateLegendaryPlayers();
       res.redirect('/');
@@ -350,11 +311,6 @@ class Maintenance{
     });
 
     
-    this.router.get('/updateHJMC',util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) hjmc.getContests();
-      res.redirect('/');
-    });
-
     this.router.get('/calculate', util.verifyMaintenanceToken, async function(req,res){
 
       let seasons = [configurationService.getActiveSeason()];

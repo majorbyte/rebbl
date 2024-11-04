@@ -1,11 +1,7 @@
 "use strict";
 const express = require('express')
   , path = require('path')
-  , chaosService = require('./lib/ChaosService.js')
-  , crippleService = require('./lib/crippleService.js')
   , clanService = require('./lib/ClanService.js')
-  , maintenanceService = require('./lib/MaintenanceService.js')
-  , signupService = require('./lib/signupService.js')
   , util = require("./lib/util.js")
   , session = require('express-session')
   , methodOverride = require('method-override')
@@ -220,30 +216,9 @@ class Server{
         socket.join(query.roomName);
         return;
       }
-      let data = await crippleService.getCasualties();
-
-      socket.emit('cripple', data);
-
-      data = await signupService.getSignUps();
-
-      socket.emit('signup', {count:data.all.length});
-
-      data = await maintenanceService.getCasualties();
-
-      socket.emit('greenhorn', data);
-
-      data = await chaosService.getCasualties();
-
-      socket.emit('chaos', data);
-
     });
 
-    crippleService.init(this.io);
     clanService.init(this.io);
-    signupService.init(this.io);
-    maintenanceService.init(this.io);
-    chaosService.init(this.io);
-
     this.server.listen(this.port);
   }
 

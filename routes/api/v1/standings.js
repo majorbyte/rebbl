@@ -1,49 +1,8 @@
 'use strict';
 const db = require('../../../lib/LeagueService.js')
   , util = require('../../../lib/util.js')
-  , rampup = require('../../../lib/Rampup.js')
   , express = require('express')
   , router = express.Router({mergeParams: true});
-
-router.get('/rampup/:league', util.cache(10*60), async function(req, res){
-
-  let standings = await rampup.getCoachScore();
-  let league = req.params.league.toUpperCase();
-
-  if (["GMAN","REL"].indexOf(league) === -1) {
-    res.sendResponse("");
-  } else {
-
-    league = `${league} Rampup`;
-    if(league.indexOf("REL") > -1) league = league.toUpperCase();
-
-    res.sendResponse(
-      standings[league].sort(function (a, b) {
-        if (a.points > b.points) {
-          return -1;
-        }
-        if (b.points > a.points) {
-          return 1;
-        }
-        if (a.tddiff > b.tddiff) {
-          return -1;
-        }
-        if (b.tddiff > a.tddiff) {
-          return 1;
-        }
-        if (a.loss > b.loss) {
-          return 1;
-        }
-        if (b.loss > a.loss) {
-          return -1;
-        }
-        return 0;
-      })
-    );
-  }
-
-
-});
 
 router.get('/stunty', util.cache(10*60), async function(req, res){
 

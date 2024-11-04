@@ -2,7 +2,6 @@
 
 const express = require("express")
   , api = require("../../../../lib/apiService.js")
-  , bb3Service = require("../../../../lib/bb3Service.js")
   , createScheduleService = require("../../../../lib/createScheduleService.js")
   , cache = require("memory-cache")
   , cyanideService = require("../../../../lib/CyanideService.js")

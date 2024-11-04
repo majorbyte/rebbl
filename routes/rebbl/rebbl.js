@@ -130,11 +130,6 @@ class Rebbl{
     this.router.use('/standings', new standings().routesConfig());
     this.router.use('/old_team', require(`./old_team.js`));
     this.router.use('/playoffs', require(`./playoffs.js`));
-    this.router.get("/camping/winter", util.cache(10*60), (req, res) => res.render("rebbl/winter"));
-    this.router.get("/camping/summer", util.cache(10*60), (req, res) => res.render("rebbl/summer"));
-    this.router.get("/huge/ladder", util.cache(1), (req, res) => res.render("rebbl/huge"));
-    this.router.get("/christmascracker/review", util.cache(1), (req, res) => res.render("rebbl/cracker/review"));
-    this.router.get("/christmascracker", util.cache(1), (req, res) => res.render("rebbl/cracker/cracker"));
     this.router.use('/:league', new league().routesConfig());
     this.router.use('/:league/:division', new division().routesConfig());
 
