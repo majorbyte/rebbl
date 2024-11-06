@@ -60,6 +60,15 @@ class ZFL{
       await zflService.updateCompetitions("e3500321-83d6-11ef-be7b-bc24112ec32e");
       res.redirect("/");
     });
+
+    this.router.use((_, res) => {
+      res.redirect("/standings");
+    });
+
+    this.router.use((err, _, res,next) => {
+      console.error(err);
+      res.redirect("/standings");
+    });
   }
 
   #checkAuth(req, res, next) {
@@ -82,84 +91,102 @@ class ZFL{
     res.redirect('/account'); 
   }
 
-  async #getFixtures(_,res){
-    let account = null;
-    if (res.locals.user) account = await dataService.getZFLAccount({id:res.locals.user.id});
-    const isAdmin = account && account.roles && account.roles.some(x => x == "admin");
-    const isDM = account && account.roles && account.roles.some(x => x == "dm");
-    
-    
-
-    res.render("zfl/fixtures" , {isDM,isAdmin, competitions:await dataService.getZFLCompetitions({year:this.year}) });
+  async #getFixtures(_,res,next){
+    try {
+      let account = null;
+      if (res.locals.user) account = await dataService.getZFLAccount({id:res.locals.user.id});
+      const isAdmin = account && account.roles && account.roles.some(x => x == "admin");
+      const isDM = account && account.roles && account.roles.some(x => x == "dm");
+  
+      res.render("zfl/fixtures" , {isDM,isAdmin, competitions:await dataService.getZFLCompetitions({year:this.year}) });
+    } catch(err){
+      next(err);
+    }
   }
 
-  async #getFixturesAdmin(_,res){
-    let account = null;
-    if (res.locals.user) account = await dataService.getZFLAccount({id:res.locals.user.id});
-    
-    const isAdmin = account && account.roles && account.roles.some(x => x == "admin");
-    const isDM = account && account.roles && account.roles.some(x => x == "dm");
-    const isAdminMode = isDM || isAdmin;
-    const competitions = await dataService.getZFLCompetitions({year:this.year}) ;
+  async #getFixturesAdmin(_,res,next){
+    try{
+      let account = null;
+      if (res.locals.user) account = await dataService.getZFLAccount({id:res.locals.user.id});
+      
+      const isAdmin = account && account.roles && account.roles.some(x => x == "admin");
+      const isDM = account && account.roles && account.roles.some(x => x == "dm");
+      const isAdminMode = isDM || isAdmin;
+      const competitions = await dataService.getZFLCompetitions({year:this.year}) ;
 
-    let teamIds = [];
-    if (isAdmin) teamIds = await dataService.getZFLTeams({"admin.id":account.coach.id},{projection:{id:1}});
+      let teamIds = [];
+      if (isAdmin) teamIds = await dataService.getZFLTeams({"admin.id":account.coach.id},{projection:{id:1}});
 
-    res.render("zfl/fixtures" , {isDM, isAdmin, teamIds, isAdminMode, competitions});
+      res.render("zfl/fixtures" , {isDM, isAdmin, teamIds, isAdminMode, competitions});
+    } catch(err){
+      next(err);
+    }
+}
+
+  async #getTeam(req,res,next){
+    try{
+      const team = await dataService.getZFLTeam({id: req.params.id, year:this.year});
+      let isAdmin = false;
+      let isOwner = false;
+      let admins = [];
+      if (res.locals.user) {
+        const account = await dataService.getZFLAccount({id:res.locals.user.id});
+        isAdmin = account.roles.some(x => x == "dm");
+        isOwner = account.teamId === team.id;
+        admins = await dataService.getZFLAccounts({roles:"admin"});  
+      }
+  
+      team.bio = await dataService.getZFLBio({team:team.name.toLowerCase()});
+      for(const player of team.bio?.players || []){
+        if (player.content?.length > 0) player.content = markdown.render(player.content);
+      }
+      if (team.bio?.content && team.bio?.content.length > 0) team.bio.content = markdown.render(team.bio.content);
+      
+      res.render("zfl/team" , {team, admins, isAdmin, isOwner}); 
+    } catch(err){
+      next(err);
+    }
   }
 
-  async #getTeam(req,res){
-    const team = await dataService.getZFLTeam({id: req.params.id, year:this.year});
-    let isAdmin = false;
-    let isOwner = false;
-    let admins = [];
-    if (res.locals.user) {
-      const account = await dataService.getZFLAccount({id:res.locals.user.id});
-      isAdmin = account.roles.some(x => x == "dm");
-      isOwner = account.teamId === team.id;
-      admins = await dataService.getZFLAccounts({roles:"admin"});  
+  async #getAccount(_,res,next){
+    try{
+      let account = await dataService.getZFLAccount({id:res.locals.user.id});
+      if (!account){
+        account = {
+          id: res.locals.user.id,
+          username: res.locals.user.username,
+          coach: null,
+          zflCoachName: null,
+          bio:"",
+          teamId: null,
+          roles:[]
+        } 
+        dataService.insertZFLAccount(account);
+      }
+      let team = null
+      if (account.teamId){
+        team = await dataService.getZFLTeam({id:account.teamId},{projection:{roster:0}});
+      }
+      res.render("zfl/account" , {account,team} );
+    } catch(err){
+      next(err);
     }
-
-    team.bio = await dataService.getZFLBio({team:team.name.toLowerCase()});
-    for(const player of team.bio?.players || []){
-      if (player.content?.length > 0) player.content = markdown.render(player.content);
-    }
-    if (team.bio?.content && team.bio?.content.length > 0) team.bio.content = markdown.render(team.bio.content);
-    
-    res.render("zfl/team" , {team, admins, isAdmin, isOwner}); 
   }
 
-  async #getAccount(_,res){
-    let account = await dataService.getZFLAccount({id:res.locals.user.id});
-    if (!account){
-      account = {
-        id: res.locals.user.id,
-        username: res.locals.user.username,
-        coach: null,
-        zflCoachName: null,
-        bio:"",
-        teamId: null,
-        roles:[]
-      } 
-      dataService.insertZFLAccount(account);
-    }
-    let team = null
-    if (account.teamId){
-      team = await dataService.getZFLTeam({id:account.teamId},{projection:{roster:0}});
-    }
-    res.render("zfl/account" , {account,team} );
-  }
+  async #getProfile(req,res,next){
+    try{
+      let account = await dataService.getZFLAccount({"coach.id":req.params.id});
+      
+      if (!account) return res.redirect("/");
+      let team = null;
+      if (account.teamId){
+        team = await dataService.getZFLTeam({id:account.teamId},{projection:{roster:0}});
+      }
 
-  async #getProfile(req,res){
-    let account = await dataService.getZFLAccount({"coach.id":req.params.id});
-    
-    if (!account) return res.redirect("/");
-    let team = null;
-    if (account.teamId){
-      team = await dataService.getZFLTeam({id:account.teamId},{projection:{roster:0}});
+      res.render("zfl/profile" , {account, team} );
+    } catch(err){
+      next(err);
     }
-
-    res.render("zfl/profile" , {account, team} );
   }
 
   async #updateBio(req,res){
@@ -180,10 +207,10 @@ class ZFL{
       }
       else await dataService.updateZFLBio({team:teamName},{$set:{content:bio}},{upsert:true});
       return res.status(200).send(markdown.render(bio));
-    } catch(ex){
-      console.error(ex);
+    } catch(err){
+      console.log(err);
+      return res.status(500).send();
     }
-    return res.status(400).send();
   }
 
   async #getBio(req,res){
@@ -205,88 +232,102 @@ class ZFL{
         
         return res.status(200).send(bio.content);
       }
-    } catch(ex){
-      console.error(ex);
+    } catch(err){
+      console.log(err);
+      return res.status(500).send();
     }
-    return res.status(404).send();
   }
 
 
   async #updateKit(req,res){
-    const data = {
-      homeKit1: req.body.homeKit1,
-      homeKit2: req.body.homeKit2,
-      homeKit3: req.body.homeKit3,
-      awayKit1: req.body.awayKit1,
-      awayKit2: req.body.awayKit2,
-      awayKit3: req.body.awayKit3,
+    try{
+      const data = {
+        homeKit1: req.body.homeKit1,
+        homeKit2: req.body.homeKit2,
+        homeKit3: req.body.homeKit3,
+        awayKit1: req.body.awayKit1,
+        awayKit2: req.body.awayKit2,
+        awayKit3: req.body.awayKit3,
+      }
+      await dataService.updateZFLTeam({id:req.params.id},{$set:{kit:data}});
+      res.status(200).send();
+    } catch (err){
+      console.error(err);
+      res.status(500).send();
     }
-    await dataService.updateZFLTeam({id:req.params.id},{$set:{kit:data}});
-    res.status(200).send();
   }
 
   async #setTeamAdmin(req,res){
-    let account = await dataService.getZFLAccount({id:res.locals.user.id});
-    if (!account.roles || !account.roles.some(x => x == "dm")) {
-      res.status(403).send();
-    } else {
-      account = await dataService.getZFLAccount({"coach.id":req.params.adminId});
+    try{
+      let account = await dataService.getZFLAccount({id:res.locals.user.id});
+      if (!account.roles || !account.roles.some(x => x == "dm")) {
+        res.status(403).send();
+      } else {
+        account = await dataService.getZFLAccount({"coach.id":req.params.adminId});
 
-      if (account) await dataService.updateZFLTeam({id:req.params.id, year:this.year},{$set:{admin:account.coach}});
+        if (account) await dataService.updateZFLTeam({id:req.params.id, year:this.year},{$set:{admin:account.coach}});
 
-      res.status(200).send();
+        res.status(200).send();
+      }
+    } catch(err){
+      console.log(err);
+      res.status(500).send();
     }
-
   }
 
   async #updateCoach(req,res) {
-    await dataService.updateZFLAccount({id:req.user.id},{$set:{coach:{id:req.body.id, name:req.body.name, service:req.body.service, displayId:req.body.displayId}}});
-    let competitions = await dataService.getZFLCompetitions({year:this.year});
-    let standing = competitions[0].standings.find(x => x.coach.id == req.body.id);
-    if (!standing) standing = competitions[1].standings.find(x => x.coach.id == req.body.id);
-    if (standing) await dataService.updateZFLAccount({id:req.user.id},{$set:{teamId:standing.id}});
- 
-    res.status(200).send();
-  }
-  async #updateZflName(req,res) {
-    await dataService.updateZFLAccount({id:req.user.id},{$set:{bio:req.body.bio, zflCoachName:req.body.zflCoachName}});
-    res.status(200).send();
+    try{
+      await dataService.updateZFLAccount({id:req.user.id},{$set:{coach:{id:req.body.id, name:req.body.name, service:req.body.service, displayId:req.body.displayId}}});
+      let competitions = await dataService.getZFLCompetitions({year:this.year});
+      let standing = competitions[0].standings.find(x => x.coach.id == req.body.id);
+      if (!standing) standing = competitions[1].standings.find(x => x.coach.id == req.body.id);
+      if (standing) await dataService.updateZFLAccount({id:req.user.id},{$set:{teamId:standing.id}});
+   
+      res.status(200).send();
+    } catch(err){
+      console.log(err);
+      res.status(500).send();
+    }
   }
 
-  async #getMatch(req,res){
+  async #updateZflName(req,res) {
+    try{
+      await dataService.updateZFLAccount({id:req.user.id},{$set:{bio:req.body.bio, zflCoachName:req.body.zflCoachName}});
+      res.status(200).send();
+    } catch(err){
+      console.log(err);
+      next(err);
+    }
+    
+  }
+
+  async #getMatch(req,res,next){
     try{
       const match = await dataService.getZFLMatch({gameId:req.params.id});
       if (match.released){
-        res.render("zfl/match", {match});
-        return;
+        return res.render("zfl/match", {match});
       }
 
       if (!res.locals.user && !match.released) {
-        res.redirect("/");
-        return;
+        return res.redirect("/");
       }
 
       let account = await dataService.getZFLAccount({id:res.locals.user.id});
       if (account.roles.some(x => x == "dm")) {
-        res.render("zfl/match", {match});
-        return;
+        return res.render("zfl/match", {match});
       }
 
       if (account.roles.some(x => x == "admin")) {
         let teamIds =  await dataService.getZFLTeams({"admin.id":account.coach.id},{projection:{id:1}});
         if (teamIds.some(x => x.id == match.homeTeam.id ) || teamIds.some(x => x.id == match.awayTeam.id)) {
-          res.render("zfl/match", {match});
-          return;
+          return res.render("zfl/match", {match});
         }
       }  
-
       res.redirect("/");
     }
-    catch(e){
-      console.error(e);
-      res.status(400).send(e.message);
+    catch(err){
+      next(err)
     }
-
   }
 
   async #updateStats(req,res){
@@ -306,6 +347,7 @@ class ZFL{
       res.status(200).send();
     } catch (ex){
       console.error(ex);
+      res.status(500).send();
     }
   }
 

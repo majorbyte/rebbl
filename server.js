@@ -175,9 +175,11 @@ class Server{
     const zflRoutes = require('./routes/zfl/zfl.js');
     this.app.use(this.host(['zfl.ovh','zfl.localhost.com'],zflRoutes.router));
 
+    const api = require("./routes/api/v3/api.js");
+    this.app.use(this.host(['api.localhost.com','api.rebbl.net'], new api().routesConfig()));
+
     const routes = require("./routes/routes.js");
     this.app.use(this.host(['localhost.com','rebbl.net'], new routes().routesConfig()));
-
 
     this.app.use(this.host(['localhost.com','rebbl.net'], function(req,res,next){
       const cause = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
@@ -186,24 +188,17 @@ class Server{
       next(err);
     }));
 
-    this.app.use(this.host(['localhost.com','rebbl.net'], function(err, res){
+    this.app.use(function(err, req, res,next){
       // error page
       if (err.status == 404){
+        console.log(err.message);
         res.status(404).render('404');
       } else {
         console.error(err.message);
         res.status(500).render('5xx');
       }
-    }));
+    });
 
-    this.app.use(this.host(['zfl.ovh','zfl.localhost.com'], function(req,res,next){
-      res.redirect("/standings");
-    }));
-
-    this.app.use(this.host(['zfl.ovh','zfl.localhost.com'], function(err, res){
-      console.error(err.message);
-      res.redirect("/standings");
-    }));
   }
 
   startSocketIOAndServer(){
