@@ -2,6 +2,7 @@
 
 const express = require("express")
   /* Endpoints */
+  , bloodbowlApi = require("./bloodbowl.js")
   , competitionApi = require("./competition.js");
 
 class ApiV3{
@@ -11,6 +12,7 @@ class ApiV3{
 
   routesConfig(){
 
+    this.router.use("/bloodbowl", new bloodbowlApi().routesConfig());
     this.router.use("/competition", new competitionApi().routesConfig());
 
     return this.router;

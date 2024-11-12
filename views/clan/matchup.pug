@@ -90,7 +90,10 @@ block content
                 a(class="m-1 btn btn-outline-info btn-sm" v-bind:href="`/team/${team.team.id}`" target="_blank")
                   img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                   span(class="text-info")  {{team.team.name}}
-                  img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                  if bb3
+                    img(v-bind:src="'https://cdn.rebbl.net/images/bb3/Logos/' + team.team.logo.replace('Neutral','Neutre').replace('Chosen','').replace('Renegade','') + '.png'", style="height:40px;")
+                  if !bb3
+                    img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                   br
                   span(class="badge text-bg-success") /u/{{reddit(schedule.home.clan,team.coach.name)}}
                   span(class="badge text-bg-warning") {{team.coach.name}}
@@ -101,7 +104,11 @@ block content
                 a(class="m-1 btn btn-outline-info btn-sm" v-bind:href="`/team/${team.team.id}`" target="_blank")
                   img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                   span(class="text-info")  {{team.team.name}}
-                  img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                  if bb3
+                    img(v-bind:src="'https://cdn.rebbl.net/images/bb3/Logos/' + team.team.logo.replace('Neutral','Neutre').replace('Chosen','').replace('Renegade','') + '.png'", style="height:40px;")
+                  if !bb3
+                    img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                  br
                   br
                   span(class="badge text-bg-success") /u/{{reddit(schedule.away.clan,team.coach.name)}}
                   span(class="badge text-bg-warning") {{team.coach.name}}

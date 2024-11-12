@@ -17,12 +17,15 @@ class TeamApi{
 
 
   routesConfig(){
-    this.router.get('/:teamId', util.cache(600), async function(req, res){
+    this.router.get('/:teamId', /*util.cache(600),*/ async function(req, res){
       try {
         let team;
         if (isNaN(req.params.teamId)){
-          const r = new RegExp(`^${req.params.teamId}$`,"i");
-          team = await dataService.getTeam({"team.name":{$regex: r}});
+          team = await dataService.getTeam({"team.id":req.params.teamId});
+          if (!team){
+            const r = new RegExp(`^${req.params.teamId}$`,"i");
+            team = await dataService.getTeam({"team.name":{$regex: r}});
+          }
         } else {
           team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
         }
@@ -49,8 +52,9 @@ class TeamApi{
     });
 
     this.router.get('/:teamId/cyanide', util.ensureAuthenticated, util.hasRole("admin"),apiRateLimiter, async function(req, res){
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
       try {
-        let team = await cyanideService.team({team:Number(req.params.teamId)});
+        let team = await cyanideService.team({team:id});
         res.json(team);
       }
       catch (ex){
@@ -61,10 +65,11 @@ class TeamApi{
     });
     
     this.router.get('/:teamId/players', util.cache(600), async function(req, res){
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
       try {
-        let players = await dataService.getPlayers({"teamId":Number(req.params.teamId),"active":true});
+        let players = await dataService.getPlayers({"teamId":id,"active":true});
         if (players.length === 0){
-          let team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
+          let team = await dataService.getTeam({"team.id":id});
           if (team){
             players = team.roster;
           }
@@ -78,8 +83,9 @@ class TeamApi{
     });
     
     this.router.get('/:teamId/retiredplayers', util.cache(600), async function(req, res){
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
       try {
-        let players = await dataService.getPlayers({"teamId":Number(req.params.teamId),"active":false, "id":{$ne:null}});
+        let players = await dataService.getPlayers({"teamId":id,"active":false, "id":{$ne:null}});
         res.json(players);
       }
       catch (ex){
@@ -89,8 +95,9 @@ class TeamApi{
     });
     
     this.router.get('/:teamId/hiredplayers', util.cache(600), async function(req, res){
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
       try {
-        let players = await dataService.getPlayers({"teamId":Number(req.params.teamId),"active":false, "id":null});
+        let players = await dataService.getPlayers({"teamId":id,"active":false, "id":null});
         res.json(players);
       }
       catch (ex){
@@ -100,8 +107,9 @@ class TeamApi{
     });
 
     this.router.get('/:teamId/matches', util.cache(600), async function(req, res){
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
       try {
-        let players = await dataService.getMatches({"match.teams.idteamlisting":Number(req.params.teamId)});
+        let players = await dataService.getMatches({"match.teams.idteamlisting":id});
         res.json(players);
       }
       catch (ex){

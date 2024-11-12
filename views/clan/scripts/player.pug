@@ -70,21 +70,25 @@ script.
 
 
       ko.defineProperty(this, 'maColor', function () {
+        if (!this.playerType) return '';
         if (this.ma > this.playerType?.ma) return 'green';
         if (this.ma < this.playerType?.ma) return 'red';
         return '' ;
       });
       ko.defineProperty(this, 'stColor', function () {
+        if (!this.playerType) return '';
         if (this.st > this.playerType?.st) return 'green';
         if (this.st < this.playerType?.st) return 'red';
         return '' ;
       });
       ko.defineProperty(this, 'agColor', function () {
+        if (!this.playerType) return '';
         if (this.ag > this.playerType?.ag) return 'green';
         if (this.ag < this.playerType?.ag) return 'red';
         return '' ;
       });
       ko.defineProperty(this, 'avColor', function () {
+        if (!this.playerType) return '';
         if (this.av > this.playerType?.av) return 'green';
         if (this.av < this.playerType?.av) return 'red';
         return '' ;

@@ -16,7 +16,10 @@ block content
   div(class="container")
     div(class="row col-12 d-flex flex-wrap align-items-center")
       .col.d-flex
-        //ko if: teamLoaded
+        //ko if: teamLoaded && $root.bb3
+        img.align-top.g-0(data-bind="attr:{src:`https://cdn.rebbl.net/images/bb3/Logos/${logo}.png`}" style="height:100px;width:100px")
+        // /ko
+        //ko if: teamLoaded && !$root.bb3
         img.align-top.g-0(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/256x256/logo_${logo.toLowerCase()}.png`}" style="height:100px;width:100px")
         // /ko
         span.h1.align-self-center(data-bind="text: teamName(), style:{color: teamColor(), margin:'unset'}")
@@ -347,7 +350,12 @@ block content
       td(data-bs-toggle="modal" data-bs-target="#player-dialog" data-bind="click:$root.selectPlayer.bind($data,$root),text:mvp")
       td(class="td-prevent")
         // ko foreach: $data.playerSkills
+        // ko if: !$root.bb3
         img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/${$data}.png`,title:$data.replace(/([A-Z])/g, ' $1').trim()},click:$root.selectSkill.bind($data,$root) "  alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999" )
+        // /ko
+        // ko if: $root.bb3
+        img(data-bind="attr:{src:`https://cdn.rebbl.net/images/skills/BB3Legacy/${$data.icon}`,title:$data.name }"  alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999" )
+        // /ko
         // /ko
         // ko if: diceRoll
         div(data-bind="attr:{title:`rolled: ${(new Date(diceRoll.date)).toISOString()}, clan: ${diceRoll.clan}`}" style="display:inline")
@@ -469,7 +477,7 @@ block scripts
     script(src="/scripts/knockout-es5.js")
 
   script.
-    const SKILLS = "skills.v4";
+    let SKILLS = "skills.v4";
     const SKILLDESCRIPTIONS = 'skillDescriptions.v2'
     class TeamModel{
       constructor(data){
@@ -477,7 +485,9 @@ block scripts
         ko.track(this);
       }
       map(data){
+        if (data.bb3) SKILLS = "skills.bb3.v1";
         if(data){
+          this.bb3 = data.bb3 || false;
           this.actualTV = data.actualTV || 0;
           this.apothecary = data.apothecary || 0;
           this.assistantcoaches = data.assistantcoaches || 0;
@@ -725,31 +735,41 @@ block scripts
         this.playerType = playerType;
         
         ko.defineProperty(this, 'maColor', function () {
+          if (!this.playerType) return '';
           if (this.attributes.ma > this.playerType.ma) return "green";
           if (this.attributes.ma < this.playerType.ma) return "red";
           return "" ;
         });
         ko.defineProperty(this, 'stColor', function () {
+          if (!this.playerType) return '';
           if (this.attributes.st > this.playerType.st) return "green";
           if (this.attributes.st < this.playerType.st) return "red";
           return "" ;
         });
         ko.defineProperty(this, 'agColor', function () {
+          if (!this.playerType) return '';
           if (this.attributes.ag > this.playerType.ag) return "green";
           if (this.attributes.ag < this.playerType.ag) return "red";
           return "" ;
         });
         ko.defineProperty(this, 'avColor', function () {
+          if (!this.playerType) return '';
           if (this.attributes.av > this.playerType.av) return "green";
           if (this.attributes.av < this.playerType.av) return "red";
           return "" ;
         });
         ko.defineProperty(this, 'playerSkills', function () {
           let sk = [...model.skills[this.type]|| []] ;
-          for(let x = 0; x < this.skills.length;x++){
-            if(sk.indexOf(this.skills[x]) === -1 || this.skills[x].indexOf("Increase") === 0)
-              sk.push(this.skills[x]);
-          }
+          if (!model.bb3){
+            for(let x = 0; x < this.skills.length;x++){
+              if(sk.indexOf(this.skills[x]) === -1 || this.skills[x].indexOf("Increase") === 0) sk.push(this.skills[x]);
+            }
+          } else{
+            for(const s of this.skills){
+              const skill = model.skills.find(x => x.name == s.replace("(","").replace(")","").replace("+","").replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();}).replace(/ /g,"").replace(/-/g,""));
+              if (skill) sk.push(skill);
+            }
+          } 
           return sk;
         });
 
@@ -885,6 +905,7 @@ block scripts
 
       if (teamResponse.ok){
         const data = await teamResponse.json();
+        data.team.bb3 = data.bb3;
         model.map(data.team);
         model.stats.map(data.stats);
         model.teamLoaded = true
@@ -932,7 +953,7 @@ block scripts
         skills = localStorage.getItem(SKILLS);
 
       if(!skills || skills === "undefined"){
-        let response = await fetch("/api/v2/bloodbowl/skills");
+        let response =  model.bb3 ?  await fetch("/api/v3/bloodbowl/skills") : await fetch("/api/v2/bloodbowl/skills");
         if(response.ok){
           model.skills = await response.json();
       

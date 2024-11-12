@@ -16,10 +16,10 @@ class Clan{
     res.render("clan/standings");
   }
   async _clan(req,res){
-    res.render("clan/clan",  {clan:req.params.clan})
+    res.render("clan/clan",  {clan:req.params.clan, bb3:true})
   }
   async _seasonclan(req,res){
-    res.render("clan/clan",  {clan:req.params.clan, season:req.params.season})
+    res.render("clan/clan",  {clan:req.params.clan, season:req.params.season, bb3:req.params.season > "season 18"})
   }
 
   async _build(req,res){
@@ -32,7 +32,7 @@ class Clan{
     res.render("clan/schedule");
   }
   _matchup(req,res){
-    res.render("clan/matchup");
+    res.render("clan/matchup",{bb3:req.params.season > "season 18"});
   }
   _template = (req,res) => res.render(`clan/templates/${req.params.template}`);
 

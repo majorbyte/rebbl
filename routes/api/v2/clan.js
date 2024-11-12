@@ -74,34 +74,38 @@ class ClanApi{
     });
 
     this.router.get("/:season/:division/:round/:house", async function(req, res){
-      let schedule = await dataService.getSchedule({
-        league:"clan", 
-        season:req.params.season, 
-        competition:req.params.division,
-        round:Number(req.params.round),
-        house:Number(req.params.house)
-      });
-      if (!schedule) return {};
-      let clans = await dataService.getClans({name:{$in:[ RegExp(`^${schedule.home.clan}$`,"i"),RegExp(`^${schedule.away.clan}$`,"i")]},season:req.params.season});
+      try{
+        let schedule = await dataService.getSchedule({
+          league:"clan", 
+          season:req.params.season, 
+          competition:req.params.division,
+          round:Number(req.params.round),
+          house:Number(req.params.house)
+        });
+        if (!schedule) return {};
+        let clans = await dataService.getClans({name:{$in:[ RegExp(`^${schedule.home.clan}$`,"i"),RegExp(`^${schedule.away.clan}$`,"i")]},season:req.params.season});
 
-      schedule.home.clan = clans.find(c => c.name.localeCompare(schedule.home.clan,undefined,{sensitivity:"base"}) === 0);
-      schedule.away.clan = clans.find(c => c.name.localeCompare(schedule.away.clan,undefined,{sensitivity:"base"}) === 0);
+        schedule.home.clan = clans.find(c => c.name.localeCompare(schedule.home.clan,undefined,{sensitivity:"base"}) === 0);
+        schedule.away.clan = clans.find(c => c.name.localeCompare(schedule.away.clan,undefined,{sensitivity:"base"}) === 0);
 
-      let teams = await dataService.getTeams({"team.id":{$in:schedule.home.clan.ledger.teams.filter(x => x.active).map(team=> team.team.id).concat(schedule.away.clan.ledger.teams.filter(x => x.active).map(team=> team.team.id))}});
+        let teams = await dataService.getTeams({"team.id":{$in:schedule.home.clan.ledger.teams.filter(x => x.active).map(team=> team.team.id).concat(schedule.away.clan.ledger.teams.filter(x => x.active).map(team=> team.team.id))}});
 
-      const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
-      for(var x = 0; x <5; x++){
-        schedule.home.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.home.clan.teams[x]) === 0 );
-        schedule.away.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.away.clan.teams[x]) === 0);
+        const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+        for(var x = 0; x <5; x++){
+          schedule.home.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.home.clan.teams[x]) === 0 );
+          schedule.away.clan.teams[x] = teams.find(t => collator.compare(t.team.name,schedule.away.clan.teams[x]) === 0);
+        }
+
+        delete schedule.home.clan.ledger;
+        delete schedule.away.clan.ledger;
+
+        const coaches = schedule.home.clan.members.map(x => x.coach).concat(schedule.away.clan.members.map(x => x.coach));
+        const donations = await dataService.getAccounts({coach:{$in:coaches},"showDonation":true},{projection:{coach:1}});
+        schedule.donations = donations;
+        res.json(schedule);
+      } catch(e){
+        res.status(400).send();
       }
-
-      delete schedule.home.clan.ledger;
-      delete schedule.away.clan.ledger;
-
-      const coaches = schedule.home.clan.members.map(x => x.coach).concat(schedule.away.clan.members.map(x => x.coach));
-      const donations = await dataService.getAccounts({coach:{$in:coaches},"showDonation":true},{projection:{coach:1}});
-      schedule.donations = donations;
-      res.json(schedule);
     });
 
     this.router.get("/schedule/:season/:division", async function(req, res){
