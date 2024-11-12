@@ -35,6 +35,7 @@ class ClanApi{
     this.router.use("/draft", new draftApi().routesConfig());
 
     this.router.get("/competition/:division/:round/:house",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
+      return res.json([]);
       let data = await clanService.getCompetitionInformation(req.params.division, Number(req.params.round), Number(req.params.house));
 
       data = data.filter(x => x.Row.CompetitionStatus === "0");
