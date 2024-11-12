@@ -41,7 +41,7 @@ block content
           a.m-1(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/team/' + team.team.id" target="_blank" )
             | {{team.team.name}}
             if bb3
-              img(v-bind:src="'https://cdn.rebbl.net/images/bb3/Logos/' + team.team.logo.replace('Neutral','Neutre').replace('Chosen','').replace('Renegade','') + '.png'", style="width:24px;")
+              img(v-bind:src="'https://cdn.rebbl.net/images/bb3/Logos/' + team.team.logo.replace('Neutral','Neutre').replace(/Chosen|Renegade/,'') + '.png'", style="width:24px;")
             if !bb3
               img(v-bind:src="'https://cdn.rebbl.net/images/logo/logo_' + team.team.logo.toLowerCase() + '.png'")
       template(v-else)

@@ -91,7 +91,7 @@ block content
                   img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                   span(class="text-info")  {{team.team.name}}
                   if bb3
-                    img(v-bind:src="'https://cdn.rebbl.net/images/bb3/Logos/' + team.team.logo.replace('Neutral','Neutre').replace('Chosen','').replace('Renegade','') + '.png'", style="height:40px;")
+                    img(v-bind:src="'https://cdn.rebbl.net/images/bb3/Logos/' + team.team.logo.replace('Neutral','Neutre').replace(/Chosen|Renegade/,'') + '.png'", style="height:40px;")
                   if !bb3
                     img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                   br
@@ -105,7 +105,7 @@ block content
                   img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                   span(class="text-info")  {{team.team.name}}
                   if bb3
-                    img(v-bind:src="'https://cdn.rebbl.net/images/bb3/Logos/' + team.team.logo.replace('Neutral','Neutre').replace('Chosen','').replace('Renegade','') + '.png'", style="height:40px;")
+                    img(v-bind:src="'https://cdn.rebbl.net/images/bb3/Logos/' + team.team.logo.replace('Neutral','Neutre').replace(/Chosen|Renegade/,'') + '.png'", style="height:40px;")
                   if !bb3
                     img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                   br
@@ -141,7 +141,10 @@ block content
             a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : `/clan/match/unplayed/${match.contest_id}`" target="_blank")
               .MatchRow-team
                 .TeamLabel.TeamLabel--reverse
-                  div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" )
+                  if bb3
+                    div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/${match.opponents[0].team.logo.replace('Neutral','Neutre').replace(/Chosen|Renegade/,'')}.png`" alt="" )
+                  if !bb3
+                    div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" )
                   .TeamLabel-info.TeamLabel-info--noScore
                     .text-info {{ match.opponents[0].team.name }}
                     .TeamLabel-coach
@@ -170,7 +173,10 @@ block content
 
               .MatchRow-team
                 .TeamLabel
-                  div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="")
+                  if bb3
+                    div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/${match.opponents[1].team.logo.replace('Neutral','Neutre').replace(/Chosen|Renegade/,'')}.png`" alt="" )
+                  if !bb3
+                    div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="")
                   .TeamLabel-info.TeamLabel-info--noScore
                     .text-info {{  match.opponents[1].team.name  }}
                     .TeamLabel-coach
@@ -185,7 +191,10 @@ block content
                 .col-8.MatchRow-contentWrapper.MatchRow-contentWrapper
                   .MatchRow-team
                     .TeamLabel.TeamLabel--reverse
-                      div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.coaches[0].logo.toLowerCase()}.png`" alt="")
+                      if bb3
+                        div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/${match.opponents[0].team.logo.replace('Neutral','Neutre').replace(/Chosen|Renegade/,'')}.png`" alt="" )
+                      if !bb3
+                        div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" )
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{  match.coaches[0].teamName  }}
                         .TeamLabel-coach
@@ -200,7 +209,10 @@ block content
                         span.MatchStatus-score &nbsp;
                   .MatchRow-team
                     .TeamLabel
-                      div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="")
+                      if bb3
+                        div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/${match.opponents[1].team.logo.replace('Neutral','Neutre').replace(/Chosen|Renegade/,'')}.png`" alt="" )
+                      if !bb3
+                        div: img.TeamLabel-logo(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{  match.coaches[1].teamName  }}
                         .TeamLabel-coach
