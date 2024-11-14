@@ -138,7 +138,8 @@ block content
           .col-12.row.align-center
             h1 Matches
           template(v-for="match in schedule.matches")
-            a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href="match.match_uuid ? `/clan/match/${match.match_uuid}` : `/clan/match/unplayed/${match.contest_id}`" target="_blank")
+            - let href = "match." + (bb3 ? 'game_id' : 'match_uuid') + " ? `/clan/match/${match." + (bb3 ? 'game_id' : 'match_uuid') +"}` : `/clan/match/unplayed/${match.contest_id}`"
+            a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(v-bind:href=href target="_blank")
               .MatchRow-team
                 .TeamLabel.TeamLabel--reverse
                   if bb3

@@ -7,6 +7,9 @@ const
   , express = require('express')
   , router = express.Router({mergeParams:true});
 
+
+
+
 router.get('/unplayed/:match_id', async function(req, res){
   try{
     let match = await leagueService.getUnplayedMatch(req.params.match_id);
@@ -39,6 +42,7 @@ router.put('/unplayed/:match_id', util.checkAuthenticated, util.hasRole('streame
 
 router.get('/:match_id', util.cache(600), async function(req, res, next){
   let data = null;
+
   try{
     data = await leagueService.getMatchDetails(req.params.match_id);
     if (!data) return res.render('rebbl/match/notfound', data);
@@ -47,14 +51,19 @@ router.get('/:match_id', util.cache(600), async function(req, res, next){
     return res.render('rebbl/match/notfound', data);
   }
   
+  data.bb3 = req.params.match_id.indexOf("-")>-1;
+
   data.lonersValue = [await bloodBowlService.getLonerCost(data.match.teams[0].idraces), await bloodBowlService.getLonerCost(data.match.teams[1].idraces)];
 
   data.skills =[];
 
   let skillDescriptions = await bloodBowlService.getSkillDescriptions();
 
+
   if (data.match.teams[0].roster) {
     await data.match.teams[0].roster.map(async player => {
+      if (player.skills && player.skills.AcquiredSkills) player.skills = player.skills.InnateSkills.concat(player.skills.AcquiredSkills); 
+      if (player.casualties && player.casualties.NewCasualty) player.casualties_sustained = player.casualties.NewCasualty;
       player.skills.map(async skill => {
         let description = skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() );
         if (description) {
@@ -68,6 +77,8 @@ router.get('/:match_id', util.cache(600), async function(req, res, next){
 
   if (data.match.teams[1].roster) {
     await data.match.teams[1].roster.map(async player => {
+      if (player.skills && player.skills.AcquiredSkills) player.skills = player.skills.InnateSkills.concat(player.skills.AcquiredSkills); 
+      if (player.casualties && player.casualties.NewCasualty) player.casualties_sustained = player.casualties.NewCasualty;
       player.skills.map(async skill => {
         let description = skillDescriptions.find(s => s.name.toLowerCase().replace(/[ \-']/g,'') === skill.toLowerCase().trim() );
         if (description) {

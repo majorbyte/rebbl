@@ -18,7 +18,10 @@ block content
                 - if (match.structstadium && match.structstadium.length > 0)
                   img(src=`https://cdn.rebbl.net/images/stadium/${match.structstadium.toLowerCase()}.png`  title=stadiumDescription[match.structstadium.toLowerCase()]  style="margin-top: -2px;margin-left: -6px;")
                 div(class="TeamLabel TeamLabel--reverse")
-                  div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                  if bb3
+                    div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.teams[0].teamlogo + ".png" alt="" class="TeamLabel-logo")
+                  if !bb3
+                    div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let tn = match.teams[0].teamname
@@ -31,8 +34,9 @@ block content
                           a(href=`/team/${match.teams[0].idteamlisting}` )= tn
                     div(class="TeamLabel-coach ")
                       a(href=`/coach/${match.coaches[0].idcoach}`)= match.coaches[0].coachname
-                    div(class="TeamLabel-coach" title="cash earned: " + match.teams[0].cashearned + "; spiraling expenses: " +match.teams[0].spirallingexpenses)= "winnings: " + (match.teams[0].cashearned - match.teams[0].spirallingexpenses)
-                    div(class="TeamLabel-coach ")= match.teams[0].popularitygain + " Fan Factor"
+                    if !bb3  
+                      div(class="TeamLabel-coach" title="cash earned: " + match.teams[0].cashearned + "; spiraling expenses: " +match.teams[0].spirallingexpenses)= "winnings: " + (match.teams[0].cashearned - match.teams[0].spirallingexpenses)
+                      div(class="TeamLabel-coach ")= match.teams[0].popularitygain + " Fan Factor"
             div(class="MatchRow-status")
               span(class="MatchStatus MatchStatus--transparent")
                 span
@@ -51,7 +55,10 @@ block content
             div(class="MatchRow-team")
               div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                 div(class="TeamLabel")
-                  div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
+                  if bb3
+                    div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.teams[1].teamlogo + ".png" alt="" class="TeamLabel-logo")
+                  if !bb3
+                    div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                   div(class="TeamLabel-info TeamLabel-info--noScore")
                     div(class="TeamLabel-name ")
                       - let on = match.teams[1].teamname
@@ -65,8 +72,9 @@ block content
 
                     div(class="TeamLabel-coach ")
                       a(href=`/coach/${match.coaches[1].idcoach}`)= match.coaches[1].coachname
-                    div(class="TeamLabel-coach" title="cash earned: " + match.teams[1].cashearned + "; spiraling expenses: " +match.teams[1].spirallingexpenses)= "winnings: " + (match.teams[1].cashearned - match.teams[1].spirallingexpenses)
-                    div(class="TeamLabel-coach ")= match.teams[1].popularitygain + " Fan Factor"
+                    if !bb3
+                      div(class="TeamLabel-coach" title="cash earned: " + match.teams[1].cashearned + "; spiraling expenses: " +match.teams[1].spirallingexpenses)= "winnings: " + (match.teams[1].cashearned - match.teams[1].spirallingexpenses)
+                      div(class="TeamLabel-coach ")= match.teams[1].popularitygain + " Fan Factor"
                 - if (match.filename)
                   div(class="ReplayLinks")
                     div(class="ReplayLinks-outer")
