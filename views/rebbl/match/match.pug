@@ -19,7 +19,7 @@ block content
                   img(src=`https://cdn.rebbl.net/images/stadium/${match.structstadium.toLowerCase()}.png`  title=stadiumDescription[match.structstadium.toLowerCase()]  style="margin-top: -2px;margin-left: -6px;")
                 div(class="TeamLabel TeamLabel--reverse")
                   if bb3
-                    div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.teams[0].teamlogo + ".png" alt="" class="TeamLabel-logo")
+                    div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.teams[0].teamlogo.replace(/Chaos|Renege/,'').replace("Neutral","Neutre") + ".png" alt="" class="TeamLabel-logo")
                   if !bb3
                     div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/logo/logo_" + match.teams[0].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                   div(class="TeamLabel-info TeamLabel-info--noScore")
@@ -56,7 +56,7 @@ block content
               div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
                 div(class="TeamLabel")
                   if bb3
-                    div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.teams[1].teamlogo + ".png" alt="" class="TeamLabel-logo")
+                    div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.teams[1].teamlogo.replace(/Chaos|Renege/,'').replace("Neutral","Neutre") + ".png" alt="" class="TeamLabel-logo")
                   if !bb3
                     div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/logo/logo_" + match.teams[1].teamlogo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                   div(class="TeamLabel-info TeamLabel-info--noScore")

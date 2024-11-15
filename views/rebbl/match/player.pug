@@ -40,23 +40,33 @@ tr
         img(src="https://cdn.rebbl.net/images/"+cas alt="", class="TeamLabel-logo" style="margin-top:6px;margin-left:2px;border-radius: 5px;" title=""+cas.replace(/([A-Z])/g, ' $1').trim() )
   //Comp
   td(class="match-stats")
-    div(style="margin-left:15px")= player.stats.inflictedpasses > 0 ? player.stats.inflictedpasses : ""
+    - let stat = player.stats[bb3 ? "inflicted_passes" : "inflictedpasses"]
+    div(style="margin-left:15px")= stat > 0 ? stat : ""
   // TD
   td(class="match-stats")
-    div(style="margin-left:15px")= player.stats.inflictedtouchdowns > 0 ? player.stats.inflictedtouchdowns : ""
+    - stat = player.stats[bb3 ? "touchdowns_scored" : "inflictedtouchdowns"]
+    div(style="margin-left:15px")= stat > 0 ? stat : ""
   // INT
   td(class="match-stats")
-    div(style="margin-left:15px")= player.stats.inflictedinterceptions > 0 ? player.stats.inflictedinterceptions : ""
+    - stat = player.stats[bb3 ? "inflicted_interceptions" : "inflictedinterceptions"]
+    div(style="margin-left:15px")= stat > 0 ? stat  : ""
   // CAS
   td(class="match-stats")
-    div(style="margin-left:15px")= player.stats.inflictedcasualties > 0 ? player.stats.inflictedcasualties : ""
+    - stat = player.stats[bb3 ? "casualties_inflicted" : "inflictedcasualties"]
+    div(style="margin-left:15px")= stat > 0 ? stat  : ""
   // MVP
   td(class="match-stats")
     if player.mvp
       img(src="https://cdn.rebbl.net/images/skills/MVPCondition.png" style="width:36px; border-radius:5px;" title="MVP")
   // SPP
   td(class="match-stats")
-    div= xp_gain
+    if bb3
+      div= player.xp_gain
+    if !bb3
+      div= xp_gain
   td(class="match-stats")
-    div= `${player.xp + xp_gain}/${levels[player.level+1]}`
+    if bb3
+      div= player.xp + player.xp_gain
+    if !bb3
+      div= `${player.xp + xp_gain}/${levels[player.level+1]}`
 
