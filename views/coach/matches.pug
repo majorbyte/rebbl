@@ -15,7 +15,7 @@ block content
               div(class="MatchRow MatchRow-match MatchRow-header col-12" )= match.competition + ' - ' + match.round
               div(class="MatchRow MatchRow-match col-12" )
 
-                - let url = match.match_uuid ? "/rebbl/match/" + match.match_uuid : "#"
+                - let url = match.match_uuid ? "/bb2/rebbl/match/" + match.match_uuid : "#"
                 a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")
                   div(class="MatchRow-team")
                     div(class="TeamLabel TeamLabel--reverse")

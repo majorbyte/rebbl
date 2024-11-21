@@ -67,8 +67,6 @@ class Routes{
 
 	routesConfig(){
 		this.router.use("/api", new api().routesConfig() );
-    this.router.get("/test", (req,res) => res.render("test"));
-    this.router.get("/guides", (req,res) => res.render("guides"));
     this.router.use("/maintenance", new maintenance().routesConfig());
     this.router.use("/account", new account().routesConfig());
     this.router.use("/bloodbowl", new bloodbowl().routesConfig());
@@ -76,25 +74,17 @@ class Routes{
     this.router.use("/auth", new auth().routesConfig());
     this.router.use("/admin", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), new admin().routesConfig());
 
-    this.router.get('/chaos', async function(req, res){
-      try{
-        res.render('chaos/counter',null );
-      } catch(err){
-        console.log(err);
-      }
-    });
-
     this.router.use("/clan",new clan().routesConfig());
-    this.router.use("/bb3",new bb3().routesConfig());
-    //this.router.use("/zfl",new zfl().routesConfig());
 
     this.router.use('/coach', new coach().routesConfig());
     this.router.use('/team', require(`./team/team.js`));
 
-    this.router.use("/:company", new rebbl().routesConfig());
+    this.router.use("/bb2/:company", new rebbl().routesConfig());
 
 
-    this.router.get("/", util.cache(10*60), this._root);
+    //this.router.get("/", util.cache(10*60), this._root);
+    this.router.use("/bb3", (req,res) => res.redirect("/"))
+    this.router.use("/",new bb3().routesConfig());
 
   
     return this.router;

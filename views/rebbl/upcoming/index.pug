@@ -102,7 +102,7 @@ block scripts
             date.shortDate = time.format('YYYY-MM-DD');
             date.shortTime = time.format('HH:mm');
             date.shortTimeTitle = time.format('zz(ZZ)');
-            date.url = date.match_uuid ? "/rebbl/match/" + date.match_uuid : "/rebbl/match/unplayed/"+date.contest_id;
+            date.url = date.match_uuid ? "/bb2/rebbl/match/" + date.match_uuid : "/bb2/rebbl/match/unplayed/"+date.contest_id;
             date.homeTeamLogo = date.homeTeamLogo.indexOf('.png') === -1 
               ? 'https://cdn.rebbl.net/images/logo/logo_' + date.homeTeamLogo.toLowerCase() + '.png'
               : 'https://cdn.rebbl.net/images/bb3/Logos/100x100/' + date.homeTeamLogo;
@@ -137,7 +137,7 @@ block scripts
                 ret.shortTime = "unknown";
                 ret.shortTimeTitle = "unknown";
               }
-              ret.url = date.match_uuid ? "/rebbl/match/" + date.match_uuid : "/rebbl/match/unplayed/"+date.contest_id;
+              ret.url = date.match_uuid ? "/bb2/rebbl/match/" + date.match_uuid : "/bb2/rebbl/match/unplayed/"+date.contest_id;
               ret.homeCoach = date.opponents[0].coach.name;
               ret.homeTeam = date.opponents[0].team.name;
               ret.homeTeamValue =  date.opponents[0].team.team.nextMatchTV;
