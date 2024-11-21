@@ -67,6 +67,7 @@ class ZFL{
 
     this.router.use((err, _, res,next) => {
       console.error(err);
+      console.log(err.stack);
       res.redirect("/standings");
     });
   }

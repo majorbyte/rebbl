@@ -42,7 +42,7 @@ class Maintenance{
         //await clanService.updateUnstarted("Division 1", 1, 6);
         //await clanService.updateUnstarted("Division 1");
         //await clanService.getMatchData();
-        await clanService.calculateStandings();
+        await ZFLService.updateTeams();
         //await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
 
         //const test = require ("../../lib/createScheduleService.js");
