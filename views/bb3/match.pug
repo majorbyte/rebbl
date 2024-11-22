@@ -26,7 +26,7 @@ block content
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="TeamLabel-name ")
                         - let tn = match.homeTeam.name
-                          a(href=`/bb3/team/${match.homeTeam.id}` )= tn
+                          a(href=`/team/${match.homeTeam.id}` )= tn
                       div(class="TeamLabel-coach ")
                         a(href=`/coach/bb3/${match.homeGamer.id}`)= match.homeGamer.name
                       div(class="TeamLabel-coach" )= "winnings: " + (match.homeGameResultGain.newTreasury - match.homeGameResultGain.previousTreasury - match.homeGameResultGain.cashSpentDuringMatch)
@@ -51,11 +51,11 @@ block content
                         span.badge.text-bg-success validated
                   else if user && (user.roles && user.roles.indexOf("admin") > -1) 
                     .MatchStatus.col-12 
-                      form(action=`/bb3/match/${match.gameId}/validate` method="POST")
+                      form(action=`/match/${match.gameId}/validate` method="POST")
                         button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
                   else if user && (match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) && ((!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1) && (!match.notValidatedBy ||  match.notValidatedBy.indexOf(user.bb3id) === -1))
                     .MatchStatus.col-12 
-                      form(action=`/bb3/match/${match.gameId}/validate` method="POST")
+                      form(action=`/match/${match.gameId}/validate` method="POST")
                         button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
                   span
                     if match.homeScore > match.awayScore
@@ -73,7 +73,7 @@ block content
                   if !match.validated && match.hasPendingValidation !== "0"
                     if user && (match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) &&  (!match.validated || match.hasPendingValidation === "1")  && ((!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1) &&   (!match.notValidatedBy ||  match.notValidatedBy.indexOf(user.bb3id) === -1))
                       .MatchStatus.col-12 
-                        form(action=`/bb3/match/${match.gameId}/invalidate` method="POST")
+                        form(action=`/match/${match.gameId}/invalidate` method="POST")
                           button.btn.btn-sm.btn-danger.mx-2(style="vertical-align:top;padding:1px") Do not validate
               div(class="MatchRow-team")
                 div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
@@ -82,7 +82,7 @@ block content
                     div(class="TeamLabel-info TeamLabel-info--noScore")
                       div(class="TeamLabel-name ")
                         - let on = match.awayTeam.name
-                        a(href=`/bb3/team/${match.awayTeam.id}` )= on
+                        a(href=`/team/${match.awayTeam.id}` )= on
 
                       div(class="TeamLabel-coach ")
                         a(href=`/coach/bb3/${match.awayGamer.id}`)= match.awayGamer.name
@@ -195,15 +195,15 @@ block content
                   div(class="TeamLabel-coach ")= schedule.away.coach.name
           if user && (user.roles && user.roles.indexOf("admin") > -1) 
             .MatchStatus.col-12 
-              form(action=`/bb3/schedule/${schedule.gameId}/validate` method="POST")
+              form(action=`/schedule/${schedule.gameId}/validate` method="POST")
                 button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
           else if user && (schedule.home.coach.id === user.bb3id || schedule.away.coach.id === user.bb3id) && ((!schedule.validatedBy ||  schedule.validatedBy.indexOf(user.bb3id) === -1) && (!schedule.notValidatedBy ||  schedule.notValidatedBy.indexOf(user.bb3id) === -1))
             .MatchStatus.col-12 
-              form(action=`/bb3/schedule/${schedule.gameId}/validate` method="POST")
+              form(action=`/schedule/${schedule.gameId}/validate` method="POST")
                 button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
           if user && (schedule.home.coach.id === user.bb3id || schedule.away.coach.id === user.bb3id) &&  ((!schedule.validatedBy ||  schedule.validatedBy.indexOf(user.bb3id) === -1) && (!schedule.notValidatedBy ||  schedule.notValidatedBy.indexOf(user.bb3id) === -1))
             .MatchStatus.col-12 
-              form(action=`/bb3/schedule/${schedule.gameId}/invalidate` method="POST")
+              form(action=`/schedule/${schedule.gameId}/invalidate` method="POST")
                 button.btn.btn-sm.btn-danger.mx-2(style="vertical-align:top;padding:1px") Do not validate
 
 

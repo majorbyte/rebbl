@@ -19,14 +19,14 @@ class Redraft{
 
   #redraftPreview = async (req, res) => {
     const team = await redraftService.checkRedraft(req.params.teamId, res.locals.user);
-    if (team.redraft) res.redirect(`/bb3/redraft/${req.params.teamId}`);
+    if (team.redraft) res.redirect(`/redraft/${req.params.teamId}`);
     else res.render("bb3/redraft/preview", {team});
   };
 
   #startRedraft = async (req,res) => {
     try{
       const result =  await redraftService.startRedraft(req.params.teamId, res.locals.user);
-      res.json({redirect: `/bb3/redraft/${req.params.teamId}`});
+      res.json({redirect: `/redraft/${req.params.teamId}`});
     } catch (ex) {
      res.status(400).json(ex);
     }

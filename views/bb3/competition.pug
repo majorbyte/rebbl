@@ -3,7 +3,7 @@ include functions.pug
 .season-table(style="margin-bottom:40px;")  
   div
     .d-flex.justify-content-between
-      a(href=`/bb3/competition/${competition.id}/schedules` class="highlight")
+      a(href=`/competition/${competition.id}/schedules` class="highlight")
         h2=competition.name
       - if (competition.status === 1)
         h2 Waiting for teams
@@ -37,7 +37,7 @@ include functions.pug
             .col(style=";overflow:hidden") 
               a(href=`/coach/bb3/${rank.id}`)=rank.name
             .col(style=";overflow:hidden") 
-              a(href=`/bb3/team/${rank.teamId}`)=rank.team
+              a(href=`/team/${rank.teamId}`)=rank.team
         .col-2.d-none.d-md-block(style=";overflow:hidden")=getRace(rank.race)
         .col-4
           .row

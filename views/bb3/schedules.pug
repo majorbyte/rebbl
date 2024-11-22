@@ -1,10 +1,6 @@
 extends ../no-cache-sub-relayout.pug
 include ../nav-link
 
-block vars
-  - company = company || "bb3"
-  - let options = {company: company || "bb3"}
-
 block head
   style.
     h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
@@ -18,14 +14,14 @@ block content
         - let round = 0
         - let sorted = schedules.sort((a,b) => a.round - b.round)
         each schedule, x in schedules.sort((a,b) => a.round - b.round)
-          - let url = schedule.status > 1 ? `/${company}/match/${ schedule.gameId }` : `/${company}/unplayed/${schedule.matchId}`
+          - let url = schedule.status > 1 ? `/match/${ schedule.gameId }` : `/unplayed/${schedule.matchId}`
 
           - if (round != schedule.round)
             - round = schedule.round
             br
             div.table-striped.TeamLabel-info
               div.TableHeader(style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
-                a.unplayed-anchor(name=x style="padding-top:180px;margin-top:-180px" href=`/${company}/competition/${competition.id}/schedules/${round}`)
+                a.unplayed-anchor(name=x style="padding-top:180px;margin-top:-180px" href=`/competition/${competition.id}/schedules/${round}`)
                   div.Standings-details.Standings-header.highlight= "Round " + round
 
           a.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(href=url)

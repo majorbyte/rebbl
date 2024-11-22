@@ -77,7 +77,7 @@ class Routes{
     this.router.use("/clan",new clan().routesConfig());
 
     this.router.use('/coach', new coach().routesConfig());
-    this.router.use('/team', require(`./team/team.js`));
+    this.router.use('/bb2/team', require(`./team/team.js`));
 
     this.router.use("/bb2/:company", new rebbl().routesConfig());
 

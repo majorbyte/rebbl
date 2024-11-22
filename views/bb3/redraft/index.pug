@@ -335,7 +335,7 @@ block scripts
         if (this.draftLocked || model.mock ) return;
 
         const body = {improvement: this.improvement, quantity:Number(quantity)};
-        const response = await fetch(`/bb3/redraft/api/${this.teamId}/improvement`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
+        const response = await fetch(`/redraft/api/${this.teamId}/improvement`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
         if (!response.ok) showError(await response.json());
         if (this.improvement === 1) model.apo = this.quantity == 1;
       }
@@ -396,7 +396,7 @@ block scripts
           model.modal.show();
         } else {
           this.loading = true;
-          const response = await fetch(`/bb3/redraft/api/${this.teamId}/${this.id}`,{method: !this.selected ? "PUT" : "DELETE"});
+          const response = await fetch(`/redraft/api/${this.teamId}/${this.id}`,{method: !this.selected ? "PUT" : "DELETE"});
           if (response.ok) this.selected = !this.selected;
           else showError(await response.json());
           this.loading = false;
@@ -450,7 +450,7 @@ block scripts
         
 
         const body = {id:this.id, quantity:Number(quantity)};
-        const response = await fetch(`/bb3/redraft/api/${this.teamId}/position`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
+        const response = await fetch(`/redraft/api/${this.teamId}/position`,{method:"PUT", headers:{'Content-Type': 'application/json',},body:JSON.stringify(body)});
         if (!response.ok) showError(await response.json());
       }
     }
@@ -508,7 +508,7 @@ block scripts
       async proceed(){
         if (this.mock || this.confirmed || this.validated) return;
         this.inProgress = true;
-        const response = await fetch(`/bb3/redraft/api/${this.id}/${this.selectedPlayer.id}`,{method: "PUT"});
+        const response = await fetch(`/redraft/api/${this.id}/${this.selectedPlayer.id}`,{method: "PUT"});
 
         if (response.ok){
           const index = this.roster.findIndex(x => x.id === this.selectedPlayer.id);
@@ -528,7 +528,7 @@ block scripts
       }
 
       async showValidation(){
-        const response = await fetch(`/bb3/redraft/api/${this.id}/validate`);
+        const response = await fetch(`/redraft/api/${this.id}/validate`);
 
         if (response.ok){ 
           showSuccess("You redraft is successfully validated!");
@@ -545,7 +545,7 @@ block scripts
       async confirm(){
         if (this.mock || this.confirmed || this.validated) return;
         this.inProgress = true;
-        const response = await fetch(`/bb3/redraft/api/${this.id}/confirm`,{method: "POST"});
+        const response = await fetch(`/redraft/api/${this.id}/confirm`,{method: "POST"});
 
         if (!response.ok) showError(await response.json());
 
@@ -556,7 +556,7 @@ block scripts
 
       async reload(){
         this.roster.forEach(x => x.loading =true);
-        const response = await fetch(`/bb3/redraft/api/${this.id}`);
+        const response = await fetch(`/redraft/api/${this.id}`);
         this.map(await response.json());
         this.roster.forEach(x => x.loading =false);
       }
@@ -585,7 +585,7 @@ block scripts
     $(document).ready(async function(){
       let path = window.location.pathname.split("/");
 
-      const response = await fetch(`/bb3/redraft/api/${path[path.length-1]}`);
+      const response = await fetch(`/redraft/api/${path[path.length-1]}`);
       if (!response.ok) {
         showError(await response.json());
         return;

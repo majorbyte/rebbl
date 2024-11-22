@@ -58,7 +58,7 @@ block content
           img(src="https://cdn.rebbl.net/images/bb3/apo.png")
       //if (user && user.bb3id === team.coach.id)
         .col
-          a.float-end.btn.btn-sm.btn-success(href=`/bb3/redraft/${team.id}/preview`) Redraft
+          a.float-end.btn.btn-sm.btn-success(href=`/redraft/${team.id}/preview`) Redraft
 
     br
     nav(class="col-12")
@@ -261,7 +261,7 @@ block scripts
       btnProceed.disabled =  true;
       spinner.classList.remove("d-none");
 
-      const response = await fetch(`/bb3/team/#{team.id}/retire/${playerId}`, {method:"POST"});
+      const response = await fetch(`/team/#{team.id}/retire/${playerId}`, {method:"POST"});
 
       if (response.ok){
         const e = document.getElementById("successToast");

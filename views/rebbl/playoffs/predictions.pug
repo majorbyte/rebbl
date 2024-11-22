@@ -160,7 +160,7 @@ block content
           // /ko
           //ko if: match.opponents[0].team.id > 0
           div(class="teamname" data-bind="{attr: {title:match.opponents[0].team.name}}")
-              a(data-bind="{attr:{href: `/rebbl/team/${match.opponents[0].team.id}`},text: match.opponents[0].coach.name }" target="_blank")
+              a(data-bind="{attr:{href: `/bb2/rebbl/team/${match.opponents[0].team.id}`},text: match.opponents[0].coach.name }" target="_blank")
           // /ko
           //ko if: match.opponents[0].team.id === 0
           div(class="teamname" data-bind="{attr: {title:match.opponents[0].team.name}, text: match.opponents[0].coach.name}")
@@ -171,7 +171,7 @@ block content
           // /ko
           //ko if: match.opponents[1].team.id > 0
           div(class="teamname" data-bind="{attr: {title:match.opponents[1].team.name}}")
-              a(data-bind="{attr:{href: `/rebbl/team/${match.opponents[1].team.id}`},text: match.opponents[1].coach.name }" target="_blank")
+              a(data-bind="{attr:{href: `/bb2/rebbl/team/${match.opponents[1].team.id}`},text: match.opponents[1].coach.name }" target="_blank")
           // /ko
           //ko if: match.opponents[1].team.id === 0
           div(class="teamname" data-bind="{attr: {title:match.opponents[1].team.name}, text: match.opponents[1].coach.name}")

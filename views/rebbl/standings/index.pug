@@ -92,10 +92,10 @@ block content
               // /ko
             div(class="col" style=";overflow:hidden") 
               // ko if: highlighted
-              a.highlighted(data-bind="text: teamName(),attr:{href:`/team/${teamId}`}")
+              a.highlighted(data-bind="text: teamName(),attr:{href:`/bb2/team/${teamId}`}")
               // /ko
               // ko if: !highlighted
-              a(data-bind="text: teamName(),attr:{href:`/team/${teamId}`}")
+              a(data-bind="text: teamName(),attr:{href:`/bb2/team/${teamId}`}")
               // /ko
         div(class="col-2 d-none d-md-block" style=";overflow:hidden" data-bind="text:race.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })")
         div(class="col-4" )
@@ -108,7 +108,7 @@ block content
               div.col-3.col-md-3(data-bind="text:games")
               div.schedule-row.d-none.d-md-block
                 //ko foreach: {data:$root.getSchedule($data.competition, $data.teamId), as: 'schedule'}
-                a(data-bind="attr:{href:`/rebbl/match/${schedule.match_uuid}`}" target="_blank")
+                a(data-bind="attr:{href:`/bb2/rebbl/match/${schedule.match_uuid}`}" target="_blank")
                   div.square(data-bind="css:schedule.scheduleColor($parent.teamId), event: { mouseover: function(data,event) { toggle($root, $parent.teamId,true)} , mouseout: function(data,event) { toggle($root, $parent.teamId, false) } }")
                 // /ko
             div(class="col-4 col-md-2 text-end" data-bind="text:tddiff")

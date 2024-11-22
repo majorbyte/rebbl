@@ -52,7 +52,7 @@ class TeamApi{
     });
 
     this.router.get('/:teamId/cyanide', util.ensureAuthenticated, util.hasRole("admin"),apiRateLimiter, async function(req, res){
-      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.teamId);
       try {
         let team = await cyanideService.team({team:id});
         res.json(team);
@@ -65,7 +65,7 @@ class TeamApi{
     });
     
     this.router.get('/:teamId/players', util.cache(600), async function(req, res){
-      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.teamId);
       try {
         let players = await dataService.getPlayers({"teamId":id,"active":true});
         if (players.length === 0){
@@ -83,7 +83,7 @@ class TeamApi{
     });
     
     this.router.get('/:teamId/retiredplayers', util.cache(600), async function(req, res){
-      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.teamId);
       try {
         let players = await dataService.getPlayers({"teamId":id,"active":false, "id":{$ne:null}});
         res.json(players);
@@ -95,7 +95,7 @@ class TeamApi{
     });
     
     this.router.get('/:teamId/hiredplayers', util.cache(600), async function(req, res){
-      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.teamId);
       try {
         let players = await dataService.getPlayers({"teamId":id,"active":false, "id":null});
         res.json(players);
@@ -107,7 +107,7 @@ class TeamApi{
     });
 
     this.router.get('/:teamId/matches', util.cache(600), async function(req, res){
-      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.id);
+      const id = isNaN(req.params.teamId) ? req.params.teamId : Number(req.params.teamId);
       try {
         let players = await dataService.getMatches({"match.teams.idteamlisting":id});
         res.json(players);

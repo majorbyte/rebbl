@@ -1,5 +1,5 @@
 
-- let url = match.match_uuid ? `/${company}/match/${ match.match_uuid }` : `/${company}/match/unplayed/${match.contest_id}`
+- let url = match.match_uuid ? `/bb2/${company}/match/${ match.match_uuid }` : `/bb2/${company}/match/unplayed/${match.contest_id}`
 - let hasDate = dates.find(x => x.id === match.contest_id)
 - if (match.opponents)
   a(href=url class="MatchRow-contentWrapper MatchRow-contentWrapper--hover")

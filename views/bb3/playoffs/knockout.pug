@@ -268,7 +268,7 @@ block content
               div(class="col-12 row")
                 // ko if: model.selected.status > 1
                 div(class="col-6 offset-3 text-center")
-                  a(data-bind="attr:{href: '/bb3/match/' + model.selected.gameId }" target="_blank")
+                  a(data-bind="attr:{href: '/match/' + model.selected.gameId }" target="_blank")
                     span(class="winner") match summary
                 // /ko
                 // ko if: model.selected.status == 1
@@ -278,13 +278,13 @@ block content
                 // /ko
               div(class="col-12 row")
                 div(class="col-6")
-                  a(class="pull-left" data-bind="{text: model.selected.home?.team.name, attr: {href: '/bb3/team/'+model.selected.home?.team.id}}" target="_blank")
+                  a(class="pull-left" data-bind="{text: model.selected.home?.team.name, attr: {href: '/team/'+model.selected.home?.team.id}}" target="_blank")
                   br(style="clear:both")
-                  a(class="pull-left" data-bind="{text: model.selected.home?.coach.name, attr: {href: '/bb3/coach/'+model.selected.home?.coach.id}}" target="_blank")
+                  a(class="pull-left" data-bind="{text: model.selected.home?.coach.name, attr: {href: '/coach/'+model.selected.home?.coach.id}}" target="_blank")
                 div(class="col-6")
-                  a(class="pull-right" data-bind="{text: model.selected.away?.team.name, attr: {href: '/bb3/team/'+model.selected.away?.team.id}}" target="_blank")
+                  a(class="pull-right" data-bind="{text: model.selected.away?.team.name, attr: {href: '/team/'+model.selected.away?.team.id}}" target="_blank")
                   br(style="clear:both")
-                  a(class="pull-right" data-bind="{text: model.selected.away?.coach.name, attr: {href: '/bb3/coach/'+model.selected.away?.coach.id}}" target="_blank")
+                  a(class="pull-right" data-bind="{text: model.selected.away?.coach.name, attr: {href: '/coach/'+model.selected.away?.coach.id}}" target="_blank")
             // /ko
 
 
