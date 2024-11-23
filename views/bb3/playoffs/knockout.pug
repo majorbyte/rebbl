@@ -39,7 +39,7 @@ block append scripts
         this.selected = d;
       }.bind(this);
       this.getUrl = function(team,n){
-        return `https://cdn.rebbl.net/images/bb3/Logos/${team.logo}`;
+        return `https://cdn.rebbl.net/images/bb3/Logos/100x100/${team.logo}`;
       }
       this.spoil = function(){
         this.spoiled = !this.spoiled;
@@ -148,7 +148,7 @@ block content
               // ko if:  $data.home?.team.name.toLowerCase().indexOf("admin") === -1 && $data.away?.team.name.toLowerCase().indexOf("admin") === -1  
               li(class=`team team-top` )
                 //ko if: $data.home?.team.logo.length > 0
-                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/{$data.home?.team.logo}`}}")
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/100x100/{$data.home?.team.logo}`}}")
                 // /ko
                 div(class="teamname" data-bind="{attr: {title:home.team.name}, text: $data.home?.coach.name}")
                 div(class="score") 
@@ -160,7 +160,7 @@ block content
                   // /ko
               li(class=`team team-bottom`)
                 // ko if: $data.away?.team.logo.length > 0
-                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${$data.away?.team.logo}`}}")
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/100x100/${$data.away?.team.logo}`}}")
                 // /ko
                 div(class="teamname" data-bind="{attr: {title:$data.away?.team.name}, text: $data.away?.coach.name}")
                 div(class="score")
@@ -212,7 +212,7 @@ block content
               // ko if:  $data.home?.team.name.toLowerCase().indexOf("admin") === -1 && $data.away?.team.name.toLowerCase().indexOf("admin") === -1  
               li(class=`team team-top` )
                 //ko if: $data.home?.team.logo.length > 0
-                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${$data.home?.team.logo}`}}")
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/100x100/${$data.home?.team.logo}`}}")
                 // /ko
                 div(class="teamname" data-bind="{attr: {title:home.team.name}, text: $data.home?.coach.name}")
                 div(class="score") 
@@ -224,7 +224,7 @@ block content
                   // /ko
               li(class=`team team-bottom ` )
                 // ko if: $data.away?.team.logo.length > 0
-                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${$data.away?.team.logo}`}}")
+                img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/100x100/${$data.away?.team.logo}`}}")
                 // /ko
                 div(class="teamname" data-bind="{attr: {title:$data.away?.team.name}, text: $data.away?.coach.name}")
                 div(class="score")
@@ -294,7 +294,7 @@ block content
         // ko if:  match.home?.team.name.toLowerCase().indexOf("admin") === -1 && match.away?.team.name.toLowerCase().indexOf("admin") === -1  
         li(class=`team team-top` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id == match.away?.coach.id ? 'looser' :''  }")
           //ko if: match.home?.team.logo.length > 0
-          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${match.home?.team.logo}`}}")
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.home?.team.logo}`}}")
           // /ko
           div(class="teamname" data-bind="{attr: {title:match.home?.team.name}, text: match.home?.coach.name}")
           div(class="score") 
@@ -306,7 +306,7 @@ block content
             // /ko
         li(class=`team team-bottom ` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id == match.home?.coach.id ? 'looser' :'' }")
           // ko if: match.away?.team.logo.length > 0
-          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${match.away?.team.logo}`}}")
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.away?.team.logo}`}}")
           // /ko
           div(class="teamname" data-bind="{attr: {title:match.away?.team.name}, text: match.away?.coach.name}")
           div(class="score")
@@ -333,7 +333,7 @@ block content
             // /ko
           div(class="teamname" data-bind="{attr: {title:match.home?.team.name}, text: match.home?.coach.name}")
           //ko if: match.home?.team.logo.length > 0
-          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${match.home?.team.logo}`}}")
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.home?.team.logo}`}}")
           // /ko
         li(class=`team team-bottom` data-bind="{css: match.winner && match.winner.coach && match.winner.coach.id === match.home?.coach.id ? 'looser' :''  }")
           div(class="score")
@@ -345,7 +345,7 @@ block content
             // /ko
           div(class="teamname" data-bind="{attr: {title:match.away?.team.name}, text: match.away?.coach.name}")
           // ko if: match.away?.team.logo.length > 0
-          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/${match.away?.team.logo}`}}")
+          img(class="" style="height:24px"  data-bind="{attr: {src:`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.away?.team.logo}`}}")
           // /ko
         // /ko
       div(class="info" data-bs-toggle="modal" data-bs-target=`#trophy` data-bind="click: model.select")  

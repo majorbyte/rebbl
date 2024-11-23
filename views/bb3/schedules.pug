@@ -31,7 +31,7 @@ block content
           a.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(href=url)
             div.MatchRow-team
               div.TeamLabel.TeamLabel--reverse
-                div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${schedule.home.team.logo}` alt="" class="TeamLabel-logo")
+                div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${schedule.home.team.logo}` alt="" class="TeamLabel-logo")
                 div(class="TeamLabel-info TeamLabel-info--noScore")
                   div(class="TeamLabel-name ")= schedule.home.team.name
                   div(class="TeamLabel-coach ")= schedule.home.coach.name
@@ -52,7 +52,7 @@ block content
                     span(class="MatchStatus-score")= schedule.status > 1 ? schedule.away.score : ''
             div(class="MatchRow-team")
               div(class="TeamLabel")
-                div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/${schedule.away.team.logo}` alt="" class="TeamLabel-logo")
+                div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${schedule.away.team.logo}` alt="" class="TeamLabel-logo")
                 div(class="TeamLabel-info TeamLabel-info--noScore")
                   div(class="TeamLabel-name ")= schedule.away.team.name
                   div(class="TeamLabel-coach ")= schedule.away.coach.name

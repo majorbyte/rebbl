@@ -155,18 +155,18 @@ class ClanApi{
       let cas_sustained_total = player.casualties_sustained_total || [];
 
       cas_sustained.splice(cas_sustained.length-1,1);
-      cas_sustained.push("PinchedNerve");
+      cas_sustained.push("seriously_hurt");
 
       cas_state.splice(cas_state.length-1,1);
-      cas_state.push("PinchedNerve");
+      cas_state.push("seriously_hurt");
 
       cas_sustained_total.splice(cas_sustained_total.length-1,1);
-      cas_sustained_total.push("PinchedNerve");
+      cas_sustained_total.push("seriously_hurt");
 
       dataService.updatePlayer({id:playerId},{$set:{"casualties_sustained":cas_sustained,"eic":true,active:true,casualties_state: cas_state, casualties_sustained_total:cas_sustained_total}});
 
       dataService.updateMatch({uuid:req.params.matchId},{$set:{"match.teams.$[].roster.$[player].eic":true}},{arrayFilters:[{"player.id":playerId}]});
-      dataService.updateSchedule({league:"clan","matches.match_uuid":req.params.matchId},{$set:{"matches.$.eic":true}});
+      dataService.updateSchedule({league:"clan","matches.game_id":req.params.matchId},{$set:{"matches.$.eic":true}});
 
       res.status(200).send();
     });
