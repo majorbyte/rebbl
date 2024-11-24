@@ -37,8 +37,9 @@ tr(class="stats "+cls )
     -if(player.eic)
       span.badge.badge-success EIC!
     each cas in player.casualties_state
+      - let casIcon = bb3 ? `skills/bb3/Icon_Casualty/ico_action_${cas}.png` : `skills/${cas}.png`;
       -if (cas !== "BadlyHurt")
-        img(src=`${imagePath}skills/${cas}.png` alt="" title=""+cas.replace(/([A-Z])/g, ' $1').trim() )
+        img(src=`${imagePath}/${casIcon}` alt="" title=""+cas.replace(/([A-Z])/g, ' $1').trim() )
     - if((player.casualties_sustained && player.casualties_sustained[0] === "Dead") &&( player.casualties_state && player.casualties_state.indexOf("Dead") === -1) )    
       img(src=`${imagePath}skills/Dead.png` alt="" title="Dead" )
     - if(player.diceRoll)

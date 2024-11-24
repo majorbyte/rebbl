@@ -64,13 +64,13 @@ class ClanApi{
     });
 
     this.router.put("/assassinate/:teamId/:playerId",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),function(req,res){
-      clanService.assassinate(Number(req.params.teamId),Number(req.params.playerId));
+      clanService.assassinate(req.params.teamId,req.params.playerId);
 
       res.status(200).send();
     });
 
     this.router.put("/abandon/:contestId",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),function(req,res){
-      clanService.abandon(Number(req.params.contestId));
+      clanService.abandon(req.params.contestId);
       res.status(200).send();
     });
 
@@ -147,7 +147,7 @@ class ClanApi{
     });
 
     this.router.put("/eic/:matchId/:playerId",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
-      const playerId = Number(req.params.playerId);
+      const playerId = req.params.playerId;
       let player = await dataService.getPlayer({id:playerId});
 
       let cas_sustained = player.casualties_sustained;
@@ -521,7 +521,7 @@ class ClanApi{
       if(!schedule){
         res.status(500).json("schedule not found");
       } else{
-        let id = Number(req.params.id);
+        let id = req.params.id;
         let score = Number(req.params.score);
         if(Number(req.params.index) === 0)
           await dataService.updateScheduleAsync({_id:schedule._id, "matches.contest_id":id},{$set:{"matches.$.opponents.0.team.score" :score}});
@@ -543,7 +543,7 @@ class ClanApi{
       if(!schedule){
         res.status(500).json("schedule not found");
       } else{
-        let id = Number(req.params.id);
+        let id = req.params.id;
         await dataService.updateScheduleAsync({_id:schedule._id, "matches.contest_id":id},{$set:{"matches.$.counted" :false}});
         res.status(202).send();
       }
@@ -561,13 +561,13 @@ class ClanApi{
     });
 
     this.router.post("/:clan/applynewblood/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
-      await clanService.newBloodAdmin(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
+      await clanService.newBloodAdmin(req.params.clan,req.params.teamId,req.params.newTeamName);
 
       res.status(200).send();
     });
 
     this.router.post("/:clan/substitutecoach/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
-      await clanService.newCoach(req.params.clan,Number(req.params.teamId),req.params.newTeamName);
+      await clanService.newCoach(req.params.clan,req.params.teamId,req.params.newTeamName);
 
       res.status(200).send();
     });

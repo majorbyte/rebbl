@@ -817,6 +817,8 @@ block scripts
       }
 
       getCASImage(e){
+        if (model.bb3) return `https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_${e}.png`;
+
         let bust = "";  
         switch(e){
           case "DamagedBack":

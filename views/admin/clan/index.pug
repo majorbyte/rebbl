@@ -126,7 +126,7 @@ block content
                   a.m-1.btn.btn-outline-info.btn-sm(v-bind:href="`/team/${team.team.id}`" target="_blank")
                     img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                     span.text-info  {{team.team.name}}
-                    img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                    img(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                     br
                     span.badge.text-bg-success /u/{{reddit(schedule.home.clan,team.coach.name)}}
                     span.badge.text-bg-warning {{team.coach.name}}
@@ -158,7 +158,7 @@ block content
                   a.m-1.btn.btn-outline-info.btn-sm(v-bind:href="`/team/${team.team.id}`" target="_blank")
                     img(v-bind:src="`https://cdn.rebbl.net/images/races/${team.team.idraces}.png`" style="height:40px")
                     span.text-info  {{team.team.name}}
-                    img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
+                    img(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/256x256/logo_${team.team.logo.toLowerCase()}.png`" style="height:40px")
                     br
                     span.badge.text-bg-success /u/{{reddit(schedule.away.clan,team.coach.name)}}
                     span.badge.text-bg-warning {{team.coach.name}}
@@ -229,7 +229,7 @@ block content
                   template(v-if="match.opponents")
                     .MatchRow-team
                       .TeamLabel.TeamLabel--reverse
-                        div: img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                        div: img(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/256x256/logo_${match.opponents[0].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                         .TeamLabel-info.TeamLabel-info--noScore
                           .text-info {{ match.opponents[0].team.name }}
                     .MatchRow-status.row
@@ -252,7 +252,7 @@ block content
                           span.badge.text-bg-success= "EIC!"
                     .MatchRow-team
                       .TeamLabel
-                        div: img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                        div: img(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/256x256/logo_${match.opponents[1].team.logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                         .TeamLabel-info.TeamLabel-info--noScore
                           .text-info {{  match.opponents[1].team.name  }}
                   template(v-if="match.coaches")
@@ -312,7 +312,7 @@ block content
                 .col-12.MatchRow-contentWrapper.MatchRow-contentWrapper--hover
                   .MatchRow-team
                     .TeamLabel.TeamLabel--reverse
-                      div: img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.coaches[0].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      div: img(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/256x256/logo_${match.coaches[0].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{ match.coaches[0].teamName }}
                         .TeamLabel-coach
@@ -328,7 +328,7 @@ block content
                           span.MatchStatus-score &nbsp;
                   .MatchRow-team
                     .TeamLabel(v-if="match.coaches.length > 1")
-                      div: img(v-bind:src="`https://cdn.rebbl.net/images/logo/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
+                      div: img(v-bind:src="`https://cdn.rebbl.net/images/bb3/Logos/256x256/logo_${match.coaches[1].logo.toLowerCase()}.png`" alt="" class="TeamLabel-logo")
                       .TeamLabel-info.TeamLabel-info--noScore
                         .text-info {{  match.coaches[1].teamName  }}
                         .TeamLabel-coach
@@ -693,7 +693,7 @@ block scripts
           let result = await fetch(`/api/v2/team/${this.selectedTeam.id}/players`)
           if(result.ok){
             let players = await result.json();
-            this.eicPlayers = players.filter(p => p.casualties_sustained.filter(x => x !== "BadlyHurt").length > 0 );
+            this.eicPlayers = players.filter(p => p.casualties.NewCasualty.filter(x => x !== "badly_hurt").length > 0 );
           }
         },
         async loadPlayersForAssassination(){

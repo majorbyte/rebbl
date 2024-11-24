@@ -47,7 +47,7 @@ router.get('/:match_id', util.cache(600), async function(req, res, next){
     data = await leagueService.getMatchDetails(req.params.match_id);
     if (!data) return res.render('rebbl/match/notfound', data);
 
-    data.lonersValue = [await bloodBowlService.getLonerCost(data.match.teams[0].idraces), await bloodBowlService.getLonerCost(data.match.teams[1].idraces)];
+    //data.lonersValue = [await bloodBowlService.getLonerCost(data.match.teams[0].idraces), await bloodBowlService.getLonerCost(data.match.teams[1].idraces)];
   }
   catch(e){
     return res.render('rebbl/match/notfound', data);
