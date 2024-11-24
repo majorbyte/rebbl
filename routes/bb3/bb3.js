@@ -3,6 +3,7 @@
 const bb3Service = require("../../lib/bb3Service.js");
 
 const express = require("express")
+, accountService = require("../../lib/accountService.js")
 , dataService = require("../../lib/DataServiceBB3.js").rebbl3
 , datingService = require("../../lib/DatingService.js")
 , redraft = require("./redraft.js")
@@ -11,6 +12,8 @@ const express = require("express")
 class BB3{
 	constructor(){
 		this.router = express.Router();
+
+    this.router.use(async (req, res, next) => { res.locals.user = req.isAuthenticated() ? await accountService.getAccount(req.user.name) : null; return next();});
 	}
 
   match = async (req,res) => {
@@ -147,28 +150,37 @@ class BB3{
     
   }
 
+  landingPage = async(req,res) => {
+    const season = req.params.season || "season 2";
+    const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
+
+    let competition;
+    if (res.locals.user) competition = competitions.find(x => x.standings.some(coach => coach.id === res.locals.user.bb3id ));
+    if (!competition) competition = competitions[Math.floor(Math.random()*competitions.length)];
+    res.render("bb3/landingpage", {competition})
+  }
 
   routesConfig(){
-    this.router.get("/", util.cache(1), util.checkAuthenticated, this.competitions);
+    this.router.get("/",  this.landingPage);
     this.router.use("/redraft", new redraft().routesConfig());
-    this.router.get("/competition/:competitionId", util.cache(1), util.checkAuthenticated, this.competition);
-    this.router.get("/competition/:competitionId/schedules", util.cache(10*60), util.checkAuthenticated, this.schedules);
-    this.router.get("/competition/:competitionId/schedules/:round", util.cache(10*60), util.checkAuthenticated, this.round);
-    this.router.get("/team/:id", util.cache(/*10*60*/1), util.checkAuthenticated, this.team);
-    this.router.get("/match/:id", util.cache(1), util.checkAuthenticated, this.match);
-    this.router.get("/unplayed/:id", util.cache(10*60), util.checkAuthenticated, this.unplayed);
+    this.router.get("/competition/:competitionId",  this.competition);
+    this.router.get("/competition/:competitionId/schedules",  this.schedules);
+    this.router.get("/competition/:competitionId/schedules/:round",  this.round);
+    this.router.get("/team/:id",  this.team);
+    this.router.get("/match/:id",  this.match);
+    this.router.get("/unplayed/:id",  this.unplayed);
 
-    this.router.post("/match/:id/validate", util.cache(1), util.ensureAuthenticated, async (req,res) => this.validate(req,res,true));
-    this.router.post("/match/:id/invalidate", util.cache(1), util.ensureAuthenticated, async (req,res) => this.validate(req,res,false));
-    this.router.post("/schedule/:id/validate", util.cache(1), util.ensureAuthenticated, async (req,res) => this.validateSchedule(req,res,true));
-    this.router.post("/schedule/:id/invalidate", util.cache(1), util.ensureAuthenticated, async (req,res) => this.validateSchedule(req,res,false));
+    this.router.post("/match/:id/validate", util.ensureAuthenticated, async (req,res) => this.validate(req,res,true));
+    this.router.post("/match/:id/invalidate", util.ensureAuthenticated, async (req,res) => this.validate(req,res,false));
+    this.router.post("/schedule/:id/validate", util.ensureAuthenticated, async (req,res) => this.validateSchedule(req,res,true));
+    this.router.post("/schedule/:id/invalidate", util.ensureAuthenticated, async (req,res) => this.validateSchedule(req,res,false));
 
-    this.router.put('/unplayed/:matchId/stream', util.checkAuthenticated, util.hasRole('streamer'), this.stream);
-    this.router.put('/unplayed/:matchId/schedule', util.checkAuthenticated, util.ensureAuthenticated, this.scheduleMatch);
+    this.router.put('/unplayed/:matchId/stream',  util.hasRole('streamer'), this.stream);
+    this.router.put('/unplayed/:matchId/schedule',  util.ensureAuthenticated, this.scheduleMatch);
 
     this.router.post('/team/:id/retire/:playerId', util.ensureAuthenticated, this.retirePlayer)
 
-    this.router.get('/:season', util.cache(1), util.checkAuthenticated, this.competitions)
+    this.router.get('/:season',  this.competitions)
 
     return this.router;
   }

@@ -1,0 +1,87 @@
+doctype html 
+- let theme = (user && user.useDark || user && user.account && user.account.useDark) ? "dark" : "light"
+html(data-bs-theme=theme)
+  head
+    script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")      
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/shop/style.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
+    style.
+      body{color:#979797 !important;}
+      /* latin-ext */
+      @font-face {
+        font-family: 'Bungee Inline';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url(/webfonts/bungee-inline.woff2) format('woff2');
+      }
+
+      h1,h2 {
+        font-family: "Bungee Inline", sans-serif;
+        font-style: normal;
+        color:#dfdfdf;
+        font-weight:bold;
+      }
+      h1 > a {
+        font-family: "Bungee Inline", sans-serif;
+        font-style: normal;
+        font-weight:bold;
+        text-decoration: none;
+      }
+
+
+    block head
+
+    block vars
+      - let page = "/"
+  body
+    nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark.p-0
+      .container-fluid
+        a.navbar-brand(href=user ? '/account' : '/login') 
+          .d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 38px;')
+            img.w-100.h-100(src=`https://cdn.rebbl.net/images/bb3/coach/avatar/txt_gamer_avatar_beastman.png `)
+
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarCollapse.collapse.navbar-collapse
+          ul.navbar-nav.me-auto.mb-2.mb-md-0
+            li.nav-item
+              a.nav-link(aria-current='page' href='/standings' class=page == "standings" ? "active" : "" ) home
+            li.nav-item
+              a.nav-link(href='/fixtures'  class=page == "fixtures" ? "active" : "" ) divisions
+          ul.navbar-nav
+            li.nav-item.align-center.d-flex
+              div
+                i.fa.fa-sun
+              .form-check.form-switch
+                  input.form-check-input(type="checkbox" role="switch" id="switchTheme" style="margin-left: -2em;margin-right: 0.5em;" change="event => toggleTheme(event)" checked=theme=="dark" )
+              div
+                i.fa.fa-moon
+  
+          block nav  
+    div(style="padding-top:48px")
+      block content
+
+    block scripts
+      - if (user)
+        script.
+          async function toggleTheme(){
+            const theme = document.documentElement.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-bs-theme", theme);
+            await fetch(`/api/v2/account/theme/${theme}`,{method:"PUT"});
+          }
+      - if (!user)
+        script.
+          function toggleTheme(){
+            const theme = document.documentElement.getAttribute("data-bs-theme");
+            document.documentElement.setAttribute("data-bs-theme", theme === "dark" ? "light" : "dark")
+          }
+
+      script.
+        const elm = document.getElementById("switchTheme");
+
+        elm.addEventListener('change', toggleTheme);

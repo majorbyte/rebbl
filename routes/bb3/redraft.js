@@ -93,8 +93,8 @@ class Redraft{
 
 
   routesConfig(){
-    this.router.get("/:teamId/preview", util.cache(1), util.checkAuthenticated, this.#redraftPreview);
-    this.router.get("/:teamId", util.cache(1), util.checkAuthenticated, this.#teamView);
+    this.router.get("/:teamId/preview",  util.checkAuthenticated, this.#redraftPreview);
+    this.router.get("/:teamId",  util.checkAuthenticated, this.#teamView);
     this.router.post("/:teamId", util.ensureAuthenticated, this.#startRedraft);
     
     this.router.post("/api/:teamId", util.ensureAuthenticated, this.#startRedraft);
@@ -107,7 +107,7 @@ class Redraft{
 
     this.router.delete("/api/:teamId/:playerId", util.ensureAuthenticated, this.#undraftPlayer);
 
-    this.router.get("/api/:teamId", util.cache(1),  this.#teamData);
+    this.router.get("/api/:teamId",   this.#teamData);
 
 
     return this.router;

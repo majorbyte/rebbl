@@ -117,6 +117,17 @@ class AccountApi{
       }
     });
 
+    this.router.put("/theme/:theme",util.ensureAuthenticated, async function(req,res){
+      try {
+        await accountService.setTheme(req.user.name, req.params.theme);
+        res.status(200).send();
+      }
+      catch (ex){
+        console.error(ex);
+        res.status(500).send('Something something error');
+      }
+    });
+
     this.router.get("/me",util.ensureAuthenticatedNoRedirect, async function(req,res){
       const account = await accountService.getAccount(req.user.name);
 
