@@ -13,14 +13,15 @@ mixin stats(title, stats, prop)
       tbody
         each stat of stats
           tr 
-            - let team = logos.find(x => x.name.toLowerCase() == stat.TeamName.toLowerCase())
+            - let team = logos.find(x => x.name.toLowerCase() == (stat.TeamName || "").toLowerCase())
             if x == 0	
               td.text-center.align-middle.fs-3= ++x 
             else
               td.text-center.align-middle.fs-4= ++x
             td
-              a(href=`/team/${team.id}#${stat.LobbyId}` target="_blank")
-                img.img-fluid(src=`/images/zfl/${team.logo}` style="padding:0px")
+              if team
+                a(href=`/team/${team.id}#${stat.LobbyId}` target="_blank")
+                  img.img-fluid(src=`/images/zfl/${team.logo}` style="padding:0px")
             td.text-center.align-middle.fs-3= stat[prop]
 block vars 
   - let page ="teamstats"

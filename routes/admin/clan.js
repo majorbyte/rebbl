@@ -1,6 +1,7 @@
 "use strict";
 
 const express = require("express")
+  , clanService = require("../../lib/ClanService.js")
   , dataService = require("../../lib/DataService.js").rebbl
   , util = require("../../lib/util.js")
   , router = express.Router();
@@ -11,6 +12,16 @@ router.get("/", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), asy
     res.render("admin/clan/index");
   } catch(err){
     console.log(err);
+  }
+});
+
+router.put("/clean", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req, res){
+  try{
+    await clanService.getContestData(true);
+    return res.json();
+  }catch(e){
+    console.error(e);
+    return res.status(500).json(e);
   }
 });
 

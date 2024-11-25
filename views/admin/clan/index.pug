@@ -23,6 +23,7 @@ block content
           input.btn-check(type="radio" autocomplete="off")       
           label.btn.btn-outline-primary(style="margin-right: 15px" @click="loadCoaches()") Coaches
           a.btn.btn-outline-primary(href="/admin/clan/schedule") Schedule
+          label#clean.btn.btn-outline-primary(style="margin-left: 15px" @click="clean()") Clean
       br
       template(v-if="showCoaches")
         .row.col-12
@@ -602,6 +603,13 @@ block scripts
             this.coaches = await response.json();
           }
           this.showCoaches = true;
+        },
+        clean: async function(){
+          const elm = document.getElementById("clean");
+          elm.innerHTML = "Running Clean";
+          let response = await fetch(`/admin/clan/clean`,{method:"PUT"});
+          if (response.ok) elm.innerHTML = "Clean Success";
+          else elm.innerHTML = "Clean Failed";
         },
         reddit: function(clan, coach){
           let account = clan.members.find(function(x){return x.coach.toLowerCase() === coach.toLowerCase()});
