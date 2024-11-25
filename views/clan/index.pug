@@ -11,12 +11,12 @@ block content
   div(class="container g-0" id="app")
     div(class="row col-12")
       template(v-for="division in divisions")
-        a(v-bind:href="`/clan/schedule/season 19/${division}`" target="_blank" )
+        a(v-bind:href="`/schedule/season 19/${division}`" target="_blank" )
           h3 {{division}}
           div(class="row col-12")
             template(v-for="clan of filter(division)")
               div(class="p-1")
-                a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/clan/' + clan.name" target="_blank" )
+                a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/' + clan.name" target="_blank" )
                   | {{ clan.name }} &nbsp;
                   img(v-bind:src="'https://cdn.rebbl.net/' + clan.logo" style="height:48px")
 

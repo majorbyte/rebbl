@@ -44,9 +44,9 @@ block content
         template(v-for="coach in filteredCoaches")   
           .row.col-12
             .col-2
-              a(target="_blank" v-bind:href="`/clan/clan/${coach.clan}`") {{coach.clan}}
+              a(target="_blank" v-bind:href="`/clan/${coach.clan}`") {{coach.clan}}
             .col-2 
-              a(target="_blank" v-bind:href="`/clan/coach/${coach.coachId}`") {{coach.coach}}
+              a(target="_blank" v-bind:href="`/coach/${coach.coachId}`") {{coach.coach}}
             .col-2 {{coach.discord}}
             .col-2
               a(target="_blank" v-bind:href="`https://old.reddit.com/u/${coach.reddit}`") {{coach.reddit}}
@@ -110,7 +110,7 @@ block content
               .col-10.media.text-centerd.d-flex.flex-wrap.align-items-center
                 img.pull-right(v-bind:src="`https://cdn.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
                 h1 
-                  a(v-bind:href="`/clan/clan/${schedule.home.clan.name}`" target="_blank") {{ schedule.home.clan.name }}
+                  a(v-bind:href="`/clan/${schedule.home.clan.name}`" target="_blank") {{ schedule.home.clan.name }}
               .col-2.text-end
                 h1 {{schedule.home.win}}
             template(v-if="schedule.matches.length === 0")
@@ -144,7 +144,7 @@ block content
                 img(v-bind:src="`https://cdn.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
                 .media-body
                   h1 
-                    a(v-bind:href="`/clan/clan/${schedule.away.clan.name}`" target="_blank") {{schedule.away.clan.name}}
+                    a(v-bind:href="`/clan/${schedule.away.clan.name}`" target="_blank") {{schedule.away.clan.name}}
             template(v-if="schedule.matches.length === 0")
               br
               template(v-for="power in Object.keys(schedule.away.clan.powers)")
@@ -226,7 +226,7 @@ block content
                     template(v-if="isPlayed(match) && hasEIC(match,0)")
                       button(type="button" class="btn btn-outline-info btn-sm active float-right" @click="loadEicPlayers(match, 0)"  data-bs-toggle="modal" data-bs-target="#eicUse")
                         | EIC      
-                a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(style="width:unset" v-bind:href="match.game_id ? `/clan/match/${match.game_id}` : '#'" target="_blank")
+                a.col-8.MatchRow-contentWrapper.MatchRow-contentWrapper--hover(style="width:unset" v-bind:href="match.game_id ? `/match/${match.game_id}` : '#'" target="_blank")
                   template(v-if="match.opponents")
                     .MatchRow-team
                       .TeamLabel.TeamLabel--reverse

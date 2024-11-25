@@ -43,7 +43,7 @@ block content
         h3(style="margin-top: 0px;")
           a.highlight(data-bind="attr:{href:`/coach/${idcoach}/details`}, text: coachname")
           // ko if: coachname === coach
-          a.btn.btn-sm.btn-primary(style="margin-left:15px;margin-top:-10px" data-bind="attr:{href:`/bb2/team/${id}/update`}" title="Can only be done once every 10 minutes across all your teams") update team
+          a.btn.btn-sm.btn-primary(style="margin-left:15px;margin-top:-10px" data-bind="attr:{href:`/team/${id}/update`}" title="Can only be done once every 10 minutes across all your teams") update team
           // /ko
       div(class="row col-12")
         h3(style="margin-top: 0px;")
@@ -267,7 +267,7 @@ block content
         br
         div(class="MatchRow MatchRow-match MatchRow-header" data-bind="text: `${competitionname} - ${hasOwnProperty('round') ? round || 0 : 0}`"  style="width:unset")
         div(class="MatchRow MatchRow-match" style="width:unset")
-          a(data-bind="attr:{href: `/bb2/rebbl/match/${$parent.uuid}` }" class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" target="_blank")
+          a(data-bind="attr:{href: `/rebbl/match/${$parent.uuid}` }" class="MatchRow-contentWrapper MatchRow-contentWrapper--hover" target="_blank")
             div(class="MatchRow-team")
               div(class="TeamLabel TeamLabel--reverse")
                 div(class="TeamLabel-block"): img(data-bind="attr:{src:`https://cdn.rebbl.net/images/logo/logo_${teams[0].teamlogo.toLowerCase()}.png`}" alt="" class="TeamLabel-logo")

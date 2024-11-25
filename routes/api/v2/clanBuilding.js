@@ -222,7 +222,7 @@ class ClanBuildingApi{
   ensureAuthenticated = function (req, res, next) {
     try{
       if (res.locals.user) { return next(); }
-      req.session.returnUrl = '/clan/clan';
+      req.session.returnUrl = '/clan';
       if (req.isAuthenticated()){
         res.redirect("/account/create");
       } else {

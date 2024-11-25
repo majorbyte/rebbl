@@ -21,7 +21,7 @@ block content
     .row.col-12
       h2
         i(data-bind="id:$data[0].division"  style="padding-top:180px;margin-top:-180px")
-        a.highlight(data-bind="text:$data[0].division,attr:{href:`/clan/schedule/${$root.season}/${$data[0].division}`}")
+        a.highlight(data-bind="text:$data[0].division,attr:{href:`/schedule/${$root.season}/${$data[0].division}`}")
     .table-responsive
       table.table-striped.table-sm(style="width:100%")
         thead
@@ -55,7 +55,7 @@ block content
               // ko if: $data.hasOwnProperty("logo")
               img(data-bind="attr:{src: `https://cdn.rebbl.net/${logo}`}" style="width:32px;margin-right:15px")
               // /ko
-              a(data-bind="text:clan,attr:{href:`/clan/clan/season/${$root.season}/${clan}`}")
+              a(data-bind="text:clan,attr:{href:`/clan/season/${$root.season}/${clan}`}")
             // ko if: $root.usePoints() && $data.hasOwnProperty("clanPoints")
             td.text-center(data-bind="text:clanPoints")
             td.text-center(data-bind="text:clanWins")

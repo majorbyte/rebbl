@@ -21,7 +21,7 @@ block content
             div(class="col-12 TableHeader col-md-11 col-xl-12 col-lg-12 col-sm-12" style="display:block;border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;text-align:center")
               div(title="" class="Standings-details Standings-header highlight" ) Round {{row}}
             template(v-for="col in numberOfHouses" )
-              a(:set="_schedule = schedule(row,col)" class="row col-12 g-0 col-md-11 col-xl-12 col-lg-12 col-sm-12" v-bind:href="'/clan/'+ _schedule.season + '/' + _schedule.competition + '/' + _schedule.round + '/' + _schedule.house" style="padding-left:15px;padding-right:15px")
+              a(:set="_schedule = schedule(row,col)" class="row col-12 g-0 col-md-11 col-xl-12 col-lg-12 col-sm-12" v-bind:href="'/'+ _schedule.season + '/' + _schedule.competition + '/' + _schedule.round + '/' + _schedule.house" style="padding-left:15px;padding-right:15px")
                 .col.row.g-0
                   .col.text-start
                     img(v-bind:src="'https://cdn.rebbl.net/' + _schedule.home.logo" alt="" class="TeamLabelLogo" )

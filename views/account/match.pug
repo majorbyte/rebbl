@@ -202,7 +202,7 @@ block content
               -if (match.bb3)
                 a(href=`/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
               -else
-                a(href=`/bb2/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
+                a(href=`/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
           div(class="col-2 text-center")
             - if (match.bb3)
               img(src="https://cdn.rebbl.net/images/bb3/Logos/" + match.opponents[0].team.logo alt="" class="TeamLabel-logo")
@@ -218,7 +218,7 @@ block content
               -if (match.bb3)
                 a(href=`/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
               -else
-                a(href=`/bb2/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
+                a(href=`/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
         div(class="row justify-content-center")
           div(class="col-4 text-end")= match.bb3 ? getRace(match.opponents[0].team.race) : match.opponents[0].team.race
           div(class="col-2 text-center") 

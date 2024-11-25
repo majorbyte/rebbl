@@ -2,6 +2,7 @@
 
 const express = require("express")
 , accountService = require('../../lib/accountService.js')
+, api = require("../api/api.js")
 , util = require("../../lib/util.js");
 
 class Clan{
@@ -37,16 +38,19 @@ class Clan{
   _template = (req,res) => res.render(`clan/templates/${req.params.template}`);
 
   routesConfig(){
+    this.router.use("/api", new api().routesConfig() );
     this.router.get("/build/:template", this._template);
     this.router.get("/divisions",util.cache(2), this._root);
     this.router.get("/clan",util.cache(2), this._clan);
-    this.router.get("/clan/build",util.ensureAuthenticated, util.cache(2), this._build);
-    this.router.get("/clan/build/:clan",util.ensureAuthenticated, util.cache(2), this._build);
-    this.router.get("/clan/:clan",util.ensureAuthenticated, util.cache(2), this._clan);
-    this.router.get("/clan/season/:season/:clan",util.cache(2), this._seasonclan);    
+    this.router.get("/build",util.ensureAuthenticated, util.cache(2), this._build);
+    this.router.get("/build/:clan",util.ensureAuthenticated, util.cache(2), this._build);
+    this.router.get("/:clan",util.ensureAuthenticated, util.cache(2), this._clan);
+    this.router.get("/season/:season/:clan",util.cache(2), this._seasonclan);    
     this.router.get("/schedule/:s/:d",util.cache(2), this._schedule);
     this.router.get("/:season/:division/:round/:house",util.cache(2), this._matchup);
     
+    this.router.use('~/team', require(`../team/team.js`));
+
     this.router.get("/", util.cache(2), this._standings);
 
     return this.router;

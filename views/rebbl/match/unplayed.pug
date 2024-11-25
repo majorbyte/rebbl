@@ -188,14 +188,14 @@ block content
       div(class="row justify-content-center align-items-center h-100")
         div(class="col-5 text-end")
           h3
-            a(href=`/bb2/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
+            a(href=`/team/${match.opponents[0].team.id}`)= match.opponents[0].team.name
         div(class="col-2 text-center")
           img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[0].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
           span -
           img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
         div(class="col-5")
           h3 
-            a(href=`/bb2/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
+            a(href=`/team/${match.opponents[1].team.id}`)= match.opponents[1].team.name
       div(class="row justify-content-center")
         div(class="col-4 text-end")= match.opponents[0].team.race
         div(class="col-2 text-center") 

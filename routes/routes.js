@@ -8,13 +8,11 @@ const
   /* routes  */
   , api = require("./api/api.js")
   , maintenance = require("./maintenance/maintenance.js")
-  , rebbl = require("./rebbl/rebbl.js")
   , account = require("./account/account.js")
   , bloodbowl = require("./bloodbowl/bloodbowl.js")
   , signup = require("./signup/signup.js")
   , auth = require("./account/auth.js")
   , admin = require("./admin/admin.js")
-  , clan = require("./clan/clan.js")
   , bb3 = require("./bb3/bb3.js");
   //zfl = require("./zfl/zfl.js");
 
@@ -74,12 +72,10 @@ class Routes{
     this.router.use("/auth", new auth().routesConfig());
     this.router.use("/admin", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), new admin().routesConfig());
 
-    this.router.use("/clan",new clan().routesConfig());
-
     this.router.use('/coach', new coach().routesConfig());
-    this.router.use('/bb2/team', require(`./team/team.js`));
+    this.router.use('/team', require(`./team/team.js`));
 
-    this.router.use("/bb2/:company", new rebbl().routesConfig());
+    //this.router.use("/:company", new rebbl().routesConfig());
 
 
     //this.router.get("/", util.cache(10*60), this._root);

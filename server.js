@@ -178,6 +178,12 @@ class Server{
     const api = require("./routes/api/v3/api.js");
     this.app.use(this.host(['api.localhost.com','api.rebbl.net'], new api().routesConfig()));
 
+    const clan = require("./routes/clan/clan.js");
+    this.app.use(this.host(["clan.localhost.com","clan.rebbl.net"], new clan().routesConfig()));
+
+    const rebbl = require("./routes/rebbl/rebbl.js");
+    this.app.use(this.host(["bb2.localhost.com","bb2.rebbl.net"], new rebbl().routesConfig()));
+
     const routes = require("./routes/routes.js");
     this.app.use(this.host(['localhost.com','rebbl.net'], new routes().routesConfig()));
 
