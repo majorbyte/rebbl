@@ -47,7 +47,11 @@ class Server{
 
     this.sessionObject = {
       secret: 'keyboard cat'
-      , cookie: {maxAge:180*24*60*60*1000} // Let's start with half a year,
+      //, domain: ".localhost.com"
+      , cookie: {
+        domain: ".localhost.com",
+        maxAge:180*24*60*60*1000
+      } // Let's start with half a year,
       , genid: uuidv4
       , resave: false
       , saveUninitialized: false

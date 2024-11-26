@@ -2,7 +2,7 @@
 
 const express = require("express")
 , accountService = require('../../lib/accountService.js')
-, api = require("../api/api.js")
+, registerDefaultRoutes = require("../default.js")
 , util = require("../../lib/util.js");
 
 class Clan{
@@ -38,7 +38,8 @@ class Clan{
   _template = (req,res) => res.render(`clan/templates/${req.params.template}`);
 
   routesConfig(){
-    this.router.use("/api", new api().routesConfig() );
+    registerDefaultRoutes(this.router);
+
     this.router.get("/build/:template", this._template);
     this.router.get("/divisions",util.cache(2), this._root);
     this.router.get("/clan",util.cache(2), this._clan);
@@ -54,11 +55,7 @@ class Clan{
     this.router.get("/", util.cache(2), this._standings);
 
     return this.router;
-
   }
-
 }
-
-
 
 module.exports = Clan;

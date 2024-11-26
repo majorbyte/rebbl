@@ -1,7 +1,5 @@
 'use strict';
 
-const { retirePlayer } = require("../../lib/bb3Service.js");
-
 const 
   accountService = require("../../lib/accountService.js")
   , dataService = require('../../lib/DataService.js').rebbl

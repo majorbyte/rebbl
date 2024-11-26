@@ -2,6 +2,7 @@
 const 
     dataService = require("../../lib/DataService.js").rebbl
   , datingService = require("../../lib/DatingService.js")
+  , registerDefaultRoutes = require("../default.js")
   , division = require(`./division.js`)
   , express = require('express')
   , league =require(`./league.js`)
@@ -74,7 +75,7 @@ class Rebbl{
           let date = d.find(s => s.id === match.contest_id);
           match.date = date.date;
           if(date.stream)
-          match.stream=date.stream;
+          match.stream=date.stream; 
         }));
     
         data.upcoming = data.upcoming.filter(a => a.league.toLowerCase().indexOf("rebbrl") === -1).sort((a,b) => a.date < b.date ? -1 : 1);
@@ -117,23 +118,24 @@ class Rebbl{
 
 
   routesConfig(){
-   
+    registerDefaultRoutes(this.router);
+
     //handle old routes
-    this.router.get('/team/*', (req,res) => res.redirect(301,`../../${req.url.split("/").splice(1).join("/") }`) );
-    this.router.get('/coach/*', (req,res) => res.redirect(301,`../../${req.url.split("/").splice(1).join("/") }`) );
+    //this.router.get('/team/*', (req,res) => res.redirect(301,`../../${req.url.split("/").splice(1).join("/") }`) );
+    //this.router.get('/coach/*', (req,res) => res.redirect(301,`../../${req.url.split("/").splice(1).join("/") }`) );
 
-    this.router.use('/counter', require(`./counter.js`));
-    this.router.use('/match', require(`./match.js`));
-    this.router.use('/stunty', require(`./stunty.js`));
-    this.router.use('/ongoing', require(`./ongoing.js`));
-    this.router.use('/upcoming', require(`./upcoming.js`));
-    this.router.use('/standings', new standings().routesConfig());
-    this.router.use('/old_team', require(`./old_team.js`));
-    this.router.use('/playoffs', require(`./playoffs.js`));
-    this.router.use('/:league', new league().routesConfig());
-    this.router.use('/:league/:division', new division().routesConfig());
+    this.router.use('/:company/counter', require(`./counter.js`));
+    this.router.use('/:company/match', require(`./match.js`));
+    this.router.use('/:company/stunty', require(`./stunty.js`));
+    this.router.use('/:company/ongoing', require(`./ongoing.js`));
+    this.router.use('/:company/upcoming', require(`./upcoming.js`));
+    this.router.use('/:company/standings', new standings().routesConfig());
+    this.router.use('/:company/old_team', require(`./old_team.js`));
+    this.router.use('/:company/playoffs', require(`./playoffs.js`));
+    this.router.use('/:company/:league', new league().routesConfig());
+    this.router.use('/:company/:league/:division', new division().routesConfig());
 
-    this.router.get("/", util.cache(10*60), this._root.bind(this));
+    this.router.get("/:company", util.cache(10*60), this._root.bind(this));
 
 
     return this.router;

@@ -265,7 +265,7 @@ block content
     div(class="row" style="justify-content: center")
       div(class="col-lg-6 col-12 g-0")
         -let titleMain = company === "" ? "LATEST REBBL GAMES" : `LATEST ${company} GAMES`
-        -let urlMain = company === "" ? "bb2/rebbl" : "bb2/" + company
+        -let urlMain = company === "" ? "rebbl" : company
         a(href=`/${urlMain}`)
           h2(style="margin-left:50px;margin-top:10px")= titleMain
         div( id="leftgames" class="col-12 carousel slide" )
