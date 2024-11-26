@@ -800,8 +800,7 @@ block scripts
       }
 
       cssClass(){
-        return  (this.active && this.casualties_sustained && 
-               (this.casualties_sustained.length === 1 && this.casualties_sustained[0] !== "BadlyHurt" ))
+        return  (this.active && this.suspended_next_match)
           ? "stats player-out" 
           : "stats";
       }
