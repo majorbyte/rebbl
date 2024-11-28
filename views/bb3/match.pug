@@ -1,5 +1,4 @@
-extends ../no-cache-sub-relayout.pug
-include ../nav-link
+extends layout.pug
 include teamStat.pug
 include functions.pug
 
@@ -9,159 +8,143 @@ block append vars
     const homeTeamStats = match?.statistics.homeGamerStatistics?.teamStatistics.statistics.statistic || []
     const awayTeamStats = match?.statistics.awayGamerStatistics?.teamStatistics.statistics.statistic || []
     
+block head
+  link(rel="stylesheet" href="/styles/skills.css")
+
+  style.
+    h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
+    .card{width: 12rem;}
+    :root{
+      --bs-primary-rgb:230,123,0
+    }
     
 
 block content
-  div(class=`container`)
-    div(class="row")
+  .container.fs-5
+    .row
       - if (match)
-        div(class="ScheduleMatchList col-12")
-          div(class="MatchSchedule row")
-            div(class="MatchRow MatchRow-match MatchRow-header col-12" )= `${match.competition.name}`
-            div(class="MatchRow MatchRow-match col-12" )
-              div(class="MatchRow-team")
-                div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
-                  div(class="TeamLabel TeamLabel--reverse")
-                    div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
-                    div(class="TeamLabel-info TeamLabel-info--noScore")
-                      div(class="TeamLabel-name ")
-                        - let tn = match.homeTeam.name
-                          a(href=`/team/${match.homeTeam.id}` )= tn
-                      div(class="TeamLabel-coach ")
-                        a(href=`/coach/bb3/${match.homeGamer.id}`)= match.homeGamer.name
-                      div(class="TeamLabel-coach" )= "winnings: " + (match.homeGameResultGain.newTreasury - match.homeGameResultGain.previousTreasury - match.homeGameResultGain.cashSpentDuringMatch)
-                      div(class="TeamLabel-coach" )= "fan attendance: " + (match.homeGameResultGain.fanAttendance)
-                      - let homeFans = Number(match.homeGameResultGain.newDedicatedFans) - Number(match.homeGameResultGain.previousDedicatedFans)
-                      - if (homeFans != 0)
-                        div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans " + (homeFans > 0 ? `(+${homeFans})` : `(${homeFans})`)
-                      -else 
-                        div(class="TeamLabel-coach " title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
-              .MatchRow-status.row
+        .col-12
+          .row
+            .col-12.text-center
+              - if (match.replayFile)
+                a.float-end(href=`https://replays.rebbl.net/bb3/${match.replayFile}`)
+                  img(src=`https://cdn.rebbl.net/images/replay.png` alt="Download replay" title="Download replay")
+              h2= `${match.competition.name}`
+              - if (user && !user.bb3id) user.bb3id = 0
+              .col-12
+                if match.validated || match.hasPendingValidation === "0"
+                  if match.homeHasConceded == "1"
+                    .col-12(style="justify-content: start;padding: 0px;background-color: unset;}")
+                      span.badge.text-bg-warning conceded
+                  else if match.awayHasConceded == "1"
+                    .col-12(style="justify-content: end;padding: 0px;background-color: unset;}")
+                      span.badge.text-bg-warning conceded
+                  else 
+                    .col-12(style="background-color: unset;}")
+                      span.badge.text-bg-success validated
+                else if user && (user.roles && user.roles.indexOf("admin") > -1) 
+                  .col-12 
+                    form(action=`/match/${match.gameId}/validate` method="POST")
+                      button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
+                else if user && (match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) && ((!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1) && (!match.notValidatedBy ||  match.notValidatedBy.indexOf(user.bb3id) === -1))
+                  .col-12 
+                    form(action=`/match/${match.gameId}/validate` method="POST")
+                      button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
+
+            .col-12.row.g-0
+              .col-5.row.g-0
+                .d-flex.justify-content-end
+                  .flex.text-end
+                    - let tn = match.homeTeam.name
+                    a.text-primary.text-decoration-none.fs-3(href=`/team/${match.homeTeam.id}` )= tn
+                    .text-end
+                      a.text-primary-emphasis.text-decoration-none.fs-4(href=`/coach/bb3/${match.homeGamer.id}`)= match.homeGamer.name
+                      .text-end.fs-5
+                        div= "winnings: " + (match.homeGameResultGain.newTreasury - match.homeGameResultGain.previousTreasury - match.homeGameResultGain.cashSpentDuringMatch)
+                        div= "fan attendance: " + (match.homeGameResultGain.fanAttendance)
+                        - let homeFans = Number(match.homeGameResultGain.newDedicatedFans) - Number(match.homeGameResultGain.previousDedicatedFans)
+                        - if (homeFans != 0)
+                          div(title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans " + (homeFans > 0 ? `(+${homeFans})` : `(${homeFans})`)
+                        -else 
+                          div(title=`previous: ${match.homeGameResultGain.previousDedicatedFans}`)= match.homeGameResultGain.newDedicatedFans + " Dedicated Fans"
+                  .flex.align-self-center: img(src=`https://cdn.rebbl.net/images/bb3/Logos/256x256/${match.homeTeam.logo.icon}` alt="" style="width:175px")
+              .col-2.row.g-0
                 - if (user && !user.bb3id) user.bb3id = 0
-                .MatchStatus.MatchStatus--transparent.col-12.row
-                  if match.validated || match.hasPendingValidation === "0"
-                    if match.homeHasConceded == "1"
-                      .MatchStatus.col-12(style="justify-content: start;padding: 0px;background-color: unset;}")
-                        span.badge.text-bg-warning conceded
-                    else if match.awayHasConceded == "1"
-                      .MatchStatus.col-12(style="justify-content: end;padding: 0px;background-color: unset;}")
-                        span.badge.text-bg-warning conceded
-                    else 
-                      .MatchStatus.col-12(style="background-color: unset;}")
-                        span.badge.text-bg-success validated
-                  else if user && (user.roles && user.roles.indexOf("admin") > -1) 
-                    .MatchStatus.col-12 
-                      form(action=`/match/${match.gameId}/validate` method="POST")
-                        button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
-                  else if user && (match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) && ((!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1) && (!match.notValidatedBy ||  match.notValidatedBy.indexOf(user.bb3id) === -1))
-                    .MatchStatus.col-12 
-                      form(action=`/match/${match.gameId}/validate` method="POST")
-                        button.btn.btn-sm.btn-success.mx-2(style="vertical-align:top") Validate
-                  span
+                .col-12.row.text-center(style="align-content:space-evenly")
+                  div.fs-1
                     if match.homeScore > match.awayScore
-                      span(class="MatchStatus-score is-winner")= match.homeScore
-                      span(class="MatchStatus-score") -
-                      span(class="MatchStatus-score")= match.awayScore
+                      span.fw-bold= match.homeScore
+                      span.mx-2 -
+                      span= match.awayScore
                     else if match.awayScore > match.homeScore
-                      span(class="MatchStatus-score")= match.homeScore
-                      span(class="MatchStatus-score") -
-                      span(class="MatchStatus-score is-winner")= match.awayScore
+                      span= match.homeScore
+                      span.mx-2 -
+                      span.fw-bold= match.awayScore
                     else
-                      span(class="MatchStatus-score")= match.homeScore
-                      span(class="MatchStatus-score") -
-                      span(class="MatchStatus-score")= match.awayScore
+                      span= match.homeScore
+                      span.mx-2 -
+                      span= match.awayScore
                   if !match.validated && match.hasPendingValidation !== "0"
                     if user && (match.homeGamer.id === user.bb3id || match.awayGamer.id === user.bb3id) &&  (!match.validated || match.hasPendingValidation === "1")  && ((!match.validatedBy ||  match.validatedBy.indexOf(user.bb3id) === -1) &&   (!match.notValidatedBy ||  match.notValidatedBy.indexOf(user.bb3id) === -1))
                       .MatchStatus.col-12 
                         form(action=`/match/${match.gameId}/invalidate` method="POST")
                           button.btn.btn-sm.btn-danger.mx-2(style="vertical-align:top;padding:1px") Do not validate
-              div(class="MatchRow-team")
-                div(class="MatchRow-contentWrapper MatchRow-contentWrapper--hover MatchRow-contentWrapper--hover--noBorder")
-                  div(class="TeamLabel")
-                    div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
-                    div(class="TeamLabel-info TeamLabel-info--noScore")
-                      div(class="TeamLabel-name ")
-                        - let on = match.awayTeam.name
-                        a(href=`/team/${match.awayTeam.id}` )= on
-
-                      div(class="TeamLabel-coach ")
-                        a(href=`/coach/bb3/${match.awayGamer.id}`)= match.awayGamer.name
-                      div(class="TeamLabel-coach" )= "winnings: " + (match.awayGameResultGain.newTreasury - match.awayGameResultGain.previousTreasury - match.awayGameResultGain.cashSpentDuringMatch)
-                      div(class="TeamLabel-coach" )= "fan attendance: " + (match.awayGameResultGain.fanAttendance)
-                      - let awayFans = Number(match.awayGameResultGain.newDedicatedFans) - Number(match.awayGameResultGain.previousDedicatedFans)
-                      - if ( awayFans != 0)
-                        div(class="TeamLabel-coach " title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans " + (awayFans > 0 ? `(+${awayFans})` : `(${awayFans})`)
-                      -else 
-                        div(class="TeamLabel-coach " title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans"
-                        
-                  - if (match.replayFile)
-                    div(class="ReplayLinks")
-                      div(class="ReplayLinks-outer")
-                        div(class="ReplayLinks-inner")
-                          a(href=`https://replays.rebbl.net/bb3/${match.replayFile}`)
-                            img(src=`https://cdn.rebbl.net/images/replay.png` class="ReplayLinks-download" alt="Download replay" title="Download replay")
+              .col-5.row.g-0
+                .d-flex
+                  .flex.align-self-center: img(src=`https://cdn.rebbl.net/images/bb3/Logos/256x256/${match.awayTeam.logo.icon}` alt="" style="width:175px")
+                  .flex
+                      - let on = match.awayTeam.name
+                      a.text-primary.text-decoration-none.fs-3(href=`/team/${match.awayTeam.id}` )= on
+                      .text-start
+                        a.text-primary-emphasis.text-decoration-none.fs-4(href=`/coach/bb3/${match.awayGamer.id}`)= match.awayGamer.name
+                        .text-start.fs-5
+                          div= "winnings: " + (match.awayGameResultGain.newTreasury - match.awayGameResultGain.previousTreasury - match.awayGameResultGain.cashSpentDuringMatch)
+                          div= "fan attendance: " + (match.awayGameResultGain.fanAttendance)
+                          - let awayFans = Number(match.awayGameResultGain.newDedicatedFans) - Number(match.awayGameResultGain.previousDedicatedFans)
+                          - if ( awayFans != 0)
+                            div(title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans " + (awayFans > 0 ? `(+${awayFans})` : `(${awayFans})`)
+                          -else 
+                            div(title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans"
+                    
             if match.homeHasConceded == "0" && match.awayHasConceded == "0"
               div(class="col-12")
                 br
-              div(class="col-12 d-flex")
-                div(class="table-responsive-xl col-6 ")
-                  table(class="team-stats")
+              .col-12.d-flex
+                .col-6
+                  table(style="font-size: 16px;width: 100%;border-collapse: collapse;")
                     thead 
                       tr 
-                        th statistic 
-                        th= match.homeTeam.name
-                        th= match.awayTeam.name
+                        th.text-primary-emphasis statistic 
+                        th.text-primary-emphasis.text-center= match.homeTeam.name
+                        th.text-primary-emphasis.text-center= match.awayTeam.name
 
                     tbody
                       tr
                         td Team value
-                        td= match.homeTeam.value
-                        td= match.awayTeam.value
+                        td.text-center= match.homeTeam.value
+                        td.text-center= match.awayTeam.value
 
                       each stat in homeTeamStats.filter(x => x.categoryId != 2 && [18,27,31].indexOf(Number(x.id)) === -1)
                         +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
-                      //+teamStat("Spent on inducements", [67], homeTeamStats, awayTeamStats)
-                        +teamStat("Possession (total / own / oppo)", [63,64,65], homeTeamStats, awayTeamStats)
-                        +teamStat("Pass (try/success/yards)", [1009], homeTeamStats, awayTeamStats)
-                        +teamStat("Catch (try/success)", [1002], homeTeamStats, awayTeamStats)
-                        +teamStat("Interceptions", [1004], awayTeamStats, homeTeamStats)
-                        +teamStat("Dodge (try/success)", [1003], homeTeamStats, awayTeamStats)
-                        +teamStat("Rush (try/success)", [1011], homeTeamStats, awayTeamStats)
-                div(class="table-responsive-xl col-6 ")
-                  table(class="team-stats")
+                .col-6
+                  table(style="font-size: 16px;width: 100%;border-collapse: collapse;")
                     thead 
                       tr 
-                        th statistic 
-                        th= match.homeTeam.name
-                        th= match.awayTeam.name
+                        th.text-primary-emphasis statistic 
+                        th.text-primary-emphasis.text-center= match.homeTeam.name
+                        th.text-primary-emphasis.text-center= match.awayTeam.name
 
                     tbody
                       - const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
                       each stat in homeTeamStats.filter(x => x.categoryId == 2).sort((a,b) => collator.compare(a.name, b.name))
                         +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
-
-                      //+teamStat("Blocks succeeded", [26], homeTeamStats, awayTeamStats)
-                        +teamStat("Armour breaks", [61], homeTeamStats, awayTeamStats)
-                        +teamStat("Knockout (inflicted/sustained)", [25,29], homeTeamStats, awayTeamStats)
-                        +teamStat("Casualties (inflicted/sustained)", [19,28], homeTeamStats, awayTeamStats)
-                        +teamStat("Kills / Deaths", [21,31], homeTeamStats, awayTeamStats)
-                        +teamStat("Surfs", [57], homeTeamStats, awayTeamStats)
-                        +teamStat("Fouls / Expulsion", [47,62], homeTeamStats, awayTeamStats)
-                        +teamStat("Throw Team-Mate success", [69], homeTeamStats, awayTeamStats)
-
             - match.homeTeam.mvp = match.homeMvp
-            //- let roster = Array.isArray(match.spp.homeTeamSppResult.playerSppResults.playerSppResult) ? match.spp.homeTeamSppResult.playerSppResults.playerSppResult : [match.spp.homeTeamSppResult.playerSppResults.playerSppResult]
-            //- match.homeTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
-            //- - match.homeTeam.rosterStatistics = match.statistics.homeGamerStatistics.teamStatistics.playerStatistics
             - match.awayTeam.mvp = match.awayMvp
-            //- - roster = Array.isArray(match.spp.awayTeamSppResult.playerSppResults.playerSppResult) ? match.spp.awayTeamSppResult.playerSppResults.playerSppResult : [match.spp.awayTeamSppResult.playerSppResults.playerSppResult]
-            //- - match.awayTeam.roster = roster.sort((a,b) => a.player.number - b.player.number)
-            //- - match.awayTeam.rosterStatistics = match.statistics.awayGamerStatistics.teamStatistics.playerStatistics
             hr
             - match.homeTeam.coach = match.homeGamer 
             - match.awayTeam.coach = match.awayGamer 
-            div(class="col-12 table-responsive-md")
-              table(class="match-stats-table" style="width:100%")
+            .col-12.table-responsive-md
+              table(style="width:100%")
                 each team in [match.homeTeam, match.awayTeam]
                   include team.pug
       - if (schedule)

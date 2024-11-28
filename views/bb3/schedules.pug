@@ -16,38 +16,36 @@ block content
       - let sorted = schedules.sort((a,b) => a.round - b.round)
       .row
         each round, y in [...new Set(schedules.map(x => x.round))]
-          .col-12.col-sm-12.col-lg-6.col-xxl-3.g-0
+          .col-12.col-sm-12.col-lg-6.col-xl-4.g-0
             br
             div.text-center
               a.text-primary.text-decoration-none(href=`/competition/${competition.id}/schedules/${round}`)
                 h2.fs-3.text-primary-emphasis.text-decoration-none= "Round " + round
             each schedule, x in schedules.filter(a => a.round == round)
               - let url = schedule.status > 1 ? `/match/${ schedule.gameId }` : `/unplayed/${schedule.matchId}`
-              .row
+              a.row.text-decoration-none.fs-5(href=url target="_blank")
                 .col-5.g-0
                   div
-                    div.float-end(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${schedule.home.team.logo}` style="width:48px" alt="" class="TeamLabel-logo")
-                    div.float-end.text-end(class="TeamLabel-info TeamLabel-info--noScore")
+                    div.float-end: img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${schedule.home.team.logo}` style="width:48px" alt="")
+                    div.float-end.text-end.mx-1
                       div.text-primary= schedule.home.team.name
                       div.text-primary-emphasis= schedule.home.coach.name
-                .col-2.g-0.text-center
-                  span(class="MatchStatus MatchStatus--transparent")
-                    span
-                      if schedule.home.score > schedule.away.score
-                        span(class="MatchStatus-score is-winner")= schedule.home.score
-                        span(class="MatchStatus-score") -
-                        span(class="MatchStatus-score")= schedule.away.score
-                      else if schedule.away.score > schedule.home.score
-                        span(class="MatchStatus-score")= schedule.home.score
-                        span(class="MatchStatus-score") -
-                        span(class="MatchStatus-score is-winner")= schedule.away.score
-                      else
-                        span(class="MatchStatus-score")= schedule.status > 1 ? schedule.home.score : ''
-                        span(class="MatchStatus-score") -
-                        span(class="MatchStatus-score")= schedule.status > 1 ? schedule.away.score : ''
+                .col-2.g-0.text-center.text-decoration-none.fs-4(style="align-content:space-evenly")
+                  if schedule.home.score > schedule.away.score
+                    span.mx-1.fw-bold= schedule.home.score
+                    span.mx-1 -
+                    span.mx-1= schedule.away.score
+                  else if schedule.away.score > schedule.home.score
+                    span.mx-1= schedule.home.score
+                    span.mx-1 -
+                    span.mx-1= schedule.away.score
+                  else
+                    span.mx-1= schedule.status > 1 ? schedule.home.score : ''
+                    span.mx-1 -
+                    span.mx-1.fw-bold= schedule.status > 1 ? schedule.away.score : ''
                 .col-5.g-0
-                  div(class="TeamLabel")
-                    div.float-start(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${schedule.away.team.logo}` style="width:48px" alt="" class="TeamLabel-logo")
-                    div
+                  div
+                    div.float-start: img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${schedule.away.team.logo}` style="width:48px" alt="")
+                    div.float-start.mx-1
                       .text-primary= schedule.away.team.name
                       .text-primary-emphasis= schedule.away.coach.name

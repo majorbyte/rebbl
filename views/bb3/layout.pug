@@ -5,32 +5,55 @@ html(data-bs-theme=theme)
     script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
     script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
     script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")      
-    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/shop/style.css")
     link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
     link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
     link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
     style.
-      body{color:#979797 !important;}
-      /* latin-ext */
+      body{color:#979797 !important}
       @font-face {
-        font-family: 'Bungee Inline';
-        font-style: normal;
+        font-family: 'Roboto';
+        src: url(/fonts/roboto-latin-regular-webfont.woff2) format("woff2");
         font-weight: 400;
-        font-display: swap;
-        src: url(/webfonts/bungee-inline.woff2) format('woff2');
+        font-style: normal
       }
 
-      h1,h2 {
-        font-family: "Bungee Inline", sans-serif;
-        font-style: normal;
-        color:#dfdfdf;
-        font-weight:bold;
+      @font-face {
+        font-family: 'Roboto';
+        src: url(/fonts/roboto-latin-medium-webfont.woff2) format("woff2");
+        font-weight: 500;
+        font-style: normal
       }
-      h1 > a {
-        font-family: "Bungee Inline", sans-serif;
-        font-style: normal;
-        font-weight:bold;
-        text-decoration: none;
+
+      @font-face {
+        font-family: 'Roboto';
+        src: url(/fonts/roboto-latin-bold-webfont.woff2) format("woff2");
+        font-weight: 700;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Industry';
+        src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+        font-weight: 400;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Industry';
+        src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+        font-weight: 500;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Industry';
+        src: url(/fonts/industry-bold-webfont.woff2) format("woff2");
+        font-weight: 700;
+        font-style: normal
+      }
+
+      *{
+        font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
       }
 
 

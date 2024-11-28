@@ -3,4 +3,4 @@ mixin teamStat(title, statIds, homeTeamStats, awayTeamStats)
     tr
       td= title
       each stats of [homeTeamStats, awayTeamStats]
-        td= statIds.map(id => `${getStat(stats,id)}`)
+        td.text-center= statIds.map(id => `${getStat(stats,id)}`)

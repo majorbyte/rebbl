@@ -40,13 +40,17 @@ mixin player(player, stats, mvp)
         div(class="TeamLabel-name ")= player.type.split("_")[1].replace(/([A-Z])/g, ' $1')
     // skills
     td
-      div
+      .d-flex
         -if (player.type)
           //- let playerSkills = Array.isArray(player.skills.skillsItem) ? player.skills.skillsItem : [player.skills.skillsItem]
           - for(let skill of player.skills)
             - let s = skills.find(x => x.id == skill)
             - if (s)
-              img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt=""  data-bs-toggle="modal" data-bs-target="#skill-dialog" style="z-index:9999" )
+              if user && user.icon === "BB3Legacy"
+                .flex.skill-32.bg-legacy(class=`bg-${s.icon.replace('.png','')}`)
+              else
+                .flex.skill-32.bg-standard(class=`bg-${s.icon.replace('.png','')}`)
+
           if player.skills.filter(s => s).length > 0
             span.style(style="margin-left: 32px")
     td(class="match-stats")
@@ -67,11 +71,11 @@ mixin player(player, stats, mvp)
 
     td.text-center
       if player.mvp
-        img(src="https://cdn.rebbl.net/images/bb3/mvp.png" title="MVP")
+        img.skill-32(src="https://cdn.rebbl.net/images/bb3/mvp.png" title="MVP")
       if getStat(stats,62) > 0
-        img(src=`https://cdn.rebbl.net/images/bb3/ico_action_expelled_.png`)
+        img.skill-32(src=`https://cdn.rebbl.net/images/bb3/ico_action_expelled_.png`)
       if getCasualtyIcon()
-        img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${getCasualtyIcon()}` title=getCasualtyIcon().replace("ico_action_","").replace("_", " ").replace(".png",""))
+        img.skill-32(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${getCasualtyIcon()}` title=getCasualtyIcon().replace("ico_action_","").replace("_", " ").replace(".png",""))
 
     //each id in [53,18,55,19,47]
       td(class="match-stats")

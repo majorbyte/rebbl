@@ -64,6 +64,7 @@ class Routes{
   }
 
 	routesConfig(){
+    this.router.use("/",new bb3().routesConfig());
 		this.router.use("/api", new api().routesConfig() );
     this.router.use("/maintenance", new maintenance().routesConfig());
     this.router.use("/account", new account().routesConfig());
@@ -80,7 +81,6 @@ class Routes{
 
     //this.router.get("/", util.cache(10*60), this._root);
     this.router.use("/bb3", (req,res) => res.redirect("/"))
-    this.router.use("/",new bb3().routesConfig());
 
   
     return this.router;
