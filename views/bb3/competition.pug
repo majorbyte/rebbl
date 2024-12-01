@@ -3,8 +3,8 @@ include functions.pug
 .season-table(style="margin-bottom:40px;")  
   div
     .d-flex.justify-content-between
-      a(href=`/competition/${competition.id}/schedules` class="highlight")
-        h2=competition.name
+      a.text-primary.text-decoration-none(href=`/competition/${competition.id}/schedules` class="highlight")
+        h2= competition.name
       - if (competition.status === 1)
         h2 Waiting for teams
       - if (competition.status === 2)

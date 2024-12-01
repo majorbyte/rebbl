@@ -1,7 +1,5 @@
 extends layout.pug
 
-
-
 block vars
   - let options = {company: company}
 
@@ -9,41 +7,9 @@ block head
   style.
     h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
     .card{width: 12rem;}
-    .coach-container{
-        width: 100%;
-        height: 120px;
-
-        background-image: 
-            url(https://cdn.rebbl.net/images/bb3/coach/banner/txt_gamer_banner_002.png); 
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-origin: border-box;
-        display:flex;
-
-    }
-    .coach{
-        width: 120px;
-        max-width: 100%;
-        height: 120px;
-
-        background-image: 
-            url(https://cdn.rebbl.net/images/bb3/coach/frame/txt_gamer_frame_001.png),
-            url(https://cdn.rebbl.net/images/bb3/coach/avatar/txt_gamer_avatar_beastman.png); 
-        background-position: left top, left top;
-        background-repeat: no-repeat, no-repeat;
-        background-size: contain, contain;
-        background-origin: content-box, padding-box;
-    }
 
 block content
-  //div.container.navcontainer(style="display:flex;flex-flow:wrap" data-index="0")
   .container
-    .coach-container
-      .coach
-      h1.text-white.align-middle GMAN DIVISION 1
-    - let compName = ""
-
     each competition, index in competitions.filter(x => x.name.indexOf(" R") ===-1) .sort(function(a,b){return a.name > b.name})
       include ./competition.pug              
 

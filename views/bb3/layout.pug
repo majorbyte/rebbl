@@ -9,7 +9,6 @@ html(data-bs-theme=theme)
     link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
     link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
     style.
-      body{color:#979797 !important}
       @font-face {
         font-family: 'Roboto';
         src: url(/fonts/roboto-latin-regular-webfont.woff2) format("woff2");
@@ -55,6 +54,8 @@ html(data-bs-theme=theme)
       *{
         font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
       }
+      :root{--bs-primary-rgb:230,123,0;}
+
 
 
     block head
@@ -89,22 +90,23 @@ html(data-bs-theme=theme)
     div(style="padding-top:48px")
       block content
 
-    block scripts
-      - if (user)
-        script.
-          async function toggleTheme(){
-            const theme = document.documentElement.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
-            document.documentElement.setAttribute("data-bs-theme", theme);
-            await fetch(`/api/v2/account/theme/${theme}`,{method:"PUT"});
-          }
-      - if (!user)
-        script.
-          function toggleTheme(){
-            const theme = document.documentElement.getAttribute("data-bs-theme");
-            document.documentElement.setAttribute("data-bs-theme", theme === "dark" ? "light" : "dark")
-          }
-
+    - if (user)
       script.
-        const elm = document.getElementById("switchTheme");
+        async function toggleTheme(){
+          const theme = document.documentElement.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+          document.documentElement.setAttribute("data-bs-theme", theme);
+          await fetch(`/api/v2/account/theme/${theme}`,{method:"PUT"});
+        }
+    - if (!user)
+      script.
+        function toggleTheme(){
+          const theme = document.documentElement.getAttribute("data-bs-theme");
+          document.documentElement.setAttribute("data-bs-theme", theme === "dark" ? "light" : "dark")
+        }
 
-        elm.addEventListener('change', toggleTheme);
+    script.
+      const elm = document.getElementById("switchTheme");
+
+      elm.addEventListener('change', toggleTheme);
+
+    block scripts

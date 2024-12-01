@@ -151,7 +151,7 @@ class BB3{
   }
 
   landingPage = async(req,res) => {
-    const season = req.params.season || "season 2";
+    const season = req.params.season || "season 3";
     const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
 
     let competition;
@@ -162,6 +162,7 @@ class BB3{
 
   routesConfig(){
     this.router.get("/",  this.landingPage);
+    this.router.use("/standings", this.competitions);
     this.router.use("/redraft", new redraft().routesConfig());
     this.router.get("/competition/:competitionId",  this.competition);
     this.router.get("/competition/:competitionId/schedules",  this.schedules);
