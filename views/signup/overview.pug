@@ -48,7 +48,7 @@ block content
               p Nagivate 
                 a(href="/signup/bb3/signups" class="highlighted-rules") here
                 span &nbsp;to view all current signups
-            else if (signup.type==="rebbrl3")
+            else if (signup.type==="college")
               h3= "REBBL BB3 College Season 3 - " + signup.league
               if (signup.open)
                 div(style="display:flex")
@@ -87,72 +87,93 @@ block content
         p.lead You haven't signed up yet, so hit that button to continue with your sign up for REBBL BB3 Season 3!
         hr.my-2
       .row.row-cols-1.row-cols-md-4.mb-3.text-center
-        .col
-          .card.mb-4.rounded-3.shadow-sm.border-primary
-            .card-header.py-3.text-bg-primary.border-primary
-              h4.my-0.fw-normal New Team
-            .card-body
-              span.badge.rounded-pill.text-bg-success Fresh Team
-              ul.list-unstyled.mt-3.mb-4
-                li No Greenhorn
-                li No stress
-                li No bad dice in offseason
-                li &nbsp;
-                li &nbsp;
-            .card-body 
-              a(href="https://www.reddit.com/r/ReBBl/comments/1dbq4iq/rebbl_bb3_season_2_signups" class="highlighted-rules") Read more here about Season 3
-            .card-body 
-              a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/fresh" type='button') Signup
-        .col
-          .card.mb-4.rounded-3.shadow-sm.border-primary
-            .card-header.py-3.text-bg-primary.border-primary
-              h4.my-0.fw-normal Greenhorn Cup
-            .card-body
-              span.badge.rounded-pill.text-bg-success Fresh Team
-              ul.list-unstyled.mt-3.mb-4
-                li 2 x 2-round swiss
-                li 23rd October - 20th November
-                li TV 1100 limit Redraft, no fees
-                li Players from all timezones
-                li.text-success.fst-italic Includes signup for Season 3
-            .card-body 
-              a(href="https://www.reddit.com/r/ReBBl/comments/1g5484y/rebbl_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Greenhorn here
-            .card-body 
-              a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/greenhorn" type='button') Signup
-        .col
-          .card.mb-4.rounded-3.shadow-sm.boder-primary
-            .card-header.py-3(class=`${redrafted ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled opacity-50"}`)
-              h4.my-0.fw-normal Returning Team
-            .card-body
-              span.badge.rounded-pill.text-bg-warning returning Team
-              ul.list-unstyled.mt-3.mb-4
-                li(class=`${!redrafted ?'text-danger fw-bold' : ''}`) First you redraft
-                li(title="then you statoil") Then you sign up
-                li You wait
-                li &nbsp;
-                li &nbsp;
-            .card-body 
-              a(href="https://www.reddit.com/r/ReBBl/comments/1dbq4iq/rebbl_bb3_season_2_signups" class="highlighted-rules") Read more here about Season 3
-            .card-body 
-              a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/returning" type='button' class=`${redrafted ?  "" : "disabled opacity-50"}`) Signup
-        .col
-          .card.mb-4.rounded-3.shadow-sm(class=`${canReturn ?  "border-primary" :"border-secondary opacity-50"}`)
-            .card-header.py-3(class=`${canReturn ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled"}`)
-              h4.my-0.fw-normal Ure Trophy
-            .card-body
-              span.badge.rounded-pill.text-bg-warning returning Team
-              ul.list-unstyled.mt-3.mb-4
-                li 2 x 2-round swiss
-                li 23rd October - 20th November
-                li You redraft when you're done
-                li Players from all timezones
-                li.text-success.fst-italic Includes signup for Season 3
-            .card-body 
-              a(href="https://www.reddit.com/r/ReBBl/comments/1g5484y/rebbl_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Ure Trophy here
-            .card-body 
-              a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/ure" type='button' class=`${canReturn ?  "" : "disabled"}`) Signup
+        if (signupState.mainOpen)
+          .col
+            .card.mb-4.rounded-3.shadow-sm.border-primary
+              .card-header.py-3.text-bg-primary.border-primary
+                h4.my-0.fw-normal New Team
+              .card-body
+                span.badge.rounded-pill.text-bg-success Fresh Team
+                ul.list-unstyled.mt-3.mb-4
+                  li No Greenhorn
+                  li No stress
+                  li No bad dice in offseason
+                  li &nbsp;
+                  li &nbsp;
+              .card-body 
+                a(href="https://www.reddit.com/r/ReBBl/comments/1g573rd/rebbl_bb3_season_3_signups/" class="highlighted-rules") Read more here about Season 3
+              .card-body 
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/fresh" type='button') Signup
+        if (signupState.greenhornOpen)
+          .col
+            .card.mb-4.rounded-3.shadow-sm.border-primary
+              .card-header.py-3.text-bg-primary.border-primary
+                h4.my-0.fw-normal Greenhorn Cup
+              .card-body
+                span.badge.rounded-pill.text-bg-success Fresh Team
+                ul.list-unstyled.mt-3.mb-4
+                  li 2 x 2-round swiss
+                  li 23rd October - 20th November
+                  li TV 1100 limit Redraft, no fees
+                  li Players from all timezones
+                  li.text-success.fst-italic Includes signup for Season 3
+              .card-body 
+                a(href="https://www.reddit.com/r/ReBBl/comments/1g5484y/rebbl_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Greenhorn here
+              .card-body 
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/greenhorn" type='button') Signup
+        if (signupState.mainOpen)
+          .col
+            .card.mb-4.rounded-3.shadow-sm.boder-primary
+              .card-header.py-3(class=`${redrafted ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled opacity-50"}`)
+                h4.my-0.fw-normal Returning Team
+              .card-body
+                span.badge.rounded-pill.text-bg-warning returning Team
+                ul.list-unstyled.mt-3.mb-4
+                  li(class=`${!redrafted ?'text-danger fw-bold' : ''}`) First you redraft
+                  li(title="then you statoil") Then you sign up
+                  li You wait
+                  li &nbsp;
+                  li &nbsp;
+              .card-body 
+                a(href="https://www.reddit.com/r/ReBBl/comments/1g573rd/rebbl_bb3_season_3_signups/" class="highlighted-rules") Read more here about Season 3
+              .card-body 
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/returning" type='button' class=`${redrafted ?  "" : "disabled opacity-50"}`) Signup
+        if (signupState.ureOpen)
+          .col
+            .card.mb-4.rounded-3.shadow-sm(class=`${canReturn ?  "border-primary" :"border-secondary opacity-50"}`)
+              .card-header.py-3(class=`${canReturn ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled"}`)
+                h4.my-0.fw-normal Ure Trophy
+              .card-body
+                span.badge.rounded-pill.text-bg-warning returning Team
+                ul.list-unstyled.mt-3.mb-4
+                  li 2 x 2-round swiss
+                  li 23rd October - 20th November
+                  li You redraft when you're done
+                  li Players from all timezones
+                  li.text-success.fst-italic Includes signup for Season 3
+              .card-body 
+                a(href="https://www.reddit.com/r/ReBBl/comments/1g5484y/rebbl_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Ure Trophy here
+              .card-body 
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/ure" type='button' class=`${canReturn ?  "" : "disabled"}`) Signup
+        if (signups.every(x => "uregreenhornfreshreturningcollege".indexOf(x.type) === -1))
+          .col
+            .card.mb-4.rounded-3.shadow-sm(class=`${canReturn ?  "border-primary" :"border-secondary opacity-50"}`)
+              .card-header.py-3(class=`${canReturn ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled"}`)
+                h4.my-0.fw-normal College
+              .card-body
+                span.badge.rounded-pill.text-bg-success Fresh Team
+                ul.list-unstyled.mt-3.mb-4
+                  li 4 minute turns 
+                  li RLE*
+                  li Mentors
+                  li &nbsp;
+                  li * Relaxed Learning Environment
+              .card-body 
+                a(href="https://www.reddit.com/r/ReBBl/comments/1h54u6s/rebbrl_college_league_season_3" class="highlighted-rules") Read more about College here
+              .card-body 
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/rebbrl/college" type='button' class=`${canReturn ?  "" : "disabled"}`) Signup
 
-    //- if (signups.every(x => x.type !==  "rebbrl3") && signups.every(x => x.type !==  "rebbl3"))
+    //- if (signups.every(x => x.type !==  "college") && signups.every(x => x.type !==  "rebbl3"))
       .jumbotron
         h1.display-4 COLLEGE Season 3
         p.lead Are you a new coach, wanting to learn to play Blood Bowl 3 in our rookie's College League Season 3?

@@ -1,5 +1,7 @@
 'use strict';
 
+const { greenhorn } = require('../../lib/ConfigurationService.js');
+
 const accountService = require('../../lib/accountService.js')
   , discordService = require('../../lib/DiscordService.js')
   , dataService = require('../../lib/DataServiceBB3.js').rebbl3
@@ -45,10 +47,14 @@ class Signup{
 
   routesConfig(){
 
-    const bb3Open = true;
-    const rookiesOpen = false;
+    const signupState = {
+      mainOpen : true,
+      greenhornOpen : false,
+      ureOpen: false,
+      collegeOpen: true
+    }
 
-    if (!bb3Open && !rookiesOpen){
+    if (!signupState.mainOpen && !signupState.greenhornOpen && !signupState.ureOpen && !signupState.collegeOpen){
       this.router.get('/', async function(req, res){
         res.render('signup/closed');
       });
@@ -59,10 +65,10 @@ class Signup{
 
     this.router.get('/discord/callback', this._authDiscordCallback);
 
-    if (bb3Open || rookiesOpen)
-      this.router.get('/', util.ensureAuthenticated, async (req,res) => this.#getStatus(req,res, bb3Open,rookiesOpen));
+    if (signupState.mainOpen || signupState.collegeOpen)
+      this.router.get('/', util.ensureAuthenticated, async (req,res) => this.#getStatus(req,res, signupState));
 
-    if (rookiesOpen){
+    if (signupState.collegeOpen){
       this.router.get('/rebbrl/college', util.ensureLoggedIn, this._college.bind(this));
       this.router.get('/rebbrl/college-reserves', util.ensureLoggedIn, this._collegeReserve.bind(this));
       
@@ -71,11 +77,12 @@ class Signup{
       this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
     }
 
-    if (bb3Open){
+    if (signupService.mainOpen){
       this.router.get('/bb3/fresh', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,false));
-      this.router.get('/bb3/greenhorn', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,true));
       this.router.get('/bb3/returning', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,false));
-      this.router.get('/bb3/ure', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,true));
+
+      if (signupState.greenhornOpen) this.router.get('/bb3/greenhorn', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,true));
+      if (signupState.ureOpen)this.router.get('/bb3/ure', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,true));
       
       this.router.post('/bb3/confirm', util.ensureLoggedIn, this.#confirmNewBB3.bind(this));
       this.router.post('/bb3/resign', util.ensureAuthenticated, this.#resignBB3);
@@ -91,7 +98,7 @@ class Signup{
     return this.router;
   }
 
-  async #getStatus(req, res, bb3open, rookiesOpen){
+  async #getStatus(req, res, signupState){
     try{
       let user = await signupService.getExistingTeam(req.user.name);
       let signups = [];
@@ -100,7 +107,7 @@ class Signup{
 
       if (signup){
         signup.signedUp = true;
-        signup.open = bb3open;
+        signup.open = signupState.mainOpen;
         signups.push(signup);
       }
 
@@ -112,7 +119,7 @@ class Signup{
 
       const lastSeasonTeam = await this.#getLastSeasonTeam(account.bb3id);
 
-      res.render('signup/overview', {signups:signups, user: user, canReturn:lastSeasonTeam!= null, redrafted:lastSeasonTeam?.redraft?.status == "validated"});
+      res.render('signup/overview', {signups:signups, user: user, signupState,canReturn:lastSeasonTeam!= null, redrafted:lastSeasonTeam?.redraft?.status == "validated"});
     } catch (err){
       console.log(err);
     }
@@ -247,7 +254,7 @@ class Signup{
 
   async _rebbrl(req, res, league){
     try {
-      let signup = await signupService.getSignUp(req.user.name,"rebbrl3");
+      let signup = await signupService.getSignUp(req.user.name,"college");
       let account = await accountService.getAccount(req.user.name);
 
       if (!account.bb3coach) {
@@ -260,14 +267,14 @@ class Signup{
       }
   
 
-      // if (!signup){
-      //   if(account){
-      //     res.render('signup/signup-new-coach-rebbrl', {user: {account: account, league: league}, reserve: req.reserve});
-      //   } else {
-      //     res.render('signup/signup-new-coach-rebbrl', {user: req.user.name});
-      //   }
-      //   return;
-      // }
+       if (!signup){
+         if(account){
+           res.render('signup/signup-new-coach-rebbrl', {user: {account: account, league: league}, reserve: req.reserve});
+         } else {
+           res.render('signup/signup-new-coach-rebbrl', {user: req.user.name});
+         }
+         return;
+       }
 
       // if(account){
       //   signup.account = account;
@@ -289,7 +296,7 @@ class Signup{
       } else {
         signup.saveType = "new";
       }
-      signup.type ="rebbrl3";
+      signup.type ="college";
 
       let account = await accountService.getAccount(req.user.name);
       signup.coach = account.bb3coach;
