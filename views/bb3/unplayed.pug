@@ -160,7 +160,7 @@ block content
     .container.h-100
       .row.justify-content-center
         .row.col-12.justify-content-center.text-center
-          h2(style="margin-top:40px;margin-bottom:20px")= match.competition + " - week " + match.round
+          h2(style="margin-top:40px;margin-bottom:20px")= match.competitionName + " - week " + match.round
           .row.col.justify-content-center.text-center
             - if(user?.roles?.includes("streamer"))
               span Enter match date in your own local time

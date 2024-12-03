@@ -155,9 +155,13 @@ class BB3{
     const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
 
     let competition;
-    if (res.locals.user) competition = competitions.find(x => x.standings.some(coach => coach.id === res.locals.user.bb3id ));
+    let upcomingMatch;
+    if (res.locals.user) {
+      competition = competitions.find(x => x.standings.some(coach => coach.id === res.locals.user.bb3id ));
+      if (res.locals.user.bb3id) upcomingMatch = await bb3Service.getUpcomingMatch(null, res.locals.user.bb3id)
+    }
     if (!competition) competition = competitions[Math.floor(Math.random()*competitions.length)];
-    res.render("bb3/landingpage", {competition})
+    res.render("bb3/landingpage", {competition,upcomingMatch})
   }
 
   routesConfig(){
