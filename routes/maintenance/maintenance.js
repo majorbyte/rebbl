@@ -281,6 +281,17 @@ class Maintenance{
       }
     };
 
+    this.router.get('/announcements', util.verifyMaintenanceHeader, async function(req,res){
+      try{
+        await reddit.getAnnouncements();
+      }
+      catch(e){
+        console.dir(e);
+        loggingService.error(e);
+      }
+      res.status(200).send();
+    });
+
     this.router.get('/updateleague', util.verifyMaintenanceToken, async function(req,res){
       doUpdates(req);
       res.redirect('/');

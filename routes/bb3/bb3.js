@@ -4,6 +4,7 @@ const bb3Service = require("../../lib/bb3Service.js");
 
 const express = require("express")
 , accountService = require("../../lib/accountService.js")
+, oldService = require("../../lib/DataService.js").rebbl
 , dataService = require("../../lib/DataServiceBB3.js").rebbl3
 , datingService = require("../../lib/DatingService.js")
 , redraft = require("./redraft.js")
@@ -158,10 +159,13 @@ class BB3{
     let upcomingMatch;
     if (res.locals.user) {
       competition = competitions.find(x => x.standings.some(coach => coach.id === res.locals.user.bb3id ));
-      if (res.locals.user.bb3id) upcomingMatch = await bb3Service.getUpcomingMatch(null, res.locals.user.bb3id)
+      if (res.locals.user.bb3id) upcomingMatch = await bb3Service.getUpcomingMatch(null, res.locals.user.bb3id);
     }
     if (!competition) competition = competitions[Math.floor(Math.random()*competitions.length)];
-    res.render("bb3/landingpage", {competition,upcomingMatch})
+
+    const announcements = await oldService.getAnnouncements({});
+    
+    res.render("bb3/landingpage", {competition,upcomingMatch,announcements: announcements.sort((a,b) => b.date-a.date).slice(0,5)})
   }
 
   routesConfig(){
