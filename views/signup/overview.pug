@@ -154,11 +154,11 @@ block content
               .card-body 
                 a(href="https://www.reddit.com/r/ReBBl/comments/1g5484y/rebbl_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Ure Trophy here
               .card-body 
-                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/ure" type='button' class=`${canReturn ?  "" : "disabled"}`) Signup
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/ure" type='button') Signup
         if (signups.every(x => "uregreenhornfreshreturningcollege".indexOf(x.type) === -1))
           .col
-            .card.mb-4.rounded-3.shadow-sm(class=`${canReturn ?  "border-primary" :"border-secondary opacity-50"}`)
-              .card-header.py-3(class=`${canReturn ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled"}`)
+            .card.mb-4.rounded-3.shadow-sm.border-secondary
+              .card-header.py-3.text-bg-secondary.border-secondary
                 h4.my-0.fw-normal College
               .card-body
                 span.badge.rounded-pill.text-bg-success Fresh Team
@@ -171,7 +171,7 @@ block content
               .card-body 
                 a(href="https://www.reddit.com/r/ReBBl/comments/1h54u6s/rebbrl_college_league_season_3" class="highlighted-rules") Read more about College here
               .card-body 
-                a.w-100.btn.btn-lg.btn-primary(href="/signup/rebbrl/college" type='button' class=`${canReturn ?  "" : "disabled"}`) Signup
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/rebbrl/college" type='button') Signup
 
     //- if (signups.every(x => x.type !==  "college") && signups.every(x => x.type !==  "rebbl3"))
       .jumbotron
