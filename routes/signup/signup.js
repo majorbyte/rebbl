@@ -77,7 +77,7 @@ class Signup{
       this.router.post('/resign-rebbrl', util.ensureLoggedIn, this._resignRebbrl);
     }
 
-    if (signupService.mainOpen){
+    if (signupState.mainOpen){
       this.router.get('/bb3/fresh', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,false));
       this.router.get('/bb3/returning', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,false));
 
