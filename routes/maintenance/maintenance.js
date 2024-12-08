@@ -42,7 +42,7 @@ class Maintenance{
         //await clanService.updateUnstarted("Division 1", 1, 6);
         //await clanService.updateUnstarted("Division 1");
         //await clanService.getMatchData();
-        await ZFLService.recalculateAllStats();
+        await bb3Service.updateCoaches();
         //await bb3Service.handleRetiredPlayers("bb4a531b-e9d9-11ee-a745-02000090a64f","f41cfddc-d425-11ee-a745-02000090a64f");
 
         //const test = require ("../../lib/createScheduleService.js");
@@ -154,31 +154,6 @@ class Maintenance{
       res.redirect('/');
     });
     
-    // this.router.get('/updatebb3', util.verifyMaintenanceToken, async function(req, res){
-    //   updateBB3();
-    //   res.redirect('/');
-    // });
-
-    // const updateBB3 = async function (){
-    //   const compIds = ["5d031521-b151-11ed-80a8-020000a4d571","2b791aa6-b14d-11ed-80a8-020000a4d571"];
-
-    //   for(const id of compIds){
-    //     const ids = await bb3Service.getRanking(id);
-    //     if (ids.length === 0) continue;
-        
-    //     await bb3Service.getTeams(ids);
-    //     const matchIds = await bb3Service.updateMatches(ids,id);
-    //     await bb3Service.calculateStandings(id);
-    
-    //     const hookUrl = id === "2b791aa6-b14d-11ed-80a8-020000a4d571" 
-    //       ? process.env.BB3Hook
-    //       : process.env.BB3RookiesHook;
-    //     for(const matchId of matchIds){
-    //       await bb3MatchReport.matchReport(matchId, hookUrl);
-    //     }
-    //   }      
-    // }
-
     const updateClan = async function(req){
       try{
         await clanService.getContestData();
