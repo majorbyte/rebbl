@@ -292,7 +292,22 @@ block scripts
 
           let path = window.location.pathname.split("/");
           let response = await fetch(`/api/v2/clan/${path[path.length-4]}/${path[path.length-3]}/${path[path.length-2]}/${path[path.length-1]}`);
-          this.schedule = await response.json();
+          const schedule = await response.json();
+          
+          debugger;
+          for(const game of schedule.unstarted)
+          while (game.coaches.length < 2){
+            game.coaches.push({ 
+              accepted: false,
+              coachId: "00000000-0000-0000-0000-000000000000",
+              coachName: "Missing ticket",
+              logo: "Logo_Human_01",
+              teamId: "00000000-0000-0000-0000-000000000000",
+              teamName: "Missing ticket"
+            });
+          }
+          this.schedule = schedule
+
           $(function () {
             $('[data-bs-toggle="popover"]').popover({ customClass: 'popoverFix' })
           });

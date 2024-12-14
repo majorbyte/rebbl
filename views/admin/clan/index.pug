@@ -586,6 +586,17 @@ block scripts
           let response = await fetch(`/api/v2/clan/${this.season}/${s.competition}/${s.round}/${s.house}`);
 
           this.schedule = await response.json();
+
+          for(const game of this.schedule.unstarted)
+          while (game.coaches.length < 2) game.coaches.push({ 
+            accepted: false,
+            coachId: "00000000-0000-0000-0000-000000000000",
+            coachName: "Missing ticket",
+            logo: "Logo_Human_01",
+            teamId: "00000000-0000-0000-0000-000000000000",
+            teamName: "Missing ticket"
+          });
+
           this.schedule.matches = (this.schedule.matches || []).concat(this.schedule.unstarted || []).filter(x => x.opponents || x.coaches);
           if(this.schedule.matches.length < 5){
             this.loadingMissingGames = true;
@@ -594,8 +605,8 @@ block scripts
         },
         loadMissingCompetitions: async function(division, round, house){
           let response = await fetch(`/api/v2/clan/competition/${division}/${round}/${house}`);
-          this.loadingMissingGames = false;
           this.missingGames = await response.json();
+          this.loadingMissingGames = false;
         },
         loadCoaches: async function(){
           if (this.coaches.length === 0) {
