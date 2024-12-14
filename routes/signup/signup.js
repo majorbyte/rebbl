@@ -48,7 +48,7 @@ class Signup{
   routesConfig(){
 
     const signupState = {
-      mainOpen : true,
+      mainOpen : false,
       greenhornOpen : false,
       ureOpen: false,
       collegeOpen: true
