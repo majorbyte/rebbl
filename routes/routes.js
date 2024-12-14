@@ -64,6 +64,8 @@ class Routes{
   }
 
 	routesConfig(){
+    
+    this.router.use("/clan",  (req,res) => res.redirect(302, `${req.protocol}://clan.${req.get("host")}/${req.originalUrl.split("/").slice(2).join("/")}`));
     this.router.use("/",new bb3().routesConfig());
 		this.router.use("/api", new api().routesConfig() );
     this.router.use("/maintenance", new maintenance().routesConfig());
@@ -82,7 +84,7 @@ class Routes{
     //this.router.get("/", util.cache(10*60), this._root);
     this.router.use("/bb3", (req,res) => res.redirect("/"))
 
-  
+
     return this.router;
   }
 }

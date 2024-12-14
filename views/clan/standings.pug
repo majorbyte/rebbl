@@ -55,7 +55,7 @@ block content
               // ko if: $data.hasOwnProperty("logo")
               img(data-bind="attr:{src: `https://cdn.rebbl.net/${logo}`}" style="width:32px;margin-right:15px")
               // /ko
-              a(data-bind="text:clan,attr:{href:`/clan/season/${$root.season}/${clan}`}")
+              a(data-bind="text:clan,attr:{href:`/season/${$root.season}/${clan}`}")
             // ko if: $root.usePoints() && $data.hasOwnProperty("clanPoints")
             td.text-center(data-bind="text:clanPoints")
             td.text-center(data-bind="text:clanWins")

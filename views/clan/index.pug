@@ -16,7 +16,7 @@ block content
           div(class="row col-12")
             template(v-for="clan of filter(division)")
               div(class="p-1")
-                a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/clan/' + clan.name" target="_blank" )
+                a(class="btn btn-outline-info btn-sm" role="button" v-bind:href="'/' + clan.name" target="_blank" )
                   | {{ clan.name }} &nbsp;
                   img(v-bind:src="'https://cdn.rebbl.net/' + clan.logo" style="height:48px")
 

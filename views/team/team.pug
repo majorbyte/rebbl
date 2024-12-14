@@ -41,7 +41,7 @@ block content
         // /ko
       div(class="row col-12")
         h3(style="margin-top: 0px;")
-          a.highlight(data-bind="attr:{href:`/coach/${idcoach}/details`}, text: coachname")
+          a.highlight(data-bind="attr:{href:`/coach/${idcoach.length < 10 ? '' : 'bb3/'}${idcoach}`}, text: coachname")
           // ko if: coachname === coach
           a.btn.btn-sm.btn-primary(style="margin-left:15px;margin-top:-10px" data-bind="attr:{href:`/team/${id}/update`}" title="Can only be done once every 10 minutes across all your teams") update team
           // /ko

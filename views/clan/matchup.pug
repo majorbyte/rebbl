@@ -27,7 +27,7 @@ block content
               div(class="col-10 media text-center d-flex flex-wrap align-items-center")
                 div(class="media-body")
                   h1 
-                    a(v-bind:href="`/clan/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
+                    a(v-bind:href="`/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
                 img(v-bind:src="`https://cdn.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
               div(class="col-2 text-right")
                 h1 {{schedule.home.score}}
@@ -41,7 +41,7 @@ block content
                 img(v-bind:src="`https://cdn.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
                 div(class="media-body")
                   h1 
-                    a(v-bind:href="`/clan/${schedule.away.clan.name}`") {{schedule.away.clan.name}}   
+                    a(v-bind:href="`/${schedule.away.clan.name}`") {{schedule.away.clan.name}}   
       template(v-else)
         div(class="row col-12 g-0")
           div(class="col-5")
@@ -49,7 +49,7 @@ block content
               div(class="col-10 media text-center d-flex flex-wrap align-items-center")
                 div(class="media-body")
                   h1 
-                    a(v-bind:href="`/clan/season/${schedule.season}/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
+                    a(v-bind:href="`/season/${schedule.season}/${schedule.home.clan.name}`") {{schedule.home.clan.name}}
                 img(v-bind:src="`https://cdn.rebbl.net/${schedule.home.clan.logo}`" style="max-height:120px;max-width:180px")
               div(class="col-2 text-end")
                 h1 {{schedule.home.win}}
@@ -63,7 +63,7 @@ block content
                 img(v-bind:src="`https://cdn.rebbl.net/${schedule.away.clan.logo}`" style="max-height:120px;max-width:180px")
                 div(class="media-body")
                   h1 
-                    a(v-bind:href="`/clan/season/${schedule.season}/${schedule.away.clan.name}`") {{schedule.away.clan.name}}          
+                    a(v-bind:href="`/season/${schedule.season}/${schedule.away.clan.name}`") {{schedule.away.clan.name}}          
       template(v-if="!schedule.drafted && powers.length > 0")          
         div(class="col-12 row")
           div(class="col-12 row  align-center")

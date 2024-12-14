@@ -16,7 +16,7 @@ block content
       - let sorted = schedules.sort((a,b) => a.round - b.round)
       .row
         each round, y in [...new Set(schedules.map(x => x.round))]
-          .col-12.col-sm-12.col-lg-6.col-xl-4.g-0
+          .col-12.col-xl-6.g-0
             br
             div.text-center
               a.text-primary.text-decoration-none(href=`/competition/${competition.id}/schedules/${round}`)

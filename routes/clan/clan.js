@@ -51,6 +51,7 @@ class Clan{
     this.router.get("/:season/:division/:round/:house",util.cache(2), this._matchup);
     
     this.router.use('~/team', require(`../team/team.js`));
+    this.router.use('/match', require('../rebbl/match.js'));
 
     this.router.get("/", util.cache(2), this._standings);
 
