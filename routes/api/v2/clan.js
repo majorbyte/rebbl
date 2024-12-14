@@ -555,7 +555,7 @@ class ClanApi{
     });
 
     this.router.get("/team/:name", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
-      let team = await cyanideService.team({platform:"pc",name:req.params.name});
+      let team = await cyanideService.team({platform:"pc",name:req.params.name,order:"creationdate"});
       if (team) res.status(200).send();
       else res.send(404).send();
     });
