@@ -168,6 +168,8 @@ class BB3{
     res.render("bb3/landingpage", {competition,upcomingMatch,announcements: announcements.sort((a,b) => b.date-a.date).slice(0,5)})
   }
 
+  coach = async (req,res) => res.render("bb3/coach", {coach: await oldService.getAccount({bb3id:req.params.id})}); 
+
   routesConfig(){
     this.router.get("/",  this.landingPage);
     this.router.use("/standings", this.competitions);
@@ -179,6 +181,9 @@ class BB3{
     this.router.get("/match/:id",  this.match);
     this.router.get("/unplayed/:id",  this.unplayed);
 
+    this.router.get('/coach/:id', this.coach);
+
+
     this.router.post("/match/:id/validate", util.ensureAuthenticated, async (req,res) => this.validate(req,res,true));
     this.router.post("/match/:id/invalidate", util.ensureAuthenticated, async (req,res) => this.validate(req,res,false));
     this.router.post("/schedule/:id/validate", util.ensureAuthenticated, async (req,res) => this.validateSchedule(req,res,true));
@@ -188,6 +193,7 @@ class BB3{
     this.router.put('/unplayed/:matchId/schedule',  util.ensureAuthenticated, this.scheduleMatch);
 
     this.router.post('/team/:id/retire/:playerId', util.ensureAuthenticated, this.retirePlayer)
+
 
     this.router.get('/:season',  this.competitions)
 

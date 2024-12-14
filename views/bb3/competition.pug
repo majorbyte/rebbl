@@ -35,7 +35,7 @@ include functions.pug
           .row
             .col-2=rank.position
             .col(style=";overflow:hidden") 
-              a(href=`/coach/bb3/${rank.id}`)=rank.name
+              a(href=`/coach/${rank.id}`)=rank.name
             .col(style=";overflow:hidden") 
               a(href=`/team/${rank.teamId}`)=rank.team
         .col-2.d-none.d-md-block(style=";overflow:hidden")=getRace(rank.race)

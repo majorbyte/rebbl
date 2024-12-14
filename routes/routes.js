@@ -75,7 +75,7 @@ class Routes{
     this.router.use("/auth", new auth().routesConfig());
     this.router.use("/admin", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), new admin().routesConfig());
 
-    this.router.use('/coach', new coach().routesConfig());
+    //this.router.use('/coach', new coach().routesConfig());
     this.router.use('/team', require(`./team/team.js`));
 
     //this.router.use("/:company", new rebbl().routesConfig());

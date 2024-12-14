@@ -47,34 +47,24 @@ block content
     if user && user.info
       .coach-container(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/banner/${user.info.banner}.png) `)
         .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${user.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${user.info.avatar}.png); `)
-        a.d-flex.justify-content-center.mx-auto.text-decoration-none(href=`/competition/${competition.id}/schedules` class="highlight")
-          h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0=competition.name
+        a.d-flex.justify-content-center.mx-auto.text-decoration-none(href=`/competition/${competition.id}/schedules` style="-webkit-text-stroke:2px black")
+          h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;")=competition.name
         - if (competition.standings && user && competition.standings.find(x => x.id == user.bb3id))
           .place-container.d-flex.justify-content-center
             h1.text-white.fw-bold.align-content-center.my-0.py-0= "#" + competition.standings.find(x => x.id == user.bb3id).position
     else
       .coach-container.container-default
         .coach.coach-default
-        a.d-flex.justify-content-center.mx-auto.text-decoration-none(href=`/competition/${competition.id}/schedules` class="highlight")
-          h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0=competition.name
+        a.d-flex.justify-content-center.mx-auto.text-decoration-none(href=`/competition/${competition.id}/schedules`  style="-webkit-text-stroke:2px black")
+          h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;")=competition.name
         - if (competition.standings && user && competition.standings.find(x => x.id == user.bb3id))
           .place-container.d-flex.justify-content-center
             h1.text-white.fw-bold.align-content-center.my-0.py-0= "#" + competition.standings.find(x => x.id == user.bb3id).position
     .season-table.text-secondary-emphasis.fs-5(style="margin-bottom:40px;")  
-      div
-        .d-flex.justify-content-end
-          - if (competition.status === 1)
-            h2 Waiting for teams
-          - if (competition.status === 2)
-            h2 Waiting to start
-          - if (competition.status === 3)
-            h2= `Round ${competition.day}`
-          - if (competition.status === 4)
-            h2 Finished  
       .row(style="border-bottom: 3px solid #bdbcbccf;")
         .col-8.col-md-6(style="font-size:1.25em")
           .row
-            .col-1 #
+            .col-2 #
             .col Coach
             .col Team
         .col-2.d-none.d-md-block(style="font-size:1.25em") Race
@@ -86,10 +76,10 @@ block content
             .col-2.d-none.d-md-block L
             .col-4.col-md-2 P
             .col-4.col-md-2.text-end ΔTD
-      - let myStanding = {}
+      - let myStanding = undefined
       if competition.standings && user
         - myStanding =  competition.standings.find(x => x.id == user.bb3id);
-      else
+      if (!myStanding)
         - myStanding = {position:2}
       each rank in competition.standings.filter(x => x.position >= myStanding.position-1 && x.position <= myStanding.position+1)
         .row.season-table-row(id= rank.team.startsWith("[ADMIN]") ? "": rank.id)
@@ -97,7 +87,7 @@ block content
             .row
               .col-2=rank.position
               .col(style=";overflow:hidden") 
-                a.text-decoration-none.text-primary(href=`/coach/bb3/${rank.id}`)=rank.name
+                a.text-decoration-none.text-primary(href=`/coach/${rank.id}`)=rank.name
               .col(style=";overflow:hidden") 
                 a.text-decoration-none.text-primary(href=`/team/${rank.teamId}`)=rank.team
           .col-2.d-none.d-md-block(style=";overflow:hidden")=getRace(rank.race)
@@ -113,60 +103,62 @@ block content
       .col-8.fs-5
         if upcomingMatch
           for match in upcomingMatch
+            - let item = match.home.coach.bb3id == user.bb3id ? match.away : match.home
             .row.col-12
               h2(style="margin-top:40px;margin-bottom:20px")= match.competitionName + " - week " + match.round
             .row
               .col-2
-                img(src="https://cdn.rebbl.net/images/bb3/Logos/100x100/" + match.away.team.logo alt="" class="w-50")
+                .coach-container
+                  .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${item.coach.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${item.coach.info.avatar}.png); `)
               .col-4
                 h3 
-                  a(href=`/team/${match.away.team.id}`)= match.away.team.name
+                  a(href=`/team/${item.team.id}`)= item.team.name
                 h3 
-                  a(href=`/team/${match.away.team.id}`)= match.away.coach.name
+                  a(href=`/coach/${item.coach.bb3id}`)= item.coach.name
               .col-2
-                .coach1
-
+                img(src="https://cdn.rebbl.net/images/bb3/Logos/100x100/" + item.team.logo alt="" class="w-50")
             .row
               .col-2
                 strong race
-              div(class="col-4")= getRace(match.away.team.race)
+              div(class="col-4")= getRace(item.team.race)
             .row
               .col-2
                 strong team value
-              -if (match.away.team.team)
-                div(class="col-4")= match.away.team.team.nextMatchTV
+              -if (item.team.team)
+                div(class="col-4")= item.team.team.nextMatchTV
               -else
-                div(class="col-4")= match.away.team.value
+                div(class="col-4")= item.team.value
             .row
               .col-2
                 strong cash
-              -if (match.away.team.team)
-                div(class="col-4")= Math.floor(match.away.team.team.cash/1000) + "k"
+              -if (item.team.team)
+                div(class="col-4")= Math.floor(item.team.team.cash/1000) + "k"
               -else
                 div(class="col-4") -
             .row
               .col-2
                 strong coach
-              div(class="col-4")= match.away.coach.name
+              div(class="col-4")= item.coach.name
             .row
               .col-2
                 strong reddit
-              div(class="col-4 highlight")= "/u/" + (match.away.coach.reddit ? match.away.coach.reddit.toLowerCase() : "")
+              div(class="col-4 highlight")= "/u/" + (item.coach.reddit ? item.coach.reddit.toLowerCase() : "")
             .row
               .col-2
                 strong discord
-              div(class="col-4")= match.away.coach.discord
+              div(class="col-4")= item.coach.discord
             .row
               .col-2
                 strong steam
-              div(class="col-4")= match.away.coach.steam
+              div(class="col-4")= item.coach.steam
             .row
               .col-2
                 strong timezone  
                 div 
                   strong current time
-              div(class="col-4 timezone" )= match.away.coach.timezone
+              div(class="col-4 timezone" )= item.coach.timezone
                 div(class="time")
+            br
             .row.col
               - if(user?.roles?.includes("streamer"))
                 span Enter match date in your own local time
@@ -177,11 +169,11 @@ block content
                         i.fa-solid.fa-calendar
                       input.datetimepickerInput.form-control.px-0.text-center(id=`datetimepickerInput-${match.matchId}` type="text" value=(match.date ? match.date.date : null)  data-td-target=`#datetimepicker-${match.matchId}`)
                       button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-matchId=match.matchId data-competitionid=match.competition_id data-bs-target=`#datetimepickerInput-${match.matchId}` id=`btn-${match.matchId}`) Set match date
-                    a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.home.team.name data-team-away=match.away.team.name class="calendar-add") Add to Google Calendar
+                    a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.home.team.name data-team-away=item.team.name class="calendar-add") Add to Google Calendar
                   -if (user.twitch)                  
-                    .col-xs-12.col-sm-5.col-md-2 
-                      btn.hidden.btn.btn-danger.unstream(id=`unstream-${match.matchId}` data-matchId=match.matchId) unstream
+                    .col-12
                       btn.btn.btn-success.stream(id=`stream-${match.matchId}` data-matchId=match.matchId)  stream
+                      btn.d-none.btn.btn-danger.unstream(id=`unstream-${match.matchId}` data-matchId=match.matchId) unstream
               - if(match.date)
                 p planned match start:&nbsp;
                   span(id="matchTime")= match.date.date
