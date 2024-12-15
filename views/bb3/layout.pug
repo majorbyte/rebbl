@@ -75,7 +75,7 @@ html(data-bs-theme=theme)
       .container-fluid
         a.navbar-brand(href=user ? '/account' : '/account/login') 
           .d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 38px;')
-            img.w-100.h-100(src=`https://cdn.rebbl.net/images/bb3/coach/avatar/txt_gamer_avatar_beastman.png `)
+            img.w-100.h-100(src=`https://cdn.rebbl.net/images/bb3/coach/avatar/${user ? user.info.avatar : "anonymous"}.png`)
 
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
           span.navbar-toggler-icon

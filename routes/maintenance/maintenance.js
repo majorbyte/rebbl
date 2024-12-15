@@ -107,6 +107,17 @@ class Maintenance{
       
     });
 
+    this.router.get('/bb3-coach', util.verifyMaintenanceToken, async function(req, res){
+      try{
+        await bb3Service.updateCoaches();
+        res.redirect('/');
+      }
+      catch(e){
+        loggingService.error(e);
+      }
+      
+    });
+
 
     this.router.get('/schedules' , util.verifyMaintenanceToken, async function(req,res){
     
