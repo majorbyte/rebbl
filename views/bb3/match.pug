@@ -58,7 +58,7 @@ block content
                     - let tn = match.homeTeam.name
                     a.text-primary.text-decoration-none.fs-3(href=`/team/${match.homeTeam.id}` )= tn
                     .text-end
-                      a.text-primary-emphasis.text-decoration-none.fs-4(href=`/coach/bb3/${match.homeGamer.id}`)= match.homeGamer.name
+                      a.text-primary-emphasis.text-decoration-none.fs-4(href=`/coach/${match.homeGamer.id}`)= match.homeGamer.name
                       .text-end.fs-5
                         div= "winnings: " + (match.homeGameResultGain.newTreasury - match.homeGameResultGain.previousTreasury - match.homeGameResultGain.cashSpentDuringMatch)
                         div= "fan attendance: " + (match.homeGameResultGain.fanAttendance)
@@ -96,7 +96,7 @@ block content
                       - let on = match.awayTeam.name
                       a.text-primary.text-decoration-none.fs-3(href=`/team/${match.awayTeam.id}` )= on
                       .text-start
-                        a.text-primary-emphasis.text-decoration-none.fs-4(href=`/coach/bb3/${match.awayGamer.id}`)= match.awayGamer.name
+                        a.text-primary-emphasis.text-decoration-none.fs-4(href=`/coach/${match.awayGamer.id}`)= match.awayGamer.name
                         .text-start.fs-5
                           div= "winnings: " + (match.awayGameResultGain.newTreasury - match.awayGameResultGain.previousTreasury - match.awayGameResultGain.cashSpentDuringMatch)
                           div= "fan attendance: " + (match.awayGameResultGain.fanAttendance)

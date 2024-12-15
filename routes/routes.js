@@ -66,7 +66,8 @@ class Routes{
 	routesConfig(){
     
     this.router.use("/clan",  (req,res) => res.redirect(302, `${req.protocol}://clan.${req.get("host")}/${req.originalUrl.split("/").slice(2).join("/")}`));
-    this.router.use("/",new bb3().routesConfig());
+    this.router.use("/rebbl",  (req,res) => res.redirect(302, `${req.protocol}://bb2.${req.get("host")}${req.originalUrl}`));
+    this.router.use("/rebbrl",  (req,res) => res.redirect(302, `${req.protocol}://bb2.${req.get("host")}${req.originalUrl}`));
 		this.router.use("/api", new api().routesConfig() );
     this.router.use("/maintenance", new maintenance().routesConfig());
     this.router.use("/account", new account().routesConfig());
@@ -75,15 +76,10 @@ class Routes{
     this.router.use("/auth", new auth().routesConfig());
     this.router.use("/admin", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), new admin().routesConfig());
 
-    //this.router.use('/coach', new coach().routesConfig());
-    this.router.use('/team', require(`./team/team.js`));
+    //this.router.use('/team', require(`./team/team.js`));
 
-    //this.router.use("/:company", new rebbl().routesConfig());
-
-
-    //this.router.get("/", util.cache(10*60), this._root);
     this.router.use("/bb3", (req,res) => res.redirect("/"))
-
+    this.router.use("/",new bb3().routesConfig());
 
     return this.router;
   }

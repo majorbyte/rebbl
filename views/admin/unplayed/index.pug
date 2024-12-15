@@ -307,7 +307,7 @@ block content
             span( data-bind="text: competition")
             // /ko
           td
-            a(data-bind="text: home.coach.name, attr:{href:'/coach/bb3/'+ home.coach.id}"  target="_blank" style="color:#03a9f4")
+            a(data-bind="text: home.coach.name, attr:{href:'/coach/'+ home.coach.id}"  target="_blank" style="color:#03a9f4")
             // ko if: $data.hasOwnProperty("validatedBy") && validatedBy.indexOf(home.coach.id) > -1
             span.badge.badge-sm.text-bg-success.mx-2 validated
             // /ko
@@ -325,7 +325,7 @@ block content
           td 
             span(data-bind="text: away.team.name ")
           td
-            a(data-bind="text: away.coach.name, attr:{href:'/coach/bb3/'+ away.coach.id}" target="_blank" style="color:#03a9f4")
+            a(data-bind="text: away.coach.name, attr:{href:'/coach/'+ away.coach.id}" target="_blank" style="color:#03a9f4")
             // ko if: $data.hasOwnProperty("validatedBy") && validatedBy.indexOf(away.coach.id) > -1
             span.badge.bage-sm.text-bg-success.mx-2 validated
             // /ko

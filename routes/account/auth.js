@@ -25,8 +25,8 @@ class Authentication{
     this.router.get('/reddit/callback', function(req, res, next){
       try {
           passport.authenticate('reddit', {
-            successRedirect: req.session.returnUrl || '/',
-            failureRedirect: '/login'
+            successRedirect: '/',
+            failureRedirect: '/account/login'
           })(req, res, next);
       }catch(ex){
           console.log(ex.message);

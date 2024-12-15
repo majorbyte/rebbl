@@ -120,6 +120,7 @@ class Server{
       this.app.set('trust proxy', 1); // trust first proxy
       this.sessionObject.cookie.secure = true; // serve secure cookies
       this.sessionObject.secret = process.env['sessionSecret'];
+      this.sessionObject.cookie.domain = '.rebbl.net';
     }
 
     this.app.use(bodyParser.urlencoded({ extended: true}));

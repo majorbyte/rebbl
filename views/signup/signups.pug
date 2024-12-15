@@ -79,7 +79,7 @@ block content
             // ko foreach:{data: filteredUsers, as:'signup'}
             div(class="TableRow")
               div(style="white-space: nowrap;display: table-cell;width: 250px;" class="sticky_column")
-                a( data-bind="text:signup.coach, attr:{href:'/coach/'+encodeURIComponent(signup.coach)+'/details'}")
+                a( data-bind="text:signup.coach, attr:{href:'/coach/'+encodeURIComponent(signup.coach)}")
               div(style="white-space: nowrap;display: table-cell;width: 350px;")
                 //ko if: signup.teamId
                 a(href="" target="_blank" data-bind="{attr: {href : '/team/' + signup.teamId}}") 

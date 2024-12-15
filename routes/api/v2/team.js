@@ -4,6 +4,7 @@
 const 
   cyanideService = require("../../../lib/CyanideService.js")
   , dataService = require('../../../lib/DataService.js').rebbl
+  , databb3Service = require('../../../lib/DataServiceBB3.js').rebbl3
   , teamService = require('../../../lib/teamservice.js')
   , express = require('express')
   , rateLimit = require("express-rate-limit")
@@ -11,7 +12,7 @@ const
 
 class TeamApi{
   constructor(){
-    this.router = express.Router({mergeParams: true});
+      this.router = express.Router({mergeParams: true});
   }
 
 
@@ -21,7 +22,8 @@ class TeamApi{
       try {
         let team;
         if (isNaN(req.params.teamId)){
-          team = await dataService.getTeam({"team.id":req.params.teamId});
+          team = await databb3Service.getTeam({"id":req.params.teamId});
+          if (!team) team = await dataService.getTeam({"team.id":req.params.teamId});
           if (!team){
             const r = new RegExp(`^${req.params.teamId}$`,"i");
             team = await dataService.getTeam({"team.name":{$regex: r}});
