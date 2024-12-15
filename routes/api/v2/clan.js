@@ -504,7 +504,7 @@ class ClanApi{
         else 
           await dataService.updateScheduleAsync({_id:schedule._id},{$set:{"away.win":win,"away.draw":draw,"away.loss":loss}});
         
-        res.send(202).send();
+        res.status(202).send();
       }
 
     });
@@ -557,7 +557,7 @@ class ClanApi{
     this.router.get("/team/:name", util.ensureAuthenticated, util.hasRole("admin","clanadmin"), async function(req,res){
       let team = await cyanideService.team({platform:"pc",name:req.params.name,order:"creationdate"});
       if (team) res.status(200).send();
-      else res.send(404).send();
+      else res.status(404).send();
     });
 
     this.router.post("/:clan/applynewblood/:teamId/:newTeamName",util.ensureAuthenticated, util.hasRole("admin","clanadmin"),async function(req,res){
