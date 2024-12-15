@@ -168,6 +168,7 @@ class Server{
     this.app.use(express.urlencoded({ extended: true }));
 
     this.app.use(util.checkBadBots);
+    this.app.use(util.checkTeapots);
 
     this.app.use(util.checkAuthenticated);
 

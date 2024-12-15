@@ -40,7 +40,7 @@ class Clan{
   routesConfig(){
     registerDefaultRoutes(this.router);
 
-    this.router.get("/build/:template", this._template);
+    //this.router.get("/build/:template", this._template); //this seems like an old thing not needed anymore
     this.router.get("/divisions",util.cache(2), this._root);
     this.router.get("/clan",util.cache(2), this._clan);
     this.router.get("/build",util.ensureAuthenticated, util.cache(2), this._build);

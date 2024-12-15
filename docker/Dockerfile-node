@@ -22,4 +22,4 @@ RUN npm prune --production
 
 COPY --chown=node:node . .
 
-CMD ["node","server.js"] 
+CMD ["node","--trace-deprecation","server.js"] 
