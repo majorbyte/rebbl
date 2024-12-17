@@ -10,3 +10,6 @@ Disallow: /
 User-agent: BLEXBot
 
 Disallow: /
+
+User-Agent: WellKnownBot
+Disallow: /

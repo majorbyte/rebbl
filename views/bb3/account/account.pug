@@ -1,0 +1,311 @@
+extends sublayout.pug
+
+block append vars
+  - var activeSubMenu = "account"
+
+block append scripts
+  script.
+    let icon = "#{user.icon || 'BB3Standard'}"
+    let schedule = #{user.doNotLoadSchedules || false};
+    $(document).ready(function(){
+      $("#timezone").on('change', function(e){
+        $("#tz_info").text(moment().tz(e.currentTarget.value).format('YYYY-MM-DD HH:mm Z'));
+      });
+
+      let select = document.getElementById("timezone");
+      let guessed = moment.tz.guess();
+
+      guessed = "#{user.timezone}" || guessed;
+      let names = moment.tz.names();
+      let l = names.length;
+
+      for(let i = 0; i < l; i++){
+        let tz = names[i];
+        let option = document.createElement("option");
+        option.setAttribute("value", tz);
+        option.text = tz;
+        if (tz === guessed){
+          option.setAttribute("selected", "selected")
+        }
+        select.appendChild(option);
+      }
+      $("#tz_info").text(moment().tz(guessed).format('YYYY-MM-DD HH:mm ZZ'));
+    });
+
+    const unfollow = async function(id){
+      let result = await fetch(`/api/v2/account/unfollow/${id}`,{method:"PUT"});
+    
+      if (result.ok){
+        let data = await result.json();
+        if (!data){
+          // false means we are not following anymore
+          let e = document.getElementById(id);
+          e.remove();
+        } 
+      }
+    }
+    const clearLocalStorage = function(){
+      debugger;
+      const storage = window.localStorage;
+      if(storage) storage.clear();
+    }
+    const toggleSchedule = async function(){
+      let result = await fetch(`/api/v2/account/schedule`,{method:"PUT"});
+
+      if (result.ok){
+        schedule = !schedule
+        let e = document.getElementById("btnSchedule");
+        e.innerHTML = schedule ? "yes" : "no";
+      }
+    }
+    const toggle = async function(event){
+      console.dir(event.id);
+      let result;
+      if (event.id == "legacy-outlined") result = await fetch(`/api/v2/account/icon/legacy`,{method:"PUT"});
+      if (event.id == "standard-outlined") result = await fetch(`/api/v2/account/icon/new`,{method:"PUT"});
+
+      if (result.ok){
+        icon = event.id == "legacy-outlined" ? "BB3Legacy" : "BB3Standard";
+        let i = document.getElementById("imgIcon");
+        i.src = `https://cdn.rebbl.net/images/skills/${icon}/Dodge.png`;
+      }
+    }
+  - if (!user.bb3coach)
+    script.
+
+      let coachNames;
+
+      function updateFields(e){
+        const select = document.getElementById("bb3coachSelect");
+        const input = document.getElementById("bb3coach");
+        const id = document.getElementById("bb3coachId");
+        const img = document.getElementById("bb3coachService");
+        const displayId = document.getElementById("bb3displayId");
+
+
+        id.value = select.value;
+        const coach = coachNames.find(x => x.id === id.value);
+        input.value = coach.name;
+
+        displayId.innerHTML = coach.displayId.toUpperCase();
+        displayId.classList.remove("hidden");
+
+        switch (coach.service){
+          case "steam":
+            img.src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+            break;
+          case "psn":
+            img.src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
+            break;
+          case "switch":
+            img.src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
+            break;
+          case "xbl":
+            img.src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
+            break;
+          case "eos":
+            img.src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
+            break;
+          default:
+            img.src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+            break;
+        }
+
+        img.classList.remove("hidden");
+        const saveButton = document.getElementById("saveButton");
+        saveButton.classList.remove("hidden");
+      }
+
+      async function search(e){
+
+        const btn = document.getElementById("searchButton");
+        const input = document.getElementById("bb3coach");
+        const spinner = document.getElementById("spinner");
+        const select = document.getElementById("bb3coachSelect");
+        const selectLabel = document.getElementById("bb3coachSelectLabel");
+        
+        btn.disabled = true;
+        btn.classList.add("btn-primary")<
+        btn.classList.remove("btn-danger")
+        spinner.classList.remove("hidden");
+
+        const response = await fetch(`/api/v2/account/bb3/${input.value}`);
+
+        if (response.ok){
+          const coaches = await response.json();
+          coachNames = coaches;
+          if (Array.isArray(coaches)){
+            const select = document.getElementById("bb3coachSelect");
+            const selectLabel = document.getElementById("bb3coachSelectLabel");
+
+            select.innerHTML = '';
+
+            const o =  document.createElement("option");
+            o.disabled = true;
+            o.selected = true;
+            o.text = "Select your account";
+            select.add(o,null);
+
+            coaches.forEach(coach => {
+              const opt = document.createElement("option");
+
+              opt.value = coach.id;
+              opt.text = `${coach.service}: ${coach.name}`;
+              select.add(opt,null);
+            });
+
+            select.classList.remove("hidden");
+            selectLabel.classList.remove("hidden");
+          } else if (coaches != null) {
+            const input = document.getElementById("bb3coach");
+            const id = document.getElementById("bb3coachId");
+            const saveButton = document.getElementById("saveButton");
+            select.classList.add("hidden");
+            selectLabel.classList.add("hidden");
+
+            id.value = coaches.id;
+            input.value = coaches.name;
+
+            saveButton.classList.remove("hidden");
+          } else{
+            btn.disabled = false;
+            spinner.classList.add("hidden");
+            btn.classList.remove("btn-primary")<
+            btn.classList.add("btn-danger")
+          }
+
+        }
+
+        spinner.classList.add("hidden");
+        btn.disabled = false;
+      }
+
+      async function savebb3(){
+        const input = document.getElementById("bb3coach");
+        const id = document.getElementById("bb3coachId");
+        const spinner = document.getElementById("spinnerSave");
+        const coach = coachNames.find(x => x.id === id.value);
+
+        spinner.classList.remove("hidden");
+
+        const response = await fetch(`/api/v2/account/bb3`,{
+          method:'POST',
+          headers:{'Content-Type': 'application/json'},
+          body:JSON.stringify({id:id.value, name:input.value, service:coach.service, displayId:coach.displayId})
+        });
+        if (response.ok){
+          location.reload();
+        }
+
+        spinner.classList.add("hidden");
+      }
+
+block content
+  .container
+    .row.col-12
+      .col
+        div.container.signup
+          h1 reddit:&nbsp;
+            span.highlight= user.reddit
+            a.btn.btn-warning.btn-sm.ms-5(type="button" href="/account/logout") Logout
+          .row 
+            if user.bb3coach
+              .col.align-content-center(style="clear:both")
+                img.float-start(src="https://cdn.rebbl.net/images/bb3.png" style="width:48px") 
+                h3= user.coach
+                  - let src = ''
+                  case user.bb3service
+                    when "steam"
+                      - src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+                    when "psn"
+                      - src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
+                    when "switch"
+                      - src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
+                    when "xbl"
+                      - src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
+                    when "eos"
+                      - src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
+                  img#bb3coachService(style="width:32px" src=src)
+            if user.coach
+              .col
+                img.float-start(src="https://cdn.rebbl.net/images/bb2.png" style="width:48px") 
+                h3= user.coach
+          .row
+            div(style="width: 410px;")
+              div
+              if !user.bb3coach              
+                label(for="bb3coach") Blood Bowl 3 coach name 
+                input#bb3coach(type="text" name="bb3coach" value=user.bb3coach)
+                input#bb3coachId(type="hidden")
+                label#bb3coachSelectLabel.hidden(for="bb3coachSelect" ) select the correct coach
+                select#bb3coachSelect.hidden(onchange="updateFields()")
+                img#bb3coachService(style="width:32px").hidden
+                span#bb3displayId.hidden
+                br
+                button#searchButton.btn.btn-primary.btn-sm(onclick="search()")
+                  span Search
+                  span#spinner.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+                button#saveButton.btn.btn-success.hidden.btn-sm(style="float:right" onclick="savebb3()" ) Save
+                  span#spinnerSave.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
+        form(action="/account/update" method="post" class="container signup")
+          .row.my-2
+            .col-2
+              label(for="timezone") Timezone
+            .col-8
+              select(id="timezone" name="timezone" required title="timezone")
+          .row
+            .col-2 
+            .col-8
+              label(id="tz_info")
+          .row.my-2
+            .col-2 
+              label(for="discord") Discord
+            .col-8
+              input(type="text" id="discord" name="discord" value=user.discord disabled)
+              -if (user.discordId != undefined)
+                a.btn.btn-warning.btn-sm.ms-3(type="button" href="/account/discord/delete") Disconnect
+              -else
+                a.btn.btn-primary.btn-sm(type="button" href="/auth/discord") Connect
+          .row.my-2
+            .col-2 
+              label(for="twitch") Twitch
+            .col-8
+              input(type="text" id="twitch" name="twitch" value=user.twitch )
+          //div
+            input(type="checkbox" id="useDark" name="useDark" checked=(user.useDark||false) style="height:25px;width:25px") 
+            label(for="useDark" style="display:inline;verticle-align:middle;margin-left:6px") Use rebbl dark mode
+          //-if (user.showDonation !== undefined && user.donations)
+            div
+              input(type="checkbox" id="showDonation" name="showDonation" checked=user.showDonation style="height:25px;width:25px") 
+              label(for="showDonation" style="display:inline;verticle-align:middle;margin-left:6px") Show that I donated
+          div(style="clear:both")
+            button(type="submit" class="btn btn-primary") Save
+            br
+            br
+      .col
+        h3 Local data:
+          button.btn.btn-warning.btn-sm.ms-3(type="button" onclick="clearLocalStorage()") Clear local storage
+        
+        //h3 Do not show schedule in standings: 
+        //button.btn.btn-primary.btn-sm.my-1(type="button" onclick=`toggleSchedule()` id="btnSchedule")= user.doNotLoadSchedules ? "yes" : "no"
+
+        br  
+        br  
+
+        input.btn-check(type="radio" class="" name="options-outlined" id="standard-outlined" autocomplete="off" checked onclick=`toggle(this)`)
+        label.btn.btn-outline-primary.me-2(for="standard-outlined") use standard icons
+
+        input.btn-check(type="radio" class="" name="options-outlined" id="legacy-outlined" autocomplete="off" onclick=`toggle(this)`)
+        label.btn.btn-outline-primary.ms-2(for="legacy-outlined") use legacy icons
+
+        br
+        br  
+
+        img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/Dodge.png` id="imgIcon")
+        //-if (user.following)
+          h3 Following:
+          each follow in user.following
+            div
+              button.btn.btn-primary.btn-sm.my-1(type="button" onclick=`unfollow(${follow.id})` id=`${follow.id}`)= `unfollow ${follow.name}`
+
+

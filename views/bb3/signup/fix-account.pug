@@ -1,0 +1,9 @@
+extends ../../account/sublayout.pug
+
+block content
+  .container
+    h2= `We need to you to link your bb3 coach to your reddit account first, ${user.coach}`
+
+    p You can do this on your account page 
+      a.highlighted-rules(href="/account" class="")= " here"
+      span .

@@ -1,0 +1,18 @@
+extends ../layout.pug 
+
+block append scripts
+  script(src="https://cdn.rebbl.net/scripts/moment.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
+
+block nav 
+  li.nav-item
+    a.nav-link(aria-current='page' href='/' class=page == "standings" ? "active" : "" ) home
+  li.nav-item
+    a.nav-link(aria-current='page' href='/account/reports' class=page == "standings" ? "active" : "" ) reports
+  li.nav-item
+    a.nav-link(aria-current='page' href='/account/trophies' class=page == "standings" ? "active" : "" ) throphies
+  li.nav-item
+    a.nav-link(aria-current='page' href='/signup' class=page == "standings" ? "active" : "" ) signup
+  li.nav-item
+    a.nav-link(aria-current='page' href='/signup/signups' class=page == "standings" ? "active" : "" ) signups

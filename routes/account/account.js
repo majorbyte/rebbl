@@ -11,11 +11,16 @@ const accountService = require("../../lib/accountService.js")
 class Account{
 	constructor(){
 		this.router = express.Router();
+    this.template = "bb3/account";
+    this.router.use((req, _, next) => { 
+      this.template = req.subdomains.some(x => ["bb2","clan"].indexOf(x.toLowerCase()) > -1) ? "account" : "bb3/account"; 
+      return next();
+    });
 	}
 
 
   routesConfig(){
-    this.router.get('/login', function(req, res){res.render('account/login');});
+    this.router.get('/login', (_,res) => res.render(`${this.template}/login`));
     //this.router.get('/logout', function(req, res){req.logout(); res.redirect('/');});
     this.router.get('/logout', function(req, res, next) {
       req.logout(function(err) {
@@ -25,28 +30,29 @@ class Account{
       });
     });    
 
-    this.router.get('/create', util.ensureLoggedIn, this._getCreateAccount);
-    this.router.post('/create', util.ensureLoggedIn, this._createAccount);
+    this.router.get('/create', util.ensureLoggedIn, this._getCreateAccount.bind(this));
+    this.router.post('/create', util.ensureLoggedIn, this._createAccount.bind(this));
 
-    this.router.get('/', util.checkAuthenticated, util.ensureAuthenticated, this._getAccount);
+    this.router.get('/', util.checkAuthenticated, util.ensureAuthenticated, this._getAccount.bind(this));
     
-    this.router.get('/discord', util.checkAuthenticated, util.ensureAuthenticated, this._discord);
-    this.router.get('/nodiscord', util.checkAuthenticated, util.ensureAuthenticated, this._noDiscord);
+    this.router.get('/discord', util.checkAuthenticated, util.ensureAuthenticated, this._discord.bind(this));
+    this.router.get('/nodiscord', util.checkAuthenticated, util.ensureAuthenticated, this._noDiscord.bind(this));
 
-    this.router.get('/match',util.checkAuthenticated, util.ensureAuthenticated, this._getMatch);
-    this.router.get('/reports',util.checkAuthenticated, util.ensureAuthenticated, async (_,res) => res.render("account/reports") );
-    this.router.get('/trophies',util.checkAuthenticated, util.ensureAuthenticated, this._getTrophies);
-    this.router.get('/discord/delete', util.checkAuthenticated, util.ensureAuthenticated, this._removeDiscord);
+    this.router.get('/match',util.checkAuthenticated, util.ensureAuthenticated, this._getMatch.bind(this));
+    this.router.get('/reports',util.checkAuthenticated, util.ensureAuthenticated, async (_,res) => res.render(`${this.template}/reports`) );
+    this.router.get('/trophies',util.checkAuthenticated, util.ensureAuthenticated, this._getTrophies.bind(this));
+    this.router.get('/discord/delete', util.checkAuthenticated, util.ensureAuthenticated, this._removeDiscord.bind(this));
 
-    this.router.post('/trophies/hide',util.checkAuthenticated, util.ensureAuthenticated, this._hideTrophy);
-    this.router.post('/trophies/show',util.checkAuthenticated, util.ensureAuthenticated, this._showTrophy);
-    this.router.post('/update', util.checkAuthenticated, util.ensureAuthenticated, this._updateAccount);
+    this.router.post('/trophies/hide',util.checkAuthenticated, util.ensureAuthenticated, this._hideTrophy.bind(this));
+    this.router.post('/trophies/show',util.checkAuthenticated, util.ensureAuthenticated, this._showTrophy.bind(this));
+    this.router.post('/update', util.checkAuthenticated, util.ensureAuthenticated, this._updateAccount.bind(this));
 
-    this.router.put('/unplayed/:match_id', util.checkAuthenticated, util.ensureAuthenticated, this._scheduleMatch);
+    this.router.put('/unplayed/:match_id', util.checkAuthenticated, util.ensureAuthenticated, this._scheduleMatch.bind(this));
 
     return this.router;
   }
 
+  
 
   async _getAccount(req, res){
     try{
@@ -71,7 +77,7 @@ class Account{
           }
           account.following = coaches;
         }
-        res.render('account/account', { user: account });
+        return res.render(`${this.template}/account`, { user: account });
       }
     } catch(err){
       console.log(err);
@@ -83,7 +89,7 @@ class Account{
       if (!req.user.name){
         res.redirect('/signup');
       } else {
-        res.render('account/create', { user: req.user.name});
+        res.render(`${this.template}/create`, { user: req.user.name});
       }
     } catch(err){
       console.log(err);

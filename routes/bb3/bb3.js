@@ -169,6 +169,9 @@ class BB3{
   }
 
   coach = async (req,res) => res.render("bb3/coach", {coach: await oldService.getAccount({bb3id:req.params.id})}); 
+  #coachMatches = async(req,res) => isNaN(req.params.id) 
+    ? res.render("bb3/coach", {coach: await oldService.getAccount({bb3id:req.params.id})})
+    : res.redirect(302, `${req.protocol}://bb2.${req.get("host")}${req.originalUrl}`);
 
   routesConfig(){
     this.router.get("/",  this.landingPage);
@@ -182,6 +185,7 @@ class BB3{
     this.router.get("/unplayed/:id",  this.unplayed);
 
     this.router.get('/coach/:id', this.coach);
+    this.router.get('/coach/:id/matches', this.#coachMatches);
 
 
     this.router.post("/match/:id/validate", util.ensureAuthenticated, async (req,res) => this.validate(req,res,true));

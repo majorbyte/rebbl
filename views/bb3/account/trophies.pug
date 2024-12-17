@@ -1,0 +1,37 @@
+extends ./sublayout.pug
+
+block append vars
+  - var activeSubMenu = "trophies"
+
+block head
+  style.
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: #28a745;
+      font-size:50px
+    }
+    
+
+block content
+   div(class="container")
+      div(class="row col-12")
+        - if(user.trophies && user.trophies.length > 0)
+          each trophy, index in user.trophies
+            div(class="col-3")
+              - let action = trophy.display ? "/account/trophies/hide" : "/account/trophies/show" 
+              form(action=action method="post")
+                input(type="hidden" value=index id="index" name="index")
+                - if (trophy.display)
+                  i(class="fa-solid fa-check-circle overlay")
+                img(src="https://cdn.rebbl.net/" + trophy.filename title=trophy.title alt="" style="display:block;margin-left:auto;margin-right:auto")
+                - if (trophy.display)
+                  button(style="display:block;margin-left:auto;margin-right:auto;margin-top:10px" submit) Hide
+                - else
+                  button(style="display:block;margin-left:auto;margin-right:auto;margin-top:10px" submit) Display
+                h2(style="text-align: center;margin-bottom: 0px;")= trophy.title
+                h4(style="text-align: center;margin-top: 0px;")= trophy.date
+        -else  
+          h2(style="text-align: center;margin-bottom: 0px;") No Trophies earned yet!
+

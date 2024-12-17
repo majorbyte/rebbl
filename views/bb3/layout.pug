@@ -81,8 +81,9 @@ html(data-bs-theme=theme)
           span.navbar-toggler-icon
         #navbarCollapse.collapse.navbar-collapse
           ul.navbar-nav.me-auto.mb-2.mb-md-0
-            li.nav-item
-              a.nav-link(aria-current='page' href='/standings' class=page == "standings" ? "active" : "" ) standings
+            block nav  
+              li.nav-item
+                a.nav-link(aria-current='page' href='/standings' class=page == "standings" ? "active" : "" ) standings
           ul.navbar-nav
             li.nav-item.align-center.d-flex.text-white
               div
@@ -92,7 +93,6 @@ html(data-bs-theme=theme)
               div
                 i.fa.fa-moon
   
-          block nav  
     div(style="padding-top:48px")
       block content
 

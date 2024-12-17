@@ -1,0 +1,386 @@
+extends sublayout.pug
+
+block append vars
+  - var activeSubMenu = "reports"
+
+block head
+  style.
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: #28a745;
+      font-size:50px
+    }
+    h2{margin-top:unset}
+
+block append scripts
+  - if (process.env.NODE_ENV === 'production')
+    script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-mapping.min.js")
+    script(src="https://cdn.rebbl.net/scripts/knockout-es5.js")
+
+  - else
+    script(src="/scripts/knockout-3.4.2.js")
+    script(src="/scripts/knockout-mapping.min.js")
+    script(src="/scripts/knockout-es5.js")
+
+  script.
+
+    function showSuccess(msg){
+      const elm = document.getElementById("toastSuccess");
+      const body = document.getElementById("successBody");
+
+      body.innerHTML = msg;
+      const toast = new bootstrap.Toast(elm);
+      toast.show();
+    }
+
+    function showError(err){
+      const elm = document.getElementById("toastError");
+      const body = document.getElementById("errorBody");
+
+      body.innerHTML = err.message;
+      const toast = new bootstrap.Toast(elm);
+      toast.show();
+    }
+
+    class HookModel{
+      constructor(data){
+        this.map(data || {});
+        this._reset = () => this.map(data);
+        this.isDirty.bind(this);  
+
+        this._original = this.stringify(this);
+
+        ko.track(this);
+      }      
+
+      map(data){
+        this.id = data.id;
+        this.url = `https://discord.com/api/webhooks/${data.id}/***`;
+        this.name = data.name;
+        this.displayName = data.displayName || null;
+        this.avatarUrl = data.avatarUrl || null;
+        this.image = data.image;
+        this.races = data.races;
+        this.competitions = data.competitions;
+        this.reportCoach = data.reportCoach || false;
+        this.toAdd = "";
+        this.selectedCompetitions = [];
+      }
+
+      addItem() {
+        if ((this.toAdd != "") && (this.competitions.indexOf(this.toAdd) < 0)) // Prevent blanks and duplicates
+            this.competitions.push(this.toAdd);
+        this.toAdd =""; // Clear the text box
+      };
+ 
+      removeSelected() {
+        this.competitions.removeAll(this.selectedCompetitions);
+        this.selectedCompetitions = []; // Clear selection
+      };
+
+      stringify = (value) => JSON.stringify(value, (key, val) => ["_original", "selectedCompetitions"].indexOf(key) > -1 ? undefined : val);
+
+      isDirty() {
+        return this._original ? this.stringify(this) !== this._original : false;
+      }
+
+      async save(){
+        this._original = this.stringify(this);
+
+        const response = await fetch(`/api/v2/hooks/${this.id}`,{
+          method: "PUT",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+            id: this.id,
+            races: this.races,
+            competitions: this.competitions,
+            reportCoach: this.reportCoach,
+            displayName: this.displayName || null,
+            avatarUrl: this.avatarUrl || null
+          })
+        });
+
+        if (response.ok) showSuccess("Webhook settings updated.");
+        else showError(await response.json());
+      }
+
+      async refresh(){
+        const response = await fetch(`/api/v2/hooks/${this.id}/refresh`,{
+          method: "PUT",
+          headers:{"Content-Type":"application/json"},
+          body: null
+        });
+
+        if (response.ok) model.load();
+        else showError(await response.json());
+
+      }
+
+      async delete (){
+        const response = await fetch(`/api/v2/hooks/${this.id}`,{method: "DELETE"});
+        if (response.ok) showSuccess("Deleted webhook successfully.");
+        else showError(await response.json());
+        model.load();
+      }
+
+    }
+    
+    class HooksModel{
+      constructor(data){
+        
+        this.map(data || []);
+        this._reset = () => this.map(data);
+        ko.track(this);
+        this._original = JSON.stringify(this);
+      }      
+
+      map(data){
+        if (Array.isArray(data)) this.hooks = data.map(d => new HookModel(d));
+        else this.hooks = [];
+
+        this.loading = true;        
+        this.uri = "";
+      }
+
+      async addWebhook(){
+        const response = await fetch("/api/v2/hooks",{
+          method: "POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({url: this.uri})
+        });
+
+        if (response.ok) showSuccess("Webhook successfully added.");
+        else showError(await response.json());
+
+        this.load();
+      }
+
+      async load(){
+        this.loading = true;
+        const hooks = await fetch("/api/v2/hooks");
+
+        if (hooks.ok){  
+          model.map(await hooks.json()); 
+        }
+        this.loading = false;
+      }
+
+      isDirty = _ => JSON.stringify(this, (key, val) => key === "_original" ? undefined : val) !== this._original;
+    }
+
+    
+    let model = new HooksModel([]);
+    $(document).ready(async function(){
+      model.load();
+      ko.applyBindings(model);
+    });
+
+
+block content
+  #toastSuccess.toast.float-end.align-items-center.text-bg-success.border-0(role="alert" aria-live="assertive" aria-atomic="true")
+    .d-flex
+      .toast-body#successBody
+      button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")
+  #toastError.toast.top-0.end-0.align-items-center.text-bg-danger.border-0(role="alert" aria-live="assertive" aria-atomic="true")
+    .d-flex
+      .toast-body#errorBody
+      button.btn-close.btn-close-white.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Close")      
+
+  div(class="container")
+    div.alert.alert-info
+      p Here you can manage you discord hooks to get bb3 match reports.
+    label(for="add") Add a new webhook url
+    .input-group#add 
+      span.input-group-text webhook url 
+      input.form-control(type="text" data-bind="value: uri")
+      button.btn.btn-outline-success(data-bind="click: addWebhook") save
+
+    h3 Registered webhooks  
+    .col-12(data-bind="visible: loading")
+      .accordion#discordAccordion
+        #accordion-item.placeholder-glow
+          .accordion-item.placeholder.col-12
+            h2.accordion-header.placeholder
+        #accordion-item.placeholder-glow
+          .accordion-item.placeholder.col-12
+            h2.accordion-header.placeholder
+
+    .col-12.d-none(data-bind="hidden: loading, css:{'d-none': loading}")
+      .accordion#discordAccordion
+        // ko foreach: hooks
+        #accordion-item
+          .accordion-item
+            h2.accordion-header
+              button.accordion-button.collapsed.py-2(type="button" data-bs-toggle="collapse" aria-expanded="false" data-bind="attr: {'data-bs-target':'#' + $data.id,'aria-controls':$data.id}")
+                  img(data-bind="attr: {src: $data.image}" style="width:40px; margin-top:-6px !important ")
+                  h2(data-bind="{text: $data.name}" style="margin-bottom:unset;")
+            .accordion-collapse.collapse.collapsed(data-bs-parent="#discordAccordion" data-bind="attr: {id: $data.id}")
+              .accordion-body
+                .row 
+                  .col-12 
+                    button.btn.btn-warning.float-start(title="refresh name & avater")
+                      i.fa.fa-recycle(data-bind="click: $data.refresh")
+                    button.btn.btn-success.float-end(data-bind="{attr: {disabled: !$data.isDirty()}, click: $data.save}") save
+                label(for="url") Webhook URL
+                input.form-control(type="text", name="url" data-bind="value: $data.url" disabled)
+
+                label(for="url") Display name
+                input.form-control(type="text", name="url" data-bind="value: $data.displayName" )
+
+                label(for="url") Alternative avatar
+                .input-group
+                  input.form-control(type="text", name="url" data-bind="value: $data.avatarUrl" )
+                  span.input-group-text
+                    img(data-bind="attr: {src: $data.avatarUrl}, css:{'d-none': $data.avatarUrl == null}" style="width:40px;height:40px")
+
+
+                h3 filters
+                .col-12.callout.callout-info
+                  | All filters work as 
+                  code or
+                  |  filters. 
+                  br
+                  br
+                  | This means that if you would select 
+                  code Dwarf
+                  |  as a race filter and enter 
+                  code /rel/i
+                  |  as a competition filter, you will get all dwarf matches reported from 
+                  code Big O
+                  | , 
+                  code GMan
+                  |  and 
+                  code REL
+                  |  competitions, but also all matches played in 
+                  code REL
+                  |  regardless of race.
+                ul.nav.nav-pills#filters(role="tablist" )
+                  li.nav-item(role="presentation") 
+                    button.nav-link.active(data-bind="attr: {id: `races-tab-${$data.id}`, 'data-bs-target':`#races-pane-${$data.id}`,  'aria-controls':`races-pane-${$data.id}` }" data-bs-toggle="tab"  type="button" role="tab" aria-selected="true") races
+                  li.nav-item(role="presentation") 
+                    button.nav-link(data-bind="attr: {id: `competitions-tab-${$data.id}`, 'data-bs-target':`#competitions-pane-${$data.id}`,  'aria-controls':`competitions-pane-${$data.id}`}" data-bs-toggle="tab" type="button" role="tab" aria-selected="false") competitions
+                  li.nav-item(role="presentation") 
+                    button.nav-link(data-bind="attr: {id: `coach-tab-${$data.id}`, 'data-bs-target':`#coach-pane-${$data.id}`,  'aria-controls':`coach-pane-${$data.id}`}" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" ) coach
+                .tab-content#filtersContent
+                  .tab-pane.fade.show.active(data-bind="attr: {id: `races-pane-${$data.id}`}" role="tabpanel" aria-labelledby="races-tab" tabindex="0")
+                    .row 
+                      .col-12.callout.callout-info
+                        | You can toggle here for which races you want to get reports.
+
+                      .col-3
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" id="Blorc" role="switch" value="1000" data-bind="checked: $data.races") 
+                          label.form-check-label(for="Blorc") Black Orc
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="8" data-bind="checked: $data.races") 
+                          label Chaos Chosen
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="1001" data-bind="checked: $data.races") 
+                          label Chaos Renegade
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="9" data-bind="checked: $data.races") 
+                          label Dark Elf
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="2" data-bind="checked: $data.races") 
+                          label Dwarf
+                      .col-3
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="14" data-bind="checked: $data.races") 
+                          label Elven Union
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="6" data-bind="checked: $data.races") 
+                          label Goblin
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="11" data-bind="checked: $data.races") 
+                          label Halfling
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="1" data-bind="checked: $data.races") 
+                          label Human
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="24" data-bind="checked: $data.races") 
+                          label Imperial Nobility
+                      .col-3
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="5" data-bind="checked: $data.races") 
+                          label Lizardman
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="17" data-bind="checked: $data.races") 
+                          label Necromantic Horror
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="18" data-bind="checked: $data.races") 
+                          label Nurgle
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="1002" data-bind="checked: $data.races") 
+                          label OldWorld Alliance
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="4" data-bind="checked: $data.races") 
+                          label Orc
+                      .col-3
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="10" data-bind="checked: $data.races") 
+                          label Shambling Undead
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="3" data-bind="checked: $data.races") 
+                          label Skaven
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="22" data-bind="checked: $data.races") 
+                          label Underworld Denizen
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="7" data-bind="checked: $data.races") 
+                          label Wood Elf
+                  .tab-pane.fade.show(data-bind="attr: {id: `competitions-pane-${$data.id}`}" role="tabpanel" aria-labelledby="comeptitions-tab" tabindex="0")
+                    .row
+                      br
+                      form(data-bind="submit:addItem")
+                        .col-12.callout.callout-info
+                          | You can either enter the full, case-sensitive name of the competition, or write a 
+                          strond regular expression 
+                          | to match the several competitions at once. 
+                          br
+                          | For example use  
+                          code /gman/i
+                          |  to report on all competition named 
+                          code GMan A
+                          | , 
+                          code gman B
+                          |  or 
+                          code Temp GMAN comp
+                          br
+                          br
+                          | Toggles are used for selecting which competitions you want to remove from the list.
+
+                        label(for="addCompetition") Add a new competition to report
+                        .col-12.input-group#addCompetition
+                          span.input-group-text competition 
+                          input.form-control(type="text" data-bind='value:toAdd, valueUpdate: "afterkeydown"')
+                          button.btn.btn-outline-success(type="submit" data-bind="enable: toAdd.length > 0") Add
+                        br
+                      .row
+                      // ko foreach: competitions
+                      .col-3
+                        .form-check.form-switch
+                          input.form-check-input(type="checkbox" role="switch" value="10" data-bind="value: $data, checked: $parent.selectedCompetitions") 
+                          label(data-bind="text: $data")
+                      // /ko
+                      div
+                          button.btn.btn-danger(data-bind="click: removeSelected, enable: selectedCompetitions.length > 0") Remove selected competitions
+                  .tab-pane.fade.show(data-bind="attr: {id: `coach-pane-${$data.id}`}" role="tabpanel" aria-labelledby="coach-tab" tabindex="0")
+                    .row 
+                      .col-12.callout.callout-info
+                        | When this options is turned on, reports for your coach id will be sent.
+                      .form-check.form-switch
+                        input.form-check-input(type="checkbox" role="switch" value="8" data-bind="checked: $data.reportCoach") 
+                        label Report matches for my coach.
+
+              button.collapsed.accordion-button.alert.alert-danger(data-bind="attr: {'data-bs-target':`#collapse-${$data.id}`, 'aria-controls':`collapse-${$data.id}`}" type="button" data-bs-toggle="collapse" aria-expanded="false" style="margin-bottom:0px !important")
+                Accordion Danger
+              .collapse(data-bind="attr: {id: `collapse-${$data.id}` }")
+                .card.card-body.d-md-block
+                  p.alert.alert-danger Clicking delete will remove this webhook registration
+                    button.my-0.border.border-warning.btn.btn-danger.float-end(style="margin-top:-7px !important" data-bind="click: $data.delete") delete
+        // /ko
+    br
+
