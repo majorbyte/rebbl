@@ -70,6 +70,14 @@ block append scripts
         i.src = `https://cdn.rebbl.net/images/skills/${icon}/Dodge.png`;
       }
     }
+    function discordConnect(){
+      window.location.assign("/auth/discord");
+    }
+
+    function discordDisconnect(){
+      window.location.assign("/account/discord/delete");
+    }
+
   - if (!user.bb3coach)
     script.
 
@@ -200,6 +208,7 @@ block append scripts
         spinner.classList.add("hidden");
       }
 
+
 block content
   .container
     .row.col-12
@@ -212,7 +221,7 @@ block content
             if user.bb3coach
               .col.align-content-center(style="clear:both")
                 img.float-start(src="https://cdn.rebbl.net/images/bb3.png" style="width:48px") 
-                h3= user.coach
+                h3= user.bb3coach
                   - let src = ''
                   case user.bb3service
                     when "steam"
@@ -248,29 +257,22 @@ block content
                 button#saveButton.btn.btn-success.hidden.btn-sm(style="float:right" onclick="savebb3()" ) Save
                   span#spinnerSave.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
         form(action="/account/update" method="post" class="container signup")
-          .row.my-2
-            .col-2
-              label(for="timezone") Timezone
-            .col-8
-              select(id="timezone" name="timezone" required title="timezone")
-          .row
-            .col-2 
-            .col-8
-              label(id="tz_info")
-          .row.my-2
-            .col-2 
-              label(for="discord") Discord
-            .col-8
-              input(type="text" id="discord" name="discord" value=user.discord disabled)
-              -if (user.discordId != undefined)
-                a.btn.btn-warning.btn-sm.ms-3(type="button" href="/account/discord/delete") Disconnect
-              -else
-                a.btn.btn-primary.btn-sm(type="button" href="/auth/discord") Connect
-          .row.my-2
-            .col-2 
-              label(for="twitch") Twitch
-            .col-8
-              input(type="text" id="twitch" name="twitch" value=user.twitch )
+          .input-group.my-2
+            span.input-group-text(for="timezone") Timezone
+            select#timezone.form-control(name="timezone" required title="timezone")
+            span#tz_info.input-group-text
+          .input-group.my-2
+            span.input-group-text(for="discord") Discord
+            input.form-control(type="text" id="discord" name="discord" value=user.discord disabled)
+            -if (user.discordId != undefined)
+              button.btn.btn-outline-warning(type="button" onclick="discordDisconnect()") Disconnect
+              //href="/account/discord/delete"
+            -else
+              button.btn.btn-outline-primary(type="button" onclick="discordConnect()") Connect
+              //href="/auth/discord"
+          .input-group.my-2
+            span.input-group-text(for="twitch") Twitch
+            input#twitch.form-control(type="text" name="twitch" value=user.twitch )
           //div
             input(type="checkbox" id="useDark" name="useDark" checked=(user.useDark||false) style="height:25px;width:25px") 
             label(for="useDark" style="display:inline;verticle-align:middle;margin-left:6px") Use rebbl dark mode

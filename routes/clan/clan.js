@@ -43,14 +43,14 @@ class Clan{
     //this.router.get("/build/:template", this._template); //this seems like an old thing not needed anymore
 
     this.router.use("/rebbl/match", (req,res) => res.redirect(302, "/" + req.originalUrl.split("/").slice(2).join("/")));
-    this.router.get("/divisions", this._root);
-    this.router.get("/clan", this._clan);
-    this.router.get("/build",util.ensureAuthenticated, this._build);
-    this.router.get("/build/:clan",util.ensureAuthenticated, this._build);
-    this.router.get("/:clan",util.ensureAuthenticated, this._clan);
-    this.router.get("/season/:season/:clan", this._seasonclan);    
-    this.router.get("/schedule/:s/:d", this._schedule);
-    this.router.get("/:season/:division/:round/:house", this._matchup);
+    this.router.get("/divisions", util.cache(600), this._root);
+    this.router.get("/clan", util.cache(600), this._clan);
+    this.router.get("/build",util.ensureAuthenticated, util.cache(1), this._build);
+    this.router.get("/build/:clan",util.ensureAuthenticated, util.cache(1), this._build);
+    this.router.get("/:clan",util.ensureAuthenticated, util.cache(600), this._clan);
+    this.router.get("/season/:season/:clan", util.cache(600), this._seasonclan);
+    this.router.get("/schedule/:s/:d", util.cache(600), this._schedule);
+    this.router.get("/:season/:division/:round/:house", util.cache(600), this._matchup);
     
     this.router.use('~/team', require(`../team/team.js`));
     this.router.use('/match', require('../rebbl/match.js'));

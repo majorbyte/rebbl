@@ -4,6 +4,10 @@ block append vars
   - var activeSubMenu = "account"
 
 block append scripts
+  script(src="https://cdn.rebbl.net/scripts/moment.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
+
   script.
     $(document).ready(function(){
       $("#timezone").on('change', function(e){
@@ -54,27 +58,28 @@ block content
           select(id="timezone" name="timezone" required title="timezone" value=account.timezone)
           label(id="tz_info")
       -if (!account)
-        div(style="width: 500px;")
-          label(for="coach") Blood Bowl 3 coach name
-          input#bb3coach(type="text" name="bb3coach")
-          input#bb3coachId(type="hidden" name="bb3id")
-          input#bb3coachServiceInput(type="hidden" name="bb3service")
-          input#bb3coachDisplayId(type="hidden" name="bb3displayId")
-          button#searchButton.btn.btn-primary.btn-sm.mx-2(onclick="search()")
-            span Search
-            span#spinner.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
-          label#bb3coachSelectLabel.hidden(for="bb3coachSelect" ) select the correct coach 
-          select#bb3coachSelect.hidden(onchange="updateFields()")
-          div
-            img#bb3coachService(style="width:32px").hidden
-            span#bb3displayId.hidden
-          br
+        .input-group
+          span.input-group-text coach name
+          input#bb3coach.form-control(type="text" name="bb3coach")
+          button#searchButton.btn.btn-outline-primary(onclick="search()") search
+            span#spinner.spinner-border.spinner-border-sm.d-none.mx-1(role="status" aria-hidden="true")
+
+        input#bb3coachId(type="hidden" name="bb3id")
+        input#bb3coachServiceInput(type="hidden" name="bb3service")
+        input#bb3coachDisplayId(type="hidden" name="bb3displayId")
+
+        .input-group#bb3coachSelectLabel.d-none.my-2
+          span.input-group-text select the correct coach 
+          select#bb3coachSelect.d-none.form-control(onchange="updateFields()")
         div
-          label(for="timezone") Timezone
-          select(id="timezone" name="timezone" required title="timezone")
-          label(id="tz_info")
+          img#bb3coachService(style="width:32px").d-none
+          span#bb3displayId.d-none
+        .input-group.my-2
+          span.input-group-text Timezone
+          select.form-control(id="timezone" name="timezone" required title="timezone")
+          span.input-group-text#tz_info
       div(style="clear:both")
-        button#saveButton.btn.btn-primary.hidden(type="submit") Save
+        button#saveButton.btn.btn-primary.d-none(type="submit") Save
         br
         br                
 
@@ -99,7 +104,7 @@ block content
         bb3coachDisplayId.value=coach.displayId;
 
         displayId.innerHTML = coach.displayId.toUpperCase();
-        displayId.classList.remove("hidden");
+        displayId.classList.remove("d-none");
 
         switch (coach.service){
           case "steam":
@@ -123,9 +128,9 @@ block content
 
         }
 
-        img.classList.remove("hidden");
+        img.classList.remove("d-none");
         const saveButton = document.getElementById("saveButton");
-        saveButton.classList.remove("hidden");
+        saveButton.classList.remove("d-none");
       }
 
       async function search(e){
@@ -137,9 +142,9 @@ block content
         const selectLabel = document.getElementById("bb3coachSelectLabel");
         
         btn.disabled = true;
-        btn.classList.add("btn-primary")<
+        btn.classList.add("btn-outline-primary")<
         btn.classList.remove("btn-danger")
-        spinner.classList.remove("hidden");
+        spinner.classList.remove("d-none");
 
         const response = await fetch(`/api/v2/account/bb3/${input.value}`);
 
@@ -166,29 +171,29 @@ block content
               select.add(opt,null);
             });
 
-            select.classList.remove("hidden");
-            selectLabel.classList.remove("hidden");
+            select.classList.remove("d-none");
+            selectLabel.classList.remove("d-none");
           } else if (coaches != null) {
             const input = document.getElementById("bb3coach");
             const id = document.getElementById("bb3coachId");
             const saveButton = document.getElementById("saveButton");
-            select.classList.add("hidden");
-            selectLabel.classList.add("hidden");
+            select.classList.add("d-none");
+            selectLabel.classList.add("d-none");
 
             id.value = coaches.id;
             input.value = coaches.name;
 
-            saveButton.classList.remove("hidden");
+            saveButton.classList.remove("d-none");
           } else{
             btn.disabled = false;
-            spinner.classList.add("hidden");
+            spinner.classList.add("d-none");
             btn.classList.remove("btn-primary")<
             btn.classList.add("btn-danger")
           }
 
         }
 
-        spinner.classList.add("hidden");
+        spinner.classList.add("d-none");
         btn.disabled = false;
       }
 
@@ -198,7 +203,7 @@ block content
         const spinner = document.getElementById("spinnerSave");
         const coach = coachNames.find(x => x.id === id.value);
 
-        spinner.classList.remove("hidden");
+        spinner.classList.remove("d-none");
 
         const response = await fetch(`/api/v2/account/bb3`,{
           method:'POST',
@@ -209,5 +214,5 @@ block content
           location.reload();
         }
 
-        spinner.classList.add("hidden");
+        spinner.classList.add("d-none");
       }

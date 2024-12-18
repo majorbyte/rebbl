@@ -113,7 +113,7 @@ class Account{
   
       const user = await accountService.searchAccount({"reddit": {$regex: new RegExp(`^${req.user.name}`,"i")}});
   
-      res.render('account/trophies',{user:user} );
+      res.render(`${this.template}/trophies`,{user:user} );
     } catch(err){
       console.log(err);
     }

@@ -42,21 +42,21 @@ block content
               h3= "REBBL BB3 Season 3- " + signup.league
               if (signup.open)
                 div(style="display:flex")
-                  form(action="/signup/bb3/resign" method="post" style="display:flex" )
+                  form(action="/signup/resign" method="post" style="display:flex" )
                     br
                     button(type="submit"  class="btn btn-primary") Resign
               p Nagivate 
-                a(href="/signup/bb3/signups" class="highlighted-rules") here
+                a(href="/signup/signups" class="highlighted-rules") here
                 span &nbsp;to view all current signups
             else if (signup.type==="college")
               h3= "REBBL BB3 College Season 3 - " + signup.league
               if (signup.open)
                 div(style="display:flex")
-                  form(action="/signup/bb3/resign" method="post" style="display:flex" )
+                  form(action="/signup/resign" method="post" style="display:flex" )
                     br
                     button(type="submit"  class="btn btn-primary") Resign
               p Nagivate 
-                a(href="/signup/bb3/signups" class="highlighted-rules") here
+                a(href="/signup/signups" class="highlighted-rules") here
                 span &nbsp;to view all current signups
             //- else
               - if (signup.saveType === "reserve")
@@ -103,7 +103,7 @@ block content
               .card-body 
                 a(href="https://www.reddit.com/r/ReBBl/comments/1g573rd/rebbl_bb3_season_3_signups/" class="highlighted-rules") Read more here about Season 3
               .card-body 
-                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/fresh" type='button') Signup
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/fresh" type='button') Signup
         if (signupState.greenhornOpen)
           .col
             .card.mb-4.rounded-3.shadow-sm.border-primary
@@ -120,7 +120,7 @@ block content
               .card-body 
                 a(href="https://www.reddit.com/r/ReBBl/comments/1g5484y/rebbl_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Greenhorn here
               .card-body 
-                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/greenhorn" type='button') Signup
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/greenhorn" type='button') Signup
         if (signupState.mainOpen)
           .col
             .card.mb-4.rounded-3.shadow-sm.boder-primary
@@ -137,7 +137,7 @@ block content
               .card-body 
                 a(href="https://www.reddit.com/r/ReBBl/comments/1g573rd/rebbl_bb3_season_3_signups/" class="highlighted-rules") Read more here about Season 3
               .card-body 
-                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/returning" type='button' class=`${redrafted ?  "" : "disabled opacity-50"}`) Signup
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/returning" type='button' class=`${redrafted ?  "" : "disabled opacity-50"}`) Signup
         if (signupState.ureOpen)
           .col
             .card.mb-4.rounded-3.shadow-sm(class=`${canReturn ?  "border-primary" :"border-secondary opacity-50"}`)
@@ -154,7 +154,7 @@ block content
               .card-body 
                 a(href="https://www.reddit.com/r/ReBBl/comments/1g5484y/rebbl_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Ure Trophy here
               .card-body 
-                a.w-100.btn.btn-lg.btn-primary(href="/signup/bb3/ure" type='button') Signup
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/ure" type='button') Signup
         if (signups.every(x => "uregreenhornfreshreturningcollege".indexOf(x.type) === -1))
           .col
             .card.mb-4.rounded-3.shadow-sm.border-secondary

@@ -43,6 +43,13 @@ class Signup{
       ,{id:20,name:"Vampire"}
       ,{id:7,name:"WoodElf"}
     ];
+
+    this.template = "bb3/account";
+    this.router.use((req, _, next) => { 
+      this.template = req.subdomains.some(x => ["bb2"].indexOf(x.toLowerCase()) > -1) ? "account" : "bb3/account"; 
+      return next();
+    });
+
   }
 
   routesConfig(){
@@ -78,14 +85,14 @@ class Signup{
     }
 
     if (signupState.mainOpen){
-      this.router.get('/bb3/fresh', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,false));
-      this.router.get('/bb3/returning', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,false));
+      this.router.get('/fresh', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,false));
+      this.router.get('/returning', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,false));
 
-      if (signupState.greenhornOpen) this.router.get('/bb3/greenhorn', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,true));
-      if (signupState.ureOpen)this.router.get('/bb3/ure', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,true));
+      if (signupState.greenhornOpen) this.router.get('/greenhorn', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,false,true));
+      if (signupState.ureOpen)this.router.get('/ure', util.ensureLoggedIn, (req,res) => this.#changeSignupBB3(req,res,true,true));
       
-      this.router.post('/bb3/confirm', util.ensureLoggedIn, this.#confirmNewBB3.bind(this));
-      this.router.post('/bb3/resign', util.ensureAuthenticated, this.#resignBB3);
+      this.router.post('/confirm', util.ensureLoggedIn, this.#confirmNewBB3.bind(this));
+      this.router.post('/resign', util.ensureAuthenticated, this.#resignBB3);
     }
 
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
