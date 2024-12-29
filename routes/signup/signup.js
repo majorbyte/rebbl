@@ -67,6 +67,7 @@ class Signup{
       });
     }
    
+    this.router.use('/bb3', (req,res) => res.redirect(302, req.originalUrl.toLocaleLowerCase().replace("/bb3/","/")));
     this.router.get('/discord', util.ensureAuthenticated, this._authDiscord);
     this.router.get('/nodiscord', util.ensureAuthenticated, this._noDiscord);
 

@@ -168,7 +168,7 @@ class BB3{
     res.render("bb3/landingpage", {competition,upcomingMatch,announcements: announcements.sort((a,b) => b.date-a.date).slice(0,5)})
   }
 
-  coach = async (req,res) => res.render("bb3/coach", {coach: await oldService.getAccount({bb3id:req.params.id})}); 
+  coach = async (req,res) => res.render("bb3/coach", {coach: await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]})}); 
   #coachMatches = async(req,res) => isNaN(req.params.id) 
     ? res.render("bb3/coach", {coach: await oldService.getAccount({bb3id:req.params.id})})
     : res.redirect(302, `${req.protocol}://bb2.${req.get("host")}${req.originalUrl}`);
@@ -185,6 +185,7 @@ class BB3{
     this.router.get("/unplayed/:id",  this.unplayed);
 
     this.router.get('/coach/:id', this.coach);
+    this.router.get('/coach/:id/details', (req,res) => res.redirect(302, `${req.protocol}://bb2.${req.get("host")}${req.originalUrl}`) );
     this.router.get('/coach/:id/matches', this.#coachMatches);
 
 
