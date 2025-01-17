@@ -184,7 +184,7 @@ block content
                       span {{ match.opponents[1].coach.name }}
                       template(v-if="schedule.donations.find(x => x.coach == match?.opponents[1].coach.name)")
                         <img src="/images/gold.png" style="width:25px;margin-left:5px" title="has donated to rebbl.net">
-          template(v-if="schedule.unstarted && schedule.unstarted.length > 0")
+          template(v-if="schedule && schedule.unstarted && schedule.unstarted.length > 0")
             .row.col-12.g-0.align-center
               .col-12.row.align-center
                 h2 Not Started
@@ -295,6 +295,7 @@ block scripts
           const schedule = await response.json();
           
           debugger;
+          if (schedule.unstarted)
           for(const game of schedule.unstarted)
           while (game.coaches.length < 2){
             game.coaches.push({ 

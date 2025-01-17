@@ -1,5 +1,6 @@
 'use strict';
 const express = require('express')
+  , clanService = require("../../../lib/ClanService.js")
   , dataService = require("../../../lib/DataService.js").rebbl
   , draftService = require("../../../lib/DraftService.js")
   , logging = require("../../../lib/loggingService.js")
@@ -55,15 +56,18 @@ class DraftApi{
         await draftService.registerPowers(draft);
         break;
       case "matches":
-        const unstarted = await draftService.createGames(draft,query);
+        await draftService.createGames(draft,query);
 
-        dataService.updateSchedule(query, {$set:{unstarted: unstarted, drafted:true}});
+        dataService.updateSchedule(query, {$set:{drafted:true}});
+
+        await clanService.getContestData();
         break;
       case "post":
         await draftService.postToReddit(draft);
         break;
     }
 
+    return res.status(200).send();
   }
 
   routesConfig(){
