@@ -17,6 +17,8 @@ class BB3{
     this.router.use(async (req, res, next) => { res.locals.user = req.isAuthenticated() ? await accountService.getAccount(req.user.name) : null; return next();});
 	}
 
+  starplayers = async (_,res) => res.render("bb3/starplayers"); 
+
   match = async (req,res) => {
     let match = await dataService.getMatch({gameId:req.params.id});
     if (!match) match = await dataService.getMatch({matchId:req.params.id});
@@ -176,6 +178,7 @@ class BB3{
   routesConfig(){
     this.router.get("/",  this.landingPage);
     this.router.use("/standings", this.competitions);
+    this.router.use("/starplayers", this.starplayers);
     this.router.use("/redraft", new redraft().routesConfig());
     this.router.get("/competition/:competitionId",  this.competition);
     this.router.get("/competition/:competitionId/schedules",  this.schedules);

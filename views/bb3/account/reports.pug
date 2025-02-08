@@ -67,6 +67,7 @@ block append scripts
         this.competitions = data.competitions;
         this.reportCoach = data.reportCoach || false;
         this.toAdd = "";
+        this.active = data.active
         this.selectedCompetitions = [];
       }
 
@@ -217,18 +218,23 @@ block content
               button.accordion-button.collapsed.py-2(type="button" data-bs-toggle="collapse" aria-expanded="false" data-bind="attr: {'data-bs-target':'#' + $data.id,'aria-controls':$data.id}")
                   img(data-bind="attr: {src: $data.image}" style="width:40px; margin-top:-6px !important ")
                   h2(data-bind="{text: $data.name}" style="margin-bottom:unset;")
+                  //ko if: !$data.active
+                  label.mx-2.text-warning(title="Hook is inactive")
+                    i.fa.fa-warning
+                  // /ko
             .accordion-collapse.collapse.collapsed(data-bs-parent="#discordAccordion" data-bind="attr: {id: $data.id}")
               .accordion-body
+                // ko if: $data.active
                 .row 
                   .col-12 
                     button.btn.btn-warning.float-start(title="refresh name & avater")
                       i.fa.fa-recycle(data-bind="click: $data.refresh")
-                    button.btn.btn-success.float-end(data-bind="{attr: {disabled: !$data.isDirty()}, click: $data.save}") save
+                    button.btn.btn-success.float-end(data-bind="{attr: {disabled: !$data.isDirty() || !$data.active}, click: $data.save}") save
                 label(for="url") Webhook URL
                 input.form-control(type="text", name="url" data-bind="value: $data.url" disabled)
 
                 label(for="url") Display name
-                input.form-control(type="text", name="url" data-bind="value: $data.displayName" )
+                input.form-control(type="text", name="url" data-bind="value: $data.displayName, attr: {disabled: !$data.active}")
 
                 label(for="url") Alternative avatar
                 .input-group
@@ -259,11 +265,11 @@ block content
                   |  regardless of race.
                 ul.nav.nav-pills#filters(role="tablist" )
                   li.nav-item(role="presentation") 
-                    button.nav-link.active(data-bind="attr: {id: `races-tab-${$data.id}`, 'data-bs-target':`#races-pane-${$data.id}`,  'aria-controls':`races-pane-${$data.id}` }" data-bs-toggle="tab"  type="button" role="tab" aria-selected="true") races
+                    button.nav-link.active(data-bind="attr: {id: `races-tab-${$data.id}`, disabled: !$data.active, 'data-bs-target':`#races-pane-${$data.id}`,  'aria-controls':`races-pane-${$data.id}` }" data-bs-toggle="tab"  type="button" role="tab" aria-selected="true") races
                   li.nav-item(role="presentation") 
-                    button.nav-link(data-bind="attr: {id: `competitions-tab-${$data.id}`, 'data-bs-target':`#competitions-pane-${$data.id}`,  'aria-controls':`competitions-pane-${$data.id}`}" data-bs-toggle="tab" type="button" role="tab" aria-selected="false") competitions
+                    button.nav-link(data-bind="attr: {id: `competitions-tab-${$data.id}`, disabled: !$data.active, 'data-bs-target':`#competitions-pane-${$data.id}`,  'aria-controls':`competitions-pane-${$data.id}`}" data-bs-toggle="tab" type="button" role="tab" aria-selected="false") competitions
                   li.nav-item(role="presentation") 
-                    button.nav-link(data-bind="attr: {id: `coach-tab-${$data.id}`, 'data-bs-target':`#coach-pane-${$data.id}`,  'aria-controls':`coach-pane-${$data.id}`}" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" ) coach
+                    button.nav-link(data-bind="attr: {id: `coach-tab-${$data.id}`, disabled: !$data.active, 'data-bs-target':`#coach-pane-${$data.id}`,  'aria-controls':`coach-pane-${$data.id}`}" data-bs-toggle="tab" type="button" role="tab" aria-selected="false" ) coach
                 .tab-content#filtersContent
                   .tab-pane.fade.show.active(data-bind="attr: {id: `races-pane-${$data.id}`}" role="tabpanel" aria-labelledby="races-tab" tabindex="0")
                     .row 
@@ -374,7 +380,10 @@ block content
                       .form-check.form-switch
                         input.form-check-input(type="checkbox" role="switch" value="8" data-bind="checked: $data.reportCoach") 
                         label Report matches for my coach.
-
+                // /ko
+                // ko if: !$data.active
+                label the hook got marked as not active, best course of action is to remove it and create a new registration  
+                // /ko
               button.collapsed.accordion-button.alert.alert-danger(data-bind="attr: {'data-bs-target':`#collapse-${$data.id}`, 'aria-controls':`collapse-${$data.id}`}" type="button" data-bs-toggle="collapse" aria-expanded="false" style="margin-bottom:0px !important")
                 Accordion Danger
               .collapse(data-bind="attr: {id: `collapse-${$data.id}` }")

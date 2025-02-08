@@ -57,6 +57,7 @@ class HooksApi{
       hook.name = webhook.name;
       hook.channelId = webhook.channel_id;
       hook.guidlId = webhook.guild_id;
+      hook.active = true;
       
       await dataService.insertHook(hook);
       dataService.refreshHooks();

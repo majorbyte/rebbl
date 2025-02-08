@@ -22,8 +22,9 @@ class TeamApi{
       try {
         let team;
         if (isNaN(req.params.teamId)){
-          team = await databb3Service.getTeam({"id":req.params.teamId});
-          if (!team) team = await dataService.getTeam({"team.id":req.params.teamId});
+          
+          team = await dataService.getTeam({"team.id":req.params.teamId});
+          if (!team) team = await databb3Service.getTeam({"id":req.params.teamId});
           if (!team){
             const r = new RegExp(`^${req.params.teamId}$`,"i");
             team = await dataService.getTeam({"team.name":{$regex: r}});
