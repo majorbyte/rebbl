@@ -22,8 +22,11 @@ mixin stats(title, stats, prop)
               td.text-center.align-middle.fs-4= ++x
             td.text-start.align-middle.fs-4= stat.Name
             td
-              a(href=`/team/${team.id}#${stat.LobbyId}` target="_blank")
-                img.img-fluid(src=`/images/zfl/${team.logo}` style="padding:0px")
+              if (team)
+                a(href=`/team/${team.id}#${stat.LobbyId}` target="_blank")
+                  img.img-fluid(src=`/images/zfl/${team.logo}` style="padding:0px")
+              if (!team)    
+                span ???
             td.text-center.align-middle.fs-3= stat[prop]
 block vars 
   - let page ="playerstats"

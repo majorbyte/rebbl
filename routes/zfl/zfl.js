@@ -193,8 +193,20 @@ class ZFL{
   async #updateBio(req,res){
     try{
 
-      const bio = req.body.bio.substr(0,2000);
-      const playerName = req.params.playerName.toLowerCase();
+      let isAdmin = false;
+      let isOwner = false;
+      if (res.locals.user) {
+        const account = await dataService.getZFLAccount({id:res.locals.user.id});
+        const team = await dataService.getZFLTeam({id: account.teamId, year:this.year});
+        isAdmin = account.roles.some(x => x == "dm");
+        isOwner = team.name.toLowerCase() === req.params.teamName.toLowerCase() ;
+      }
+
+      if (!isAdmin && !isOwner) return res.status(401).send("{error:denied}");
+
+      const size = req.params.playerName ? 2000 : 5000;
+      const bio = req.body.bio.substr(0,size);
+      const playerName = req.params.playerName?.toLowerCase();
       const teamName = req.params.teamName.toLowerCase();
 
       const team = await dataService.getZFLBio({team:teamName});
@@ -217,7 +229,7 @@ class ZFL{
   async #getBio(req,res){
     try{
 
-      const playerName = req.params.playerName.toLowerCase();
+      const playerName = req.params.playerName?.toLowerCase();
       const teamName = req.params.teamName.toLowerCase();
 
       if (req.params.playerName && req.params.playerName.length > 0) {

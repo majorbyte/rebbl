@@ -35,11 +35,11 @@ block main
           i= team.motto
     .clearfix
     .row(style="margin-left:0px").px-5
-      .col-md-2.col-4
+      .col-md-2.col-3
         strong=`Current TV: ${team.value}`
-      .col-md-2.col-4
+      .col-md-2.col-3
         strong=`Cash: ${team.treasury}`
-      .col-md-2.col-4
+      .col-md-2.col-3
         - if (isAdmin)
           strong admin 
           select#adminId(name="" value=team.admin ? team.admin.id : null onchange="onValueChange()")
@@ -52,6 +52,9 @@ block main
                 option(value=admin.coach.id )= admin.coach.name
         - else if (team.admin)
           strong=`admin: ${team.admin.name}`
+      - if (isAdmin)
+        .col-md-2.col-3
+          button.btn.btn-sm.btn-primary(onclick=`editBio('')`) Edit Team Bio          
       br
     nav.col-12.px-5
       .nav.nav-tabs.bg-dark(data-bs-theme="dark" id="nav-tab" role="tablist")
@@ -82,7 +85,7 @@ block main
                 tr(class=Number(player.player.missNextGame)==1?"player-out":"player-in" id=player.player.id) 
                   td
                     span.m-0.p-0=player.player.number
-                    if isOwner
+                    if isOwner || isAdmin
                       span.float-end(onclick=`editBio('${player.player.name}')`)
                         svg(width="32" height="32" fill="currentColor" viewBox="0 0 16 16")
                           use(href="/svg/icons.svg#bi-pencil")
@@ -182,6 +185,10 @@ block scripts
     }
     const tinyMDE = new TinyMDE.Editor({element: "tinymde", content: ""});
     const commandBar = new TinyMDE.CommandBar({element: "tinymde_commandbar", editor: tinyMDE, commands:['bold', 'italic', 'strikethrough', '|', 'h1', 'h2','h3', 'ul', 'ol','|', 'blockquote', 'hr']});
+    let PlayerName = "";
+    
+    const bioSize = _ => PlayerName === "" ? 5000 : 2000;
+
     tinyMDE.addEventListener("selection", e => { 
       let st = `${e.focus ? e.focus.row : '–'} : ${e.focus ? e.focus.col : '–'}`;
       for (let command in e.commandState) {
@@ -190,11 +197,13 @@ block scripts
       document.getElementById("pos").innerHTML = st; 
     });
     tinyMDE.addEventListener("change", e => { 
-      if (e.content.length > 2000){ 
-        tinyMDE.setContent(e.content.substr(0,2000));
-        e.content = e.content.substr(0,2000);
+      const size = bioSize();
+
+      if (e.content.length > size){ 
+        tinyMDE.setContent(e.content.substr(0,size));
+        e.content = e.content.substr(0,size);
       }
-      document.getElementById("wc").innerHTML = `${2000 - e.content.length} characters left`; 
+      document.getElementById("wc").innerHTML = `${size - e.content.length} characters left`; 
     });
 
     const bioModal = new bootstrap.Modal(document.getElementById('bioModal'));
@@ -202,7 +211,7 @@ block scripts
     const editBioModal = new bootstrap.Modal(document.getElementById('editBioModal'));
     const editBioModalTitle = document.getElementById("editBioModalTitle");
     
-    let PlayerName = "";
+    
 
     function showBio(playerName){
       PlayerName = playerName;
@@ -224,7 +233,7 @@ block scripts
       PlayerName = playerName;
       editBioModalTitle.innerHTML = playerName;
 
-      const response = await fetch(`/api/team/#{team.name}/bio/${PlayerName}`);
+      const response = await fetch(`/api/team/#{team.name}/bio${PlayerName === '' ? '' : `/${PlayerName}`}`);
 
       if (response.ok){
         tinyMDE.setContent(await response.text());
@@ -238,7 +247,7 @@ block scripts
     const saveBio = async function(){
       try{
         const bio = tinyMDE.getContent();
-        const response = await fetch(`/api/team/#{team.name}/bio/${PlayerName}`,{
+        const response = await fetch(`/api/team/#{team.name}/bio${PlayerName === '' ? '' : `/${PlayerName}`}`,{
           method:'PATCH',
           headers:{'Content-Type': 'application/json'},
           body: JSON.stringify({bio})
