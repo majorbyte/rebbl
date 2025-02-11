@@ -199,7 +199,7 @@ class ZFL{
         const account = await dataService.getZFLAccount({id:res.locals.user.id});
         const team = await dataService.getZFLTeam({id: account.teamId, year:this.year});
         isAdmin = account.roles.some(x => x == "dm");
-        isOwner = team.name.toLowerCase() === req.params.teamName.toLowerCase() ;
+        isOwner = team?.name.toLowerCase() === req.params.teamName.toLowerCase() ;
       }
 
       if (!isAdmin && !isOwner) return res.status(401).send("{error:denied}");
