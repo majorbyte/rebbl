@@ -56,7 +56,7 @@ block content
       if (team.improvements[0].quantity > 0)
         div(class="col-md-1 col-6")
           img(src="https://cdn.rebbl.net/images/bb3/apo.png")
-      //if (user && user.bb3id === team.coach.id)
+      if (user && user.bb3id === team.coach.id)
         .col
           a.float-end.btn.btn-sm.btn-success(href=`/redraft/${team.id}/preview`) Redraft
 
