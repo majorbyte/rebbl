@@ -49,7 +49,7 @@ class Server{
       secret: 'keyboard cat'
       //, domain: ".localhost.com"
       , cookie: {
-        domain: ".localhost.com",
+        domain: "localhost.com",
         maxAge:180*24*60*60*1000
       } // Let's start with half a year,
       , genid: uuidv4
@@ -58,6 +58,18 @@ class Server{
       , store: this.sessionStore
     };
 
+    this.zflSessionObject = {
+      secret: 'keyboard cat'
+      //, domain: ".localhost.com"
+      , cookie: {
+        domain: "zfl.localhost.com",
+        maxAge:180*24*60*60*1000
+      } // Let's start with half a year,
+      , genid: uuidv4
+      , resave: false
+      , saveUninitialized: false
+      , store: this.sessionStore
+    };
 
     // set our default template engine to "ejs"
     // which prevents the need for using file extensions
@@ -121,12 +133,27 @@ class Server{
       this.sessionObject.cookie.secure = true; // serve secure cookies
       this.sessionObject.secret = process.env['sessionSecret'];
       this.sessionObject.cookie.domain = '.rebbl.net';
+
+      this.zflSessionObject.cookie.secure = true; // serve secure cookies
+      this.zflSessionObject.secret = process.env['sessionSecret'];
+      this.zflSessionObject.cookie.domain = 'zfl.ovh';
     }
 
     this.app.use(bodyParser.urlencoded({ extended: true}));
     this.app.use(bodyParser.json());
     this.app.use(methodOverride());
-    this.app.use(session(this.sessionObject));
+    const zflObj = this.zflSessionObject;
+    const obj = this.sessionObject;
+
+
+    this.app.use((req,res,next) => {
+      var host = req.get("host");
+
+       let mw = session(host.indexOf("zfl")> -1 ? zflObj : obj);
+
+       mw(req,res,next);
+      
+    });
 
     // Initialize Passport!  Also use passport.session() middleware, to support
     // persistent login sessions (recommended).
