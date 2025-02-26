@@ -16,6 +16,7 @@ block append vars
         case "Imperial Nobility": return "Logo_ImperialNobility_10.png";
         case "Lizardman": return "Logo_Lizardman_10.png";
         case "Necromantic Horror": return "Logo_Necromantic_10.png";
+        case "Norse": return "Logo_Norse_10.png";
         case "Nurgle": return "Logo_Nurgle_10.png";
         case "OldWorld Alliance": return "Logo_Neutre_10.png";
         case "Orc": return "Logo_Orc_10.png";
@@ -43,7 +44,7 @@ block content
             | you go!
 
         //- let races = ["Human","Dwarf","Skaven","Orc","Lizardman","Goblin","WoodElf","Chaos Chosen","Dark Elf","Shambling Undead","Halfling","Elven Union","Necromantic Horror","Nurgle","Underworld Denizen","Khorne","Imperial Nobility","Slaanesh","Black Orc","Chaos Renegade","OldWorld Alliance","Tzeentch"]
-        - let races = ["Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Necromantic Horror","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen","Wood Elf"]
+        - let races = ["Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Necromantic Horror","Norse","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen","Wood Elf"]
         div(style="grid-template-columns: auto;display:grid;clear:both;" class="table-responsive mb-3")
           div(class="table-striped TeamLabel-info")
             div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
@@ -131,7 +132,7 @@ block append scripts
       self.users = ko.observableArray([]);
       self.loading = ko.observable(true);
       self.leagues = ko.observableArray(["BIG O","GMAN","REL"]);
-      self.races = ko.observableArray(["Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Necromantic Horror","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen", "Wood Elf"]);
+      self.races = ko.observableArray(["Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Necromantic Horror","Norse","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen", "Wood Elf"]);
 
       self.OI = ko.observable(false);
       self.greenhorn = ko.observable(false);

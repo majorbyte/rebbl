@@ -22,7 +22,7 @@ block content
 
                 a.btn.btn-light.btn-sm.pull-right(type="button" href="/signup/nodiscord") No thanks
         if (signup.type ==="ure" || signup.type ==="greenhorn" ||  signup.type=="fresh" || signup.type=="returning")
-          h2= "Welcome to REBBL BB3 Season 3, "
+          h2= "Welcome to REBBL BB3 Season 4, "
             span(class="highlight")= signup.coach
             span !
         else 
@@ -39,7 +39,7 @@ block content
             span= " to the following:"
           div
             if (signup.type ==="ure" || signup.type ==="greenhorn" ||  signup.type=="fresh" || signup.type=="returning")
-              h3= "REBBL BB3 Season 3- " + signup.league
+              h3= "REBBL BB3 Season 4- " + signup.league
               if (signup.open)
                 div(style="display:flex")
                   form(action="/signup/resign" method="post" style="display:flex" )
@@ -49,7 +49,7 @@ block content
                 a(href="/signup/signups" class="highlighted-rules") here
                 span &nbsp;to view all current signups
             else if (signup.type==="college")
-              h3= "REBBL BB3 College Season 3 - " + signup.league
+              h3= "REBBL BB3 College Season 4 - " + signup.league
               if (signup.open)
                 div(style="display:flex")
                   form(action="/signup/resign" method="post" style="display:flex" )
@@ -83,8 +83,8 @@ block content
       hr.my-4
     if (signups.every(x => "uregreenhornfreshreturning".indexOf(x.type) === -1))
       .jumbotron
-        h1.display-4 REBBL BB3 Season 3
-        p.lead You haven't signed up yet, so hit that button to continue with your sign up for REBBL BB3 Season 3!
+        h1.display-4 REBBL BB3 Season 4
+        p.lead You haven't signed up yet, so hit that button to continue with your sign up for REBBL BB3 Season 4!
         hr.my-2
       .row.row-cols-1.row-cols-md-4.mb-3.text-center
         if (signupState.mainOpen)
@@ -101,7 +101,7 @@ block content
                   li &nbsp;
                   li &nbsp;
               .card-body 
-                a(href="https://www.reddit.com/r/ReBBl/comments/1g573rd/rebbl_bb3_season_3_signups/" class="highlighted-rules") Read more here about Season 3
+                a(href="https://www.reddit.com/r/ReBBl/comments/1iy7gma/rebbl_bb3_season_4_signups/?" class="highlighted-rules") Read more here about Season 4
               .card-body 
                 a.w-100.btn.btn-lg.btn-primary(href="/signup/fresh" type='button') Signup
         if (signupState.greenhornOpen)
@@ -113,12 +113,12 @@ block content
                 span.badge.rounded-pill.text-bg-success Fresh Team
                 ul.list-unstyled.mt-3.mb-4
                   li 2 x 2-round swiss
-                  li 23rd October - 20th November
-                  li TV 1100 limit Redraft, no fees
+                  li March 2nd - March 31st
+                  li TV 1250 limit Redraft, no fees
                   li Players from all timezones
-                  li.text-success.fst-italic Includes signup for Season 3
+                  li.text-success.fst-italic Includes signup for Season 4
               .card-body 
-                a(href="https://www.reddit.com/r/ReBBl/comments/1g5484y/rebbl_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Greenhorn here
+                a(href="https://www.reddit.com/r/ReBBl/comments/1iyw48v/rebbl_s3_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Greenhorn here
               .card-body 
                 a.w-100.btn.btn-lg.btn-primary(href="/signup/greenhorn" type='button') Signup
         if (signupState.mainOpen)
@@ -135,7 +135,7 @@ block content
                   li &nbsp;
                   li &nbsp;
               .card-body 
-                a(href="https://www.reddit.com/r/ReBBl/comments/1g573rd/rebbl_bb3_season_3_signups/" class="highlighted-rules") Read more here about Season 3
+                a(href="https://www.reddit.com/r/ReBBl/comments/1iy7gma/rebbl_bb3_season_4_signups/?" class="highlighted-rules") Read more here about Season 4
               .card-body 
                 a.w-100.btn.btn-lg.btn-primary(href="/signup/returning" type='button' class=`${redrafted ?  "" : "disabled opacity-50"}`) Signup
         if (signupState.ureOpen)
@@ -147,15 +147,15 @@ block content
                 span.badge.rounded-pill.text-bg-warning returning Team
                 ul.list-unstyled.mt-3.mb-4
                   li 2 x 2-round swiss
-                  li 23rd October - 20th November
+                  li March 2nd - March 31st
                   li You redraft when you're done
                   li Players from all timezones
-                  li.text-success.fst-italic Includes signup for Season 3
+                  li.text-success.fst-italic Includes signup for Season 4
               .card-body 
-                a(href="https://www.reddit.com/r/ReBBl/comments/1g5484y/rebbl_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Ure Trophy here
+                a(href="https://www.reddit.com/r/ReBBl/comments/1iyw48v/rebbl_s3_postseason_greenhorn_cup_and_ure_trophy//" class="highlighted-rules") Read more about Ure Trophy here
               .card-body 
                 a.w-100.btn.btn-lg.btn-primary(href="/signup/ure" type='button') Signup
-        if (signups.every(x => "uregreenhornfreshreturningcollege".indexOf(x.type) === -1))
+        //if (signups.every(x => "uregreenhornfreshreturningcollege".indexOf(x.type) === -1))
           .col
             .card.mb-4.rounded-3.shadow-sm.border-secondary
               .card-header.py-3.text-bg-secondary.border-secondary
@@ -175,11 +175,11 @@ block content
 
     //- if (signups.every(x => x.type !==  "college") && signups.every(x => x.type !==  "rebbl3"))
       .jumbotron
-        h1.display-4 COLLEGE Season 3
-        p.lead Are you a new coach, wanting to learn to play Blood Bowl 3 in our rookie's College League Season 3?
+        h1.display-4 COLLEGE Season 4
+        p.lead Are you a new coach, wanting to learn to play Blood Bowl 3 in our rookie's College League Season 4?
         hr.my-2
         p Read more about what the College League is about 
           a(href="https://www.reddit.com/r/ReBBl/comments/1dbq4iq/rebbl_bb3_season_2_signups" class="highlighted-rules") here
           | , scroll down to the header: &nbsp;
-          span(class="text-info") REBBRL College League Season 3
+          span(class="text-info") REBBRL College League Season 4
         a.btn.btn-primary.btn-lg(href="/signup/rebbrl/college" role="button") Continue

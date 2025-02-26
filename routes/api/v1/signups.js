@@ -45,7 +45,7 @@ router.get('/page', util.cache(10*60), async function(req, res){
 });
 
 router.get('/bb3', async function(req, res){
-  const data = await db.getSignupsBB3({season:"season 3"});
+  const data = await db.getSignupsBB3({season:"season 4"});
 
   const mapEntry = entry => {
     return {

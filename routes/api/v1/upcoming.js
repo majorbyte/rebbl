@@ -109,6 +109,7 @@ router.get("/", util.cache(10*60), async function(req, res){
         case 10: return "Shambling Undead";
         case 11: return "Halfling";
         case 14: return "Elven Union";
+        case 15: return "Norse";
         case 17: return "Necromantic Horror";
         case 18: return "Nurgle";
         case 22: return "Underworld Denizen";
