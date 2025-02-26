@@ -142,18 +142,14 @@ class Server{
     this.app.use(bodyParser.urlencoded({ extended: true}));
     this.app.use(bodyParser.json());
     this.app.use(methodOverride());
-    const zflObj = this.zflSessionObject;
-    const obj = this.sessionObject;
 
 
-    this.app.use((req,res,next) => {
-      var host = req.get("host");
+    const zflHosts = ['zfl.ovh','zfl.localhost.com'];
+    const localHosts = ["clan.localhost.com", "bb2.localhost.com", 'localhost.com'];
+    const hosts = ["clan.rebbl.net","bb2.rebbl.net","rebbl.net"];
 
-       let mw = session(host.indexOf("zfl")> -1 ? zflObj : obj);
-
-       mw(req,res,next);
-      
-    });
+    this.app.use(this.host(zflHosts,session(this.zflSessionObject)));
+    this.app.use(this.host(localHosts.concat(hosts), session(this.sessionObject)));
 
     // Initialize Passport!  Also use passport.session() middleware, to support
     // persistent login sessions (recommended).
