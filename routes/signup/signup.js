@@ -124,7 +124,6 @@ class Signup{
       }
 
       let account = await accountService.getAccount(req.user.name);
-
       const lastSeasonTeam = await this.#getLastSeasonTeam(account.bb3id);
 
       res.render('signup/overview', {signups:signups, user: user, signupState,canReturn:lastSeasonTeam!= null, redrafted:lastSeasonTeam?.redraft?.status == "validated"});
@@ -139,7 +138,7 @@ class Signup{
     if (!account.bb3coach || account.bb3id.length < 1) return res.render('signup/bb3/fix-account');
   
     if (returning) {
-      const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": account.bb3id, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},season:"season 3"});
+      const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": account.bb3id, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},"name":{'$regex' : '^((?!greenhorn).)*$', '$options' : 'i'},season:"season 3"});
 
       if (!competition) return res.redirect("/signup");
 
@@ -169,7 +168,7 @@ class Signup{
 
 
   async #getLastSeasonTeam(coachId){
-    const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": coachId, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},season:"season 3"});
+    const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": coachId, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},"name":{'$regex' : '^((?!greenhorn).)*$', '$options' : 'i'},season:"season 3"});
     if (!competition) return null;
     const standing = competition.standings.find(x => x.id === coachId);
     return standing ? await dataService.getTeam({"id": standing.teamId}) : null;
