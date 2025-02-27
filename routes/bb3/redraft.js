@@ -84,11 +84,15 @@ class Redraft{
 
 
   #teamData = async (req,res) => {
-    const team = await dataService.getTeam({id: req.params.teamId});
-    team.redraft.id = team.id;
-    team.redraft.name = team.name;
-    team.redraft.logo = team.logo;
-    res.json(team.redraft);
+    try{
+      const team = await dataService.getTeam({id: req.params.teamId});
+      team.redraft.id = team.id;
+      team.redraft.name = team.name;
+      team.redraft.logo = team.logo;
+      res.json(team.redraft);
+    } catch (ex) {
+      res.status(400).json(ex);
+    }
   }
 
 

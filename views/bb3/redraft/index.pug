@@ -533,6 +533,7 @@ block scripts
 
         if (response.ok){ 
           showSuccess("You redraft is successfully validated!");
+          this.validated = true;
           return;
         } 
 
