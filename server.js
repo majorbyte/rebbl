@@ -149,7 +149,7 @@ class Server{
     const hosts = ["clan.rebbl.net","bb2.rebbl.net","rebbl.net"];
 
     this.app.use(this.host(zflHosts,session(this.zflSessionObject)));
-    this.app.use(this.host(localHosts.concat(hosts), session(this.sessionObject)));
+    this.app.use(this.host({exclude:zflHosts}, session(this.sessionObject)));
 
     // Initialize Passport!  Also use passport.session() middleware, to support
     // persistent login sessions (recommended).
@@ -169,8 +169,16 @@ class Server{
   }
 
   host = (host, fn) =>  function(req,res,next){
+    //console.log(req.hostname);
+    //console.log(host);
     if (Array.isArray(host) && host.some(x => req.hostname === x)) return fn(req,res,next);
+    //console.log("not array");
+    if (host.exclude && Array.isArray(host.exclude) && host.exclude.every(x => req.hostname !== x)) return fn(req,res,next)
+    //console.log("not excluded");
     if (req.hostname === host) return fn(req,res,next);
+    //console.log("not matching host");
+    if (host === "*") return fn(req,res,next);
+    //console.log("not wildcard");
     next();
   }
 

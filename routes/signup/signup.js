@@ -161,7 +161,7 @@ class Signup{
     }
 
     let teams = await bb3Service.searchTeams(account.bb3id, '%');
-    teams = teams.filter(x => !x.experienced);
+    teams = teams.filter(x => !x.experienced && !x.custom);
 
     res.render('signup/bb3/signup-new-coach', {user: {account: account}, type:extra?"greenhorn":"fresh", teams});
   }

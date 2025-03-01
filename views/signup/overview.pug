@@ -39,9 +39,13 @@ block content
             span= " to the following:"
           div
             if (signup.type ==="ure" || signup.type ==="greenhorn" ||  signup.type=="fresh" || signup.type=="returning")
-              h3= "REBBL BB3 Season 4- " + signup.league
+              h3.mb-0= "REBBL BB3 Season 4 - " + signup.league
+              if (signup.type ==="ure")
+                h3.mt-0= "& Ure Trophy"
+              if (signup.type ==="greenhorn")
+                h3.mt-0= "& Greenhorn Cup"
               if (signup.open)
-                div(style="display:flex")
+                .mt-4(style="display:flex")
                   form(action="/signup/resign" method="post" style="display:flex" )
                     br
                     button(type="submit"  class="btn btn-primary") Resign
@@ -90,15 +94,16 @@ block content
         if (signupState.mainOpen)
           .col
             .card.mb-4.rounded-3.shadow-sm.border-primary
-              .card-header.py-3.text-bg-primary.border-primary
-                h4.my-0.fw-normal New Team
+              .card-header.py-3.text-bg-info.border-primary
+                h4.my-0.fw-normal Season 4
               .card-body
-                span.badge.rounded-pill.text-bg-success Fresh Team
+                span.badge.rounded-pill.text-bg-info.me-1 Regular season
+                span.badge.rounded-pill.text-bg-success.ms-1 Fresh Team
                 ul.list-unstyled.mt-3.mb-4
+                  li Projected start: April 2nd, 2025
                   li No Greenhorn
                   li No stress
                   li No bad dice in offseason
-                  li &nbsp;
                   li &nbsp;
               .card-body 
                 a(href="https://www.reddit.com/r/ReBBl/comments/1iy7gma/rebbl_bb3_season_4_signups/?" class="highlighted-rules") Read more here about Season 4
@@ -110,10 +115,11 @@ block content
               .card-header.py-3.text-bg-primary.border-primary
                 h4.my-0.fw-normal Greenhorn Cup
               .card-body
-                span.badge.rounded-pill.text-bg-success Fresh Team
+                span.badge.rounded-pill.text-bg-info.me-1 Pre-season
+                span.badge.rounded-pill.text-bg-success.ms-1 Fresh Team
                 ul.list-unstyled.mt-3.mb-4
-                  li 2 x 2-round swiss
                   li March 2nd - March 31st
+                  li 2 x 2-round swiss
                   li TV 1250 limit Redraft, no fees
                   li Players from all timezones
                   li.text-success.fst-italic Includes signup for Season 4
@@ -121,15 +127,34 @@ block content
                 a(href="https://www.reddit.com/r/ReBBl/comments/1iyw48v/rebbl_s3_postseason_greenhorn_cup_and_ure_trophy/" class="highlighted-rules") Read more about Greenhorn here
               .card-body 
                 a.w-100.btn.btn-lg.btn-primary(href="/signup/greenhorn" type='button') Signup
+        if (signupState.ureOpen)
+          .col
+            .card.mb-4.rounded-3.shadow-sm(class=`${canReturn ?  "border-primary" :"border-secondary opacity-50"}`)
+              .card-header.py-3(class=`${canReturn ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled"}`)
+                h4.my-0.fw-normal Ure Trophy
+              .card-body
+                span.badge.rounded-pill.text-bg-info.me-1 Post-season
+                span.badge.rounded-pill.text-bg-warning.ms-1 returning Team
+                ul.list-unstyled.mt-3.mb-4
+                  li March 2nd - March 31st
+                  li 2 x 2-round swiss
+                  li You redraft when you're done
+                  li Players from all timezones
+                  li.text-success.fst-italic Includes signup for Season 4
+              .card-body 
+                a(href="https://www.reddit.com/r/ReBBl/comments/1iyw48v/rebbl_s3_postseason_greenhorn_cup_and_ure_trophy//" class="highlighted-rules") Read more about Ure Trophy here
+              .card-body 
+                a.w-100.btn.btn-lg.btn-primary(href="/signup/ure" type='button') Signup
         if (signupState.mainOpen)
           .col
-            .card.mb-4.rounded-3.shadow-sm.boder-primary
+            .card.mb-4.rounded-3.shadow-sm.border-primary
               .card-header.py-3(class=`${redrafted ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled opacity-50"}`)
                 h4.my-0.fw-normal Returning Team
               .card-body
-                span.badge.rounded-pill.text-bg-warning returning Team
+                span.badge.rounded-pill.text-bg-info.me-1 Regular season
+                span.badge.rounded-pill.text-bg-warning.ms-1 returning Team
                 ul.list-unstyled.mt-3.mb-4
-                  li(class=`${!redrafted ?'text-danger fw-bold' : ''}`) First you redraft
+                  li(class=`${!redrafted ?'text-danger fw-bold' : ''}` title="first you mary") First you redraft
                   li(title="then you statoil") Then you sign up
                   li You wait
                   li &nbsp;
@@ -138,23 +163,6 @@ block content
                 a(href="https://www.reddit.com/r/ReBBl/comments/1iy7gma/rebbl_bb3_season_4_signups/?" class="highlighted-rules") Read more here about Season 4
               .card-body 
                 a.w-100.btn.btn-lg.btn-primary(href="/signup/returning" type='button' class=`${redrafted ?  "" : "disabled opacity-50"}`) Signup
-        if (signupState.ureOpen)
-          .col
-            .card.mb-4.rounded-3.shadow-sm(class=`${canReturn ?  "border-primary" :"border-secondary opacity-50"}`)
-              .card-header.py-3(class=`${canReturn ?  "text-bg-primary border-primary" :"text-bg-secondary border-secondary disabled"}`)
-                h4.my-0.fw-normal Ure Trophy
-              .card-body
-                span.badge.rounded-pill.text-bg-warning returning Team
-                ul.list-unstyled.mt-3.mb-4
-                  li 2 x 2-round swiss
-                  li March 2nd - March 31st
-                  li You redraft when you're done
-                  li Players from all timezones
-                  li.text-success.fst-italic Includes signup for Season 4
-              .card-body 
-                a(href="https://www.reddit.com/r/ReBBl/comments/1iyw48v/rebbl_s3_postseason_greenhorn_cup_and_ure_trophy//" class="highlighted-rules") Read more about Ure Trophy here
-              .card-body 
-                a.w-100.btn.btn-lg.btn-primary(href="/signup/ure" type='button') Signup
         //if (signups.every(x => "uregreenhornfreshreturningcollege".indexOf(x.type) === -1))
           .col
             .card.mb-4.rounded-3.shadow-sm.border-secondary
