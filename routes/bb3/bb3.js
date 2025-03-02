@@ -17,9 +17,9 @@ class BB3{
     this.router.use(async (req, res, next) => { res.locals.user = req.isAuthenticated() ? await accountService.getAccount(req.user.name) : null; return next();});
 	}
 
-  starplayers = async (_,res) => res.render("bb3/starplayers"); 
+  #starplayers = async (_,res) => res.render("bb3/starplayers"); 
 
-  match = async (req,res) => {
+  #match = async (req,res) => {
     let match = await dataService.getMatch({gameId:req.params.id});
     if (!match) match = await dataService.getMatch({matchId:req.params.id});
 
@@ -31,18 +31,22 @@ class BB3{
     res.render("bb3/match", {match, schedule, user:res.locals.user});
       
   };
-  competitions = async (req,res) => {
+  #competitions = async (req,res) => {
     const season = req.params.season || "season 3";
     const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
     res.render("bb3/competitions", {competitions})
   };
-  competition = async (req,res) =>  {
+  #competition = async (req,res) =>  {
     const competition = await dataService.getCompetition({id:req.params.competitionId});
     if (competition.format == 1) return res.render("bb3/playoffs/knockout", {competition});
 
     res.render("bb3/competition", {competition});
   }
-  schedules = async (req,res) => {
+  #standings = async (req,res) =>  {
+    const competition = await dataService.getCompetition({id:req.params.competitionId});
+    res.render("bb3/competitions", {competitions:[competition]});
+  }
+  #schedules = async (req,res) => {
     
     const competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}})
     let schedules = await dataService.getSchedules({competitionId:req.params.competitionId});
@@ -63,7 +67,7 @@ class BB3{
 
     res.render("bb3/schedules", {league:"REBBL", schedules, competition})
   }
-  round = async (req,res) => {
+  #round = async (req,res) => {
     let schedules  = await dataService.getSchedules({competitionId:req.params.competitionId, round:Number(req.params.round)});
     let competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1,season:1}});
 
@@ -77,12 +81,12 @@ class BB3{
     }
     res.render("bb3/schedules", {league:"REBBL", schedules , competition});
   }
-  unplayed = async (req,res) => res.render("bb3/unplayed",{matches: await bb3Service.getUnplayedMatch(req.params.id)});
+  #unplayed = async (req,res) => res.render("bb3/unplayed",{matches: await bb3Service.getUnplayedMatch(req.params.id)});
 
-  validate = async (req,res, valid) => res.render("bb3/match", {match: await bb3Service.processMatch(req.params.id, res.locals.user, valid), user:res.locals.user});
-  validateSchedule = async (req,res, valid) => res.render("bb3/match", {schedule: await bb3Service.processMatchBySchedule(req.params.id, res.locals.user, valid), user:res.locals.user});
+  #validate = async (req,res, valid) => res.render("bb3/match", {match: await bb3Service.processMatch(req.params.id, res.locals.user, valid), user:res.locals.user});
+  #validateSchedule = async (req,res, valid) => res.render("bb3/match", {schedule: await bb3Service.processMatchBySchedule(req.params.id, res.locals.user, valid), user:res.locals.user});
 
-  scheduleMatch = async function(req, res){
+  #scheduleMatch = async function(req, res){
     try{
       let contest = await dataService.getSchedule({"matchId":req.params.matchId});
       
@@ -100,7 +104,7 @@ class BB3{
     }
   }
 
-  stream = async function(req, res){
+  #stream = async function(req, res){
     try{
       let contest = await dataService.getSchedule({"matchId":req.params.matchId});
       
@@ -118,7 +122,7 @@ class BB3{
     }
   };
 
-  team = async (req,res) => {
+  #team = async (req,res) => {
     let team = await dataService.getTeam({id:req.params.id});
     if (!team){
       await bb3Service.getTeams([req.params.id]);
@@ -140,7 +144,7 @@ class BB3{
     return res.render("bb3/fullTeam", {team, matches, retiredPlayers, user:res.locals.user});
   };
 
-  retirePlayer = async (req,res)  => {  
+  #retirePlayer = async (req,res)  => {  
     
     try{
       const result = await bb3Service.retirePlayer(res.locals.user, req.params.id, req.params.playerId);
@@ -153,14 +157,15 @@ class BB3{
     
   }
 
-  landingPage = async(req,res) => {
+  #landingPage = async(req,res) => {
     const season = req.params.season || "season 3";
     const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
 
     let competition;
     let upcomingMatch;
     if (res.locals.user) {
-      competition = competitions.find(x => x.standings.some(coach => coach.id === res.locals.user.bb3id ));
+      //competition = competitions.find(x => x.standings.some(coach => coach.id === res.locals.user.bb3id ));
+      competition = competitions.filter(x => x.standings.some(coach => coach.id === res.locals.user.bb3id ) && x.status < 4).pop();
       if (res.locals.user.bb3id) upcomingMatch = await bb3Service.getUpcomingMatch(null, res.locals.user.bb3id);
     }
     if (!competition) competition = competitions[Math.floor(Math.random()*competitions.length)];
@@ -170,40 +175,41 @@ class BB3{
     res.render("bb3/landingpage", {competition,upcomingMatch,announcements: announcements.sort((a,b) => b.date-a.date).slice(0,5)})
   }
 
-  coach = async (req,res) => res.render("bb3/coach", {coach: await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]})}); 
+  #coach = async (req,res) => res.render("bb3/coach", {coach: await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]})}); 
   #coachMatches = async(req,res) => isNaN(req.params.id) 
     ? res.render("bb3/coach", {coach: await oldService.getAccount({bb3id:req.params.id})})
     : res.redirect(302, `${req.protocol}://bb2.${req.get("host")}${req.originalUrl}`);
 
   routesConfig(){
-    this.router.get("/",  this.landingPage);
-    this.router.use("/standings", this.competitions);
-    this.router.use("/starplayers", this.starplayers);
+    this.router.get("/",  this.#landingPage);
+    this.router.use("/standings", this.#competitions);
+    this.router.use("/starplayers", this.#starplayers);
     this.router.use("/redraft", new redraft().routesConfig());
-    this.router.get("/competition/:competitionId",  this.competition);
-    this.router.get("/competition/:competitionId/schedules",  this.schedules);
-    this.router.get("/competition/:competitionId/schedules/:round",  this.round);
-    this.router.get("/team/:id",  this.team);
-    this.router.get("/match/:id",  this.match);
-    this.router.get("/unplayed/:id",  this.unplayed);
+    this.router.get("/competition/:competitionId",  this.#competition);
+    this.router.get("/competition/:competitionId/standings",  this.#standings);
+    this.router.get("/competition/:competitionId/schedules",  this.#schedules);
+    this.router.get("/competition/:competitionId/schedules/:round",  this.#round);
+    this.router.get("/team/:id",  this.#team);
+    this.router.get("/match/:id",  this.#match);
+    this.router.get("/unplayed/:id",  this.#unplayed);
 
-    this.router.get('/coach/:id', this.coach);
+    this.router.get('/coach/:id', this.#coach);
     this.router.get('/coach/:id/details', (req,res) => res.redirect(302, `${req.protocol}://bb2.${req.get("host")}${req.originalUrl}`) );
     this.router.get('/coach/:id/matches', this.#coachMatches);
 
 
-    this.router.post("/match/:id/validate", util.ensureAuthenticated, async (req,res) => this.validate(req,res,true));
-    this.router.post("/match/:id/invalidate", util.ensureAuthenticated, async (req,res) => this.validate(req,res,false));
-    this.router.post("/schedule/:id/validate", util.ensureAuthenticated, async (req,res) => this.validateSchedule(req,res,true));
-    this.router.post("/schedule/:id/invalidate", util.ensureAuthenticated, async (req,res) => this.validateSchedule(req,res,false));
+    this.router.post("/match/:id/validate", util.ensureAuthenticated, async (req,res) => this.#validate(req,res,true));
+    this.router.post("/match/:id/invalidate", util.ensureAuthenticated, async (req,res) => this.#validate(req,res,false));
+    this.router.post("/schedule/:id/validate", util.ensureAuthenticated, async (req,res) => this.#validateSchedule(req,res,true));
+    this.router.post("/schedule/:id/invalidate", util.ensureAuthenticated, async (req,res) => this.#validateSchedule(req,res,false));
 
-    this.router.put('/unplayed/:matchId/stream',  util.hasRole('streamer'), this.stream);
-    this.router.put('/unplayed/:matchId/schedule',  util.ensureAuthenticated, this.scheduleMatch);
+    this.router.put('/unplayed/:matchId/stream',  util.hasRole('streamer'), this.#stream);
+    this.router.put('/unplayed/:matchId/schedule',  util.ensureAuthenticated, this.#scheduleMatch);
 
-    this.router.post('/team/:id/retire/:playerId', util.ensureAuthenticated, this.retirePlayer)
+    this.router.post('/team/:id/retire/:playerId', util.ensureAuthenticated, this.#retirePlayer)
 
 
-    this.router.get('/:season',  this.competitions)
+    this.router.get('/:season',  this.#competitions)
 
     return this.router;
   }

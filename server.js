@@ -235,7 +235,6 @@ class Server{
       // error page
       if (err.status == 404){
         console.log(err.message);
-        console.log(err.stack);
         res.status(404).render('404');
       } else {
         console.error(err.message);

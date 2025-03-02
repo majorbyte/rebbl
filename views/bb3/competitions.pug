@@ -2,7 +2,7 @@ extends layout.pug
 
 block vars
   - let options = {company: company}
-
+  - let page = "standings"
 block head
   style.
     h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
@@ -11,7 +11,7 @@ block head
 block content
   .container
     each competition, index in competitions.filter(x => x.name.indexOf(" R") ===-1) .sort(function(a,b){return a.name > b.name})
-      include ./competition.pug              
+      include ./competition.pug
 
 block scripts
 

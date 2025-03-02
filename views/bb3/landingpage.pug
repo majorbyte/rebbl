@@ -2,7 +2,7 @@ extends layout.pug
 
 block vars
   - let options = {company: company}
-
+  - let page = "home"
 include functions.pug 
 
 block head
@@ -47,16 +47,24 @@ block content
     if user && user.info
       .coach-container(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/banner/${user.info.banner}.png) `)
         .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${user.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${user.info.avatar}.png); `)
-        a.d-flex.justify-content-center.mx-auto.text-decoration-none(href=`/competition/${competition.id}/schedules` style="-webkit-text-stroke:2px black")
-          h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;")=competition.name
+        .d-flex.justify-content-center.mx-auto.text-decoration-none
+          .d-flex.flex-column.justify-content-center
+            h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;-webkit-text-stroke:2px black")=competition.name
+            .d-flex
+              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.id}/schedules`) schedules
+              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.id}/standings`) standings
         - if (competition.standings && user && competition.standings.find(x => x.id == user.bb3id))
           .place-container.d-flex.justify-content-center
             h1.text-white.fw-bold.align-content-center.my-0.py-0= "#" + competition.standings.find(x => x.id == user.bb3id).position
     else
       .coach-container.container-default
         .coach.coach-default
-        a.d-flex.justify-content-center.mx-auto.text-decoration-none(href=`/competition/${competition.id}/schedules`  style="-webkit-text-stroke:2px black")
-          h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;")=competition.name
+        .d-flex.justify-content-center.mx-auto.text-decoration-none
+          .d-flex.flex-column.justify-content-center
+            h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;-webkit-text-stroke:2px black")=competition.name
+            .d-flex
+              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.id}/schedules`) schedules
+              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.id}/standings`) standings
         - if (competition.standings && user && competition.standings.find(x => x.id == user.bb3id))
           .place-container.d-flex.justify-content-center
             h1.text-white.fw-bold.align-content-center.my-0.py-0= "#" + competition.standings.find(x => x.id == user.bb3id).position

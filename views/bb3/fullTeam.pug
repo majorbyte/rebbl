@@ -19,6 +19,17 @@ block append vars
       }
       return false;
     }
+
+    const chosenSpecialRules = function(id){
+      switch(Number(id)){
+          case 4: return "Favoured by Chaos Undivided";
+          case 5: return "Favoured by Khorne";
+          case 6: return "Favoured by Nurgle";
+          case 17: return "Old World Classic";
+          default: return "";
+
+      }
+    }
 block head 
   style.
     .col-12 table img {width: 40px;height: 40px;}
@@ -36,29 +47,47 @@ block content
           i= team.motto
     div(class="clearfix")
     div(class="row" style="margin-left:0px")
-      div(class="col-md-2 col-6")
+      .col-md-2.col-4
         strong=`Current TV: ${team.value/1000}`
-      div(class="col-md-2 col-6")
+      .col-md-2.col-4
         strong=`Cash: ${team.treasury}`
+      if (team.chosenSpecialRules)        
+        .col-md-2.col-4
+          strong=chosenSpecialRules(team.chosenSpecialRules.chosenSpecialRulesItem)
     div(class="row" style="margin-left:0px")
-      div(class="col-md-1 col-6")
+      .col-md-1.col-6
         img(src="https://cdn.rebbl.net/images/bb3/dedicated_fan.png")
         strong=team.improvements[3].quantity
-      div(class="col-md-1 col-6")
+      .col-md-1.col-6
         img(src="https://cdn.rebbl.net/images/bb3/reroll.png")
         strong=team.improvements[4].quantity
-      div(class="col-md-1 col-6")
+      .col-md-1.col-6
         img(src="https://cdn.rebbl.net/images/bb3/cheerleader.png")
         strong=team.improvements[1].quantity
-      div(class="col-md-1 col-6")
+      .col-md-1.col-6
         img(src="https://cdn.rebbl.net/images/bb3/assistant_coach.png")
         strong=team.improvements[2].quantity
       if (team.improvements[0].quantity > 0)
-        div(class="col-md-1 col-6")
+        .col-md-1.col-6
           img(src="https://cdn.rebbl.net/images/bb3/apo.png")
+      if (team.isCustom)
+        .col-md-1.col-6
+          img(src="https://cdn.rebbl.net/images/bb3/custom.png" title="custom team")
+      if (team.mustRollExpensiveMistake == 1)
+        .col-md-1.col-6
+          img(src="https://cdn.rebbl.net/images/bb3/exclamation.png")
+          strong.text-danger Expensive mistake
+      if (team.hasPlayerThatMustLevelUp == 1)
+        .col-md-1.col-6
+          img(src="https://cdn.rebbl.net/images/bb3/exclamation.png")
+          strong.text-danger Maxed out spp
+      if (team.hasRecrutableJourneymen == 1)
+        .col-md-1.col-6
+          img(src="https://cdn.rebbl.net/images/bb3/exclamation.png")
+          strong.text-warning Recruitable journeyman
       if (user && user.bb3id === team.coach.id)
-        .col
-          a.float-end.btn.btn-sm.btn-success(href=`/redraft/${team.id}/preview`) Redraft
+          .col
+            a.float-end.btn.btn-sm.btn-success(href=`/redraft/${team.id}/preview`) Redraft
 
     br
     nav(class="col-12")
