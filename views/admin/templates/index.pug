@@ -18,7 +18,7 @@ block scripts
         self.title = data.title;
         self.flair = data.flair;
         self.template = data.template;
-        self.editable=false
+        self.editable=false;
       };      
 
       self.toggleEdit = () => {
@@ -46,6 +46,19 @@ block scripts
         });
       }
 
+      self.preview = async () => {
+        console.log("preview")
+        let response = await fetch(`/api/v1/admin/templates/${self.key}`,{
+          headers:{'Content-Type': 'application/json',}
+        });
+        if (response.ok){
+          let data = await response.text();
+          data = data.split("\n").join("</code><br/><code>");
+          model.previewText = `<code>${data}</code>`;
+        }
+      }
+
+
       self.snap = () => {
         self._original = Object.assign({},self);
       };
@@ -69,8 +82,25 @@ block scripts
       const self = this;
       self.map = function(data){
         self.templates = data.map(x => new Template(x));
+        self.previewText = "";
       }
+      self.snap = () => {
+        self._original = Object.assign({},self);
+      };
+      self.commit = () => {
+        if (self._original != null) {
+            return self._original.map(self);
+        }
+      };
+      self.rollback = () => {
+        if (self._original != null) {
+            self.map(self._original);
+        }
+      };
+
       self.map(data);
+      self.snap();
+      ko.track(this);
     }
 
     let model;
@@ -86,7 +116,14 @@ block scripts
 block content
   .container
     .row.col-12.alert.alert-warning
-      p All schedules <b>except</b> CLAN will run on Tuesdays at 13:00 UTC, CLAN will run on Sundays at 13:00 UTC, but will skip a week. <br/> <i>Round</i> is the number that will be used for the next schedule post
+      p All schedules <b>except</b> CLAN will run on Tuesdays at 13:00 UTC, CLAN will run on Sundays at 13:00 UTC, but will skip a week. 
+      br 
+      h3 current placeholders
+      ul 
+        li <i>round</i> is the number that will be used for the next schedule post
+        li <i>divisionsBlock</i> outputs the links for the competitions involved
+        li <i>date</i> outputs the rollover date, clan only (afaik)
+
  
     .row.col-12
       .col-2
@@ -109,14 +146,16 @@ block content
         span(data-bind="text: name")
       .col-2
         input(type="checkbox" data-bind="checked: active" disabled)
-      .col-2
+      .col-1
         span(data-bind="text: round")
       .col-3
         span(data-bind="text: title")
-      .col-1
-        button.btn-sm.btn-default(data-bind="click:$data.toggleEdit") 
+      .col-2
+        button.btn.btn-sm.btn-success.mx-1(data-bind="click:$data.toggleEdit" title="edit template") 
           i(class="fa-solid fa-edit")
-        button.btn-sm.btn-info(data-bind="click:$data.post") 
+        button.btn.btn-sm.btn-primary.mx-1(data-bind="click:$data.preview" title="show preview text") 
+          i(class="fa-solid fa-search")
+        button.btn.btn-sm.btn-danger.mx-1(data-bind="click:$data.post" title="post to reddit") 
           i(class="fa-solid fa-newspaper")
 
     // /ko
@@ -142,4 +181,4 @@ block content
     // /ko
 
     // /ko
-          
+    p(data-bind="html:$root.previewText") 
