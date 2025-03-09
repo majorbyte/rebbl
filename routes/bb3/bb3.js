@@ -3,7 +3,6 @@
 const bb3Service = require("../../lib/bb3Service.js");
 
 const express = require("express")
-, accountService = require("../../lib/accountService.js")
 , oldService = require("../../lib/DataService.js").rebbl
 , dataService = require("../../lib/DataServiceBB3.js").rebbl3
 , datingService = require("../../lib/DatingService.js")
@@ -13,8 +12,6 @@ const express = require("express")
 class BB3{
 	constructor(){
 		this.router = express.Router();
-
-    this.router.use(async (req, res, next) => { res.locals.user = req.isAuthenticated() ? await accountService.getAccount(req.user.name) : null; return next();});
 	}
 
   #starplayers = async (_,res) => res.render("bb3/starplayers"); 
@@ -43,7 +40,8 @@ class BB3{
     res.render("bb3/competition", {competition});
   }
   #standings = async (req,res) =>  {
-    const competition = await dataService.getCompetition({id:req.params.competitionId});
+    let competition = await dataService.getCompetition({id:req.params.competitionId});
+    if (competition.excludeRedraft) competition = await dataService.getCompetition({name:competition.name.replace(/ R\d/, ""), excludeRedraft:false});
     res.render("bb3/competitions", {competitions:[competition]});
   }
   #schedules = async (req,res) => {
@@ -123,24 +121,19 @@ class BB3{
   };
 
   #team = async (req,res) => {
-    let team = await dataService.getTeam({id:req.params.id});
+    let team = await res.locals.profiler.measure("retrieving team","database", dataService.getTeam({id:req.params.id}));
+
     if (!team){
       await bb3Service.getTeams([req.params.id]);
       team = await dataService.getTeam({id:req.params.id});
     } 
-    const retiredPlayers = await dataService.getRetiredPlayers({teamId:req.params.id});
     const m = Array.isArray(team?.matches) ? team.matches : [];
-    const matches = await dataService.getMatches({gameId:{$in:m}});
 
-    const competition = await dataService.getCompetition({"standings.teamId":req.params.id});
-    
-    if (competition){
-      const standing = competition.standings.find(x => x.teamId === req.params.id);
-
-      if (standing) team.coachId = standing.id;
-  
-    }
-
+    const [retiredPlayers,matches] = await res.locals.profiler.measure("retrieving retiredplayers & matches","database", Promise.all([
+      dataService.getRetiredPlayers({teamId:req.params.id}),
+      dataService.getMatches({gameId:{$in:m}})
+    ]));
+      
     return res.render("bb3/fullTeam", {team, matches, retiredPlayers, user:res.locals.user});
   };
 
@@ -175,7 +168,7 @@ class BB3{
     res.render("bb3/landingpage", {competition,upcomingMatch,announcements: announcements.sort((a,b) => b.date-a.date).slice(0,5)})
   }
 
-  #coach = async (req,res) => res.render("bb3/coach", {coach: await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]})}); 
+  #coach = async (req,res) => res.render("bb3/coachNew", {coach: await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]})}); 
   #coachMatches = async(req,res) => isNaN(req.params.id) 
     ? res.render("bb3/coach", {coach: await oldService.getAccount({bb3id:req.params.id})})
     : res.redirect(302, `${req.protocol}://bb2.${req.get("host")}${req.originalUrl}`);

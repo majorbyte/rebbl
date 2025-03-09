@@ -63,8 +63,10 @@ html(data-bs-theme=theme)
       .season-table-row:nth-of-type(2n){
         background-color: #4a4a4a69;
       }
-
-
+      .debuginfo {text-align: right;padding: 5px;color: gray;font-size: smaller;clear: both;}
+      .debuginfo .content {display:none}
+      .debuginfo:hover .content {display:inline}
+      .debuginfo .icon  {color: #a0a0a0;font: 1em serif;padding: 0 2px;}
 
     block head
 
@@ -73,7 +75,7 @@ html(data-bs-theme=theme)
   body
     nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark.p-0
       .container-fluid
-        a.navbar-brand(href=user ? '/account' : '/account/login') 
+        a.navbar.py-0(href=user ? '/account' : '/account/login') 
           .d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 38px;')
             img.w-100.h-100(src=`https://cdn.rebbl.net/images/bb3/coach/avatar/${user && user.info? user.info.avatar : "anonymous"}.png`)
 
@@ -88,11 +90,11 @@ html(data-bs-theme=theme)
                 a.nav-link(aria-current='page' href='/standings' class=page == "standings" ? "active" : "" ) standings
           ul.navbar-nav
             li.nav-item.align-center.d-flex.text-white
-              div
+              .align-content-end
                 i.fa.fa-sun
               .form-check.form-switch
                   input.form-check-input(type="checkbox" role="switch" id="switchTheme" style="margin-left: -2em;margin-right: 0.5em;" change="event => toggleTheme(event)" checked=theme=="dark" )
-              div
+              .align-content-end
                 i.fa.fa-moon
   
     div(style="padding-top:48px")
@@ -118,3 +120,8 @@ html(data-bs-theme=theme)
       elm.addEventListener('change', toggleTheme);
 
     block scripts
+
+    p.debuginfo  
+      span.content.icon π
+      span.content #debuginformation#
+      span.icon π

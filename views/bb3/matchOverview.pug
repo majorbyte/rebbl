@@ -1,32 +1,32 @@
 br
-.col-12
-  a.MatchRow-contentWrapper(href=`/match/${match.gameId}` class="" target="_blank")
-    .col-5
-      div(class="TeamLabel TeamLabel--reverse")
-        div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
-        div(class="TeamLabel-info TeamLabel-info--noScore")
-          div(class="TeamLabel-name ")=match.homeTeam.name
-          div(class="TeamLabel-coach ")=match.homeGamer.name
-    .col-2.text-center
-      span(class="MatchStatus MatchStatus--transparent")
-        span
-          - if (match.homeScore > match.awayScore)
-            span(class="MatchStatus-score is-winner")=match.homeScore
-            span(class="MatchStatus-score") -
-            span(class="MatchStatus-score")=match.awayScore
-          - if (match.homeScore < match.awayScore)
-            span(class="MatchStatus-score")=match.homeScore
-            span(class="MatchStatus-score") -
-            span(class="MatchStatus-score is-winner")=match.awayScore
-          - if (match.homeScore == match.awayScore)
-            span(class="MatchStatus-score")=match.homeScore
-            span(class="MatchStatus-score") -
-            span(class="MatchStatus-score")=match.awayScore
-      p.my-0
-        span.TeamLabel-coach=match.competition.name
-    .col-5
-      div(class="TeamLabel")
-        div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
-        div(class="TeamLabel-info TeamLabel-info--noScore")
-          div(class="TeamLabel-name ")=match.awayTeam.name
-          div(class="TeamLabel-coach ")=match.awayGamer.name
+.col-12.row
+  //a.MatchRow-contentWrapper(href=`/match/${match.gameId}` class="" target="_blank")
+  .col-5
+    div(class="TeamLabel TeamLabel--reverse")
+      div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.homeTeam.logo.icon}` alt="" class="TeamLabel-logo")
+      div(class="TeamLabel-info TeamLabel-info--noScore")
+        div(class="TeamLabel-name ")=match.homeTeam.name
+        div(class="TeamLabel-coach ")=match.homeGamer.name
+  .col-2.text-center
+    span(class="MatchStatus MatchStatus--transparent")
+      span
+        - if (match.homeScore > match.awayScore)
+          span(class="MatchStatus-score is-winner")=match.homeScore
+          span(class="MatchStatus-score") -
+          span(class="MatchStatus-score")=match.awayScore
+        - if (match.homeScore < match.awayScore)
+          span(class="MatchStatus-score")=match.homeScore
+          span(class="MatchStatus-score") -
+          span(class="MatchStatus-score is-winner")=match.awayScore
+        - if (match.homeScore == match.awayScore)
+          span(class="MatchStatus-score")=match.homeScore
+          span(class="MatchStatus-score") -
+          span(class="MatchStatus-score")=match.awayScore
+    p.my-0
+      span.TeamLabel-coach=match.competition.name
+  .col-5
+    div(class="TeamLabel")
+      div(class="TeamLabel-block"): img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${match.awayTeam.logo.icon}` alt="" class="TeamLabel-logo")
+      div(class="TeamLabel-info TeamLabel-info--noScore")
+        div(class="TeamLabel-name ")=match.awayTeam.name
+        div(class="TeamLabel-coach ")=match.awayGamer.name

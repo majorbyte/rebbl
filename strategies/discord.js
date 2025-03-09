@@ -27,7 +27,8 @@ class Strategy extends passport_oauth2_1.default {
                 return done(new Error(`Failed to fetch user profile: ${err}`));
             }
             try {
-                const json = JSON.parse(body);
+                const profile = JSON.parse(body);
+                profile.provider= "discord";
                 done(null, json);
             }
             catch (e) {

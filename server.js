@@ -12,7 +12,8 @@ const express = require('express')
   , dataService = require("./lib/DataService.js")
   , dataBB3Service = require("./lib/DataServiceBB3.js")
   , configurationService = require("./lib/ConfigurationService.js")
-  , createScheduleService = require("./lib/createScheduleService.js");
+  , createScheduleService = require("./lib/createScheduleService.js")
+  , profiler = require("./middleware/profiler.js").profiler;
 
 
 const { v4: uuidv4 } = require('uuid');
@@ -142,7 +143,7 @@ class Server{
     this.app.use(bodyParser.urlencoded({ extended: true}));
     this.app.use(bodyParser.json());
     this.app.use(methodOverride());
-
+    this.app.use(profiler);
 
     const zflHosts = ['zfl.ovh','zfl.localhost.com'];
     const localHosts = ["clan.localhost.com", "bb2.localhost.com", 'localhost.com'];

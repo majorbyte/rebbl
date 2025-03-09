@@ -177,8 +177,8 @@ const stringify = require('querystring').stringify,
          profile.link_karma = json.link_karma
          profile.comment_karma = json.comment_karma
  
-         profile._raw = body
-         profile._json = json
+         //profile._raw = body
+         //profile._json = json
  
          done(null, profile)
        } catch (e) {

@@ -1,0 +1,77 @@
+- let home = match.homeTeam.id == team.id
+- let opponent = home ?match.awayTeam : match.homeTeam
+- let coach = home ? match.awayGamer : match.homeGamer
+
+- 
+  const getCasualtyIcon = function(cas){
+    switch(cas){
+      case 1 : return "ico_action_badly_hurt.png";
+      case 2 : return "ico_action_seriously_hurt.png";
+      case 3 : return "ico_action_serious_injury.png";
+      case 4 : return "ico_action_lasting_injury.png";
+      case 5 : return "ico_action_smashed_knee.png";
+      case 6 : return "ico_action_head_injury.png";
+      case 7 : return "ico_action_broken_arm.png";
+      case 8 : return "ico_action_neck_injury.png";
+      case 9 : return "ico_action_dislocated_shoulder.png";
+      case 10 : return "ico_action_dead.png";
+    }
+    return "ico_action_seriously_hurt.png";
+  }
+
+
+br
+.col-12.row.g-0 
+  .col-xl-1.col-md-2
+    if coach.frame
+      .coach-container
+        .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${coach.frame.split('/').pop().split('.')[1]}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${coach.avatar.split('/').pop().split('.')[1]}.png); `)
+    else  
+      .coach-container
+        .coach.coach-default      
+    a.text-info.text-decoration-none(href=`/coach/${coach.id}`)= coach.name
+  .col-xl-1.col-md-2
+    img(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${opponent.logo.icon}` alt="")
+  .col-xl-10.col-md-8.p-1
+    .row.col-12
+      .col-4
+        h3 vs. 
+          a.text-primary-emphasis.text-decoration-none(href=`/match/${match.gameId}`)= ` ${opponent.name}`
+      .col-4
+        span inflicted:
+        - let data = (home ? match.awayTeam : match.homeTeam).roster.reduce((p,c) => p.concat(c.casualties),[]).sort((a,b) => b-a)
+        - let prev = data[0] || 10
+        each cas of data
+          if prev !== cas 
+            div(style="display: inline;margin: 0px 10px;")
+          img.skill-32(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${(user && user.useDark) ? "transparent_" : ""}${getCasualtyIcon(cas)}` title=getCasualtyIcon(cas).replace("ico_action_","").replace("_", " ").replace(".png",""))
+          - prev = cas
+      .col-4.text-end
+        if / R\d/.test(match.competition.name)
+          h4.text-primary 
+            a.text-primary-emphasis.text-decoration-none(href=`/competition/${match.competition.id}/standings`)= `${match.competition.name.replace(" R", " - round ")}`
+        else 
+          h4
+            a.text-primary-emphasis.text-decoration-none(href=`/competition/${match.competition.id}/standings`)= `${match.competition.name} - round ${match.competition.day}`
+    .row.col-12
+      .col-4
+        if home && match.homeScore > match.awayScore || !home && match.homeScore < match.awayScore
+          h2.text-success Win
+            span.ms-2.text-body= `${home ? match.homeScore : match.awayScore} - ${home ? match.awayScore : match.homeScore}`
+        else if !home && match.homeScore > match.awayScore || home && match.homeScore < match.awayScore
+          h2.text-danger Loss
+            span.ms-2.text-body= `${home ? match.homeScore : match.awayScore} - ${home ? match.awayScore : match.homeScore}`
+        else 
+          h2 Draw  
+            span.ms-2.text-body= `${match.homeScore} - ${match.awayScore}`
+      .col-4
+        span suffered:
+        - data = (home ? match.homeTeam : match.awayTeam).roster.reduce((p,c) => p.concat(c.casualties),[]).sort((a,b) => b-a)
+        - prev = data[0] || 10
+        each cas of data
+          if prev !== cas 
+            div(style="display: inline;margin: 0px 10px;")
+          img.skill-32(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${(user && user.useDark) ? "transparent_" : ""}${getCasualtyIcon(cas)}` title=getCasualtyIcon(cas).replace("ico_action_","").replace("_", " ").replace(".png",""))
+          - prev = cas
+      .col-4
+        h3
