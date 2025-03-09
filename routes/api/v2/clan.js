@@ -354,6 +354,7 @@ class ClanApi{
       for(let schedule of schedules)
       for(let match of schedule.matches)
       for(let x of [0,1]){
+        if (!match.opponents) continue;
         let race = getRace(match,x);
         parseMatch(race,match);
       }
