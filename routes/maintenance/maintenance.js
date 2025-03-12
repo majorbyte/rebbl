@@ -58,6 +58,9 @@ class Maintenance{
 
         //await test.swap("594eecd4-4cc8-11ef-be7b-bc24112ec32e",id,0);
 
+          let teams = await bb3Service.searchTeams("2d2383e5-b15c-11ed-80a8-020000a4d571", '%');
+          teams = teams.filter(x => !x.experienced && !x.custom);
+      
 
         //await adminMatchService.mockConcedeMatch("fa01ab2f-9c61-41eb-a86d-d59572260347","30e3a678-e0b9-11ee-a745-02000090a64f");
       } catch(e) {

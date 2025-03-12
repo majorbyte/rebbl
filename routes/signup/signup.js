@@ -27,13 +27,14 @@ class Signup{
       ,{id:14,name:"ProElf"}
       ,{id:6,name:"Goblin"}
       ,{id:11,name:"Halfling"}
-      ,{id:15,name:"HighElf"}
+      //,{id:15,name:"HighElf"}
       ,{id:1,name:"Human"}
       ,{id:16,name:"Khemri"}
       ,{id:25,name:"Kislev"}
       ,{id:5,name:"Lizardman"}
       ,{id:17,name:"Necromantic"}
-      ,{id:12,name:"Norse"}
+      ,{id:12, name: "Amazon"}
+      ,{id:15,name:"Norse"}
       ,{id:18,name:"Nurgle"}
       ,{id:4,name:"Orc"}
       ,{id:19,name:"Ogre"}

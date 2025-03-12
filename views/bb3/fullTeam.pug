@@ -114,7 +114,7 @@ block content
         .col-md-1.col-6
           img(src="https://cdn.rebbl.net/images/bb3/exclamation.png")
           strong.text-warning Recruitable journeyman
-      if (user && user.bb3id === team.coach.id)
+      if (user && team.coach && user.bb3id === team.coach.id)
           .col
             a.float-end.btn.btn-sm.btn-success(href=`/redraft/${team.id}/preview`) Redraft
 
@@ -185,7 +185,7 @@ block content
                         img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
                     if retiredPlayers.some(x => x.id === player.player.id && x.active)
                       span.badge.text-bg-success.ms-2 retired    
-                    if user && user.bb3id === team.coach.id && team.allowRetire && team.allowRetire.some(x => x === player.player.id)
+                    if user && team.coach&& user.bb3id === team.coach.id && team.allowRetire && team.allowRetire.some(x => x === player.player.id)
                       button.btn.btn-sm.btn-success.ms-2(type="button" onclick=`showModal("${player.player.id}","${player.player.name}")`) TR
                    
                   td=player.player.spp

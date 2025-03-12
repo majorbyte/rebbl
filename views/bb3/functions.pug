@@ -2,6 +2,7 @@ block append vars
   -
     const skills = [
       {id:1, name: "StripBall", icon:"StripBall.png"},
+      {id:2, name:"HitAndRun", icon:"HitAndRun.png"},
       {id:6, name: "Catch", icon:"Catch.png"},
       {id:5, name: "Drunkard", icon:"Drunkard.png"},
       {id:7, name: "Dodge", icon:"Dodge.png"},
@@ -248,6 +249,26 @@ block append vars
             code: 10, 
             data: "dwarf_dwarfDeathroller",
             silhouette:"dwarf_dwarfDeathroller"
+        }, 
+        {
+            code: 11, 
+            data: "amazon_humanLinewoman",
+            silhouette: "amazon_humanLinewoman"
+        }, 
+        {
+            code: 12, 
+            data: "amazon_humanThrower",
+            silhouette: "amazon_humanThrower"
+        }, 
+        {
+            code: 13, 
+            data: "amazon_humanBlitzer",
+            silhouette: "amazon_humanBlitzer"
+        }, 
+        {
+            code: 14, 
+            data: "amazon_humanBlocker",
+            silhouette: "amazon_humanBlocker"
         }, 
         {
             code: 21, 
@@ -1115,9 +1136,45 @@ block append vars
             code: 15, 
             data: "Norse", 
             prefix: "Norse"
+        }, 
+        {
+            code: 12, 
+            data: "Amazon", 
+            prefix: "Amazon"
         }];
 
     const getRace = id => races.find(x => x.code === Number(id)).data; 
 
     const getSkillName = name => name.replace("(","").replace(")","").replace("+","").replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();}).replace(/ /g,"").replace(/-/g,"");
     
+    const getDateFromUUID = function(uuid){
+        let timestampHex = `${uuid.substr(15,3)}${uuid.substr(9,4)}${uuid.substr(0,8)}`;
+        let timestamp = parseInt(timestampHex,16);
+        /* 
+        seconds: expressed as the number of seconds since the date of Gregorian reform to the Christian calendar, which is set at October 15, 1582. 
+        */
+        let seconds = timestamp / (10_000_000) 
+    
+        /*
+        we can convert this to unix time by subtracting the number of seconds between that date and January 1, 1970 
+        */
+        seconds -= 12219292800 //141427 * 24 * 60 * 60rc;
+    
+        return new Date(seconds*1000);
+    }
+
+    const getCasualtyIcon = function(cas){
+        switch(cas){
+            case 1 : return "ico_action_badly_hurt.png";
+            case 2 : return "ico_action_seriously_hurt.png";
+            case 3 : return "ico_action_serious_injury.png";
+            case 4 : return "ico_action_lasting_injury.png";
+            case 5 : return "ico_action_smashed_knee.png";
+            case 6 : return "ico_action_head_injury.png";
+            case 7 : return "ico_action_broken_arm.png";
+            case 8 : return "ico_action_neck_injury.png";
+            case 9 : return "ico_action_dislocated_shoulder.png";
+            case 10 : return "ico_action_dead.png";
+        }
+        return "ico_action_seriously_hurt.png";
+    }

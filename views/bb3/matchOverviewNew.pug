@@ -2,24 +2,6 @@
 - let opponent = home ?match.awayTeam : match.homeTeam
 - let coach = home ? match.awayGamer : match.homeGamer
 
-- 
-  const getCasualtyIcon = function(cas){
-    switch(cas){
-      case 1 : return "ico_action_badly_hurt.png";
-      case 2 : return "ico_action_seriously_hurt.png";
-      case 3 : return "ico_action_serious_injury.png";
-      case 4 : return "ico_action_lasting_injury.png";
-      case 5 : return "ico_action_smashed_knee.png";
-      case 6 : return "ico_action_head_injury.png";
-      case 7 : return "ico_action_broken_arm.png";
-      case 8 : return "ico_action_neck_injury.png";
-      case 9 : return "ico_action_dislocated_shoulder.png";
-      case 10 : return "ico_action_dead.png";
-    }
-    return "ico_action_seriously_hurt.png";
-  }
-
-
 br
 .col-12.row.g-0 
   .col-xl-1.col-md-2

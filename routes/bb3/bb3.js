@@ -131,7 +131,7 @@ class BB3{
 
     const [retiredPlayers,matches] = await res.locals.profiler.measure("retrieving retiredplayers & matches","database", Promise.all([
       dataService.getRetiredPlayers({teamId:req.params.id}),
-      dataService.getMatches({gameId:{$in:m}})
+      dataService.getMatches({gameId:{$in:m}},{homeScore:1,awayScore:1,homeGamer:1,awayGamer:1,"homeTeam.roster.casualties":1})
     ]));
       
     return res.render("bb3/fullTeam", {team, matches, retiredPlayers, user:res.locals.user});
@@ -168,7 +168,18 @@ class BB3{
     res.render("bb3/landingpage", {competition,upcomingMatch,announcements: announcements.sort((a,b) => b.date-a.date).slice(0,5)})
   }
 
-  #coach = async (req,res) => res.render("bb3/coachNew", {coach: await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]})}); 
+  #coach = async (req,res) => {
+    
+    const teams = await res.locals.profiler.measure("Team Info","database",  dataService.getTeams({"coach.id":req.params.id,zfl:{$ne:true}},{matches:1,logo:1,race:1,name:1,value:1}));
+
+    const matchIds = teams.reduce((p,c) => p.concat(c.matches)  ,[]).sort((a,b) => util.getDateFromUUID(b) - util.getDateFromUUID(a)).splice(0,3);
+    
+    let matches = await res.locals.profiler.measure("Team Info","database", dataService.getMatches({gameId:{$in:matchIds}},{gameId:1, homeScore:1,awayScore:1,homeGamer:1,awayGamer:1,"homeTeam.roster.casualties":1}));
+
+    matches = matches.sort((a,b) => util.getDateFromUUID(b.gameId) - util.getDateFromUUID(a.gameId));
+
+    return res.render("bb3/coachNew", {coach: await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]}),matches})
+  }; 
   #coachMatches = async(req,res) => isNaN(req.params.id) 
     ? res.render("bb3/coach", {coach: await oldService.getAccount({bb3id:req.params.id})})
     : res.redirect(302, `${req.protocol}://bb2.${req.get("host")}${req.originalUrl}`);
