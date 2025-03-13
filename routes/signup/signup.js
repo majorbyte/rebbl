@@ -98,7 +98,7 @@ class Signup{
     }
 
     this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
-    this.router.get('/signups', util.cache(10*60), function(req,res){res.render('signup/bb3/signups');});
+    this.router.get('/signups', util.cache(10*60), function(req,res){res.render('bb3/signup/signups');});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
 
 
@@ -127,7 +127,7 @@ class Signup{
       let account = await accountService.getAccount(req.user.name);
       const lastSeasonTeam = await this.#getLastSeasonTeam(account.bb3id);
 
-      res.render('signup/overview', {signups:signups, user: user, signupState,canReturn:lastSeasonTeam!= null, redrafted:lastSeasonTeam?.redraft?.status == "validated"});
+      res.render('bb3/signup/overview', {signups:signups, user: user, signupState,canReturn:lastSeasonTeam!= null, redrafted:lastSeasonTeam?.redraft?.status == "validated"});
     } catch (err){
       console.log(err);
     }
@@ -136,7 +136,7 @@ class Signup{
   async #changeSignupBB3(req, res, returning, extra){
     let account = await accountService.getAccount(req.user.name);
 
-    if (!account.bb3coach || account.bb3id.length < 1) return res.render('signup/bb3/fix-account');
+    if (!account.bb3coach || account.bb3id.length < 1) return res.render('bb3/signup/fix-account');
   
     if (returning) {
       const competition = await dataService.getCompetition({"standings": {$elemMatch: {"id": account.bb3id, "team":{'$regex' : '^((?!\\[admin).)*$', '$options' : 'i'}}},"name":{'$regex' : '^((?!greenhorn).)*$', '$options' : 'i'},season:"season 3"});
@@ -150,12 +150,12 @@ class Signup{
       if (extra) {
         const races = await dataService.getRaces();
         lastSeasonTeam.race = races.find(x => x.code == lastSeasonTeam.race).data;
-        return res.render('signup/bb3/signup-new-coach', {user: {account: account}, type:"ure", teams:[lastSeasonTeam]});
+        return res.render('bb3/signup/signup-new-coach', {user: {account: account}, type:"ure", teams:[lastSeasonTeam]});
       }
       if (lastSeasonTeam?.redraft?.status == "validated" && !extra) {
         const races = await dataService.getRaces();
         lastSeasonTeam.race = races.find(x => x.code == lastSeasonTeam.race).data;
-        return res.render('signup/bb3/signup-new-coach', {user: {account: account}, type:"returning", teams:[lastSeasonTeam]});
+        return res.render('bb3/signup/signup-new-coach', {user: {account: account}, type:"returning", teams:[lastSeasonTeam]});
       }
   
       return res.redirect("/signup");
@@ -164,7 +164,7 @@ class Signup{
     let teams = await bb3Service.searchTeams(account.bb3id, '%');
     teams = teams.filter(x => !x.experienced && !x.custom);
 
-    res.render('signup/bb3/signup-new-coach', {user: {account: account}, type:extra?"greenhorn":"fresh", teams});
+    res.render('bb3/signup/signup-new-coach', {user: {account: account}, type:extra?"greenhorn":"fresh", teams});
   }
 
 
@@ -265,12 +265,12 @@ class Signup{
       let account = await accountService.getAccount(req.user.name);
 
       if (!account.bb3coach) {
-        res.render('signup/bb3/fix-account');
+        res.render('bb3/signup/fix-account');
       } else {
         let teams = await bb3Service.searchTeams(account.bb3id, '%');
         teams = teams.filter(x => !x.experienced);
   
-        res.render('signup/bb3/signup-new-coach', {user: {account: account}, teams, rookie:true});
+        res.render('bb3/signup/signup-new-coach', {user: {account: account}, teams, rookie:true});
       }
   
 

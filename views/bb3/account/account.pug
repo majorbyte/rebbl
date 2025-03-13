@@ -30,6 +30,10 @@ block append scripts
         select.appendChild(option);
       }
       $("#tz_info").text(moment().tz(guessed).format('YYYY-MM-DD HH:mm ZZ'));
+
+      const elm = document.getElementById("switchIcons");
+
+      elm.addEventListener('change', toggle);
     });
 
     const unfollow = async function(id){
@@ -59,13 +63,13 @@ block append scripts
       }
     }
     const toggle = async function(event){
-      console.dir(event.id);
+      console.dir(event.srcElement);
       let result;
-      if (event.id == "legacy-outlined") result = await fetch(`/api/v2/account/icon/legacy`,{method:"PUT"});
-      if (event.id == "standard-outlined") result = await fetch(`/api/v2/account/icon/new`,{method:"PUT"});
+      if (event.srcElement.checked) result = await fetch(`/api/v2/account/icon/new`,{method:"PUT"});
+      else result = await fetch(`/api/v2/account/icon/legacy`,{method:"PUT"});
 
       if (result.ok){
-        icon = event.id == "legacy-outlined" ? "BB3Legacy" : "BB3Standard";
+        icon = !event.srcElement.checked  ? "BB3Legacy" : "BB3Standard";
         let i = document.getElementById("imgIcon");
         i.src = `https://cdn.rebbl.net/images/skills/${icon}/Dodge.png`;
       }
@@ -208,106 +212,216 @@ block append scripts
         spinner.classList.add("hidden");
       }
 
+block head 
+  style.
+    .coach-container{
+        width: 100%;
+        height: 120px;
+
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-origin: border-box;
+        display:flex;
+
+    }
+    .container-default{
+        background-image: url(https://cdn.rebbl.net/images/bb3/coach/banner/txt_gamer_banner_002.png); 
+    }
+    .coach{
+        width: 120px;
+        max-width: 100%;
+        height: 120px;
+        background-position: left top, left top;
+        background-repeat: no-repeat, no-repeat;
+        background-size: contain, contain;
+        background-origin: content-box, padding-box;
+    }
+    .coach-default{
+        background-image: 
+            url(https://cdn.rebbl.net/images/bb3/coach/frame/txt_gamer_frame_001.png),
+            url(https://cdn.rebbl.net/images/bb3/coach/avatar/txt_gamer_avatar_human_humanLineman.png); 
+    }
+    .place-container{
+      width:120px;
+      height:120px
+    }
+
+    .profile-sidebar {
+        background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
+    }
+
+    .nav-pills .nav-link {
+        color: var(--bs-card-color);
+        border-radius: 10px;
+        padding: 12px 20px;
+        margin: 4px 0;
+        transition: all 0.3s ease;
+    }
+    .nav-link.disabled{
+      color: #6c757d;
+    }
+    .nav-pills .nav-link:hover {
+        background-color: #f8f9fa;
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: #fff;
+        color: #4158D0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+     .profile-pic {
+        width: 120px;
+        height: 120px;
+        border: 4px solid #fff;
+        margin-top: -60px;
+        background-color: #fff;
+    }
+
+    .settings-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .settings-card:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+        margin-left: -3.5em;
+    }
+block nav-right
+  li.nav-item.align-center.d-flex.text-white
+    .align-content-end
+      a.btn.btn-warning.btn-sm.ms-2.float-end(type="button" href="/account/logout" title="logout" style="padding-top:0.2rem;padding-bottom:0.2rem") 
+        i.fas.fa-arrow-right-from-bracket
 
 block content
-  .container
-    .row.col-12
-      .col
-        div.container.signup
-          h1 reddit:&nbsp;
-            span.highlight= user.reddit
-            a.btn.btn-warning.btn-sm.ms-5(type="button" href="/account/logout") Logout
-          .row 
-            if user.bb3coach
-              .col.align-content-center(style="clear:both")
-                img.float-start(src="https://cdn.rebbl.net/images/bb3.png" style="width:48px") 
-                h3= user.bb3coach
-                  - let src = ''
-                  case user.bb3service
-                    when "steam"
-                      - src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
-                    when "psn"
-                      - src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
-                    when "switch"
-                      - src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
-                    when "xbl"
-                      - src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
-                    when "eos"
-                      - src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
-                  img#bb3coachService(style="width:32px" src=src)
-            if user.coach
-              .col
-                img.float-start(src="https://cdn.rebbl.net/images/bb2.png" style="width:48px") 
-                h3= user.coach
-          .row
-            div(style="width: 410px;")
-              div
-              if !user.bb3coach              
-                label(for="bb3coach") Blood Bowl 3 coach name 
-                input#bb3coach(type="text" name="bb3coach" value=user.bb3coach)
-                input#bb3coachId(type="hidden")
-                label#bb3coachSelectLabel.hidden(for="bb3coachSelect" ) select the correct coach
-                select#bb3coachSelect.hidden(onchange="updateFields()")
-                img#bb3coachService(style="width:32px").hidden
-                span#bb3displayId.hidden
-                br
-                button#searchButton.btn.btn-primary.btn-sm(onclick="search()")
-                  span Search
-                  span#spinner.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
-                button#saveButton.btn.btn-success.hidden.btn-sm(style="float:right" onclick="savebb3()" ) Save
-                  span#spinnerSave.spinner-border.spinner-border-sm.hidden.mx-1(role="status" aria-hidden="true")
-        form(action="/account/update" method="post" class="container signup")
-          .input-group.my-2
-            span.input-group-text(for="timezone") Timezone
-            select#timezone.form-control(name="timezone" required title="timezone")
-            span#tz_info.input-group-text
-          .input-group.my-2
-            span.input-group-text(for="discord") Discord
-            input.form-control(type="text" id="discord" name="discord" value=user.discord disabled)
-            -if (user.discordId != undefined)
-              button.btn.btn-outline-warning(type="button" onclick="discordDisconnect()") Disconnect
-              //href="/account/discord/delete"
-            -else
-              button.btn.btn-outline-primary(type="button" onclick="discordConnect()") Connect
-              //href="/auth/discord"
-          .input-group.my-2
-            span.input-group-text(for="twitch") Twitch
-            input#twitch.form-control(type="text" name="twitch" value=user.twitch )
-          //div
-            input(type="checkbox" id="useDark" name="useDark" checked=(user.useDark||false) style="height:25px;width:25px") 
-            label(for="useDark" style="display:inline;verticle-align:middle;margin-left:6px") Use rebbl dark mode
-          //-if (user.showDonation !== undefined && user.donations)
-            div
-              input(type="checkbox" id="showDonation" name="showDonation" checked=user.showDonation style="height:25px;width:25px") 
-              label(for="showDonation" style="display:inline;verticle-align:middle;margin-left:6px") Show that I donated
-          div(style="clear:both")
-            button(type="submit" class="btn btn-primary") Save
-            br
-            br
-      .col
-        h3 Local data:
-          button.btn.btn-warning.btn-sm.ms-3(type="button" onclick="clearLocalStorage()") Clear local storage
-        
-        //h3 Do not show schedule in standings: 
-        //button.btn.btn-primary.btn-sm.my-1(type="button" onclick=`toggleSchedule()` id="btnSchedule")= user.doNotLoadSchedules ? "yes" : "no"
+  .container.py-5
+    .row
+      // Profile Header
+      case user.bb3service
+        when "steam"
+          - src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+        when "psn"
+          - src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
+        when "switch"
+          - src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
+        when "xbl"
+          - src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
+        when "eos"
+          - src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
+      .col-12.mb-4
+        .text-center
+          .position-relative.d-inline-block
+            .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${user.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${user.info.avatar}.png); `)
+              img.position-absolute.bottom-0.end-0.rounded-circle#bb3coachService(style="width:32px;background-color:white" src=src)
+            
+          h2.mt-3.mb-1=user.bb3coach
 
-        br  
-        br  
+      // Main Content
+      .col-12
+        .card.col-12.border-0.shadow-sm
+          .card-body.p-0
+            .row.g-0
+              // Sidebar
+              .col-lg-3.border-end
+                .p-4
+                  .nav.flex-column.nav-pills
+                    a#nav-home-tab.nav-link.active(data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true")
+                      i.fas.fa-user.me-2
+                      | Coach details
+                    a#nav-settings-tab.nav-link(data-bs-toggle="tab" href="#nav-settings" role="tab" aria-controls="nav-settings" aria-selected="false")
+                      i.fas.fa-screwdriver-wrench.me-2
+                      | Settings
+                    if(user.trophies && user.trophies.length > 0)                      
+                      a#nav-trophies-tab.nav-link(data-bs-toggle="tab" href="#nav-trophies" role="tab" aria-controls="nav-trophies" aria-selected="false")
+                        i.fas.fa-trophy.me-2
+                        | Trophies
+                    else                        
+                      a#nav-trophies-tab.nav-link.disabled(data-bs-toggle="tab" href="#nav-trophies" role="tab" aria-controls="nav-trophies" aria-selected="false")
+                        i.fas.fa-trophy.me-2
+                        | Trophies
+              // Content Area
+              .col-lg-9
+                .tab-content#tabContent
+                  #nav-home.tab-pane.fade.col-12.show.active.table-responsive-md(role="tabpanel" aria-labelledby="nav-home-tab")
+                    .p-4
+                      // Personal Information
+                      .mb-4
+                        form.px-0(action="/account/update" method="post" class="container signup")
+                          .row
+                            .col-12
+                              h5.mb-4 Coach details
+                                  button.btn.btn-primary.float-end(type="submit") Save
+                          .row.g-3
+                            .col-md-6
+                              label.form-label Reddit
+                              input.form-control(type='text' value=user.reddit disabled)
+                            .col-md-6
+                              label.form-label Discord 
+                              .input-group
+                                input.form-control(type="text" id="discord" name="discord" value=user.discord disabled)
+                                -if (user.discordId != undefined)
+                                  button.btn.btn-outline-warning(type="button" onclick="discordDisconnect()") Disconnect
+                                  //href="/account/discord/delete"
+                                -else
+                                  button.btn.btn-outline-primary(type="button" onclick="discordConnect()") Connect
+                                  //href="/auth/discord"
 
-        input.btn-check(type="radio" class="" name="options-outlined" id="standard-outlined" autocomplete="off" checked onclick=`toggle(this)`)
-        label.btn.btn-outline-primary.me-2(for="standard-outlined") use standard icons
+                            .col-md-6
+                              label.form-label DisplayId
+                              input.form-control(type='tel' value=user.bb3displayId disabled)
+                            .col-md-6
+                              label.form-label Timezone
+                              .input-group
+                                select#timezone.form-control(name="timezone" required title="timezone")
+                                span#tz_info.input-group-text
+                            .col-md-6
+                              label.form-label Steam 
+                              input.form-control(type='text' value=user.steam)
+                            .col-md-6
+                              label.form-label Twitch 
+                              input.form-control(type='text' value=user.twitch)
 
-        input.btn-check(type="radio" class="" name="options-outlined" id="legacy-outlined" autocomplete="off" onclick=`toggle(this)`)
-        label.btn.btn-outline-primary.ms-2(for="legacy-outlined") use legacy icons
+              
+                  #nav-settings.tab-pane.fade.col-12.show.table-responsive-md(role="tabpanel" aria-labelledby="nav-matches-tab")
+                    .p-4
+                      // Personal Information
+                      .mb-4
+                        .row
+                        .col-12                      
+                          h5.mb-4 Settings
 
-        br
-        br  
-
-        img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/Dodge.png` id="imgIcon")
-        //-if (user.following)
-          h3 Following:
-          each follow in user.following
-            div
-              button.btn.btn-primary.btn-sm.my-1(type="button" onclick=`unfollow(${follow.id})` id=`${follow.id}`)= `unfollow ${follow.name}`
-
-
+                          button.btn.btn-warning.btn-sm(type="button" onclick="clearLocalStorage()") Clear local storage
+                          
+                          //h3 Do not show schedule in standings: 
+                          //button.btn.btn-primary.btn-sm.my-1(type="button" onclick=`toggleSchedule()` id="btnSchedule")= user.doNotLoadSchedules ? "yes" : "no"
+                        .col-12.d-flex.mt-5
+                          label use standard icon
+                          .form-check.form-switch
+                            input.form-check-input(type="checkbox" role="switch" id="switchIcons" style="margin-left: -2em;margin-right: 0.5em;" change="event => toggle(this)" checked=theme=="dark" )
+                          label use legacy icons
+                        .col-12
+                          img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/Dodge.png` id="imgIcon")
+                  #nav-trophies.tab-pane.fade.col-12.show.table-responsive-md(role="tabpanel" aria-labelledby="nav-trophies-tab")
+                    if(user.trophies)
+                      each trophy, index in user.trophies
+                        div(class="col-3")
+                          - let action = trophy.display ? "/account/trophies/hide" : "/account/trophies/show" 
+                          form(action=action method="post")
+                            input(type="hidden" value=index id="index" name="index")
+                            - if (trophy.display)
+                              i(class="fa-solid fa-check-circle overlay")
+                            img(src="https://cdn.rebbl.net/" + trophy.filename title=trophy.title alt="" style="display:block;margin-left:auto;margin-right:auto")
+                            //- if (trophy.display)
+                              button(style="display:block;margin-left:auto;margin-right:auto;margin-top:10px" submit) Hide
+                            //- else
+                              button(style="display:block;margin-left:auto;margin-right:auto;margin-top:10px" submit) Display
+                            h2(style="text-align: center;margin-bottom: 0px;")= trophy.title
+                            h4(style="text-align: center;margin-top: 0px;")= trophy.date

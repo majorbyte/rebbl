@@ -45,7 +45,7 @@ class Account{
 
     this.router.post('/trophies/hide',util.checkAuthenticated, util.ensureAuthenticated, this._hideTrophy.bind(this));
     this.router.post('/trophies/show',util.checkAuthenticated, util.ensureAuthenticated, this._showTrophy.bind(this));
-    this.router.post('/update', util.checkAuthenticated, util.ensureAuthenticated, this._updateAccount.bind(this));
+    this.router.post('/update', util.checkAuthenticated, util.ensureAuthenticated, this.#updateAccount.bind(this));
 
     this.router.put('/unplayed/:match_id', util.checkAuthenticated, util.ensureAuthenticated, this._scheduleMatch.bind(this));
 
@@ -203,14 +203,14 @@ class Account{
     }
   }
 
-  async _updateAccount(req, res){
+  async #updateAccount(req, res){
     try{
       let account = { reddit: req.user.name
-        , steam: req.body.steam
-        , timezone: req.body.timezone
-        , twitch: req.body.twitch
-        , useDark: req.body.useDark
-        , showDonation: req.body.showDonation === "on"
+        , steam: req.body.steam.substring(0,100)
+        , timezone: req.body.timezone.substring(0,100)
+        , twitch: req.body.twitch.substring(0,100)
+        //, useDark: req.body.useDark
+        //, showDonation: req.body.showDonation === "on"
       };
   
       await accountService.updateAccount(account);

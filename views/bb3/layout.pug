@@ -88,6 +88,8 @@ html(data-bs-theme=theme)
                 a.nav-link(aria-current='page' href='/' class=page == "home" ? "active" : "" ) home
               li.nav-item
                 a.nav-link(aria-current='page' href='/standings' class=page == "standings" ? "active" : "" ) standings
+              li.nav-item
+                a.nav-link(aria-current='page' href='/signup/signups' class=page == "signups" ? "active" : "" ) signups
           ul.navbar-nav
             li.nav-item.align-center.d-flex.text-white
               .align-content-end
@@ -96,6 +98,7 @@ html(data-bs-theme=theme)
                   input.form-check-input(type="checkbox" role="switch" id="switchTheme" style="margin-left: -2em;margin-right: 0.5em;" change="event => toggleTheme(event)" checked=theme=="dark" )
               .align-content-end
                 i.fa.fa-moon
+            block nav-right
   
     div(style="padding-top:48px")
       block content

@@ -2,10 +2,23 @@ extends layout.pug
 
 include functions.pug 
 
+block append scripts
+  script(src="https://cdn.rebbl.net/scripts/moment.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
+  script.
+    $(document).ready(function(){
+      let guessed = moment.tz.guess();
+
+      guessed = "#{coach.timezone}" || guessed;
+
+      $("#tz_info").text(moment().tz(guessed).format('YYYY-MM-DD HH:mm ZZ'));
+    });
+
 block head
   style.
+    .skill-32{width: 32px;height: 32px;margin-right:-20px;}
     h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
-    .card{width: 12rem;}
     .coach-container{
         width: 100%;
         height: 120px;
@@ -39,61 +52,277 @@ block head
       height:120px
     }
 
+    .profile-sidebar {
+        background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
+    }
+
+    .nav-pills .nav-link {
+        color: var(--bs-card-color);
+        border-radius: 10px;
+        padding: 12px 20px;
+        margin: 4px 0;
+        transition: all 0.3s ease;
+    }
+    .nav-link.disabled{
+      color: #6c757d;
+    }
+    .nav-pills .nav-link:hover {
+        background-color: #f8f9fa;
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: #fff;
+        color: #4158D0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+     .profile-pic {
+        width: 120px;
+        height: 120px;
+        border: 4px solid #fff;
+        margin-top: -60px;
+        background-color: #fff;
+    }
+
+    .settings-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .settings-card:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+        margin-left: -3.5em;
+    }
+
+    .activity-item {
+        border-left: 2px solid #e9ecef;
+        padding-left: 20px;
+        position: relative;
+    }
+
+    .activity-item::before {
+        content: '';
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #4158D0;
+        position: absolute;
+        left: -7px;
+        top: 5px;
+    }
+
 
 block content
-  .container
-    if coach
-      .coach-container(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/banner/${coach.info.banner}.png) `)
-        .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${coach.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${coach.info.avatar}.png); `)
-        .d-flex.justify-content-center.mx-auto(style="-webkit-text-stroke:2px black")
-          h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:4em;")= `${coach.info.title} ${coach.bb3coach}`
-        .place-container.d-flex.flex-column.justify-content-center
-          .div(style="-webkit-text-stroke:2px black")
-            p.fw-bold.text-center.my-0.py-0.text-white(style="font-size:3.5em;")= coach.info.level
-          .progress.mx-2(role="progressbar" aria-label="Basic example" aria-valuenow=coach.info.progression.xp aria-valuemin="0" aria-valuemax=coach.info.progression.xpNeeded title=`${coach.info.progression.xp}/${coach.info.progression.xpNeeded}`)
-            .progress-bar.progress-bar-striped(style=`width: ${Math.floor(coach.info.progression.xp * 100 / coach.info.progression.xpNeeded)}%` title=`${coach.info.progression.xp}/${coach.info.progression.xpNeeded}`)
-      .row
-        .col-12
-          h3 Contact Data
-            div
-              label(for="bb3coach") Blood Bowl 3 coach name
-              input(type="text" id="bb3coach" name="bb3coach" value=(coach.bb3coach)  disabled)
-              - let src = ''
-              case coach.bb3service
-                when "steam"
-                  - src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
-                when "psn"
-                  - src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
-                when "switch"
-                  - src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
-                when "xbl"
-                  - src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
-                when "eos"
-                  - src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
-              img#bb3coachService(style="width:32px" src=src)
-            div 
-              label(for="bb3displayId") Blood Bowl 3 gamer id
-              input(type="text" id="bb3displayId" name="bb3displayId" value=(coach.bb3displayId || "")  disabled)
-            div
-              label(for="coach") Reddit
-              input(type="text" id="reddit" name="coach" value="/u/" + coach.reddit.toLowerCase()  disabled)
-              span(id="copy" title="copy to clipboard" style="cursor:pointer")= '📋'
-            div
-              label(for="timezone") Timezone
-              input(id="timezone" name="timezone" disabled title="timezone" value=coach.timezone)
-              label(id="tz_info")
-            div
-              label(for="discord") Discord
-              input(type="text" placeholder="" id="discord" name="discord" value=coach.discord disabled)
-              - if (coach.discordNickName)
-                input(type="text" placeholder="" id="nick" name="nick" value=coach.discordNickName disabled)
-            div
-              label(for="steam") Steam
-              input(type="text" id="steam" name="steam" value=coach.steam disabled)
-            br
-    else
-      .coach-container.container-default
-        .coach.coach-default
-      .row
-        .col-12
-          h3 Unkown coach
+  - let info = coach?.info || {}
+  .container.py-5
+    .row
+      // Profile Header
+      case coach.bb3service
+        when "steam"
+          - src = "https://cdn.rebbl.net/images/bb3/SteamLogo.png"
+        when "psn"
+          - src = "https://cdn.rebbl.net/images/bb3/PSNLogo.png"
+        when "switch"
+          - src = "https://cdn.rebbl.net/images/bb3/SwitchLogo.png"
+        when "xbl"
+          - src = "https://cdn.rebbl.net/images/bb3/XboxLiveLogo.png"
+        when "eos"
+          - src = "https://cdn.rebbl.net/images/bb3/EpicLogo.png"
+      .col-12.mb-4
+        .text-center
+          .position-relative.d-inline-block
+            .coach-container(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/banner/${info.banner}.png) `)
+              .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${info.avatar}.png); `)
+                img.position-absolute.bottom-0.end-0.rounded-circle#bb3coachService(style="width:32px;background-color:white" src=src)
+              
+          h2.mt-3.mb-1.mx-0= coach.bb3coach
+
+          h3.mb-3= info.title
+          h4.text-center
+            label.form-label= `Level ${info.level}`
+            .mx-auto(style="width:200px")
+              .progress.mx-2(role="progressbar" aria-label="Basic example" aria-valuenow=info.progression.xp aria-valuemin="0" aria-valuemax=info.progression.xpNeeded title=`${info.progression.xp}/${info.progression.xpNeeded}`)
+                .progress-bar.progress-bar-striped(style=`width: ${Math.floor(info.progression.xp * 100 / info.progression.xpNeeded)}%` title=`${info.progression.xp}/${info.progression.xpNeeded}`)
+
+          .d-flex.justify-content-center.gap-2.mb-4
+            a.button.btn.btn-outline-primary(href=`https://old.reddit.com/u/${coach.reddit}` target="_blank")
+              i.fas.fa-envelope.me-2
+              | Message
+            if (coach.discordId)
+              a.button.btn.btn-primary(href=`https://discord.com/users/${coach.discordId}` target="_blank")
+                i.fas.fa-user-plus.me-2
+                | Connect
+      // Main Content
+      .col-12
+        .card.col-12.border-0.shadow-sm
+          .card-body.p-0
+            .row.g-0
+              // Sidebar
+              .col-lg-3.border-end
+                .p-4
+                  .nav.flex-column.nav-pills
+                    a#nav-home-tab.nav-link.active(data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true")
+                      i.fas.fa-user.me-2
+                      | Coach details
+                    a#nav-activites-tab.nav-link(data-bs-toggle="tab" href="#nav-activites" role="tab" aria-controls="nav-activites" aria-selected="false")
+                      i.fas.fa-stopwatch-20.me-2
+                      | Activites
+                    a#nav-teams-tab.nav-link(data-bs-toggle="tab" href="#nav-teams" role="tab" aria-controls="nav-teams" aria-selected="false")
+                      i.fas.fa-lock.me-2
+                      | Teams
+                    if(coach.trophies && coach.trophies.length > 0)                      
+                      a#nav-trophies-tab.nav-link(data-bs-toggle="tab" href="#nav-trophies" role="tab" aria-controls="nav-trophies" aria-selected="false")
+                        i.fas.fa-trophy.me-2
+                        | Trophies
+                    else                        
+                      a#nav-trophies-tab.nav-link.disabled(data-bs-toggle="tab" href="#nav-trophies" role="tab" aria-controls="nav-trophies" aria-selected="false")
+                        i.fas.fa-trophy.me-2
+                        | Trophies                  
+              // Content Area
+              .col-lg-9
+                .tab-content#tabContent
+                  #nav-home.tab-pane.fade.col-12.show.active.table-responsive-md(role="tabpanel" aria-labelledby="nav-home-tab")
+                    .p-4
+                      // Personal Information
+                      .mb-4
+                        h5.mb-4 Coach details
+                        .row.g-3
+                          .col-md-6
+                            label.form-label Reddit
+                            input.form-control(type='text' value=coach.reddit disabled)
+                          .col-md-6
+                            label.form-label Discord 
+                            input.form-control(type='text' value=coach.discord disabled)
+
+                          .col-md-6
+                            label.form-label DisplayId
+                            input.form-control(type='tel' value=coach.bb3displayId disabled)
+                          .col-md-6
+                            label.form-label Timezone
+                            .input-group
+                              input#timezone.form-control(name="timezone" disabled title="timezone" value=coach.timezone)
+                              span#tz_info.input-group-text
+                          if coach.steam
+                            .col-md-6
+                              label.form-label Steam 
+                              input.form-control(type='text' value=coach.steam disabled)
+                          if coach.twitch
+                            .col-md-6
+                              label.form-label Steam 
+                              input.form-control(type='text' value=coach.twitch disabled)
+                      // Recent Activity
+                  #nav-activites.tab-pane.fade.col-12.show.table-responsive-md(role="tabpanel" aria-labelledby="nav-activites-tab")
+                    .p-4
+                      .mb-4
+                        .row.g-0
+                          .col-lg-9
+                            .p-4
+                              div
+                                h5.mb-4 Recent Activity
+                                each m of matches
+                                  +match(coach,m)
+                  #nav-teams.tab-pane.fade.col-12.show.table-responsive-md(role="tabpanel" aria-labelledby="nav-trophies-tab")
+                    .p-4
+                      .mb-4
+                        .row.g-0
+                          each team, index in teams.sort(function(a,b){return getDateFromUUID(a.id) > getDateFromUUID(b.id) ? -1 :1})
+                            - const name = team.name.toLowerCase()
+                            - let show = name.indexOf("admin") === -1 && name.indexOf("bye week") === -1  
+                            - if(show)
+                              .col.card.mx-2
+                                h5.card-text-text-center.text-primary-emphasis(style="color: rgb(24, 119, 162)")= team.name
+                                img.card-img-top(src=`https://cdn.rebbl.net/images/bb3/Logos/256x256/${team.logo.icon}` class="" alt="...")
+                                .card-body
+                                  div
+                                    p(style="margin:0")= `TV${team.value}`  
+                                  i=team.motto
+                                  a(target="_blank" style="position: absolute;bottom: 10px;right: 10px;font-size: 2em;" href="/team/" + team.id)
+                                    i(class="fa-solid fa-arrow-circle-right")
+                  #nav-trophies.tab-pane.fade.col-12.show.table-responsive-md(role="tabpanel" aria-labelledby="nav-trophies-tab")
+                    if(user.trophies)
+                      each trophy, index in user.trophies
+                        div(class="col-3")
+                          - let action = trophy.display ? "/account/trophies/hide" : "/account/trophies/show" 
+                          form(action=action method="post")
+                            input(type="hidden" value=index id="index" name="index")
+                            - if (trophy.display)
+                              i(class="fa-solid fa-check-circle overlay")
+                            img(src="https://cdn.rebbl.net/" + trophy.filename title=trophy.title alt="" style="display:block;margin-left:auto;margin-right:auto")
+                            //- if (trophy.display)
+                              button(style="display:block;margin-left:auto;margin-right:auto;margin-top:10px" submit) Hide
+                            //- else
+                              button(style="display:block;margin-left:auto;margin-right:auto;margin-top:10px" submit) Display
+                            h2(style="text-align: center;margin-bottom: 0px;")= trophy.title
+                            h4(style="text-align: center;margin-top: 0px;")= trophy.date
+
+mixin match(coach,match)
+  
+  - let home = match.homeGamer.id == coach.bb3id
+  - let opponent = home ?match.awayTeam : match.homeTeam
+  - let opponentCoach = home ? match.awayGamer : match.homeGamer
+
+  .activity-item.mb-3
+    .col-12.row.g-0 
+      .col-12.text-start
+        if / R\d/.test(match.competition.name)
+          h4.text-primary 
+            a.text-primary-emphasis.text-decoration-none(href=`/competition/${match.competition.id}/standings`)= `${match.competition.name.replace(" R", " - round ")}`
+        else 
+          h4
+            a.text-primary-emphasis.text-decoration-none(href=`/competition/${match.competition.id}/standings`)= `${match.competition.name} - round ${match.competition.day}`
+      .col-12
+        h6= getDateFromUUID(match.gameId)
+      .col-xl-1.col-md-2
+        if opponentCoach.frame
+          .coach-container
+            .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${opponentCoach.frame.split('/').pop().split('.')[1]}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${opponentCoach.avatar.split('/').pop().split('.')[1]}.png); `)
+        else  
+          .coach-container
+            .coach.coach-default      
+        a.text-info.text-decoration-none(href=`/coach/${opponentCoach.id}`)= opponentCoach.name
+      .col-xl-2.col-md-2
+        img.place-container(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${opponent.logo.icon}` alt="")
+        br
+        a.text-info.text-decoration-none(href=`/team/${opponent.id}`)= opponent.name
+
+      .col-xl-9.col-md-8.p-1
+        .row
+          .col-12
+            span inflicted:
+            - let data = (home ? match.awayTeam : match.homeTeam).roster.reduce((p,c) => p.concat(c.casualties),[]).sort((a,b) => b-a)
+            - let prev = data[0] || 10
+            each cas of data
+              if prev !== cas 
+                div(style="display: inline;margin: 0px 10px;")
+              img.skill-32(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${(user && user.useDark) ? "transparent_" : ""}${getCasualtyIcon(cas)}` title=getCasualtyIcon(cas).replace("ico_action_","").replace("_", " ").replace(".png",""))
+              - prev = cas
+        .row
+          .col-12
+            span suffered:
+            - data = (home ? match.homeTeam : match.awayTeam).roster.reduce((p,c) => p.concat(c.casualties),[]).sort((a,b) => b-a)
+            - prev = data[0] || 10
+            each cas of data
+              if prev !== cas 
+                div(style="display: inline;margin: 0px 10px;")
+              img.skill-32(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${(user && user.useDark) ? "transparent_" : ""}${getCasualtyIcon(cas)}` title=getCasualtyIcon(cas).replace("ico_action_","").replace("_", " ").replace(".png",""))
+              - prev = cas
+        .row
+          .col-12
+            a.text-decoration-none(href=`/match/${match.gameId}` target="_blank")
+              if home && match.homeScore > match.awayScore || !home && match.homeScore < match.awayScore
+                h2.text-success Win
+                  span.ms-2.text-body= `${home ? match.homeScore : match.awayScore} - ${home ? match.awayScore : match.homeScore}`
+              else if !home && match.homeScore > match.awayScore || home && match.homeScore < match.awayScore
+                h2.text-danger Loss
+                  span.ms-2.text-body= `${home ? match.homeScore : match.awayScore} - ${home ? match.awayScore : match.homeScore}`
+              else 
+                h2 Draw  
+                  span.ms-2.text-body= `${match.homeScore} - ${match.awayScore}`
+

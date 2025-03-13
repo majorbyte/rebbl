@@ -1,12 +1,12 @@
 extends ../layout.pug
 
 block append vars
-  - var activeSubMenu = "signups"
+  - page = "signups"
   - var raceIds = ["Amazon","Human","Dwarf","Skaven","Orc","Lizardman","Goblin","Wood Elf","Chaos Chosen","Dark Elf","Shambling Undead","Halfling","Norse","Amazon","Elven Union","High Elf","Khemri","Necromantic","Nurgle","Ogre","Vampire","Chaos Renegade","Underworld Denizen","","Imperial Nobility","Kislev"]
   - 
     var getLogo = function(race){
       switch (race){
-        case "Amazon": return "Logo_Neutral_02.png";
+        case "Amazon": return "Logo_Amazon_15.png";
         case "Black Orc": return "Logo_BlackOrc_10.png";
         case "Chaos Chosen": return "Logo_Chaos_02.png";
         case "Chaos Renegade": return "Logo_Chaos_10.png";

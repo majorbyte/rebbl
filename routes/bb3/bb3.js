@@ -170,15 +170,17 @@ class BB3{
 
   #coach = async (req,res) => {
     
-    const teams = await res.locals.profiler.measure("Team Info","database",  dataService.getTeams({"coach.id":req.params.id,zfl:{$ne:true}},{matches:1,logo:1,race:1,name:1,value:1}));
+    const teams = await res.locals.profiler.measure("Team Info","database",  dataService.getTeams({"coach.id":req.params.id,zfl:{$ne:true}},{matches:1,logo:1,race:1,name:1,value:1,motto:1}));
 
     const matchIds = teams.reduce((p,c) => p.concat(c.matches)  ,[]).sort((a,b) => util.getDateFromUUID(b) - util.getDateFromUUID(a)).splice(0,3);
     
     let matches = await res.locals.profiler.measure("Team Info","database", dataService.getMatches({gameId:{$in:matchIds}},{gameId:1, homeScore:1,awayScore:1,homeGamer:1,awayGamer:1,"homeTeam.roster.casualties":1}));
 
     matches = matches.sort((a,b) => util.getDateFromUUID(b.gameId) - util.getDateFromUUID(a.gameId));
+    
+    const coach = await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]});
 
-    return res.render("bb3/coachNew", {coach: await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]}),matches})
+    return res.render("bb3/coach", {coach, matches, teams})
   }; 
   #coachMatches = async(req,res) => isNaN(req.params.id) 
     ? res.render("bb3/coach", {coach: await oldService.getAccount({bb3id:req.params.id})})
