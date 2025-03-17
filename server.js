@@ -1,4 +1,6 @@
 "use strict";
+const startGlobal = process.hrtime();
+
 const express = require('express')
   , path = require('path')
   , clanService = require('./lib/ClanService.js')
@@ -15,6 +17,8 @@ const express = require('express')
   , createScheduleService = require("./lib/createScheduleService.js")
   , profiler = require("./middleware/profiler.js").profiler;
 
+
+console.log(process.hrtime(startGlobal));
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -33,9 +37,10 @@ class Server{
   }
 
   async appConfig(){
-    await dataService.rebbl.init("rebbl");
-    await dataBB3Service.rebbl3.init("rebbl3");
+    await Promise.all([dataService.rebbl.init("rebbl"),dataBB3Service.rebbl3.init("rebbl3")]);
+    console.log(process.hrtime(startGlobal));
     configurationService.init();
+    console.log(process.hrtime(startGlobal));
 
     const uri =`mongodb://${process.env["DB_USER"]}:${process.env["DB_PASS"]}@${process.env["DB_HOST"]}:${process.env["DB_PORT"]}/${process.env["DB_NAME"]}?authSource=admin`;
 

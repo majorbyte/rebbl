@@ -58,8 +58,30 @@ class Maintenance{
 
         //await test.swap("594eecd4-4cc8-11ef-be7b-bc24112ec32e",id,0);
 
-          let teams = await bb3Service.searchTeams("2d2383e5-b15c-11ed-80a8-020000a4d571", '%');
-          teams = teams.filter(x => !x.experienced && !x.custom);
+
+        const ids = ["5abb6c16-ede3-11ef-a124-bc2411305479"]
+        for(const id of ids){
+          const schedules = await bb3.getSchedules({competitionId:id,round:3});
+
+          for(const match of schedules){
+            const response = await fetch(`http://rebbl.net:47018/api/statistics/dice/${match.gameId}`); 
+            if (!response.ok) continue;
+  
+            const data = await response.json();
+  
+            if (!data.responseGetMatchDiceRolls) continue;
+
+            data.responseGetMatchDiceRolls.matchDiceRolls.matchId = match.matchId;
+            data.responseGetMatchDiceRolls.matchDiceRolls.gameId = match.gameId;
+            
+            await bb3.updateDice({matchId:match.matchId,gameId:match.gameId},data.responseGetMatchDiceRolls.matchDiceRolls,{upsert:true});
+          }
+  
+        }
+           
+       
+           
+          
       
 
         //await adminMatchService.mockConcedeMatch("fa01ab2f-9c61-41eb-a86d-d59572260347","30e3a678-e0b9-11ee-a745-02000090a64f");

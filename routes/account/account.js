@@ -206,9 +206,9 @@ class Account{
   async #updateAccount(req, res){
     try{
       let account = { reddit: req.user.name
-        , steam: req.body.steam.substring(0,100)
-        , timezone: req.body.timezone.substring(0,100)
-        , twitch: req.body.twitch.substring(0,100)
+        , steam: req.body.steam?.substring(0,100)
+        , timezone: req.body.timezone?.substring(0,100)
+        , twitch: req.body.twitch?.substring(0,100)
         //, useDark: req.body.useDark
         //, showDonation: req.body.showDonation === "on"
       };

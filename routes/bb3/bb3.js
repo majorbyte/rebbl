@@ -17,15 +17,17 @@ class BB3{
   #starplayers = async (_,res) => res.render("bb3/starplayers"); 
 
   #match = async (req,res) => {
-    let match = await dataService.getMatch({gameId:req.params.id});
-    if (!match) match = await dataService.getMatch({matchId:req.params.id});
+    let [match,dice] =  await res.locals.profiler.measure("Match & Dice","database",  Promise.all([dataService.getMatch({matchId:req.params.id}),dataService.getDice({matchId:req.params.id})]));
+    if (!match) [match,dice] =  await res.locals.profiler.measure("Match & Dice","database",  Promise.all([dataService.getMatch({gameId:req.params.id}),dataService.getDice({gameId:req.params.id})]));
 
     let schedule = null;
     // game is played, but not synced properly, show intermediate screen
-    if (!match) schedule = await dataService.getSchedule({gameId:req.params.id}); 
-    if (!schedule) schedule = await dataService.getSchedule({matchId:req.params.id}); 
+    if (!match) {
+      schedule = await dataService.getSchedule({gameId:req.params.id}); 
+      if (!schedule) schedule = await dataService.getSchedule({matchId:req.params.id}); 
+    }
 
-    res.render("bb3/match", {match, schedule, user:res.locals.user});
+    res.render("bb3/match", {match, schedule, user:res.locals.user, dice});
       
   };
   #competitions = async (req,res) => {
@@ -152,7 +154,8 @@ class BB3{
 
   #landingPage = async(req,res) => {
     const season = req.params.season || "season 3";
-    const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
+    const competitions = await dataService.getCompetitions({season, format:{$in:[1,2,3]},status:3,leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
+    //const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
 
     let competition;
     let upcomingMatch;

@@ -3,7 +3,7 @@ include functions.pug
 .season-table(style="margin-bottom:40px;")  
   .g-0
     .d-flex.justify-content-between
-      a.text-primary.text-decoration-none(href=`/competition/${competition.id}/schedules` class="highlight")
+      a.text-primary.text-decoration-none(href=`/competition/${competition.id}${competition.format != 1 ? '/schedules' : ''}` class="highlight")
         h2.fw-bold.text-uppercase= competition.name
       - if (competition.status === 1)
         h2 Waiting for teams

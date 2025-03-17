@@ -5,7 +5,151 @@ block vars
   - let page = "home"
 include functions.pug 
 
+block append scripts
+  script(src="https://cdn.rebbl.net/scripts/moment.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone.min.js")
+  script(src="https://cdn.rebbl.net/scripts/moment-timezone-with-data-10-year-range.min.js")
+  script(src="https://cdn.rebbl.net/scripts/v2/tempusdominus.min.js")
+  -let userTimezone = user ? user.Timezone : "false";
+  script.
+    $(document).ready(function(){
+      let guessed = moment.tz.guess();
+
+      
+
+      const elements = document.body.querySelectorAll("input[data-coach]");
+      for(const e of elements){
+        const id = e.getAttribute("data-coach");
+        const tz = e.value || guessed;
+        $(`#tz_info_${id}`).text(moment().tz(tz).format('YYYY-MM-DD HH:mm ZZ'));
+      }
+        function formatDate(date) {
+          const dateFormat = "YYYYMMDDTHHmmss[Z]";
+          return date.format(dateFormat);
+        }
+
+        function calculateEndDatetime(startDatetime) {
+          return formatDate(startDatetime.add(2, "h"));
+        }
+
+        function setCalendarDatetime() {
+          $.each($('.calendar-add'), (idx, anchor) => {
+            const $anchor = $(anchor);
+            const picker = $anchor.siblings().find('.datetimepickerInput')[0];
+
+            let timezone = "#{userTimezone}" == false ? moment.tz.guess() : "#userTimezone";
+            const date =  $(picker).val()
+            let matchDate = moment.tz(date, timezone).tz("UTC");
+
+            if(date) {
+              $anchor.show();
+            } else {
+              $anchor.hide();
+            }
+
+
+            //give times in UTC and let google handle the tz magic
+            $anchor.attr("href", `http://www.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent(`REBBL ${$anchor.data('team-home')} - ${$anchor.data('team-away')}`)}&dates=${formatDate(matchDate)}/${calculateEndDatetime(matchDate)}`);
+          })
+        }
+
+
+        let timezones = $(".timezone");
+
+        timezones.each(function(zone){
+          if ($(timezones[zone]).text().length > 0)
+            $(timezones[zone]).find(".time").text(moment().tz($(timezones[zone]).text()).format('YYYY-MM-DD HH:mm ZZ'));
+        });
+
+        $(".btn-date").on("click", async function(event){
+          let id = event.currentTarget.getAttribute("data-contestid");
+          let competitionId = event.currentTarget.getAttribute("data-competitionid");
+          let clan = event.currentTarget.getAttribute("data-clan");
+          let target = event.currentTarget.getAttribute("data-bs-target");
+          let matchId = event.currentTarget.getAttribute("data-matchId");
+          
+          let timezone = "#{userTimezone}" == false ? moment.tz.guess() : "#userTimezone";
+          
+          let date = $(target).val();
+
+          if(date) {
+            date = moment.tz(date, timezone).tz("UTC").format("YYYY-MM-DD HH:mm");
+          }
+          
+          setCalendarDatetime();
+
+          let result = await fetch(id ? `/account/unplayed/${id}` : `/bb3/unplayed/${matchId}/schedule`,{
+            method:"PUT",
+            headers:{
+              'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({date, clan, competitionId})
+          });
+
+          
+          
+          let btn = $(this);
+
+          if (result.ok){
+            btn.removeClass("btn-primary").addClass("btn-success");
+            btn.prop("disabled",true);
+            setTimeout(function(btn){
+                btn.addClass("btn-secondary");
+                btn.removeClass("btn-success");
+            },1500,btn )
+          } else {
+            btn.removeClass("btn-primary").addClass("btn-danger");
+            btn.prop("disabled",true);
+          }
+        });
+        
+        let timezone = "#{userTimezone}" == false ? moment.tz.guess() : "#userTimezone";
+        $(".datetimepicker").each(function() {
+          let picker;
+          if($(this).val())
+            picker = new tempusDominus.TempusDominus(this,{localization:{format: "yyyy-MM-dd HH:mm"}, date: moment.tz(this.defaultValue,"UTC").tz(moment.tz.guess()), useCurrent:false});
+          else
+            picker = new tempusDominus.TempusDominus(this,{localization:{format: "yyyy-MM-dd HH:mm"}, useCurrent:false});
+
+          const elm = this;
+          const sub = picker.subscribe(tempusDominus.Namespace.events.change, (e) => {
+            let btn = elm.getAttribute("data-btn");
+
+            $(btn).removeClass("btn-secondary")
+            $(btn).addClass("btn-primary");
+            $(btn).removeAttr("disabled");
+          });
+        });
+
+        $(".stream").on("click", async function(event){
+          let id = event.currentTarget.getAttribute("data-contestid");
+          let matchId = event.currentTarget.getAttribute("data-matchId");
+
+          let result = await fetch(`/api/v1/upcoming/stream/${id ?? matchId}`,{method:"POST"});
+
+          if (result.ok){
+            $(event.currentTarget).addClass("hidden");
+            $(`#unstream-${id || matchId}`).removeClass("hidden");
+          } 
+        });
+        $(".unstream").on("click", async  function(event){
+          let id = event.currentTarget.getAttribute("data-contestid");
+          let matchId = event.currentTarget.getAttribute("data-matchId");
+
+          let result = await fetch(`/api/v1/upcoming/unstream/${id ?? matchId}`,{method:"POST"});
+
+          if (result.ok){
+            $(event.currentTarget).addClass("hidden");
+            $(`#stream-${id || matchId}`).removeClass("hidden");
+          } 
+        });
+
+        setCalendarDatetime();
+      });  
+
+
 block head
+  link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/tempusdominus.min.css")
   style.
     h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
     .card{width: 12rem;}
@@ -43,7 +187,7 @@ block head
     }
 
 block content
-  .container
+  .container-lg
     if user && user.info
       .coach-container(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/banner/${user.info.banner}.png) `)
         .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${user.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${user.info.avatar}.png); `)
@@ -51,8 +195,8 @@ block content
           .d-flex.flex-column.justify-content-center
             h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;-webkit-text-stroke:2px black")=competition.name
             .d-flex
-              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.id}/schedules`) schedules
-              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.id}/standings`) standings
+              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.parentId ? competition.parentId : competition.id}/schedules`) schedules
+              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.parentId ? competition.parentId : competition.id}/standings`) standings
         - if (competition.standings && user && competition.standings.find(x => x.id == user.bb3id))
           .place-container.d-flex.justify-content-center
             h1.text-white.fw-bold.align-content-center.my-0.py-0= "#" + competition.standings.find(x => x.id == user.bb3id).position
@@ -63,8 +207,8 @@ block content
           .d-flex.flex-column.justify-content-center
             h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;-webkit-text-stroke:2px black")=competition.name
             .d-flex
-              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.id}/schedules`) schedules
-              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.id}/standings`) standings
+              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.parentId ? competition.parentId : competition.id}/schedules`) schedules
+              a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.parentId ? competition.parentId : competition.id}/standings`) standings
         - if (competition.standings && user && competition.standings.find(x => x.id == user.bb3id))
           .place-container.d-flex.justify-content-center
             h1.text-white.fw-bold.align-content-center.my-0.py-0= "#" + competition.standings.find(x => x.id == user.bb3id).position
@@ -108,89 +252,90 @@ block content
               .col-4.col-md-2=(Number(rank.win)+Number(rank.loss)+Number(rank.draw))
               .col-4.col-md-2.text-end=(rank.tddiff)
     .row
-      .col-8.fs-5
-        if upcomingMatch
+      if upcomingMatch
+        .col-12.col-lg-7.fs-5.border-start
           for match in upcomingMatch
             - let item = match.home.coach.bb3id == user.bb3id ? match.away : match.home
+            input(type="hidden" value=item.coach.timezone data-coach=item.coach.bb3id )
             .row.col-12
-              h2(style="margin-top:40px;margin-bottom:20px")= match.competitionName + " - week " + match.round
+              .col-10
+                h2(style="margin-top:40px;margin-bottom:20px")= match.competitionName + " - week " + match.round
             .row
               .col-2
-                .coach-container
+                img(src="https://cdn.rebbl.net/images/bb3/Logos/100x100/" + item.team.logo alt="")
+              .col-8
+                h2.text-center.mt-2
+                  a.text-decoration-none.text-primary(href=`/team/${item.team.id}`)= item.team.name
+                h3.text-center=item.team.motto || "your motto here"                  
+              .col-2
+                .coach-container.float-end
                   .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${item.coach.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${item.coach.info.avatar}.png); `)
-              .col-4
-                h3 
-                  a(href=`/team/${item.team.id}`)= item.team.name
-                h3 
-                  a(href=`/coach/${item.coach.bb3id}`)= item.coach.name
-              .col-2
-                img(src="https://cdn.rebbl.net/images/bb3/Logos/100x100/" + item.team.logo alt="" class="w-50")
             .row
-              .col-2
-                strong race
-              div(class="col-4")= getRace(item.team.race)
-            .row
-              .col-2
-                strong team value
-              -if (item.team.team)
-                div(class="col-4")= item.team.team.nextMatchTV
-              -else
-                div(class="col-4")= item.team.value
-            .row
-              .col-2
-                strong cash
-              -if (item.team.team)
-                div(class="col-4")= Math.floor(item.team.team.cash/1000) + "k"
-              -else
-                div(class="col-4") -
-            .row
-              .col-2
-                strong coach
-              div(class="col-4")= item.coach.name
-            .row
-              .col-2
-                strong reddit
-              div(class="col-4 highlight")= "/u/" + (item.coach.reddit ? item.coach.reddit.toLowerCase() : "")
-            .row
-              .col-2
-                strong discord
-              div(class="col-4")= item.coach.discord
-            .row
-              .col-2
-                strong steam
-              div(class="col-4")= item.coach.steam
-            .row
-              .col-2
-                strong timezone  
-                div 
-                  strong current time
-              div(class="col-4 timezone" )= item.coach.timezone
-                div(class="time")
-            br
-            .row.col
-              - if(user?.roles?.includes("streamer"))
-                span Enter match date in your own local time
-                .row.col
-                  .col-xs-12.col-sm-7.col-md-6.col-lg-4
-                    .input-group.datetimepicker(id=`datetimepicker-${match.matchId}` data-td-target-input="nearest" data-td-target-toggle="nearest" data-btn=`#btn-${match.matchId}`)
-                      span.input-group-text(data-td-target=`#datetimepicker-${match.matchId}` data-td-toggle="datetimepicker")
-                        i.fa-solid.fa-calendar
-                      input.datetimepickerInput.form-control.px-0.text-center(id=`datetimepickerInput-${match.matchId}` type="text" value=(match.date ? match.date.date : null)  data-td-target=`#datetimepicker-${match.matchId}`)
-                      button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-matchId=match.matchId data-competitionid=match.competition_id data-bs-target=`#datetimepickerInput-${match.matchId}` id=`btn-${match.matchId}`) Set match date
-                    a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.home.team.name data-team-away=item.team.name class="calendar-add") Add to Google Calendar
-                  -if (user.twitch)                  
-                    .col-12
-                      btn.btn.btn-success.stream(id=`stream-${match.matchId}` data-matchId=match.matchId)  stream
-                      btn.d-none.btn.btn-danger.unstream(id=`unstream-${match.matchId}` data-matchId=match.matchId) unstream
-              - if(match.date)
-                p planned match start:&nbsp;
-                  span(id="matchTime")= match.date.date
-                - if(match.date.stream)
-                  div(class="row col-12 justify-content-center")
-                    a(href=match.date.stream.url target="_blank")
-                      img(src="/images/glitch.png" style="width:36px;height:36px")
-                      span= " " + match.date.stream.name 
-      .col-4 
+              .col-lg-6.col-12.mb-1
+                .input-group
+                  span.input-group-text.w-25 Race
+                  input.form-control(type='text' value=getRace(item.team.race) disabled)
+              .col-lg-6.col-12.mb-1
+                .input-group
+                  span.input-group-text.w-25 TV
+                  -if (item.team.team)
+                      input.form-control(type='text' value=item.team.team.nextMatchTV disabled)
+                  -else
+                    input.form-control(type='text' value=item.team.value disabled)
+              .col-lg-6.col-12.mb-1
+                .input-group
+                  span.input-group-text.w-25 Reddit
+                  input.form-control(type='text' value=item.coach.reddit disabled)
+              .col-lg-6.col-12.mb-1
+                .input-group
+                  span.input-group-text.w-25 Coach
+                  a.text-decoration-none.form-control.text-info(href=`/coach/${item.coach.bb3id}` target="_blank")= item.coach.name
+                  //input.form-control(type='text' value=item.coach.name disabled)
+              .col-lg-6.col-12.mb-1
+                .input-group
+                  span.input-group-text.w-25 Discord
+                  input.form-control(type='text' value=item.coach.discord disabled)
+              .col-lg-6.col-12.mb-1
+                .input-group
+                  span.input-group-text.w-25 Steam
+                  input.form-control(type='text' value=item.coach.steam disabled)
+              .col-12
+                .input-group
+                  span.input-group-text.w-25 Timezone
+                  input#timezone.form-control(name="timezone" disabled title="timezone" value=item.coach.timezone)
+                  span.input-group-text.d-block(id=`tz_info_${item.coach.bb3id}` style="width:37.5%")
+              //.col-12.mt-3
+                if(user)
+                  span Enter match date in your own local time
+                  .row.col
+                    .col-8
+                      .input-group.datetimepicker(id=`datetimepicker-${match.matchId}` data-td-target-input="nearest" data-td-target-toggle="nearest" data-btn=`#btn-${match.matchId}`)
+                        span.input-group-text(data-td-target=`#datetimepicker-${match.matchId}` data-td-toggle="datetimepicker")
+                          i.fa-solid.fa-calendar
+                        input.datetimepickerInput.form-control.px-0.text-center(id=`datetimepickerInput-${match.matchId}` type="text" value=(match.date ? match.date.date : null)  data-td-target=`#datetimepicker-${match.matchId}`)
+                        button.btn.btn-secondary.btn-block.btn-date( disabled data-clan=match.clan data-matchId=match.matchId data-competitionid=match.competition_id data-bs-target=`#datetimepickerInput-${match.matchId}` id=`btn-${match.matchId}`) Set match date
+                      a(href="#" target="_blank" data-date=(match.date ? match.date.date : null) data-team-home=match.home.team.name data-team-away=item.team.name class="calendar-add") Add to Google Calendar
+                    -console.dir(user)
+                    if (user.twitch)                  
+                      .col-4
+                        if (match.date && match.date.stream && match.date.stream.name === user.reddit)
+                          btn.btn.btn-danger.unstream(id=`unstream-${match.contest_id || match.matchId}` data-matchId=match.matchId data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
+                          btn.d-none.btn.btn-success.stream(id=`stream-${match.contest_id || match.matchId}` data-matchId=match.matchId data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
+                        else
+                          btn.d-none.btn.btn-danger.unstream(id=`unstream-${match.contest_id || match.matchId}` data-matchId=match.matchId data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id) unstream
+                          btn.btn.btn-success.stream(id=`stream-${match.contest_id || match.matchId}` data-matchId=match.matchId data-competitionid=match.competition_id data-clan=match.clan data-contestid=match.contest_id)  stream
+                if(match.date)
+                  p planned match start:&nbsp;
+                    span(id="matchTime")= match.date.date
+                  - if(match.date.stream)
+                    div(class="row col-12 justify-content-center")
+                      a(href=match.date.stream.url target="_blank")
+                        img(src="/images/glitch.png" style="width:36px;height:36px")
+                        span= " " + match.date.stream.name 
+        .col-0.col-lg-1
+      else
+        .col-8.fs-5
+      .col-12.col-lg-4 
         for announcement in announcements
           - let date = new Date(announcement.date *1000)
           .row

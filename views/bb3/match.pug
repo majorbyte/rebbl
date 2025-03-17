@@ -1,16 +1,17 @@
 extends layout.pug
 include teamStat.pug
 include functions.pug
+include dice-helper.pug 
 
 block append vars
   -
     let options = {company:company}
     const homeTeamStats = match?.statistics.homeGamerStatistics?.teamStatistics.statistics.statistic || []
     const awayTeamStats = match?.statistics.awayGamerStatistics?.teamStatistics.statistics.statistic || []
-    
-block head
-  link(rel="stylesheet" href="/styles/skills.css")
 
+block append head
+  link(rel="stylesheet" href="/styles/skills.css")
+  +dice-css()
   style.
     h2{margin-top:0px;margin-bottom:0px;margin-right:15px}
     .card{width: 12rem;}
@@ -22,13 +23,22 @@ block head
 block content
   .container.fs-5
     .row
-      - if (match)
+      if match
         .col-12
           .row
-            .col-12.text-center
-              - if (match.replayFile)
+            .col-12
+              if (match.replayFile)
                 a.float-end(href=`https://replays.rebbl.net/bb3/${match.replayFile}`)
                   img(src=`https://cdn.rebbl.net/images/replay.png` alt="Download replay" title="Download replay")
+              if dice
+                .nav
+                  .nav-item
+                    a.nav-link#nav-dice-tab.float-start(href=`#` data-bs-toggle="tab" data-bs-target="#nav-dice" aria-controls="nav-dice"  aria-selected="true" type="button")
+                      .dice.d-64.dd
+                  .nav-item
+                    a.nav-link#nav-players-tab.float-start.active(href=`#` data-bs-toggle="tab" data-bs-target="#nav-players" aria-controls="nav-players" aria-selected="false"  type="button")
+                      .dice.d-64.p
+            .col-12.text-center
               h2= `${match.competition.name}`
               - if (user && !user.bb3id) user.bb3id = 0
               .col-12
@@ -106,48 +116,55 @@ block content
                           -else 
                             div(title=`previous: ${match.awayGameResultGain.previousDedicatedFans}`)= match.awayGameResultGain.newDedicatedFans + " Dedicated Fans"
                     
-            if match.homeHasConceded == "0" && match.awayHasConceded == "0"
-              div(class="col-12")
-                br
-              .col-12.d-flex
-                .col-6
-                  table(style="font-size: 16px;width: 100%;border-collapse: collapse;")
-                    thead 
-                      tr 
-                        th.text-primary-emphasis statistic 
-                        th.text-primary-emphasis.text-center= match.homeTeam.name
-                        th.text-primary-emphasis.text-center= match.awayTeam.name
+            .tab-content#tabContent
+              #nav-players.tab-pane.fade.show.active(role="tabpanel" aria-labelledby="nav-players-tab")            
+                if match.homeHasConceded == "0" && match.awayHasConceded == "0"
+                  .col-12
+                    br
+                  .col-12.d-flex
+                    .col-6
+                      table(style="font-size: 16px;width: 100%;border-collapse: collapse;")
+                        thead 
+                          tr 
+                            th.text-primary-emphasis statistic 
+                            th.text-primary-emphasis.text-center= match.homeTeam.name
+                            th.text-primary-emphasis.text-center= match.awayTeam.name
 
-                    tbody
-                      tr
-                        td Team value
-                        td.text-center= match.homeTeam.value
-                        td.text-center= match.awayTeam.value
+                        tbody
+                          tr
+                            td Team value
+                            td.text-center= match.homeTeam.value
+                            td.text-center= match.awayTeam.value
 
-                      each stat in homeTeamStats.filter(x => x.categoryId != 2 && [18,27,31].indexOf(Number(x.id)) === -1)
-                        +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
-                .col-6
-                  table(style="font-size: 16px;width: 100%;border-collapse: collapse;")
-                    thead 
-                      tr 
-                        th.text-primary-emphasis statistic 
-                        th.text-primary-emphasis.text-center= match.homeTeam.name
-                        th.text-primary-emphasis.text-center= match.awayTeam.name
+                          each stat in homeTeamStats.filter(x => x.categoryId != 2 && [18,27,31].indexOf(Number(x.id)) === -1)
+                            +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
+                    .col-6
+                      table(style="font-size: 16px;width: 100%;border-collapse: collapse;")
+                        thead 
+                          tr 
+                            th.text-primary-emphasis statistic 
+                            th.text-primary-emphasis.text-center= match.homeTeam.name
+                            th.text-primary-emphasis.text-center= match.awayTeam.name
 
-                    tbody
-                      - const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
-                      each stat in homeTeamStats.filter(x => x.categoryId == 2).sort((a,b) => collator.compare(a.name, b.name))
-                        +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)
-            - match.homeTeam.mvp = match.homeMvp
-            - match.awayTeam.mvp = match.awayMvp
-            hr
-            - match.homeTeam.coach = match.homeGamer 
-            - match.awayTeam.coach = match.awayGamer 
-            .col-12.table-responsive-md
-              table(style="width:100%")
-                each team in [match.homeTeam, match.awayTeam]
-                  include team.pug
-      - if (schedule)
+                        tbody
+                          - const collator = new Intl.Collator(undefined, {numeric: true, sensitivity: "base"});
+                          each stat in homeTeamStats.filter(x => x.categoryId == 2).sort((a,b) => collator.compare(a.name, b.name))
+                            +teamStat(stat.name,[stat.id], homeTeamStats, awayTeamStats)                .col-12.table-responsive-md
+                  - match.homeTeam.mvp = match.homeMvp
+                  - match.awayTeam.mvp = match.awayMvp
+                  hr
+                  - match.homeTeam.coach = match.homeGamer 
+                  - match.awayTeam.coach = match.awayGamer 
+                  table(style="width:100%")
+                    each team in [match.homeTeam, match.awayTeam]
+                      include team.pug
+              if dice
+                #nav-dice.tab-pane.fade.table-responsive-md(role="tabpanel" aria-labelledby="nav-dice-tab")            
+                  .row.col-12
+                    +renderDiceReport(dice)
+
+
+      if schedule
           .MatchRow-contentWrapper
             div.MatchRow-team
               div.TeamLabel.TeamLabel--reverse

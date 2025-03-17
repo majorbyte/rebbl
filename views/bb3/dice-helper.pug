@@ -1,0 +1,265 @@
+
+mixin dice-css()
+    style.
+        .d-32{ --f:4;width:  32px;height:  32px;}
+        .d-64{ --f:2;width:  64px;height:  64px;}
+        .d-128{--f:1;width: 128px;height: 128px;}
+
+        .dice{background: url("https://cdn.rebbl.net/images/bb3/d128.png"); background-size:calc(1036px / var(--f)) calc(888px / var(--f))}
+        .d3_1 {background-position: calc(-10px/var(--f)) calc(calc(-10px/var(--f))/var(--f));}
+        .d3_2 {background-position: calc(calc(-158px/var(--f))/var(--f)) calc(calc(-10px/var(--f))/var(--f));}
+        .d3_3 {background-position: calc(calc(-10px/var(--f))/var(--f)) calc(calc(-158px/var(--f))/var(--f));}
+        .d6_1 {background-position: calc(-158px/var(--f)) calc(-158px/var(--f));}
+        .d6_2 {background-position: calc(-306px/var(--f)) calc(-10px/var(--f));}
+        .d6_3 {background-position: calc(-306px/var(--f)) calc(-158px/var(--f));}
+        .d6_4 {background-position: calc(-10px/var(--f)) calc(-306px/var(--f));}
+        .d6_5 {background-position: calc(-158px/var(--f)) calc(-306px/var(--f));}
+        .d6_6 {background-position: calc(-306px/var(--f)) calc(-306px/var(--f));}
+        .d8_1 {background-position: calc(-454px/var(--f)) calc(-10px/var(--f));}
+        .d8_2 {background-position: calc(-454px/var(--f)) calc(-158px/var(--f));}
+        .d8_3 {background-position: calc(-454px/var(--f)) calc(-306px/var(--f));}
+        .d8_4 {background-position: calc(-10px/var(--f)) calc(-454px/var(--f));}
+        .d8_5 {background-position: calc(-158px/var(--f)) calc(-454px/var(--f));}
+        .d8_6 {background-position: calc(-306px/var(--f)) calc(-454px/var(--f));}
+        .d8_7 {background-position: calc(-454px/var(--f)) calc(-454px/var(--f));}
+        .d8_8 {background-position: calc(-602px/var(--f)) calc(-10px/var(--f));}
+        .d16_1 {background-position: calc(-602px/var(--f)) calc(-158px/var(--f));}
+        .d16_2 {background-position: calc(-602px/var(--f)) calc(-306px/var(--f));}
+        .d16_3 {background-position: calc(-602px/var(--f)) calc(-454px/var(--f));}
+        .d16_4 {background-position: calc(-10px/var(--f)) calc(-602px/var(--f));}
+        .d16_5 {background-position: calc(-158px/var(--f)) calc(-602px/var(--f));}
+        .d16_6 {background-position: calc(-306px/var(--f)) calc(-602px/var(--f));}
+        .d16_7 {background-position: calc(-454px/var(--f)) calc(-602px/var(--f));}
+        .d16_8 {background-position: calc(-602px/var(--f)) calc(-602px/var(--f));}
+        .d16_9 {background-position: calc(-750px/var(--f)) calc(-10px/var(--f));}
+        .d16_10 {background-position: calc(-750px/var(--f)) calc(-158px/var(--f));}
+        .d16_11 {background-position: calc(-750px/var(--f)) calc(-306px/var(--f));}
+        .d16_12 {background-position: calc(-750px/var(--f)) calc(-454px/var(--f));}
+        .d16_13 {background-position: calc(-750px/var(--f)) calc(-602px/var(--f));}
+        .d16_14 {background-position: calc(-10px/var(--f)) calc(-750px/var(--f));}
+        .d16_15 {background-position: calc(-158px/var(--f)) calc(-750px/var(--f));}
+        .d16_16 {background-position: calc(-306px/var(--f)) calc(-750px/var(--f));}
+        .ad {background-position: calc(-454px/var(--f)) calc(-750px/var(--f));}
+        .bd {background-position: calc(-602px/var(--f)) calc(-750px/var(--f));}
+        .dd {background-position: calc(-750px/var(--f)) calc(-750px/var(--f));}
+        .ds {background-position: calc(-898px/var(--f)) calc(-10px/var(--f));}
+        .p {background-position: calc(-898px/var(--f)) calc(-158px/var(--f));}
+
+        .hover:hover {& .dice {display:none}}
+        .hover:hover {& .skill-32{display:block}}
+        .hover {& .skill-32{display:none}}
+
+block append vars
+  -
+    const getCas = function(cas){
+        if (cas < 6) return "transparent_ico_action_badly_hurt.png";
+        if (cas < 9) return "transparent_ico_action_seriously_hurt.png";
+        if (cas < 12) return "transparent_ico_action_serious_injury.png";
+        if (cas < 14) return "transparent_ico_action_lasting_injury.png";
+        if (cas < 16) return "transparent_ico_action_dead.png";
+    }
+
+    const flatten = (rolls, f) => rolls.flatMap(x => {
+      const stats = (Array.isArray(x.diceRolls.diceStatistic) ? x.diceRolls.diceStatistic: [x.diceRolls.diceStatistic]).filter(f).flatMap(m => m);
+      const dices = stats.flatMap(z => (Array.isArray(z.dice?.die) ? z.dice?.die : [z.dice?.die]).flatMap(q => q?.value));//.flatMap(m => m));
+      return dices.map(ny => ny)})
+
+    const block = x => x.rollType === 3;
+    const blockDice = (d) => flatten(d,block).reduce((p,c) => {p[c]++; return p;}, [0,0,0,0,0])
+
+    const armourFilter = x => x.rollType === 10;
+    const injuryFilter = x => x.rollType === 11;
+    const casFilter = x => x.rollType === 12;
+    const armourRolls = (d,f) =>{
+      const stats = (Array.isArray(d.diceRolls.diceStatistic) ? d.diceRolls.diceStatistic: [d.diceRolls.diceStatistic]).filter(f).flatMap(m => m);
+      
+      const dices = stats.flatMap(z => (Array.isArray(z.dice?.die) ? z.dice?.die : [z.dice?.die]).reduce((p,c) => p+c.value,0));//.flatMap(m => m));
+      return dices.map(ny => ny).reduce((p,c) => {p[c]++; return p;}, [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])}
+
+    const flattenD6 = (playerRolls,teamRolls) => {
+      
+      const pr = playerRolls.flatMap(x => {
+
+        const stats = (Array.isArray(x.diceRolls.diceStatistic) ? x.diceRolls.diceStatistic: [x.diceRolls.diceStatistic]).flatMap(m => m);
+        return stats.flatMap(z => (Array.isArray(z.dice?.die) ? z.dice?.die : [z.dice?.die]).filter(f => f.dieType === 0).flatMap(q => q?.value));
+                
+      }).flatMap(m=>m).reduce((p,c) => {p[c]++; return p;}, [0,0,0,0,0,0,0]);
+      const tr = teamRolls
+        .flatMap(m => m)
+        .flatMap(z => (Array.isArray(z.dice?.die) ? z.dice?.die : [z.dice?.die]).filter(f => f.dieType === 0).flatMap(q => q?.value))
+        .map(ny => ny).reduce((p,c) => {p[c]++; return p;}, pr);
+
+      
+      tr.splice(0,1);
+      return tr
+    }
+
+
+    const flattenBlockTypes = (rolls, f) => rolls.flatMap(x => {
+      const stats = (Array.isArray(x.diceRolls.diceStatistic) ? x.diceRolls.diceStatistic: [x.diceRolls.diceStatistic]).filter(f).flatMap(m => m);
+      const dices = stats.flatMap(z => (Array.isArray(z.dice?.die) ? z.dice?.die : [z.dice?.die]).length);//.flatMap(m => m));
+      return dices.map(ny => ny)})
+
+    const blockTypes = (d) => flattenBlockTypes(d,block).reduce((p,c) => {p[c]++; return p;}, [0,0,0,0]).reverse();
+
+    const flattenBlockResults = (rolls, f) => rolls.flatMap(x => {
+      const stats = (Array.isArray(x.diceRolls.diceStatistic) ? x.diceRolls.diceStatistic: [x.diceRolls.diceStatistic]).filter(f).flatMap(m => m);
+      const dices = stats.map(z => (Array.isArray(z.dice?.die) ? z.dice?.die : [z.dice?.die]).flatMap(q => q.value).sort());//.flatMap(m => m));
+      return dices.map(ny => ny)}
+
+    )
+
+    const blockResults = (d) => flattenBlockResults(d,block).reduce((p,c) => {
+      const r = p.find(x => x.type === JSON.stringify(c));
+      if (r) r.count++;
+      else p.push({type:JSON.stringify(c),data:c,count:1});
+      return p;
+
+    }, []).sort((a,b) => a.data.length -b.data.length);
+
+
+    //const 
+
+
+mixin renderDiceReport(dice)
+  .col-sm-6.col-lg-4
+    h3.text-center Block Dice
+    +renderBlockDiceBlock(blockDice(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls),blockDice(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls))
+  .col-sm-6.col-lg-4
+    h3.text-center D6 totals
+    +renderD6Block(flattenD6(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls,dice.homeTeamDiceRolls.diceRolls.diceStatistic),flattenD6(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls,dice.awayTeamDiceRolls.diceRolls.diceStatistic))
+  .col-sm-6.col-lg-4
+    h3.text-center Blocks
+    +renderBlockBlockWithFail(blockTypes(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls),blockTypes(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls),[0,0,0,0],[0,0,0,0])
+  .col-sm-6.col-lg-4
+    h3.text-center Blocks
+    +renderBlockResultsBlock(blockResults(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls),blockResults(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls))
+  .col-sm-6.col-lg-8.row
+    .col-sm-12
+      h3.text-center Armour
+      +renderArmourRolls(armourRolls(dice.homeTeamDiceRolls,armourFilter), armourRolls(dice.awayTeamDiceRolls,armourFilter))
+    .col-sm-6
+      h3.text-center Injury
+      +renderArmourRolls(armourRolls(dice.homeTeamDiceRolls,injuryFilter), armourRolls(dice.awayTeamDiceRolls,injuryFilter))
+    .col-sm-6
+      h3.text-center Casualty
+      +renderArmourRolls(armourRolls(dice.homeTeamDiceRolls, casFilter),   armourRolls(dice.awayTeamDiceRolls, casFilter),true)
+  //.col-sm-6.col-lg-4
+    h3.text-center Dodges
+    +renderD6BlockWithFail([0,0,2,0,6,6],[0,2,2,2,2,2],[0,0,1,0,3,1],[0,1,0,1,0,0])
+  //.col-sm-6.col-lg-4
+    h3.text-center Catches
+    +renderD6BlockWithFail([0,0,2,0,0,6],[0,0,1,2,0,0],[0,0,1,0,0,1],[0,0,0,0,0,0])
+  //.col-sm-6.col-lg-4
+    h3.text-center GFI's
+    +renderD6BlockWithFail([0,0,0,0,0,6],[0,0,0,0,3,2],[0,0,0,0,0,1],[0,0,0,0,1,0])
+
+
+
+mixin renderBlockDiceBlock(home, away)
+    - const homeSum = home.reduce((p,c) => p+c, 0)
+    - const awaySum = away.reduce((p,c) => p+c, 0)
+    - const homeMax = Math.max(...home);
+    - const awayMax = Math.max(...away);
+    - let x = 0
+    -for(let x = 0; x < 5; x++)
+        .col-12.d-flex.align-items-center.justify-content-center
+            +render(home[x]/homeMax*100, home[x]*100/homeSum, home[x],true )
+            .dice.d-32(class=`${['ad','bd','p','ds','dd'][x]}`)
+            +render(away[x]*100/awayMax, away[x]*100/awaySum, away[x])
+
+mixin renderBlockResultsBlock(home, away)
+    - const homeMax = Math.max(...home.map(c => c.count));
+    - const awayMax = Math.max(...away.map(c => c.count));
+    - let data = home.map(x => { return { type: x.type, data:x.data, counts:{home:x.count, away:0}  }})
+    - away.forEach(x => { let o = data.find(n => n.type === x.type); if(o){ o.counts.away = x.count }else{ data.push({ type: x.type, data:x.data, counts:{home:0,away:x.count}  }) }})
+    - let compare = function(a,b){ let sumA = a.reduce((p,c) => p+c,0);let sumB = a.reduce((p,c) => p+c,0); return sumA - sumB || a[0] - b[0] || (a[1] || 0) - (b[1] || 0) || (a[2] || 0) - (b[2] || 0) }
+    - data.sort((a,b) => { let r = a.data.length - b.data.length; return r === 0 ? compare(a.data,b.data) : r})
+    -for(let x = 0; x < data.length; x++)
+      .col-12.d-flex.align-items-center.justify-content-center
+        - let v = data[x].counts.home
+        - let s = v/homeMax*100
+        +render(s, NaN, v,true )
+        -let d = data[x].data
+        -for(let y=0;y<d.length;y++)
+          .dice.d-32(class=`${['ad','bd','p','ds','dd'][d[y]]}`)
+
+        - v = data[x].counts.away
+        - s = v/awayMax*100
+        +render(s, NaN, v)
+        
+mixin renderD6Block(home, away)
+    - const homeSum = home.reduce((p,c) => p+c, 0)
+    - const awaySum = away.reduce((p,c) => p+c, 0)
+    - const homeMax = Math.max(...home);
+    - const awayMax = Math.max(...away);
+    - let x = 0
+    -for(let x = 0; x < 6; x++)
+        .col-12.d-flex.align-items-center.justify-content-center
+            +render(home[x]/homeMax*100, home[x]*100/homeSum, home[x],true )
+            .dice.d-32(class=`${['d6_1','d6_2','d6_3','d6_4','d6_5','d6_6'][x]}`)
+            +render(away[x]*100/awayMax, away[x]*100/awaySum, away[x])
+
+mixin renderD6BlockWithFail(home, away, homeFail, awayFail)
+    - const homeMax = Math.max(...home);
+    - const awayMax = Math.max(...away);
+    - const homeFailMax = Math.max(...homeFail);
+    - const awayFailMax = Math.max(...awayFail);
+    - let x = 0
+    -for(let x = 0; x < 6; x++)
+        .col-12.d-flex.align-items-center.justify-content-center
+            +renderFail(home[x]/homeMax*100, home[x]-homeFail[x],homeFail[x]/homeFailMax*100, homeFail[x], home[x], true )
+            span.mx-2=`${['6+','5+','4+','3+','2+','1+'][x]}`
+            +renderFail(away[x]/awayMax*100, away[x]-awayFail[x],awayFail[x]/awayFailMax*100, awayFail[x], away[x], false )
+
+mixin renderBlockBlockWithFail(home, away, homeFail, awayFail)
+    - const homeMax = Math.max(...home);
+    - const awayMax = Math.max(...away);
+    - const homeFailMax = Math.max(...homeFail);
+    - const awayFailMax = Math.max(...awayFail);
+    - let x = 0
+    -for(let x = 0; x < 3; x++)
+        .col-12.d-flex.align-items-center.justify-content-center
+            +renderFail(home[x]/homeMax*100, home[x]-homeFail[x],homeFail[x]/homeFailMax*100, homeFail[x], home[x], true )
+            span.mx-2=`${['3d','2d','1d'][x]}`
+            +renderFail(away[x]/awayMax*100, away[x]-awayFail[x],awayFail[x]/awayFailMax*100, awayFail[x], away[x], false )
+
+
+mixin renderArmourRolls(home, away, cas)
+    - const homeSum = home.reduce((p,c) => p+c, 0)
+    - const awaySum = away.reduce((p,c) => p+c, 0)
+    - const homeMax = Math.max(...home) || 1;
+    - const awayMax = Math.max(...away) || 1;
+    - let x = cas? 0 : 2
+    - let e = cas? 16 : 13
+
+    -for(x; x < e; x++)
+      - if (cas && home[x] === away[x] && home[x] === 0) continue
+
+      .col-12.d-flex.align-items-center.justify-content-center(class=`${cas ? 'hover' : ''}`)
+          +render(home[x]/homeMax*100, home[x]*100/homeSum, home[x],true )
+          if cas
+              .dice.d-32(class=`d16_${x+1}`)
+              img.skill-32(title="serious injury" src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${getCas(x)}`)
+          else
+              .dice.d-32(class=`${['d6_1','d6_2','d6_1','d6_2','d6_4','d6_5','d6_4','d6_3','d6_5','d6_5','d6_6','d6_6'][x-2]}`)
+              .dice.d-32(class=`${['d6_1','d6_1','d6_3','d6_3','d6_2','d6_2','d6_4','d6_6','d6_5','d6_6','d6_6','d6_2'][x-2]}`)
+          +render(away[x]*100/awayMax, away[x]*100/awaySum, away[x])
+
+
+mixin render(size, value, txt, reverse)
+    .progress-stacked.col.bg-body.rounded-0(class=`${reverse ? "flex-row-reverse" : ""}`)
+        .progress(role="progressbar" aria-label="Segment two" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style=`width: ${size}%`)
+            .progress-bar.bg-success= !isNaN(value) ? `${Math.round(value*10,1)/10}%` : ''
+        span.mx-2= txt
+
+mixin renderFail(s1, v1, s2, v2,txt, reverse)
+    .progress-stacked.col.bg-body.rounded-0(class=`${reverse ? "flex-row-reverse" : ""}`)
+        if v2 > 0
+            .progress(role="progressbar" aria-label="Segment one" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style=`width: ${s2}%`)
+                .progress-bar.bg-danger= v2
+        if v1 > 0
+            .progress(role="progressbar" aria-label="Segment two" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style=`width: ${s1}%`)
+                .progress-bar.bg-success= v1
+        span.mx-2= (isNaN(txt) || txt == 0 ? '' : txt)
+

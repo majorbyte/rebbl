@@ -215,7 +215,7 @@ block content
                               input.form-control(type='text' value=coach.steam disabled)
                           if coach.twitch
                             .col-md-6
-                              label.form-label Steam 
+                              label.form-label Twitch 
                               input.form-control(type='text' value=coach.twitch disabled)
                       // Recent Activity
                   #nav-activites.tab-pane.fade.col-12.show.table-responsive-md(role="tabpanel" aria-labelledby="nav-activites-tab")
@@ -246,8 +246,8 @@ block content
                                   a(target="_blank" style="position: absolute;bottom: 10px;right: 10px;font-size: 2em;" href="/team/" + team.id)
                                     i(class="fa-solid fa-arrow-circle-right")
                   #nav-trophies.tab-pane.fade.col-12.show.table-responsive-md(role="tabpanel" aria-labelledby="nav-trophies-tab")
-                    if(user.trophies)
-                      each trophy, index in user.trophies
+                    if(coach.trophies)
+                      each trophy, index in coach.trophies
                         div(class="col-3")
                           - let action = trophy.display ? "/account/trophies/hide" : "/account/trophies/show" 
                           form(action=action method="post")

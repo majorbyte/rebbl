@@ -14,7 +14,7 @@ router.get('/:team_id', /*util.cache(10*60),*/ async function(req, res){
   const id = isNaN(req.params.team_id) ?req.params.team_id : Number(req.params.team_id);
   let team = await dataService.getTeam({"team.id":id});
 
-  if (req.headers['user-agent'].indexOf("https://discordapp.com") > -1){
+  if (req.headers['user-agent']?.indexOf("https://discordapp.com") > -1){
     if(team){
       let standing = await dataService.getStandings({teamId:team.team.id},{sort:{season:-1},collation:{locale:"en_US", numericOrdering: true },limit:1 });
       res.render('team/discord',{team:team,company:req.params.company,standing:standing[0]});
@@ -53,6 +53,8 @@ router.get('/:teamId/update', util.ensureAuthenticated, teamUpdateRateLimiter, a
   try {
     let account = await accountService.getAccount(req.user.name);
     let team = await dataService.getTeam({"team.id":Number(req.params.teamId)});
+
+    if (!team) return res.status(404).json({error:"team not found"});
 
     if (account.coach === team.coach.name){
       await teamService.updateTeam(Number(req.params.teamId),false);
