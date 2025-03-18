@@ -4,7 +4,7 @@ include functions.pug
   .g-0
     .d-flex.justify-content-between
       a.text-primary.text-decoration-none(href=`/competition/${competition.id}${competition.format != 1 ? '/schedules' : ''}` class="highlight")
-        h2.fw-bold.text-uppercase= competition.name
+        h2.fw-bold.text-uppercase= competition.displayName || competition.name
       - if (competition.status === 1)
         h2 Waiting for teams
       - if (competition.status === 2)

@@ -193,7 +193,7 @@ block content
         .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${user.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${user.info.avatar}.png); `)
         .d-flex.justify-content-center.mx-auto.text-decoration-none
           .d-flex.flex-column.justify-content-center
-            h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;-webkit-text-stroke:2px black")=competition.name
+            h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;-webkit-text-stroke:2px black")= competition.displayName || competition.name
             .d-flex
               a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.parentId ? competition.parentId : competition.id}/schedules`) schedules
               a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.parentId ? competition.parentId : competition.id}/standings`) standings
@@ -205,7 +205,7 @@ block content
         .coach.coach-default
         .d-flex.justify-content-center.mx-auto.text-decoration-none
           .d-flex.flex-column.justify-content-center
-            h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;-webkit-text-stroke:2px black")=competition.name
+            h1.fw-bold.align-content-center.text-primary.align-middle.text-uppercase.my-0.py-0.text-white(style="font-size:3em;-webkit-text-stroke:2px black")= competition.displayName ||competition.name
             .d-flex
               a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.parentId ? competition.parentId : competition.id}/schedules`) schedules
               a.d-flex.justify-content-center.mx-auto.text-decoration-none.text-primary(href=`/competition/${competition.parentId ? competition.parentId : competition.id}/standings`) standings
@@ -259,14 +259,14 @@ block content
             input(type="hidden" value=item.coach.timezone data-coach=item.coach.bb3id )
             .row.col-12
               .col-10
-                h2(style="margin-top:40px;margin-bottom:20px")= match.competitionName + " - week " + match.round
+                h2(style="margin-top:40px;margin-bottom:20px")= match.competitionName + " - round " + match.round
             .row
               .col-2
                 img(src="https://cdn.rebbl.net/images/bb3/Logos/100x100/" + item.team.logo alt="")
               .col-8
                 h2.text-center.mt-2
                   a.text-decoration-none.text-primary(href=`/team/${item.team.id}`)= item.team.name
-                h3.text-center=item.team.motto || "your motto here"                  
+                h3.text-center=item.team.motto
               .col-2
                 .coach-container.float-end
                   .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${item.coach.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${item.coach.info.avatar}.png); `)

@@ -32,7 +32,8 @@ class BB3{
   };
   #competitions = async (req,res) => {
     const season = req.params.season || "season 3";
-    const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
+    let competitions = await res.locals.profiler.measure("retrieve competitions","database", dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}}));
+    competitions = competitions.filter(x => !x.parentId);
     res.render("bb3/competitions", {competitions})
   };
   #competition = async (req,res) =>  {
@@ -44,11 +45,12 @@ class BB3{
   #standings = async (req,res) =>  {
     let competition = await dataService.getCompetition({id:req.params.competitionId});
     if (competition.excludeRedraft) competition = await dataService.getCompetition({name:competition.name.replace(/ R\d/, ""), excludeRedraft:false});
+    else if (competition.parentId) competition = await dataService.getCompetition({id:competition.parentId});
     res.render("bb3/competitions", {competitions:[competition]});
   }
   #schedules = async (req,res) => {
     
-    const competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1}})
+    const competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1, displayName:1}})
     let schedules = await dataService.getSchedules({competitionId:req.params.competitionId});
     const name = new RegExp(`${competition.name} Swiss`,"i");
     let swissSchedules = await dataService.getSchedules({competitionName:name});
@@ -69,11 +71,11 @@ class BB3{
   }
   #round = async (req,res) => {
     let schedules  = await dataService.getSchedules({competitionId:req.params.competitionId, round:Number(req.params.round)});
-    let competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1,season:1}});
+    let competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1,season:1,displayName:1}});
 
     if (schedules.length === 0) {
       const name = `${competition.name} R${req.params.round}`;
-      const swissCompetition = await dataService.getCompetition({season:competition.season,name},{projection:{id:1, name:1, day:1}});
+      const swissCompetition = await dataService.getCompetition({season:competition.season,name},{projection:{id:1, name:1, day:1,displayName:1}});
       if (!swissCompetition) return res.render("bb3/schedules", {league:"REBBL", schedules , competition});
         
       schedules  = await dataService.getSchedules({competitionId:swissCompetition.id, round:1});
@@ -154,7 +156,7 @@ class BB3{
 
   #landingPage = async(req,res) => {
     const season = req.params.season || "season 3";
-    const competitions = await dataService.getCompetitions({season, format:{$in:[1,2,3]},status:3,leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
+    const competitions = await res.locals.profiler.measure("retrieving competitions","database",  dataService.getCompetitions({season, format:{$in:[1,2,3]},status:3,leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}}));
     //const competitions = await dataService.getCompetitions({season, $or:[{format:2},{format:1},{format:3}],status:{$lt:5},leagueId:{$ne:"3c9429cd-b146-11ed-80a8-020000a4d571"}});
 
     let competition;
@@ -162,9 +164,15 @@ class BB3{
     if (res.locals.user) {
       //competition = competitions.find(x => x.standings.some(coach => coach.id === res.locals.user.bb3id ));
       competition = competitions.filter(x => x.standings.some(coach => coach.id === res.locals.user.bb3id ) && x.status < 4).pop();
-      if (res.locals.user.bb3id) upcomingMatch = await bb3Service.getUpcomingMatch(null, res.locals.user.bb3id);
+      if (res.locals.user.bb3id) upcomingMatch = await res.locals.profiler.measure("retrieving upcoming matches","database",   bb3Service.getUpcomingMatch(null, res.locals.user.bb3id));
     }
     if (!competition) competition = competitions[Math.floor(Math.random()*competitions.length)];
+
+    if (competition.parentId) {
+      upcomingMatch = upcomingMatch.filter(x => x.competitionId != competition.id);
+      competition = await res.locals.profiler.measure("retrieving parent competitions","database",  dataService.getCompetition({id:competition.parentId}));
+    }
+    
 
     const announcements = await oldService.getAnnouncements({});
     

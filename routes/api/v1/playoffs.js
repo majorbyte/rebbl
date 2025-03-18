@@ -28,6 +28,8 @@ router.get('/:division', util.cache(10*60), async function(req,res) {
     
     data.matches = await db.getLeagues({league: {"$regex": leagueRegex}, competition: {"$regex": divRegex}});
 
+    if (!data.matches.hasOwnProperty('1')) return res.status(204).send({msg: `No data found for ${req.params.division} - please check the competition name.`})
+
     let missing = ['2','3','4','5','6'];
     let sizes = [32,16,8,4,2,1];
 
@@ -73,7 +75,7 @@ router.get('/:division', util.cache(10*60), async function(req,res) {
     res.status(200).send(data);
   }
   catch(e){
-    res.status(400).send(e.message);
+    res.status(400).send({error: e.message});
   }
 });
 

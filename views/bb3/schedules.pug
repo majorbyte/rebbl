@@ -11,7 +11,7 @@ block head
 block content
   div.Background.u-bottomPadding--large.u-topPadding--medium
     div.container-fluid
-      h1.text-center= league + " " + competition.name
+      h1.text-center= league + " " + (competition.displayName ||  competition.name)
       - let round = 0
       - let sorted = schedules.sort((a,b) => a.round - b.round)
       .row
