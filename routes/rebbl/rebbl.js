@@ -49,7 +49,7 @@ class Rebbl{
   }
 
   async _root(req, res) {
-    let data = {company:req.params.company};
+    let data = {company:req.params.company || "Rebbl"};
     data.announcements = await dataService.getAnnouncements({});
     let c = new RegExp(`^(^Season 25)|(^REL Rampup)|(^GMAN Rampup)`, "i");
     let l = new RegExp(`^(REBBL - )|(REL Rampup)|(GMAN Rampup)`, "i");
@@ -136,6 +136,7 @@ class Rebbl{
     this.router.use('/:company/:league/:division', new division().routesConfig());
 
     this.router.get("/:company", util.cache(10*60), this._root.bind(this));
+    this.router.get("/", util.cache(10*60), this._root.bind(this));
 
 
     return this.router;

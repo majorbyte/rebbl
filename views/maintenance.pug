@@ -1,0 +1,75 @@
+doctype html 
+html(data-bs-theme="dark")
+  head
+    script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")      
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
+    style.
+      @font-face {
+        font-family: 'Roboto';
+        src: url(/fonts/roboto-latin-regular-webfont.woff2) format("woff2");
+        font-weight: 400;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Roboto';
+        src: url(/fonts/roboto-latin-medium-webfont.woff2) format("woff2");
+        font-weight: 500;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Roboto';
+        src: url(/fonts/roboto-latin-bold-webfont.woff2) format("woff2");
+        font-weight: 700;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Industry';
+        src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+        font-weight: 400;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Industry';
+        src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+        font-weight: 500;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Industry';
+        src: url(/fonts/industry-bold-webfont.woff2) format("woff2");
+        font-weight: 700;
+        font-style: normal
+      }
+
+      *{
+        font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+      }
+      @media (min-width: 1700px) {
+        .Container, .container {
+          max-width: 1600px;
+        }
+      }
+      :root{--bs-primary-rgb:230,123,0;}
+      .season-table-row:nth-of-type(2n){
+        background-color: #4a4a4a69;
+      }
+      .debuginfo {text-align: right;padding: 5px;color: gray;font-size: smaller;clear: both;}
+      .debuginfo .content {display:none}
+      .debuginfo:hover .content {display:inline}
+      .debuginfo .icon  {color: #a0a0a0;font: 1em serif;padding: 0 2px;}
+
+  body
+  
+    .container.text-center
+      h2 the site is currently undergoing maintenance, we'll be back soon 
+      img(src="/images/BB3-Git.gif")
+

@@ -38,9 +38,7 @@ class Server{
 
   async appConfig(){
     await Promise.all([dataService.rebbl.init("rebbl"),dataBB3Service.rebbl3.init("rebbl3")]);
-    console.log(process.hrtime(startGlobal));
     configurationService.init();
-    console.log(process.hrtime(startGlobal));
 
     const uri =`mongodb://${process.env["DB_USER"]}:${process.env["DB_PASS"]}@${process.env["DB_HOST"]}:${process.env["DB_PORT"]}/${process.env["DB_NAME"]}?authSource=admin`;
 
@@ -251,6 +249,39 @@ class Server{
 
   }
 
+
+  maintenance(){
+    this.server = require('http').Server(this.app);
+    //new routes(this.app).routesConfig();
+    // serve static files
+    this.app.use(express.static(path.join(__dirname, 'public-images'), {maxAge: 7*24*60*60*1000, etag: false }));
+    this.app.use(express.static(path.join(__dirname, 'public')));
+
+    //let's encrypt
+    this.app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
+
+    this.app.use('/robots.txt', express.static(path.join(__dirname, 'robots.txt')));
+
+
+    this.app.set('view engine', 'pug');
+
+    // set views for error and 404 pages
+    this.app.set('views', [path.join(__dirname, 'views')/*, path.join(__dirname, 'views', "league"), path.join(__dirname, 'views')*/]);
+
+
+    // parse request bodies (req.body)
+    this.app.use(express.urlencoded({ extended: true }));
+
+    this.app.use(util.checkBadBots);
+    this.app.use(util.checkTeapots);
+
+    
+    this.app.get("/", (_,res) => res.render("maintenance"));
+
+
+    this.server.listen(this.port);
+  }  
+
   startSocketIOAndServer(){
     this.server = require('http').Server(this.app);
     this.io = require('socket.io')(this.server);
@@ -277,3 +308,5 @@ class Server{
 
 const app = new Server();
 app.appExecute();
+
+//app.maintenance();
