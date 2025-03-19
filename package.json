@@ -19,7 +19,7 @@
     "markdown-it": "^14.1.0",
     "memory-cache": "^0.2.0",
     "method-override": "^2.3.10",
-    "mongodb": "^3.1.13",
+    "mongodb": "^6.15.0",
     "multer": "^1.4.5-lts.1",
     "passport": "^0.6.0",
     "passport-oauth2": "^1.6",
