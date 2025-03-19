@@ -1,7 +1,6 @@
 "use strict";
 
 const express = require("express")
-  , api = require("../../../../lib/apiService.js")
   , createScheduleService = require("../../../../lib/createScheduleService.js")
   , cache = require("memory-cache")
   , cyanideService = require("../../../../lib/CyanideService.js")
@@ -139,7 +138,7 @@ const express = require("express")
   router.delete("/:competitionId/:teamId", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
-      let result = await api.expel(Number(req.params.competitionId), Number(req.params.teamId));
+      //let result = await api.expel(Number(req.params.competitionId), Number(req.params.teamId));
 
       res.status(200).send(result);
     } catch(err){

@@ -317,6 +317,7 @@ class ZFL{
   async #getMatch(req,res,next){
     try{
       const match = await dataService.getZFLMatch({gameId:req.params.id});
+      if (!match) return res.redirect("/");
       if (match.released){
         return res.render("zfl/match", {match});
       }

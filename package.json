@@ -6,7 +6,6 @@
   "dependencies": {
     "archetype": "github:LaurentGoderre/archetype#fix-lodash_set-vuln",
     "async": "^2.6.2",
-    "axios": ">=0.21.2",
     "connect-mongodb-session": "^5.0.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",

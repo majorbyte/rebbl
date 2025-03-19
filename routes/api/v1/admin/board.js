@@ -1,8 +1,6 @@
 "use strict";
 
 const express = require("express")
-  , api = require("../../../../lib/apiService.js")
-  , config = require("../../../../lib/ConfigurationService.js")
   , dataService = require("../../../../lib/DataService.js").rebbl
   , util = require("../../../../lib/util.js")
   , router = express.Router();
@@ -38,7 +36,7 @@ const express = require("express")
   router.get("/:leagueId", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
-      let info = await api.getBoardInfo(Number(req.params.leagueId));
+      /*let info = await api.getBoardInfo(Number(req.params.leagueId));
 
       if (info.ResponseGetLeagueBoard.CallResult.Result === "1"){
         let data = info.ResponseGetLeagueBoard.BoardMembers.BoardMember.map(member => {
@@ -53,10 +51,11 @@ const express = require("express")
 
         data.splice(data.findIndex(x=>x.coachId === "307300"),1);
 
-        res.status(200).json(data);
-      } else {
+        res.status(200).json(data);*/
+        res.status(200).json({});
+      /*} else {
         res.status(500).json(info.ResponseGetLeagueBoard.CallResult);
-      }
+      }*/
     } catch(err){
       console.log(err);
     }
@@ -64,7 +63,7 @@ const express = require("express")
 
   router.post("/:leagueId", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
-      let data = await api.addBoardMember(Number(req.params.leagueId), req.body.coachName, Number(req.body.coachId), req.body.type);
+      /*let data = await api.addBoardMember(Number(req.params.leagueId), req.body.coachName, Number(req.body.coachId), req.body.type);
       if(data.ResponseSetBoardMember.CallResult.Result === "1"){
         dataService.insertModerationEntry({
           user: req.user.name,
@@ -83,7 +82,8 @@ const express = require("express")
           state:data.ResponseSetBoardMember.CallResult.Message
         });
         res.status(500).json(data.ResponseSetBoardMember.CallResult);
-      }
+      }*/
+     res.status(200).json({});
 
     } catch(err){
       console.log(err);
@@ -94,9 +94,9 @@ const express = require("express")
   router.get("/search/:coachName", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
-      let data = await api.searchCoach(req.params.coachName);
+      //let data = await api.searchCoach(req.params.coachName);
 
-      res.status(200).json(data.ResponseSearchCoach.Coaches.DataUser);
+      res.status(200).json({});
     } catch(err){
       console.log(err);
     }
@@ -104,7 +104,7 @@ const express = require("express")
 
   router.delete("/:id", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
-      let data = await api.removeBoardMember(req.params.id);
+      /*let data = await api.removeBoardMember(req.params.id);
 
       if(data.ResponseRemoveBoardMember.CallResult.Result === "1"){
         dataService.insertModerationEntry({
@@ -124,7 +124,8 @@ const express = require("express")
           state:data.ResponseSetBoardMember.CallResult.Message
         });
         res.status(500).json(data.ResponseRemoveBoardMember.CallResult);
-      }
+      }*/
+     res.send(200).json({})
     } catch(err){
       console.log(err);
     }
