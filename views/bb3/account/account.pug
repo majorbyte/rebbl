@@ -319,7 +319,9 @@ block content
       .col-12.mb-4
         .text-center
           .position-relative.d-inline-block
-            .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${user.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${user.info.avatar}.png); `)
+            - let frame = user.info?.frame || "txt_gamer_frame_001"
+            - let avatar = user.info?.avatar ||"txt_gamer_avatar_human_humanLineman" 
+            .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${avatar}.png); `)
               img.position-absolute.bottom-0.end-0.rounded-circle#bb3coachService(style="width:32px;background-color:white" src=src)
             
           h2.mt-3.mb-1=user.bb3coach

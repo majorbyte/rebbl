@@ -28,7 +28,7 @@ block content
                       -if (company === "imperium" || noTeamLink )
                         span=tn
                       -else
-                        - if (tn.indexOf('[colour=') > -1)
+                        - if (tn && tn.indexOf('[colour=') > -1)
                           a(href=`/team/${match.teams[0].idteamlisting}` style=("color:#" + tn.substr(11,6) )  )= tn.substr(19, tn.length-17)
                         -else
                           a(href=`/team/${match.teams[0].idteamlisting}` )= tn
@@ -65,7 +65,7 @@ block content
                       -if (company === "imperium" || noTeamLink)
                         span=on
                       -else
-                        - if (on.indexOf('[colour=') > -1)
+                        - if (on && on.indexOf('[colour=') > -1)
                           a(href=`/team/${match.teams[1].idteamlisting}` style=("color:#" + on.substr(11,6))  )= on.substr(19, on.length-17)
                         -else
                           a(href=`/team/${match.teams[1].idteamlisting}` )= on

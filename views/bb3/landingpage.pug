@@ -269,7 +269,7 @@ block content
                 h3.text-center=item.team.motto
               .col-2
                 .coach-container.float-end
-                  .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${item.coach.info.frame}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${item.coach.info.avatar}.png); `)
+                  .coach(style=`background-image: url(https://cdn.rebbl.net/images/bb3/coach/frame/${item.coach.info ? item.coach.info.frame : "txt_gamer_frame_001"}.png),url(https://cdn.rebbl.net/images/bb3/coach/avatar/${item.coach.info ? item.coach.info.avatar : "txt_gamer_avatar_human_humanLineman"}.png); `)
             .row
               .col-lg-6.col-12.mb-1
                 .input-group

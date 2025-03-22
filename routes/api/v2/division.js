@@ -10,7 +10,7 @@ class DivisionApi{
   }
   routesConfig(){
     
-    this.router.get("/:league/:season",util.cache(600), async function(req,res){
+    this.router.get("/:league/:season", async function(req,res){
       try {
 
         let {league, season} = req.params;
@@ -20,11 +20,11 @@ class DivisionApi{
       }
       catch (ex){
         console.error(ex);
-        res.status(500).send('Something something error');
+        res.status(500).send({error:'Something something error'});
       }
     });
 
-    this.router.get('/:league/:season/:division', util.cache(600), async function(req, res){
+    this.router.get('/:league/:season/:division', async function(req, res){
       try {
         let {league,season, division} = req.params;
 
@@ -33,11 +33,11 @@ class DivisionApi{
       }
       catch (ex){
         console.error(ex);
-        res.status(500).send('Something something error');
+        res.status(500).send({error:'Something something error'});
       }
     });  
 
-    this.router.get('/:league/:season/:division/slim', util.cache(600), async function(req, res){
+    this.router.get('/:league/:season/:division/slim', async function(req, res){
       try {
         let {league,season, division} = req.params;
 
@@ -68,11 +68,11 @@ class DivisionApi{
       }
       catch (ex){
         console.error(ex);
-        res.status(500).send('Something something error');
+        res.status(500).send({error:'Something something error'});
       }
     }); 
 
-    this.router.get('/:league/:season/:division/:round', util.cache(600), async function(req, res){
+    this.router.get('/:league/:season/:division/:round',  async function(req, res){
       try {
         let {league,season, division, round} = req.params;
 
@@ -81,7 +81,7 @@ class DivisionApi{
       }
       catch (ex){
         console.error(ex);
-        res.status(500).send('Something something error');
+        res.status(500).send({error:'Something something error'});
       }
     });  
 

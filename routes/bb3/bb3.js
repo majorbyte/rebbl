@@ -125,6 +125,9 @@ class BB3{
   };
 
   #team = async (req,res) => {
+
+    if (!isNaN(req.params.id)) return res.redirect(301,`${req.protocol}://bb2.${req.header('Host')}${req.originalUrl}`)
+
     let team = await res.locals.profiler.measure("retrieving team","database", dataService.getTeam({id:req.params.id}));
 
     if (!team){

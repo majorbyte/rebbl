@@ -35,7 +35,7 @@
     "wait-port": "^0.2.2"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node --trace-deprecation server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
