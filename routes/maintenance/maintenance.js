@@ -229,12 +229,6 @@ class Maintenance{
           console.dir(e);
           loggingService.error(e);
         }
-        /*try{
-          await perpetualService.getMatches();
-        }
-        catch(e){
-          loggingService.error(e);
-        }*/
         try{
           await clanService.getContestData();
         }

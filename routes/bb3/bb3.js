@@ -28,7 +28,7 @@ class BB3{
     }
 
     res.render("bb3/match", {match, schedule, user:res.locals.user, dice});
-      
+    
   };
   #competitions = async (req,res) => {
     const season = req.params.season || "season 3";
@@ -36,21 +36,24 @@ class BB3{
     competitions = competitions.filter(x => !x.parentId);
     res.render("bb3/competitions", {competitions})
   };
-  #competition = async (req,res) =>  {
+  #competition = async (req,res,next) =>  {
     const competition = await dataService.getCompetition({id:req.params.competitionId});
+    if (!competition) return next(new Error(`Could not find comeptition with id ${req.params.competitionId}`));
     if (competition.format == 1) return res.render("bb3/playoffs/knockout", {competition});
 
     res.render("bb3/competition", {competition});
   }
-  #standings = async (req,res) =>  {
+  #standings = async (req,res,next) =>  {
     let competition = await dataService.getCompetition({id:req.params.competitionId});
+    if (!competition) return next(new Error(`Could not find comeptition with id ${req.params.competitionId}`));
     if (competition.excludeRedraft) competition = await dataService.getCompetition({name:competition.name.replace(/ R\d/, ""), excludeRedraft:false});
     else if (competition.parentId) competition = await dataService.getCompetition({id:competition.parentId});
     res.render("bb3/competitions", {competitions:[competition]});
   }
-  #schedules = async (req,res) => {
+  #schedules = async (req,res,next) => {
     
     const competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1, displayName:1}})
+    if (!competition) return next(new Error(`Could not find comeptition with id ${req.params.competitionId}`));
     let schedules = await dataService.getSchedules({competitionId:req.params.competitionId});
     const name = new RegExp(`${competition.name} Swiss`,"i");
     let swissSchedules = await dataService.getSchedules({competitionName:name});
@@ -72,6 +75,8 @@ class BB3{
   #round = async (req,res) => {
     let schedules  = await dataService.getSchedules({competitionId:req.params.competitionId, round:Number(req.params.round)});
     let competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1,season:1,displayName:1}});
+
+    if (!competition) return res.status(404).send();
 
     if (schedules.length === 0) {
       const name = `${competition.name} R${req.params.round}`;

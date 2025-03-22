@@ -97,8 +97,8 @@ class Signup{
       this.router.post('/resign', util.ensureAuthenticated, this.#resignBB3);
     }
 
-    this.router.get('/signups/rebbrl', util.cache(10*60), function(req,res){res.render('signup/signups');});
-    this.router.get('/signups', util.cache(10*60), function(req,res){res.render('bb3/signup/signups');});
+    this.router.get('/signups/rebbrl', function(req,res){res.render('signup/signups');});
+    this.router.get('/signups', function(req,res){res.render('bb3/signup/signups');});
     this.router.get('/counter', async function(req, res){res.render('signup/counter');});
 
 

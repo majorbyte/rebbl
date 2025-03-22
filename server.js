@@ -302,7 +302,7 @@ class Server{
     await this.appConfig();
     this.includeRoutes();
     this.startSocketIOAndServer();
-    setTimeout(() => createScheduleService.processQueue(), 10_000)
+    setTimeout(() => createScheduleService.processQueue(), 10_000);
   }
 }
 
