@@ -329,35 +329,29 @@ class ClanApi{
       
       const data = [];
 
-      const parseMatch = (race, match) => {
+      const countRace = (match, index) =>{
         if (/\[admin\]/i.test(match.opponents[0].team.name) || /\[admin\]/i.test(match.opponents[1].team.name)) return;
-        
-        if (!match.winner) race.draw++;
-        else if (match.opponents[match.winner.index].team.race === race.race) race.win++;
-        else race.loss++;
-      };
 
-      const getRace = (match, index) =>{
         let d = data.find(x => x.race === match.opponents[index].team.race);
-        if (d) return d;
+        if (!d) {
+          d = {
+            race : match.opponents[index].team.race,
+            win: 0,
+            draw: 0,
+            loss: 0
+          };
+          data.push(d);
+        }
 
-        d = {
-          race : match.opponents[index].team.race,
-          win: 0,
-          draw: 0,
-          loss: 0
-        };
-        data.push(d);
-        return d;
+        if (!match.winner) d.draw++;
+        else if (match.winner.index == index) d.win++;
+        else d.loss++
+
       };
 
       for(let schedule of schedules)
-      for(let match of schedule.matches)
-      for(let x of [0,1]){
-        if (!match.opponents) continue;
-        let race = getRace(match,x);
-        parseMatch(race,match);
-      }
+      for(let match of schedule.matches.filter(m => m.opponents && m.match_status !== "Scheduled"))
+      for(let x of [0,1]) countRace(match,x);
 
       const getCSV = (race) => Object.keys(race).map(x => `${JSON.stringify(race[x])}` ).join(",");
      
