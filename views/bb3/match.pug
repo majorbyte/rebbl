@@ -21,7 +21,7 @@ block append head
     
 
 block content
-  .container.fs-5
+  .container
     .row
       if match
         .col-12
@@ -33,10 +33,13 @@ block content
               if dice
                 .nav
                   .nav-item
-                    a.nav-link#nav-dice-tab.float-start(href=`#` data-bs-toggle="tab" data-bs-target="#nav-dice" aria-controls="nav-dice"  aria-selected="true" type="button")
+                    a.px-1.nav-link#nav-dice-block-tab.float-start(href=`#` data-bs-toggle="tab" data-bs-target="#nav-dice-block" aria-controls="nav-dice-block"  aria-selected="true" type="button")
                       .dice.d-64.dd
                   .nav-item
-                    a.nav-link#nav-players-tab.float-start.active(href=`#` data-bs-toggle="tab" data-bs-target="#nav-players" aria-controls="nav-players" aria-selected="false"  type="button")
+                    a.px-1.nav-link#nav-dice-stats-tab.float-start(href=`#` data-bs-toggle="tab" data-bs-target="#nav-dice-stats" aria-controls="nav-dice-stats"  aria-selected="true" type="button")
+                      .dice.d-64.d6_6
+                  .nav-item
+                    a.px-1.nav-link#nav-players-tab.float-start.active(href=`#` data-bs-toggle="tab" data-bs-target="#nav-players" aria-controls="nav-players" aria-selected="false"  type="button")
                       .dice.d-64.p
             .col-12.text-center
               h2= `${match.competition.name}`
@@ -159,9 +162,12 @@ block content
                     each team in [match.homeTeam, match.awayTeam]
                       include team.pug
               if dice
-                #nav-dice.tab-pane.fade.table-responsive-md(role="tabpanel" aria-labelledby="nav-dice-tab")            
+                #nav-dice-block.tab-pane.fade.table-responsive-md(role="tabpanel" aria-labelledby="nav-dice-block-tab")            
                   .row.col-12
-                    +renderDiceReport(dice)
+                    +renderBlockDiceReport(dice)
+                #nav-dice-stats.tab-pane.fade.table-responsive-md(role="tabpanel" aria-labelledby="nav-dice-stats-tab")            
+                  .row.col-12
+                    +renderStatsDiceReport(dice)
 
 
       if schedule

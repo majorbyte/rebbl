@@ -51,6 +51,44 @@ mixin dice-css()
 
 block append vars
   -
+    const renderSkills = [1,2,4,5,6,7,13,15,16,20,21,29,30,31,32,33,34,35,36,37,41,42,46,57,66,67,68,71,73,74];
+    const skillData =[
+      {name:"GFI", id:1},
+      {name:"Dodge", id:2},
+      {name:"Pick Up", id:4},
+      {name:"Pass", id:5},
+      {name:"Interception", id:6},
+      {name:"Catch", id:7},
+      {name:"Wake Up", id:13},
+      {name:"Pro", id:15},
+      {name:"Tentacles", id:16},
+      {name:"Stand Up", id:20},
+      {name:"Bribe", id:21},
+      {name:"Jump Over", id:29},
+      {name:"Argue The Call", id:30},
+      {name:"Dauntless", id:31},
+      {name:"JumpUp", id:32},
+      {name:"Bone Head", id:33},
+      {name:"Really Stupid", id:34},
+      {name:"Unchannelled Fury", id:35},
+      {name:"Animal Savagery", id:36},
+      {name:"Foul Appearance", id:37},
+      {name:"Throw TeamMate", id:41},
+      {name:"Land", id:42},
+      {name:"Regeneration", id:46},
+      {name:"Brawler", id:57},
+      {name:"Hypnotic Gaze", id:66},
+      {name:"Chainsaw", id:67},
+      {name:"Take Root", id:68},
+      {name:"Loner", id:71},
+      {name:"Shadowing", id:73},
+      {name:"Animosity", id:74},
+    ]
+
+    const getName = id => skillData.find(x => x.id === id).name
+
+    const skillIsRolled = (dice, id) => dice.some(x => Array.isArray(x.diceRolls.diceStatistic) ?  x.diceRolls.diceStatistic.some(d => d.rollType == id) : [ x.diceRolls.diceStatistic].some(d => d.rollType == id));
+
     const getCas = function(cas){
         if (cas < 6) return "transparent_ico_action_badly_hurt.png";
         if (cas < 9) return "transparent_ico_action_seriously_hurt.png";
@@ -94,6 +132,26 @@ block append vars
       return tr
     }
 
+    const flattenD6Fail = (playerRolls, skill) => {
+      
+      let pr = playerRolls.flatMap(x => {
+
+        const stats = (Array.isArray(x.diceRolls.diceStatistic) ? x.diceRolls.diceStatistic: [x.diceRolls.diceStatistic]).flatMap(m => m);
+        
+        return stats.filter(d => d.rollType == skill).map(m => {return {
+          rollType : m.rollType,
+          requirement: m.requirement,
+          outcome: m.outcome,
+          die: m.requirement//m.dice.die.value
+        }});
+                
+      }).filter(d => renderSkills.some(n => n == d.rollType));
+      pr = pr.reduce((p,c) => {p[c.die].r++; if (c.outcome == 0) p[c.die].f++; return p;}, [{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0}]);
+      
+      pr.splice(0,1);
+      return pr
+    }
+
 
     const flattenBlockTypes = (rolls, f) => rolls.flatMap(x => {
       const stats = (Array.isArray(x.diceRolls.diceStatistic) ? x.diceRolls.diceStatistic: [x.diceRolls.diceStatistic]).filter(f).flatMap(m => m);
@@ -121,7 +179,7 @@ block append vars
     //const 
 
 
-mixin renderDiceReport(dice)
+mixin renderBlockDiceReport(dice)
   .col-sm-6.col-lg-4
     h3.text-center Block Dice
     +renderBlockDiceBlock(blockDice(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls),blockDice(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls))
@@ -155,6 +213,12 @@ mixin renderDiceReport(dice)
     +renderD6BlockWithFail([0,0,0,0,0,6],[0,0,0,0,3,2],[0,0,0,0,0,1],[0,0,0,0,1,0])
 
 
+mixin renderStatsDiceReport(dice)
+  each skill of renderSkills
+    if (skillIsRolled(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls, skill) || skillIsRolled(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls, skill)) 
+      .col-sm-6.col-lg-4
+        h3.text-center= getName(skill)
+        +renderD6WithFail(flattenD6Fail(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls, skill),flattenD6Fail(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls, skill))
 
 mixin renderBlockDiceBlock(home, away)
     - const homeSum = home.reduce((p,c) => p+c, 0)
@@ -246,6 +310,17 @@ mixin renderArmourRolls(home, away, cas)
               .dice.d-32(class=`${['d6_1','d6_1','d6_3','d6_3','d6_2','d6_2','d6_4','d6_6','d6_5','d6_6','d6_6','d6_2'][x-2]}`)
           +render(away[x]*100/awayMax, away[x]*100/awaySum, away[x])
 
+
+mixin renderD6WithFail(home, away)
+    - const homeMax = Math.max(...home) || 1;
+    - const awayMax = Math.max(...away) || 1;
+    -for(let x = 0; x < 6; x++)
+      if (away[x].r > 0 || home[x].r > 0)
+        .col-12.d-flex.align-items-center.justify-content-center
+            +renderFail(home[x].r/homeMax*100, home[x].r, home[x].f/homeMax*100, home[x].f, "", true )
+            span.mx-2=`${['1+','2+','3+','4+','5+','6+'][x]}`
+            +renderFail(away[x].r/awayMax*100, away[x].r, away[x].f/awayMax*100, away[x].f, "", false )
+            
 
 mixin render(size, value, txt, reverse)
     .progress-stacked.col.bg-body.rounded-0(class=`${reverse ? "flex-row-reverse" : ""}`)
