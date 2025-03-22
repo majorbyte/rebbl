@@ -264,31 +264,6 @@ class Maintenance{
           console.dir(e);
           loggingService.error(e);
         }
-        try{
-          //signupService.checkTeams();
-        }
-        catch(e){
-          console.dir(e);
-          loggingService.error(e);
-        }  
-        // try{
-        //   let seasons = [configurationService.getActiveSeason()];
-    
-        //   seasons.map(season => {
-        //     season.leagues.map(league =>{
-        //       league.divisions.map(division => standingsService.updateStandings(season.name, league.name,division));
-    
-        //       cache.keys().map(key => {
-        //         if (key.toLowerCase().indexOf(encodeURI(`${league.name}/${season}`))>-1){
-        //           cache.del(key);
-        //         }
-        //       });
-        //     });
-        //   });          
-        // }
-        // catch(e){
-        //   console.dir(e);
-        // }
       }
     };
 
@@ -332,13 +307,6 @@ class Maintenance{
 
     this.router.get('/updateteam', util.verifyMaintenanceToken, async function(req, res){
       bb3Service.updateTeam(req.query.id);
-      res.redirect('/');
-    });
-
-
-    this.router.get('/checksignups',util.verifyMaintenanceToken, async function(req, res){
-      if (req.app.locals.cyanideEnabled) signUp.checkTeams({'teamExist':false});
-      if (req.app.locals.cyanideEnabled) signUp.checkTeams({'teamExist':{ $exists: false }});
       res.redirect('/');
     });
 
