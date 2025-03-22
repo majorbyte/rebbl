@@ -32,90 +32,87 @@ block head
   style(type="text/css").
     .raceIcon {width: 32px; }
 block content
-  div(class="Background u-bottomPadding--large u-topPadding--medium")
-    div(class="/*TexturedBackground TexturedBackground--light-primary*/")
-      div(class="container navcontainer" data-index="0")
-        h1(class="u-no-text-transform u-verticalMargin--xx-small") Current Signups
-        div
-          span Currently&nbsp;
-            span(class="highlight" data-bind="text:$root.users().length" )
-            span &nbsp;coaches have signed up.
-          p Not signed up? 
-            a(href="/signup") Here &nbsp;
-            | you go!
+  .container.navcontainer(data-index="0")
+    h1 Current Signups
+    div
+      span Currently&nbsp;
+        span(data-bind="text:$root.users().length" )
+        span &nbsp;coaches have signed up.
+      p Not signed up? 
+        a(href="/signup") Here &nbsp;
+        | you go!
 
-        //- let races = ["Human","Dwarf","Skaven","Orc","Lizardman","Goblin","WoodElf","Chaos Chosen","Dark Elf","Shambling Undead","Halfling","Elven Union","Necromantic Horror","Nurgle","Underworld Denizen","Khorne","Imperial Nobility","Slaanesh","Black Orc","Chaos Renegade","OldWorld Alliance","Tzeentch"]
-        - let races = ["Amazon","Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Necromantic Horror","Norse","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen","Wood Elf"]
-        div(style="grid-template-columns: auto;display:grid;clear:both;" class="table-responsive mb-3")
-          div(class="table-striped TeamLabel-info")
-            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;")
-              div(style="display: table-cell;min-width:120px" class="Standings-header sticky_column") League
-              for race in races
-                div(style="display: table-cell" class="Standings-header text-center" title=race)
-                  img.raceIcon(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${getLogo(race)}`) 
-            // ko foreach: {data: leagues, as: 'league'}
-            div(class="TableRow")
-              div(style="display: table-cell;min-width:120px" class="sticky_column" )
-                span(class="highlight" data-bind="text: league") 
-                span(class="highlight" style="float:right;margin-right:15px" data-bind="text: $root.getTotal(league)") 
-              // ko foreach: {data: $root.races, as: 'race'}
-              div(style="white-space: nowrap;display: table-cell"  class="text-center" data-bind="text: $root.getRaceCount(league, race) ")
-              // /ko
+    - let races = ["Amazon","Black Orc","Chaos Chosen","Chaos Renegade","Dark Elf","Dwarf","Elven Union","Human","Imperial Nobility","Lizardman","Necromantic Horror","Norse","Nurgle","OldWorld Alliance","Orc","Shambling Undead","Skaven","Underworld Denizen","Wood Elf"]
+    table.table-sm.table.table-responsive.mb-3.table-striped.table-borderless
+      thead.fw-bolder.border-3.border-end-0.border-start-0.border-top-0
+        th(style="display: table-cell;min-width:120px") League
+        for race in races
+          th.text-center(title=race)
+            img.raceIcon(src=`https://cdn.rebbl.net/images/bb3/Logos/100x100/${getLogo(race)}`) 
+      tbody
+        // ko foreach: {data: leagues, as: 'league'}
+        tr
+          td
+            span(data-bind="text: league") 
+            span( style="float:right;margin-right:15px" data-bind="text: $root.getTotal(league)") 
+          // ko foreach: {data: $root.races, as: 'race'}
+          td.text-center(style="white-space: nowrap;display: table-cell"  data-bind="text: $root.getRaceCount(league, race) ")
+          // /ko
+        // /ko
+        tr
+          td(style="display: table-cell;min-width:120px" ) Total
+            span(style="float:right;margin-right:15px" data-bind="text: $root.filteredUsers().length" )
+          // ko foreach: {data: $root.races, as: 'race'}
+          td.text-center(style="white-space: nowrap;" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.race.trim() === race.trim() ? p + 1 : p; }, 0)")
+          // /ko
+    table.table-sm.table.table-responsive.mb-3.table-striped.table-borderless(style="width:640px" )
+      thead.fw-bolder.border-3.border-end-0.border-start-0.border-top-0
+        tr   
+          td(style=";display: table-cell;min-width:110px" ) League
+          // ko foreach: {data: ["returning", "fresh", "college"], as:'d'}
+          td.text-center(style="display: table-cell;" data-bind="text:d")
+          // /ko
+      tbody 
+        // ko foreach: {data: leagues, as: 'league'}
+        tr
+          td(style="display: table-cell;min-width:110px" data-bind="text:league" )
+          td.text-center(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && (c.type === 'returning' || c.type === 'ure') ? p+1 : p; }, 0)")
+          td.text-center(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && (c.type === 'fresh' || c.type === 'greenhorn') ? p+1 : p; }, 0)")
+          td.text-center(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.type === 'rebbrl3' ? p+1 : p; }, 0)")
+        // /ko
+        tr
+          td(style="display: table-cell;min-width:110px" ) Total
+          td.text-center.highlight(style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return (c.type === 'returning' || c.type === 'ure') ? p+1 : p; }, 0)")
+          td.text-center.highlight(style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return (c.type === 'fresh' || c.type === 'greenhorn') ? p+1 : p; }, 0)")
+          td.text-center.highlight(style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.type === 'rebbrl3'  ? p+1 : p; }, 0)")
+    table.table.table-responsive.table-striped.table-borderless.table-sm
+      thead.fw-bolder.border-3.border-end-0.border-start-0.border-top-0
+        tr
+          td Coach
+          td Team
+          td TV
+          td Race
+          td League
+          td State
+          td Timezone
+      tbody
+        // ko foreach:{data: filteredUsers, as:'signup'}
+        tr
+          td
+            a.text-decoration-none( data-bind="text:signup.coach, attr:{href:'/coach/'+signup.coachId}")
+          td
+            //ko if: signup.teamId
+            a.text-decoration-none(href="" target="_blank" data-bind="{text: $root.teamName(signup.team), attr: {href : '/team/' + signup.teamId}}") 
             // /ko
-            div(class="TableRow")
-              div(style="display: table-cell;min-width:120px" class="sticky_column") Total
-                span(class="highlight" style="float:right;margin-right:15px" data-bind="text: $root.filteredUsers().length" )
-              // ko foreach: {data: $root.races, as: 'race'}
-              div(style="white-space: nowrap;display: table-cell" class="text-center" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.race.trim() === race.trim() ? p + 1 : p; }, 0)")
-              // /ko
-        div(style="grid-template-columns: auto;display:grid;clear:both" class="table-responsive mb-3")
-          div(class="table-striped TeamLabel-info" style="width:640px" )
-            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
-              div(style=";display: table-cell;min-width:110px" class="Standings-header sticky_column") League
-              // ko foreach: {data: ["returning", "fresh", "college"], as:'d'}
-              div(style="display: table-cell;" class="Standings-header" data-bind="text:d")
-              // /ko
-            // ko foreach: {data: leagues, as: 'league'}
-            div(class="TableRow" )
-              div(style="display: table-cell;min-width:110px" data-bind="text:league" class="sticky_column")
-              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && (c.type === 'returning' || c.type === 'ure') ? p+1 : p; }, 0)")
-              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && (c.type === 'fresh' || c.type === 'greenhorn') ? p+1 : p; }, 0)")
-              div(style="white-space: nowrap;display: table-cell" data-bind="text:$root.users().reduce(function(p, c){ return c.league === league && c.type === 'rebbrl3' ? p+1 : p; }, 0)")
+            //ko ifnot: signup.teamId
+            span(data-bind="text:$root.teamName(signup.team)")
             // /ko
-            div(class="TableRow")
-              div(style="display: table-cell;min-width:110px" class="sticky_column") Total
-              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return (c.type === 'returning' || c.type === 'ure') ? p+1 : p; }, 0)")
-              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return (c.type === 'fresh' || c.type === 'greenhorn') ? p+1 : p; }, 0)")
-              div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.users().reduce(function(p, c){ return c.type === 'rebbrl3'  ? p+1 : p; }, 0)")
-              //div(class="highlight" style="white-space: nowrap;display: table-cell" data-bind="text: $root.filteredUsers().reduce(function(p, c){ return c.greenHorn ? p+1 : p; }, 0)")
-        div(style="grid-template-columns: auto;clear:both; display:grid" class="table-responsive")
-          div(class="table-striped TeamLabel-info")
-            div(class="TableHeader" style="border-bottom: 3px solid #bdbcbccf;padding-bottom: 2px;height:20px")
-              div(style="white-space: nowrap;display: table-cell;width: 250px;" class="Standings-header sticky_column") Coach
-              div(style="white-space: nowrap;display: table-cell;width: 350px;" class="Standings-header") Team
-              div(style="white-space: nowrap;display: table-cell;width: 160px;" class="Standings-header") TV
-              div(style="white-space: nowrap;display: table-cell;width: 160px;" class="Standings-header") Race
-              div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") League
-              div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") State
-              div(style="white-space: nowrap;display: table-cell;width: 80px;" class="Standings-header") Timezone
-            // ko foreach:{data: filteredUsers, as:'signup'}
-            div(class="TableRow")
-              div(style="white-space: nowrap;display: table-cell;width: 250px;" class="sticky_column")
-                a( data-bind="text:signup.coach, attr:{href:'/coach/'+signup.coachId}")
-              div(style="white-space: nowrap;display: table-cell;width: 350px;")
-                //ko if: signup.teamId
-                a(href="" target="_blank" data-bind="{text: $root.teamName(signup.team), attr: {href : '/team/' + signup.teamId}}") 
-                //span(data-bind="text: $root.teamName(signup.team)")
-                // /ko
-                //ko ifnot: signup.teamId
-                span(data-bind="text:$root.teamName(signup.team)")
-                // /ko
-              div(style="white-space: nowrap;display: table-cell;width: 160px;" data-bind="text:signup.TV")
-              div(style="white-space: nowrap;display: table-cell;width: 160px;" data-bind="text:signup.race.trim()")
-              div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.league")
-              div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text: signup.type == 'rebbrl3' ? 'college' : signup.type")
-              div(style="white-space: nowrap;display: table-cell;width: 80px;" data-bind="text:signup.timezone")
-            // /ko
+          td(data-bind="text:signup.TV")
+          td(data-bind="text:signup.race.trim()")
+          td(data-bind="text:signup.league")
+          td(data-bind="text: signup.type == 'rebbrl3' ? 'college' : signup.type")
+          td(data-bind="text:signup.timezone")
+        // /ko
 
 block append scripts
   - if (process.env.NODE_ENV === 'production')
