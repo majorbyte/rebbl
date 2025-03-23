@@ -180,18 +180,20 @@ block append vars
 
 
 mixin renderBlockDiceReport(dice)
+  - let allHomeDice = dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls.concat([{diceRolls: dice.homeTeamDiceRolls.diceRolls}])
+  - let allAwayDice = dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls.concat([{diceRolls: dice.awayTeamDiceRolls.diceRolls}])
   .col-sm-6.col-lg-4
     h3.text-center Block Dice
-    +renderBlockDiceBlock(blockDice(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls),blockDice(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls))
+    +renderBlockDiceBlock(blockDice(allHomeDice),blockDice(allAwayDice))
   .col-sm-6.col-lg-4
     h3.text-center D6 totals
     +renderD6Block(flattenD6(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls,dice.homeTeamDiceRolls.diceRolls.diceStatistic),flattenD6(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls,dice.awayTeamDiceRolls.diceRolls.diceStatistic))
   .col-sm-6.col-lg-4
     h3.text-center Blocks
-    +renderBlockBlockWithFail(blockTypes(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls),blockTypes(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls),[0,0,0,0],[0,0,0,0])
+    +renderBlockBlockWithFail(blockTypes(allHomeDice),blockTypes(allAwayDice),[0,0,0,0],[0,0,0,0])
   .col-sm-6.col-lg-4
     h3.text-center Blocks
-    +renderBlockResultsBlock(blockResults(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls),blockResults(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls))
+    +renderBlockResultsBlock(blockResults(allHomeDice),blockResults(allAwayDice))
   .col-sm-6.col-lg-8.row
     .col-sm-12
       h3.text-center Armour
@@ -214,11 +216,13 @@ mixin renderBlockDiceReport(dice)
 
 
 mixin renderStatsDiceReport(dice)
+  - let homeDice = dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls.concat([{diceRolls: dice.homeTeamDiceRolls.diceRolls}])
+  - let awayDice = dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls.concat([{diceRolls: dice.awayTeamDiceRolls.diceRolls}])
   each skill of renderSkills
-    if (skillIsRolled(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls, skill) || skillIsRolled(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls, skill)) 
+    if (skillIsRolled(homeDice, skill) || skillIsRolled(awayDice, skill)) 
       .col-sm-6.col-lg-4
         h3.text-center= getName(skill)
-        +renderD6WithFail(flattenD6Fail(dice.homeTeamDiceRolls.playerDiceRolls.playerDiceRolls, skill),flattenD6Fail(dice.awayTeamDiceRolls.playerDiceRolls.playerDiceRolls, skill))
+        +renderD6WithFail(flattenD6Fail(homeDice, skill),flattenD6Fail(awayDice, skill))
 
 mixin renderBlockDiceBlock(home, away)
     - const homeSum = home.reduce((p,c) => p+c, 0)

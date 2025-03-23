@@ -187,7 +187,7 @@ class BB3{
     res.render("bb3/landingpage", {competition,upcomingMatch,announcements: announcements.sort((a,b) => b.date-a.date).slice(0,5)})
   }
 
-  #coach = async (req,res) => {
+  #coach = async (req,res,next) => {
     
     const teams = await res.locals.profiler.measure("Team Info","database",  dataService.getTeams({"coach.id":req.params.id,zfl:{$ne:true}},{matches:1,logo:1,race:1,name:1,value:1,motto:1}));
 
@@ -199,6 +199,7 @@ class BB3{
     
     const coach = await oldService.getAccount({$or:[{bb3id:req.params.id},{bb3coach:req.params.id}]});
 
+    if (!coach) return next({message:"Cannot find the coach you are looking for.",status:404,stack:""});
     return res.render("bb3/coach", {coach, matches, teams})
   }; 
   #coachMatches = async(req,res) => isNaN(req.params.id) 

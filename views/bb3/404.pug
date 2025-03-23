@@ -1,0 +1,51 @@
+extends layout.pug
+
+
+block head 
+  style.
+    .goblin-light {
+      width: 128px;
+      height: 105px;
+      background-image: url("/images/goblin.png");
+      animation: playX 0.5s steps(10) infinite, playY 4s steps(8) infinite;
+    }
+    .goblin-dark {
+      width: 128px;
+      height: 105px;
+      background-image: url("/images/transparent_goblin.png");
+      animation: playX 0.5s steps(10) infinite, playY 4s steps(8) infinite;
+    }
+    .confused {
+      width: 205px;
+      height: 205px;
+      background-image: url("/images/confused.png");
+      animation: confusedX 0.5s steps(5) infinite, confusedY 5s steps(10) infinite;
+    }
+
+    @keyframes playX {
+      from {background-position-x: 0px;}
+      to {background-position-x: -1280px;}
+    }
+
+    @keyframes playY {
+     from {background-position-y: 0px;}
+     to {background-position-y: -1024px;}
+    }
+    @keyframes confusedX {
+      from {background-position-x: 0px;}
+      to {background-position-x: -1024px;}
+    }
+
+    @keyframes confusedY {
+     from {background-position-y: 0px;}
+     to {background-position-y: -2048px;}
+    }
+
+block content
+  .container 
+    .row 
+      .col-12
+        .d-flex.justify-content-center.text-center
+          .confused.float-start
+          span.fs-1(style="padding-top:70px")= err.message
+          .confused.float-end

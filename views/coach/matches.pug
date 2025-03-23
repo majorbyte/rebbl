@@ -47,7 +47,7 @@ block content
                       div(class="TeamLabel-block"): img(src="https://cdn.rebbl.net/images/logo/logo_" + match.opponents[1].team.logo.toLowerCase() + ".png" alt="" class="TeamLabel-logo")
                       div(class="TeamLabel-info TeamLabel-info--noScore")
                         - let on = match.opponents[1].team.name
-                        - if (on && on.indexOf('[colour=') > -1)
+                        - if (on && (on+"").indexOf('[colour=') > -1)
                           div(class="TeamLabel-name " style=("color:#" + on.substr(11,6) ) )= on.substr(19, on.length-17)
                         -else
                           div(class="TeamLabel-name ")= on
