@@ -11,7 +11,7 @@ const express = require('express')
     try{
       let user = await accountService.getAccount(req.user.name);
   
-      res.render('admin/user/index', {user:user});
+      res.render('admin/user/index', {account:user});
   
     } catch(err){
       console.log(err);
@@ -21,7 +21,7 @@ const express = require('express')
 
   router.get('/add', util.hasRole("admin"), async function(req, res){
     try{
-      res.render('admin/user/user', { user: null, admin:res.locals.user });
+      res.render('admin/user/user', { account: null, admin:res.locals.user });
   
     } catch(err){
       console.log(err);
@@ -31,7 +31,7 @@ const express = require('express')
 router.get('/:user', util.hasRole("admin"), async function(req, res){
   try{
   
-    res.render('admin/user/user', { user: req.params.user, admin:res.locals.user });
+    res.render('admin/user/user', { account: req.params.user, admin:res.locals.user });
 
   } catch(err){
     console.log(err);
@@ -52,7 +52,7 @@ router.post('/update', util.hasRole("admin"), async function(req, res){
 
     await accountService.updateAccount(account);
 
-    res.render('admin/user/user', { user: req.body.reddit, admin:res.locals.user });
+    res.render('admin/user/user', { account: req.body.reddit, admin:res.locals.user });
   } catch(err){
     console.log(err);
   }
@@ -71,7 +71,7 @@ router.post('/new', util.hasRole("admin"), async function(req, res){
 
     await accountService.saveAccount(account);
 
-    res.render('admin/user/user', { user: req.body.reddit, admin:res.locals.user });
+    res.render('admin/user/user', { account: req.body.reddit, admin:res.locals.user });
   } catch(err){
     console.log(err);
   }

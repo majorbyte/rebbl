@@ -90,6 +90,10 @@ html(data-bs-theme=theme)
                 a.nav-link(aria-current='page' href='/standings' class=page == "standings" ? "active" : "" ) standings
               li.nav-item
                 a.nav-link(aria-current='page' href='/signup/signups' class=page == "signups" ? "active" : "" ) signups
+              if (user && user.roles && ["admin","clanadmin"].some(x => user.roles.some(y => y ==x)))
+                li.nav-item
+                  a.nav-link(aria-current='page' href='/admin') admin
+
           ul.navbar-nav
             li.nav-item.align-center.d-flex.text-white
               .align-content-end

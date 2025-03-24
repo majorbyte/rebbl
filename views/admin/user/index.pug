@@ -1,6 +1,7 @@
 extends ../layout.pug
 
-
+block vars 
+  - let page = "User"
 
 block scripts
   script(src="https://cdn.rebbl.net/scripts/knockout-3.4.2.js")
@@ -32,36 +33,37 @@ block scripts
         self.discord = ko.observable();
         self.reddit = ko.observable();
         self.loading = ko.observable(true);
+        self.showBB2 = ko.observable(false);
         self.filteredUsers = ko.computed(function() {
+          let users = self.users().filter(x => (self.showBB2() && x.coach != undefined) || x.bb3coach != undefined )
+
           if(!self.coach() && !self.reddit() && !self.discord()&& !self.bb3coach()) {
-              return self.users().sort((a,b) => a.coach?.toLowerCase() > b.coach?.toLowerCase() ? 1 : -1 ); 
+              return users.sort((a,b) => a.coach?.toLowerCase() > b.coach?.toLowerCase() ? 1 : -1 ); 
           } else {
             
-            let users = null;
-
             if(self.coach()){
-              users= ko.utils.arrayFilter(self.users(), function(user) {
+              users= ko.utils.arrayFilter(users, function(user) {
                 let regex = new RegExp("^"+self.coach(), "i");
                 return regex.test(user.coach);
               });
             }
 
             if(self.bb3coach()){
-              users= ko.utils.arrayFilter(self.users(), function(user) {
+              users= ko.utils.arrayFilter(users, function(user) {
                 let regex = new RegExp("^"+self.bb3coach(), "i");
                 return regex.test(user.bb3coach);
               });
             }
 
             if(self.discord()){
-              users= ko.utils.arrayFilter(users || self.users(), function(user) {
+              users= ko.utils.arrayFilter(users, function(user) {
                 let regex = new RegExp("^"+self.discord(), "i");
                 return regex.test(user.discord);
               });
             }
 
             if(self.reddit()){
-              users= ko.utils.arrayFilter(users || self.users(), function(user) {
+              users= ko.utils.arrayFilter(users, function(user) {
                 let regex = new RegExp("^"+self.reddit(), "i");
                 return regex.test(user.reddit);
               });
@@ -71,6 +73,12 @@ block scripts
             return users;
           }
         });
+
+        self.toggleCoaches = function(data,event){
+          self.showBB2(!self.showBB2());
+          $(event.currentTarget || event.target ).toggleClass("btn-outline-primary");
+          $(event.currentTarget || event.target ).toggleClass("btn-primary");
+        }
     }
 
     const model = new DateModel();
@@ -83,44 +91,49 @@ block scripts
         model.loading(false);
     });
 
-    
-
 block content
-  div(class="container")
-    div(class="row col-12")
-      div(class="col-2") BB2 Coach
-      div(class="col-2") BB3 Coach
-      div(class="col-2") Discord
-      div(class="col-2") Reddit
-      div(class="col-2") Timezone
-      a(role="button" class="col-2 btn btn-primary" data-bind="attr:{href: 'user/add' }" aria-pressed="true") new
-    div(class="row col-12")
-      div(class="col-2") 
+  .container
+    .row.ol-12
+      .col-2 BB2 Coach
+      .col-2 BB3 Coach
+      .col-2 Discord
+      .col-2 Reddit
+      .col-2.text-center
+        button.btn.btn-sm.btn-outline-primary(role="button" data-bind="attr:{href: 'user/add' },click:toggleCoaches" aria-pressed="true"  ) show bb2 coaches
+      .col-2.text-center
+        a.btn.btn-sm.btn-primary(role="button" data-bind="attr:{href: 'user/add' }" aria-pressed="true") new
+    .row.col-12
+      .col-2
         label(style="float: left; margin-left: -75px;") search
         input(data-bind="textInput : coach")
-      div(class="col-2") 
+      .col-2
         input(data-bind="textInput : bb3coach")
-      div(class="col-2") 
+      .col-2
         input(data-bind="textInput : discord")
-      div(class="col-2") 
+      .col-2
         input(data-bind="textInput : reddit")
     //ko if: loading
-    div(class="row col-12 justify-content-center")
-      i(class="fa-solid fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
+    .row.d-flex.justify-content-center
+      .goblin-dark
     // /ko
     div(data-bind="foreach: filteredUsers" )
-      div(class="user-row row col-12")
+      .user-row.row.col-12
         a(class="col-12" data-bind="attr:{href: 'user/' + reddit }")   
           div(style="min-width:25px;margin-left:-25px;")
-            //ko if: $data.roles && $data.roles.indexOf('admin') > -1
+            //ko if: $data.roles && $data.roles.indexOf('superadmin') > -1
+            i(class="fa-solid fa-star" style="color:rgb(10, 150, 63);float:left" title="superadmin")
+            // /ko
+            //ko if: $data.roles && $data.roles.indexOf('admin') > -1 && $data.roles.indexOf('superadmin') == -1
             i(class="fa-solid fa-star" style="color: #e67b00;float:left" title="admin")
             // /ko
-          div(class="col-12 row" )
-            div(data-bind="text: $data.coach" class="col-2" style="overflow:hidden;")
-            div(data-bind="text: $data.bb3coach" class="col-2" style="overflow:hidden;")
-            div(data-bind="text: $data.discord" class="col-2" style="overflow:hidden;")
-            div(data-bind="text: $data.reddit" class="col-2" style="overflow:hidden;")
-            div(data-bind="text: $data.timezone" class="col-2" style="overflow:hidden;")
+            //ko if: $data.roles && $data.roles.indexOf('clanadmin') > -1 && $data.roles.indexOf('superadmin') == -1 && $data.roles.indexOf('admin') == -1
+            i(class="fa-solid fa-star" style="color:rgb(53, 67, 255);float:left" title="admin")
+            // /ko
+          .col-12.row
+            .col-2(data-bind="text: $data.coach" style="overflow:hidden;")
+            .col-2(data-bind="text: $data.bb3coach" style="overflow:hidden;")
+            .col-2(data-bind="text: $data.discord" style="overflow:hidden;")
+            .col-2(data-bind="text: $data.reddit" style="overflow:hidden;")
 
 
 

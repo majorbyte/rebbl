@@ -100,7 +100,7 @@ block append scripts
         input.value = coach.name;
 
         displayId.innerHTML = coach.displayId.toUpperCase();
-        displayId.classList.remove("hidden");
+        displayId.classList.remove("d-none");
 
         switch (coach.service){
           case "steam":
@@ -123,9 +123,11 @@ block append scripts
             break;
         }
 
-        img.classList.remove("hidden");
+        img.classList.remove("d-none");
         const saveButton = document.getElementById("saveButton");
-        saveButton.classList.remove("hidden");
+        saveButton.classList.remove("btn-outline-success");
+        saveButton.classList.add("btn-success");
+        saveButton.disabled = false;
       }
 
       async function search(e){
@@ -139,7 +141,7 @@ block append scripts
         btn.disabled = true;
         btn.classList.add("btn-primary")<
         btn.classList.remove("btn-danger")
-        spinner.classList.remove("hidden");
+        spinner.classList.remove("d-none");
 
         const response = await fetch(`/api/v2/account/bb3/${input.value}`);
 
@@ -166,29 +168,32 @@ block append scripts
               select.add(opt,null);
             });
 
-            select.classList.remove("hidden");
-            selectLabel.classList.remove("hidden");
+            select.classList.remove("d-none");
+            selectLabel.classList.remove("d-none");
           } else if (coaches != null) {
             const input = document.getElementById("bb3coach");
             const id = document.getElementById("bb3coachId");
             const saveButton = document.getElementById("saveButton");
-            select.classList.add("hidden");
-            selectLabel.classList.add("hidden");
+            select.classList.add("d-none");
+            selectLabel.classList.add("d-none");
 
             id.value = coaches.id;
             input.value = coaches.name;
 
-            saveButton.classList.remove("hidden");
+            saveButton.classList.remove("d-none");
           } else{
             btn.disabled = false;
-            spinner.classList.add("hidden");
+            spinner.classList.add("d-none");
             btn.classList.remove("btn-primary")<
             btn.classList.add("btn-danger")
           }
 
         }
 
-        spinner.classList.add("hidden");
+        const saveButton = document.getElementById("saveButton");
+        saveButton.classList.remove("d-none");
+
+        spinner.classList.add("d-none");
         btn.disabled = false;
       }
 
@@ -198,7 +203,7 @@ block append scripts
         const spinner = document.getElementById("spinnerSave");
         const coach = coachNames.find(x => x.id === id.value);
 
-        spinner.classList.remove("hidden");
+        spinner.classList.remove("d-none");
 
         const response = await fetch(`/api/v2/account/bb3`,{
           method:'POST',
@@ -209,7 +214,7 @@ block append scripts
           location.reload();
         }
 
-        spinner.classList.add("hidden");
+        spinner.classList.add("d-none");
       }
 
 block head 
@@ -355,6 +360,24 @@ block content
                   #nav-home.tab-pane.fade.col-12.show.active.table-responsive-md(role="tabpanel" aria-labelledby="nav-home-tab")
                     .p-4
                       // Personal Information
+                      if !user.bb3coach              
+                        h3 we're missing your BB3 coach info, please connect your BB3 to your reddit account here:
+                        .mb-4
+                          .input-group.my-1
+                            span.input-group-text(for="bb3coach") Blood Bowl 3 coach name 
+                            input#bb3coach.form-control(type="text" name="bb3coach" value=user.bb3coach)
+                            input#bb3coachId(type="hidden")
+                            button#searchButton.col-1.btn.btn-primary.btn-sm(onclick="search()")
+                              span Search
+                              span#spinner.spinner-border.spinner-border-sm.d-none.mx-1(role="status" aria-hidden="true")
+                          .input-group.my-1
+                            span.input-group-text.d-none#bb3coachSelectLabel(for="bb3coachSelect" ) select the correct coach
+                            select.form-control.d-none#bb3coachSelect(onchange="updateFields()")
+                            img#bb3coachService(style="width:32px").d-none
+                            span.input-group-text#bb3displayId.d-none
+                            button#saveButton.col-1.btn.btn-outline-success.d-none.btn-sm(style="float:right" disabled onclick="savebb3()" ) Save
+                              span#spinnerSave.spinner-border.spinner-border-sm.d-none.mx-1(role="status" aria-hidden="true")      
+
                       .mb-4
                         form.px-0(action="/account/update" method="post" class="container signup")
                           .row

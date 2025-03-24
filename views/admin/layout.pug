@@ -1,70 +1,119 @@
-include nav-link
-doctype html
-html(lang="en")
-  head
-    - if (process.env.NODE_ENV === 'production')
-      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
-      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
-      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
-      link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/style.css")
-    - else  
-      link(rel="stylesheet" href="/styles/v2/bootstrap.min.css")
-      link(rel="stylesheet" href="/styles/fontawesome.min.css")
-      link(rel="stylesheet" href="/styles/solid.min.css")
-      link(rel="stylesheet" href="/styles/v2/style.css")
-    block head
-  block vars
 
-  - if (!active) { var active =  (options && options.active) ? options.active : "" }
+mixin nav-link(name, link, page)
+  li.nav-item
+    a.nav-link(aria-current=name href=link class=page == name ? "active" : "" )= name
+
+doctype html 
+html(data-bs-theme="dark")
+  head
+    script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
+    script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")      
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/v2/bootstrap.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/fontawesome.min.css")
+    link(rel="stylesheet" href="https://cdn.rebbl.net/styles/solid.min.css")
+    style.
+      @font-face {
+        font-family: 'Roboto';
+        src: url(/fonts/roboto-latin-regular-webfont.woff2) format("woff2");
+        font-weight: 400;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Roboto';
+        src: url(/fonts/roboto-latin-medium-webfont.woff2) format("woff2");
+        font-weight: 500;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Roboto';
+        src: url(/fonts/roboto-latin-bold-webfont.woff2) format("woff2");
+        font-weight: 700;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Industry';
+        src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+        font-weight: 400;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Industry';
+        src: url(/fonts/industry-medium-webfont.woff2) format("woff2");
+        font-weight: 500;
+        font-style: normal
+      }
+
+      @font-face {
+        font-family: 'Industry';
+        src: url(/fonts/industry-bold-webfont.woff2) format("woff2");
+        font-weight: 700;
+        font-style: normal
+      }
+
+      *{
+        font-family: "Industry",Noto Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+      }
+      @media (min-width: 1700px) {
+        .Container, .container {
+          max-width: 1600px;
+        }
+      }
+      :root{--bs-primary-rgb:230,123,0;}
+      .season-table-row:nth-of-type(2n){
+        background-color: #4a4a4a69;
+      }
+      .debuginfo {text-align: right;padding: 5px;color: gray;font-size: smaller;clear: both;}
+      .debuginfo .content {display:none}
+      .debuginfo:hover .content {display:inline}
+      .debuginfo .icon  {color: #a0a0a0;font: 1em serif;padding: 0 2px;}
+
+      .goblin-dark {width: 128px;height: 105px;background-image: url("/images/transparent_goblin.png");animation: playX 0.2s steps(10) infinite, playY 1.6s steps(8) infinite;}
+
+      @keyframes playX {from {background-position-x: 0px;} to {background-position-x: -1280px;}}
+
+      @keyframes playY {from {background-position-y: 0px;} to {background-position-y: -1024px;}}
+
+    block head
+
+    block vars
+      - let page = "/"
+  body
+    nav.navbar.navbar-expand-md.navbar-dark.fixed-top.bg-dark.p-0
+      .container-fluid
+        a.navbar.py-0(href=user ? '/account' : '/account/login') 
+          .d-flex.align-items-center.justify-content-center.rounded-circle.overflow-hidden(style='width: 38px;')
+            img.w-100.h-100(src=`https://cdn.rebbl.net/images/bb3/coach/avatar/${user && user.info? user.info.avatar : "anonymous"}.png`)
+
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarCollapse.collapse.navbar-collapse
+          ul.navbar-nav.me-auto.mb-2.mb-md-0
+            block nav  
+              +nav-link("Home", "/", page)
+              +nav-link("User", "/admin/user", page)
+              +nav-link("Strikes & Bans", "/admin/strikes", page)
+              +nav-link("Unplayed", "/admin/unplayed", page)
+              +nav-link("Manage divisions", "/admin/divisions/bb3", page)
+              +nav-link("Manage board", "/admin/board", page)
+              +nav-link("Scheduling", "/admin/templates", page)
+              +nav-link("Clan", "/admin/clan", page)
+              +nav-link("Trophies", "/admin/trophies", page)
+            block nav-right
+
+      block navigation            
   
-  block body
-    body(style="padding-top:170px" )
-      a(href="/")
-        div(class="u-bottomPadding--small-rebbl")
-      nav(class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="min-height:80px;z-index:2000;justify-content:unset")
-        .container-fluid
-          button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#rebblMainNav" aria-controls="rebblMainNav" aria-expanded="false" aria-label="Toggle navigation")
-            span(class="navbar-toggler-icon")
-          a(class="navbar-brand d-md-none d-lg-none d-xl-none " href="#")= active.toUpperCase()          
-          div(class="collapse navbar-collapse" id="rebblMainNav")
-            ul(class="navbar-nav me-auto")
-              +nav-link("User", "/admin/user")
-              +nav-link("Strikes & Bans", "/admin/strikes")
-              +nav-link("Unplayed", "/admin/unplayed")
-              +nav-link("Manage divisions", "/admin/divisions/bb3")
-              +nav-link("Manage board", "/admin/board")
-              +nav-link("Scheduling", "/admin/templates")
-              //+nav-link("Rampup", "/admin/rampup")
-              +nav-link("Clan", "/admin/clan")
-              +nav-link("Trophies", "/admin/trophies")
-              +nav-link("Account", "/account")
-              block additionalMainNavigation
-      block navigation
-        nav(class="navbar navbar-expand-md fixed-top navbar-dark bg-dark" style="min-height:80px;top:80px;")
-          .container-fluid
-            button(class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#rebblSubNav" aria-controls="rebblSubNav" aria-expanded="false" aria-label="Toggle navigation")
-              span(class="navbar-toggler-icon")
-            a(class="navbar-brand" href="#") &nbsp;
-            div(class="collapse navbar-collapse" id="rebblSubNav")
-              ul(class="navbar-nav me-auto")
-      main(role="main")
-        block content  
-          div(class="jumbotron")
-            div(class="container")
-              h1(class="display-3") REBBL
-      footer(class="footer")
-        div( style="float:right;")
-          a(href="https://www.paypal.me/rebblnet" target="_blank")
-            img(src="https://cdn.rebbl.net/images/donate.png" title="Donate (soon)")  
-          | &nbsp; &nbsp; &nbsp; 
-          a(href="https://github.com/majorbyte/rebbl" ) source &nbsp;
-        p(style="padding:10px") &nbsp; <i class="fa-solid fa-copyright fa-flip-horizontal"></i> majorbyte 2023 &nbsp; &nbsp; &nbsp;
-      - if (process.env.NODE_ENV === 'production')
-        script(src="https://cdn.rebbl.net/scripts/jquery-3.3.1.slim.min.js")
-        script(src="https://cdn.rebbl.net/scripts/v2/popper.min.js")
-        script(src="https://cdn.rebbl.net/scripts/v2/bootstrap.min.js")        
-      - else
-        script(src="/scripts/jquery-3.3.1.slim.min.js")
-        script(src="/scripts/v2/popper.min.js")
-        script(src="/scripts/v2/bootstrap.min.js")        
-      block scripts
+    div(style="padding-top:48px")
+      block content
+
+    block scripts
+
+    p.debuginfo  
+      span.content.icon π
+      span.content #debuginformation#
+      span.icon π
+

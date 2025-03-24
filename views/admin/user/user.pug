@@ -1,7 +1,7 @@
 extends ../layout.pug
 
-block append vars
-  - var activeSubMenu = "account"
+block vars 
+  - let page = "User"
 
 block append scripts
   - if (process.env.NODE_ENV === 'production')
@@ -93,6 +93,7 @@ block append scripts
       self.reddit = ko.observable();
       self.newReddit = ko.observable();
       self.coach = ko.observable();
+      self.bb3coach = ko.observable();
       self.discord = ko.observable();
       self.race = ko.observable();
       self.steam = ko.observable();
@@ -223,6 +224,10 @@ block append scripts
         await self.post("/api/v1/admin/user/changeRedditAccount", {reddit:self.reddit(), newReddit:self.newReddit()});
         self.reddit(self.newReddit());
       }
+      self.bb3Disconnect = async function(data,event){
+        await fetch(`/api/v1/admin/user/${self.reddit()}`,{method:"DELETE"});
+        self.bb3coach(null);
+      }
 
 
       self.post = async function(url, data){
@@ -290,7 +295,7 @@ block append scripts
   -if (admin.roles && admin.roles.indexOf("superadmin") > -1)
     script.
       UserModel.prototype.toggleAdmin = function(data,event){
-          $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+          $(event.currentTarget || event.target ).toggleClass("btn-outline-secondary");
           $(event.currentTarget || event.target ).toggleClass("btn-success");
           if(this.roles.indexOf("admin") > -1 ){
             this.roles.splice(this.roles.indexOf("admin"),1);
@@ -310,7 +315,7 @@ block append scripts
 
   script.
     UserModel.prototype.toggleStreamer = function(data,event){
-      $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+      $(event.currentTarget || event.target ).toggleClass("btn-outline-secondary");
       $(event.currentTarget || event.target ).toggleClass("btn-success");
       if(this.roles.indexOf("streamer") > -1 ){
         this.roles.splice(this.roles.indexOf("streamer"),1);
@@ -321,7 +326,7 @@ block append scripts
       }
     }
     UserModel.prototype.toggleClanLeader = function(data,event){
-      $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+      $(event.currentTarget || event.target ).toggleClass("btn-outline-secondary");
       $(event.currentTarget || event.target ).toggleClass("btn-success");
       if(this.roles.indexOf("clanleader") > -1 ){
         this.roles.splice(this.roles.indexOf("clanleader"),1);
@@ -332,7 +337,7 @@ block append scripts
       }
     }
     UserModel.prototype.toggleClanAdmin = function(data,event){
-      $(event.currentTarget || event.target ).toggleClass("btn-secondary");
+      $(event.currentTarget || event.target ).toggleClass("btn-outline-secondary");
       $(event.currentTarget || event.target ).toggleClass("btn-success");
       if(this.roles.indexOf("clanadmin") > -1 ){
         this.roles.splice(this.roles.indexOf("clanadmin"),1);
@@ -346,7 +351,7 @@ block append scripts
       ko.applyBindings(model);
     $(document).ready(async function(){
 
-       const response = await fetch("/api/v1/admin/user/#{user}");
+       const response = await fetch("/api/v1/admin/user/#{account}");
       if (response.ok){
         model = ko.mapping.fromJS(await response.json(),mapping,model);
         model.newReddit(model.reddit());
@@ -390,59 +395,76 @@ block content
     // /ko
     // ko ifnot:isEmpty
     // ko ifnot:isError
-    h2(class="highlight")= user ? user : "Add new user"
+    h2(class="highlight")= account ? account : "Add new user"
     nav
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
         a(class="nav-item nav-link active" id="nav-info-tab" data-bs-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="true") Info
-        - if(user)
+        if(account)
           a(class="nav-item nav-link" id="nav-trophies-tab" data-bs-toggle="tab" href="#nav-trophies" role="tab" aria-controls="nav-trophies" aria-selected="false") Trophies
           a(class="nav-item nav-link" id="nav-notes-tab" data-bs-toggle="tab" href="#nav-notes" role="tab" aria-controls="nav-notes" aria-selected="false") Notes
           a(class="nav-item nav-link" id="nav-warnings-tab" data-bs-toggle="tab" href="#nav-warnings" role="tab" aria-controls="nav-warnings" aria-selected="false") Warnings
           a(class="nav-item nav-link" id="nav-strikes-tab" data-bs-toggle="tab" href="#nav-strikes" role="tab" aria-controls="nav-strikes" aria-selected="false") Strikes
           a(class="nav-item nav-link" id="nav-bans-tab" data-bs-toggle="tab" href="#nav-bans" role="tab" aria-controls="nav-bans" aria-selected="false") Bans
-          -if (admin.roles && admin.roles.indexOf("superadmin") >-1)
+          if (admin.roles && admin.roles.indexOf("superadmin") >-1)
             a(class="nav-item nav-link" id="nav-donations-tab" data-bs-toggle="tab" href="#nav-donations" role="tab" aria-controls="nav-donations" aria-selected="false") Donations
     div(class="tab-content" id="nav-tabContent")
       div(class="tab-pane fade show active" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab")
-        -if (user && admin.roles && admin.roles.indexOf("superadmin")>-1 )
-          button.btn.mx-1(data-bind="click: toggleAdmin, css: roles.indexOf('admin') > -1 ? 'btn-success' : 'btn-secondary'  " ) admin
-        button.btn.mx-1(data-bind="click: toggleClanAdmin, css: roles.indexOf('clanadmin') > -1 ? 'btn-success' : 'btn-secondary'  " ) clan admin
-        button.btn.mx-1(data-bind="click: toggleClanLeader, css: roles.indexOf('clanleader') > -1 ? 'btn-success' : 'btn-secondary'  " ) clan leader
-        button.btn.mx-1(data-bind="click: toggleStreamer, css: roles.indexOf('streamer')  > -1? 'btn-success' : 'btn-secondary'  " ) streamer
-        - let userAction = user ? "/admin/user/update" : "/admin/user/new"
-        form(action=userAction method="post" class="container signup")
-          div
-            label(for="reddit") reddit name
-            input(type="text" id="reddit" name="reddit" data-bind="value: newReddit")
-            // ko if: reddit() != newReddit()
-            button(class="btn btn-success " data-bind="click: $root.changeReddit,clickBubble: false" title="Change Reddit Account" style="margin:0px 10px") 
-              i(class="fa-solid fa-save")
-            label(style="display:inline-block") Update reddit account  
+        if (account && admin.roles && admin.roles.indexOf("superadmin")>-1 )
+          button.btn.mx-1(data-bind="click: toggleAdmin, css: roles.indexOf('admin') > -1 ? 'btn-success' : 'btn-outline-secondary'  " ) admin
+        button.btn.mx-1(data-bind="click: toggleClanAdmin, css: roles.indexOf('clanadmin') > -1 ? 'btn-success' : 'btn-outline-secondary'  " ) clan admin
+        button.btn.mx-1(data-bind="click: toggleClanLeader, css: roles.indexOf('clanleader') > -1 ? 'btn-success' : 'btn-outline-secondary'  " ) clan leader
+        button.btn.mx-1(data-bind="click: toggleStreamer, css: roles.indexOf('streamer')  > -1? 'btn-success' : 'btn-outline-secondary'  " ) streamer
+        h3 Account data
+        .container.g-0
+          .row
+            .col-12.my-1
+              .input-group
+                span.col.input-group-text(for="reddit") Reddit
+                input.form-control(type="text" id="reddit" name="reddit" data-bind="value: newReddit")
+                // ko if: reddit() == newReddit()
+                button.col.btn.btn-outline-success(disabled title="Change Reddit Account") Update
+                // /ko
+                // ko if: reddit() != newReddit()
+                button.btn.btn-success(data-bind="click: $root.changeReddit,clickBubble: false" title="Change Reddit Account") Update
+                // /ko
+            // ko if: coach 
+            .col-12.my-1
+              .input-group
+                span.col.input-group-text(for="coach") Blood Bowl 2 
+                input.form-control(type="text" disabled id="coach" name="coach" data-bind="value: coach")
+                button.col.btn.btn-outline-warning(type="button" onclick="bb2Disconnect()") Disconnect
             // /ko
-          div
-            label(for="coach") Blood Bowl 2 coach name
-            input(type="text" id="coach" name="coach" data-bind="value: coach")
-          div
-            label(for="timezone") Timezone
-            select(id="timezone" name="timezone" required title="timezone")
-          div
-            label(for="discord") Discord
-            input(type="text" id="discord" name="discord" data-bind="value: discord")
-          div
-            label(for="steam") Steam
-            input(type="text" id="steam" name="steam" data-bind="value: steam")
-          div
-            label(for="twitch") Twitch
-            input(type="text" id="twitch" name="twitch" data-bind="value: twitch")
-          div
-            label(for="team") Team
-            input(type="text" id="team" name="team" data-bind="value: team")
-          div
-            label(for="race") Race
-            input(type="text" id="race" name="race" data-bind="value: race")
-          div(style="clear:both")
-            button(type="submit") Save
-            br
+            // ko if: bb3coach
+            .col-12.my-1
+              .input-group
+                span.col.input-group-text(for="bb3coach") Blood Bowl 3 
+                input.form-control(type="text" disabled  id="bb3coach" name="bb3coach" data-bind="value: bb3coach")
+                button.col.btn.btn-outline-warning(data-bind="click:$root.bb3Disconnect,clickBubble: false") Disconnect
+            // /ko
+
+        h3 Miscelaneous data
+        - let userAction = account ? "/admin/user/update" : "/admin/user/new"
+        form.container.g-0(action=userAction method="post")
+          .row
+            .col-6.my-1
+              .input-group
+                span.col.input-group-text(for="timezone") Timezone
+                select.form-control(id="timezone" name="timezone" required title="timezone")
+            .col-6.my-1
+              .input-group
+                span.col.input-group-text(for="discord") Discord
+                input.form-control(type="text" id="discord" name="discord" data-bind="value: discord")
+            .col-6.my-1
+              .input-group
+                span.col.input-group-text(for="steam") Steam
+                input.form-control(type="text" id="steam" name="steam" data-bind="value: steam")
+            .col-6.my-1
+              .input-group
+                span.col.input-group-text(for="twitch") Twitch
+                input.form-control(type="text" id="twitch" name="twitch" data-bind="value: twitch")
+            .col-12
+              button.my-1.float-end.btn.btn-success(type="submit") Save
+              br
       div(class="tab-pane fade" id="nav-trophies" role="tabpanel" aria-labelledby="nav-trophies-tab") 
         div(class="row col-12")
           h2 Trophies

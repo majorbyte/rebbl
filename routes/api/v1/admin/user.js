@@ -339,5 +339,18 @@ router.post('/updateNote', util.ensureAuthenticated, util.hasRole("admin"), asyn
   }
 });
 
+router.delete("/:reddit", util.ensureAuthenticated, util.hasRole("admin"), async (req, res) => {
+  try{
+    let user = await accountService.getAccount(req.params.reddit);
+
+    if (user) await accountService.clearBB3Info(user.bb3id);
+
+    res.status(204).send();
+  } catch(err){
+    res.status(500).json(err);
+    console.log(err);
+  }
+});
+
 
 module.exports = router;

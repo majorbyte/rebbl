@@ -89,8 +89,8 @@ block content
         button(class="btn btn-secondary" data-bind="click:toggle" style="margin-right:5px;float:right") Show All
     hr
     //ko if: loading
-    div(class="row col-12 justify-content-center")
-      i(class="fa-solid fa-spinner fa-spin" style="margin-top:250px;font-size:96px;color: #e67b00;")
+    .row.d-flex.justify-content-center
+      .goblin-dark
     // /ko
     div(data-bind="foreach: filteredUsers" )
       //ko if: $data.strikes != undefined

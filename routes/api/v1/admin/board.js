@@ -8,7 +8,7 @@ const express = require("express")
   router.get("/", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
-      const coach = await api.getCoachInfo(307300);
+      /*const coach = await api.getCoachInfo(307300);
       let data = [];
   
       coach.ResponseGetCoachOverview.BoardMemberships.BoardMember.map(member => data.push({
@@ -25,8 +25,8 @@ const express = require("express")
       
       const excludeLeagues = [55861, 64853, 68241, 68663];
       excludeLeagues.map(ex => data.splice(data.findIndex(x => x.id === ex ),1));
-
-      res.status(200).send(data);
+      */
+      res.status(200).send({});
     } catch(err){
       console.log(err);
     }
