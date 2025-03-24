@@ -57,7 +57,13 @@ class ZFL{
     this.router.post('/upload', util.verifyMaintenanceHeader, this.#updateStats);
 
     this.router.get('/update',util.verifyMaintenanceToken, async (req,res) => {
+      //await zflService.updateFixtures("Second Division","c26451ca-74e2-11ef-be7b-bc24112ec32e","cc489b86-cc47-11ef-9e80-bc2411305479")
+      //await zflService.updateFixtures("Second Division","b921b10d-780c-11ef-be7b-bc24112ec32e","baea8fb9-ed3b-11ef-a124-bc2411305479")
+      //await zflService.updateFixtures("Elite Division","3bc2f981-7635-11ef-be7b-bc24112ec32e","0cfb8951-04f1-11f0-a124-bc2411305479")
+
+      
       await zflService.updateCompetitions("e3500321-83d6-11ef-be7b-bc24112ec32e");
+      //await zflService.calculateAllStandings();
       res.redirect("/");
     });
 

@@ -29,7 +29,7 @@ class Strategy extends passport_oauth2_1.default {
             try {
                 const profile = JSON.parse(body);
                 profile.provider= "discord";
-                done(null, json);
+                done(null, profile);
             }
             catch (e) {
                 done(e);

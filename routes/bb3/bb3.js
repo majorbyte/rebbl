@@ -177,7 +177,7 @@ class BB3{
     if (!competition) competition = competitions[Math.floor(Math.random()*competitions.length)];
 
     if (competition.parentId) {
-      upcomingMatch = upcomingMatch?.filter(x => x.competitionId != competition.id);
+      upcomingMatch = upcomingMatch?.filter(x => x.competitionId == competition.parentId);
       competition = await res.locals.profiler.measure("retrieving parent competitions","database",  dataService.getCompetition({id:competition.parentId}));
     }
     

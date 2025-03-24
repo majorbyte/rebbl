@@ -236,7 +236,7 @@ class Server{
       } else {
         console.error(err.message);
         console.log(err.stack);
-        res.status(500).render('bb3/5xx',{err});
+        res.status(500).render('bb3/500',{err});
       }
     });
 
