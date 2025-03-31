@@ -47,7 +47,12 @@ class Server{
       databaseName: "rebbl",
       collection: 'sessions'
     });
-
+    
+    this.discordSessionStore = new MongoDBStore({
+      uri: uri,
+      databaseName: "rebbl",
+      collection: 'discord_sessions'
+    });
 
     this.sessionObject = {
       secret: 'keyboard cat'
@@ -72,7 +77,7 @@ class Server{
       , genid: uuidv4
       , resave: false
       , saveUninitialized: false
-      , store: this.sessionStore
+      , store: this.discordSessionStore
     };
 
     // set our default template engine to "ejs"
