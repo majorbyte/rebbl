@@ -46,8 +46,9 @@ class BB3{
   #standings = async (req,res,next) =>  {
     let competition = await dataService.getCompetition({id:req.params.competitionId});
     if (!competition) return next(new Error(`Could not find comeptition with id ${req.params.competitionId}`));
-    if (competition.excludeRedraft) competition = await dataService.getCompetition({name:competition.name.replace(/ R\d/, ""), excludeRedraft:false});
-    else if (competition.parentId) competition = await dataService.getCompetition({id:competition.parentId});
+    if (competition.parentId) competition = await dataService.getCompetition({id:competition.parentId});
+    else if (competition.excludeRedraft) competition = await dataService.getCompetition({name:competition.name.replace(/ R\d/, ""), excludeRedraft:false});
+    
     res.render("bb3/competitions", {competitions:[competition]});
   }
   #schedules = async (req,res,next) => {
