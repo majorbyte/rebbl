@@ -43,7 +43,7 @@ const express = require("express")
   router.get("/bb3", util.ensureAuthenticated, util.hasRole("admin"), async function(req, res){
     try{
       
-      let data = await dataServiceBB3.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f",season:"season 3"});
+      let data = await dataServiceBB3.getCompetitions({leagueId:"94f0d3aa-e9ba-11ee-a745-02000090a64f",season:"season 4"});
 
       res.status(200).send(data);
     } catch(err){
