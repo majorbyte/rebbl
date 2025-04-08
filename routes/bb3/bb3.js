@@ -53,8 +53,12 @@ class BB3{
   }
   #schedules = async (req,res,next) => {
     
-    const competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1, displayName:1,season:1}})
+    const competition = await dataService.getCompetition({id:req.params.competitionId},{projection:{id:1, name:1, day:1, displayName:1,season:1,isParent:1}})
     if (!competition) return next(new Error(`Could not find comeptition with id ${req.params.competitionId}`));
+    
+    
+    if (competition.isParent) return res.render("bb3/schedules", {league:"REBBL", schedules:await dataService.getSchedules({parentId:req.params.competitionId}), competition});
+
     let schedules = await dataService.getSchedules({competitionId:req.params.competitionId});
     const name = new RegExp(`${competition.name} Swiss`,"i");
     let swissSchedules = await dataService.getSchedules({competitionName:name});
