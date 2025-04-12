@@ -146,7 +146,7 @@ block append vars
         }});
                 
       }).filter(d => renderSkills.some(n => n == d.rollType));
-      pr = pr.reduce((p,c) => {if (c.die < 7) p[c.die].r++; if (c.outcome == 0 && c.die < 7) p[c.die].f++; return p;}, [{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0}]);
+      pr = pr.reduce((p,c) => {if (c.die > 0 && c.die < 7) p[c.die].r++; if (c.outcome == 0 && c.die < 7) p[c.die].f++; return p;}, [{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0},{f:0, r:0}]);
       
       pr.splice(0,1);
       return pr
@@ -319,13 +319,11 @@ mixin renderD6WithFail(home, away)
     - const homeMax = Math.max(...home) || 1;
     - const awayMax = Math.max(...away) || 1;
     -for(let x = 0; x < 6; x++)
-      - if (!away[x] ) console.log(`away ${x}`)
-      - if (!home[x] ) console.log(`home ${x}`)
       if (away[x].r > 0 || home[x].r > 0)
         .col-12.d-flex.align-items-center.justify-content-center
-            +renderFail(home[x].r/homeMax*100, home[x].r, home[x].f/homeMax*100, home[x].f, "", true )
-            span.mx-2=`${['1+','2+','3+','4+','5+','6+'][x]}`
-            +renderFail(away[x].r/awayMax*100, away[x].r, away[x].f/awayMax*100, away[x].f, "", false )
+          +renderFail((home[x].r - home[x].f)/homeMax*100, home[x].r, home[x].f/homeMax*100, home[x].f, "", true )
+          span.mx-2=`${['1+','2+','3+','4+','5+','6+'][x]}`
+          +renderFail((away[x].r - away[x].f)/awayMax*100, away[x].r, away[x].f/awayMax*100, away[x].f, "", false )
             
 
 mixin render(size, value, txt, reverse)

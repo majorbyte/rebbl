@@ -60,7 +60,7 @@ class HooksApi{
       hook.active = true;
       
       await dataService.insertHook(hook);
-      dataService.refreshHooks();
+      await dataService.refreshHooks();
   
       res.json({});
     }
@@ -89,7 +89,7 @@ class HooksApi{
       }
 
       dataService.updateHook({_id:hook._id},hook);
-      dataService.refreshHooks();
+      await dataService.refreshHooks();
   
       res.json({});
     }
@@ -111,7 +111,7 @@ class HooksApi{
       hook.name = webhook.name;
   
       dataService.updateHook({_id:hook._id},hook);
-      dataService.refreshHooks();
+      await dataService.refreshHooks();
 
       res.json({});
 

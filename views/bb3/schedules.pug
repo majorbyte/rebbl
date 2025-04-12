@@ -14,7 +14,7 @@ block content
       h1.text-center= league + " " + (competition.displayName ||  competition.name)
       - let round = 0
       .row
-        each round, y in [...new Set(schedules.map(x => x.round))]
+        each round, y in [...new Set(schedules.map(x => x.round).sort())]
           .col-12.col-xl-6.g-0
             br
             div.text-center

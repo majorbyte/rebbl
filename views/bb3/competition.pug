@@ -41,7 +41,7 @@ include functions.pug
         .col-2.d-none.d-md-block(style=";overflow:hidden")=getRace(rank.race)
         .col-4
           .row
-            .col-4.col-md-2=rank.points
+            .col-4.col-md-2(title=rank.hasOwnProperty("strengthOfSchedule") ? rank.strengthOfSchedule : '' )=rank.points
             .col-2.d-none.d-md-block=rank.win
             .col-2.d-none.d-md-block=rank.draw
             .col-2.d-none.d-md-block=rank.loss

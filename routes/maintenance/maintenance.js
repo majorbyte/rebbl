@@ -56,27 +56,27 @@ class Maintenance{
         //await test.swap("594eecd4-4cc8-11ef-be7b-bc24112ec32e",id,0);
 
 
-        const ids = ["5abb6c16-ede3-11ef-a124-bc2411305479"]
-        for(const id of ids){
-          const schedules = await bb3.getSchedules({competitionId:id,round:3});
+        // const ids = ["5abb6c16-ede3-11ef-a124-bc2411305479"]
+        // for(const id of ids){
+        //   const schedules = await bb3.getSchedules({competitionId:id,round:3});
 
-          for(const match of schedules){
-            const response = await fetch(`http://rebbl.net:47018/api/statistics/dice/${match.gameId}`); 
-            if (!response.ok) continue;
+        //   for(const match of schedules){
+        //     const response = await fetch(`http://rebbl.net:47018/api/statistics/dice/${match.gameId}`); 
+        //     if (!response.ok) continue;
   
-            const data = await response.json();
+        //     const data = await response.json();
   
-            if (!data.responseGetMatchDiceRolls) continue;
+        //     if (!data.responseGetMatchDiceRolls) continue;
 
-            data.responseGetMatchDiceRolls.matchDiceRolls.matchId = match.matchId;
-            data.responseGetMatchDiceRolls.matchDiceRolls.gameId = match.gameId;
+        //     data.responseGetMatchDiceRolls.matchDiceRolls.matchId = match.matchId;
+        //     data.responseGetMatchDiceRolls.matchDiceRolls.gameId = match.gameId;
             
-            await bb3.updateDice({matchId:match.matchId,gameId:match.gameId},data.responseGetMatchDiceRolls.matchDiceRolls,{upsert:true});
-          }
+        //     await bb3.updateDice({matchId:match.matchId,gameId:match.gameId},data.responseGetMatchDiceRolls.matchDiceRolls,{upsert:true});
+        //   }
   
-        }
+        // }
            
-       
+        await bb3Service.checkClosedCompetitions("94f0d3aa-e9ba-11ee-a745-02000090a64f");
            
           
       
@@ -93,7 +93,8 @@ class Maintenance{
       try{
         
         await bb3Service.updateCompetitions("94f0d3aa-e9ba-11ee-a745-02000090a64f");
-
+        await bb3Service.checkClosedCompetitions("94f0d3aa-e9ba-11ee-a745-02000090a64f");
+        
         await bb3Service.calculateLeagueStandings("94f0d3aa-e9ba-11ee-a745-02000090a64f");
 
         for(const leagueId of ["94f0d3aa-e9ba-11ee-a745-02000090a64f"]){
