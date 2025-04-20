@@ -122,6 +122,8 @@ block content
     nav(class="col-12")
       div(class="nav nav-tabs" id="nav-tab" role="tablist")
         a(class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true") Players
+        if (team.hasRecrutableJourneymen == 1)
+          a(class="nav-item nav-link" id="nav-journeymen-tab" data-bs-toggle="tab" href="#nav-journeymen" role="tab" aria-controls="nav-journeymen" aria-selected="true") Journeymen
         a(class="nav-item nav-link" id="nav-matches-tab" data-bs-toggle="tab" href="#nav-matches" role="tab" aria-controls="nav-matches" aria-selected="false" data-bind="click:selectMatches") Matches
     - let teamPositions = [...new Set(team.roster.map(x => x.player.position))]
     - let borders = ["border-success","border-warning","border-primary","border-light","border-info","border-secondary"]  
@@ -190,6 +192,69 @@ block content
                    
                   td=player.player.spp
                   td(data-bind="text:value")=player.player.value
+      if (team.hasRecrutableJourneymen == 1)      
+        .tab-pane.fade.col-12.show.table-responsive-md#nav-journeymen(role="tabpanel" aria-labelledby="nav-home-journeymen")
+          table.table.table-striped
+              thead.headerText
+                tr
+                  th(scope="col") #
+                  th(scope="col") name
+                  th(scope="col") position
+                  th(scope="col") MA
+                  th(scope="col") ST
+                  th(scope="col") AG
+                  th(scope="col") PA
+                  th(scope="col") AV
+                  th(scope="col" style="min-width:160px") Skills
+                  th(scope="col") CAS
+                  th(scope="col") SPP
+                  th(scope="col") Value
+              tbody
+                - if (!Array.isArray(team.journeymen)) team.journeymen = []
+                - for(let player of team.journeymen)
+                  tr(class=Number(player.missNextGame)==1?"player-out":"player-in") 
+                    td=player.number
+                    td
+                      div
+                        - if (player.id)
+                          img(src=`https://cdn.rebbl.net/images/skills/${player.level}.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                        - else if (player.type.startsWith("neutral_")) 
+                          img(src=`https://cdn.rebbl.net/images/bb3/hud_inducement_StarPlayer.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                        - else
+                          img(src=`https://cdn.rebbl.net/images/bb3/hud_mercenary_tile_picto_mercenary.png` alt="", class="TeamLabel-logo" style="width:30px;margin-right:2px;height:30px;float:left;")
+                        .match-stats-TeamLabel-name=player.name
+
+                    td
+                      - let p = getPosition(player.position)
+                      img(src=getSilhouette(player.position) title=p class=`silhouette-shadow border border-3 rounded-pill ${borders[teamPositions.indexOf(player.position)]}`)
+                    - let c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==0)
+                    td= c ? c.value : "-"
+                    - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==1)
+                    td= c ? c.value : "-"
+                    - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==2)
+                    td= c ? c.value : "-"
+                    - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==3)
+                    td= c ? c.value : "-"
+                    - c = player.characteristics.playerCharacteristicsEntry.find(x=>x.characteristic==4)
+                    td= c ? c.value : "-"
+                    td(class="td-prevent")
+                      - let playerSkills = Array.isArray(player.skills.skillsItem) ? player.skills.skillsItem : [player.skills.skillsItem] 
+                      each skill of playerSkills
+                        - let s = skills.find(x => x.id == skill)
+                        - if (s)
+                          img(src=`https://cdn.rebbl.net/images/skills/${user && user.icon ? user.icon : "BB3Standard"}/${s.icon}` title=s.name.replace(/([A-Z])/g, ' $1').trim() alt="" style="z-index:9999" )
+                    td.pull-right
+                      - let playerCas = Array.isArray(player.casualties.casualtiesItem) ? player.casualties.casualtiesItem:[player.casualties.casualtiesItem]
+                      each cas of playerCas 
+                        -let d = getPlayerCasualtyIcon(cas)
+                        if d
+                          img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/${d[0]}` title=d[1])
+                      if player.missNextGame == "1"
+                          img(src=`https://cdn.rebbl.net/images/bb3/Icons_Casualty/ico_action_recovering.png`)
+                    
+                    td=player.spp
+                    td(data-bind="text:value")=player.value
+
       .tab-pane.fade.col-12.show.table-responsive-md(id="nav-matches" role="tabpanel" aria-labelledby="nav-matches-tab")
         - matches = matches.reverse();
         each match of matches
