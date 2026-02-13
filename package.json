@@ -12,7 +12,7 @@
     "into-stream": "^4.0.0",
     "jstransformer": "^1.0.0",
     "jstransformer-markdown-it": "^3.0.0",
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.1.1",
     "memory-cache": "^0.2.0",
     "method-override": "^2.3.10",
     "mongodb": "^6.15.0",
